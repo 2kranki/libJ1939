@@ -1,0 +1,192 @@
+/****************************************************************
+ *              J1939 Engine Retarder CA (j1939dg)
+ ****************************************************************/
+/*
+ * Program
+ *				J1939 Engine Retarder CA (j1939dg)
+ * Purpose
+ *				This object provides the Engine Status Support
+ *              for the J1939 object. The CA associated with this
+ *              object should insure that the internal Claimed
+ *              Address is kept up to date.
+ *
+ *              To support these PGNs, the CA must call the
+ *              HandleMessage() method fairly consistently.
+ *              One message is expected every 50ms. Others are
+ *              at larger intervals.
+ *              
+ *              The PGNs associated with the Engine Retarder are:
+ *                  0 TSC1 : spn 695, 897,518 (rcv from Transmission (SA == 3))
+ *                  61440 ERC1 : spn 571,520  (xmt)
+ *                  65249 RC :   spn  (xmt)
+ *
+ *              An engine retarder (compression or exhaust) is required on Eaton
+ *              AutoShift 10 and 18-Speed and 13-Speed UltraShift transmissions. 
+ *              It is recommended on the 10-Speed UltraShift transmission.
+ *
+ *              1. The transmission sends J-1939 Torque/Speed Control 1 (TSC1) 
+ *                  torque control commands to the engine retarder (compression 
+ *                  or exhaust) when deceleration assistance during a shift is 
+ *                  required. The transmission automatically detects the retarder
+ *                  source address (compression or exhaust) and addresses the 
+ *                  TSC1 accordingly. If both compression and exhaust are present,
+ *                  the transmission will address exhaust only.
+ *              2. The engine retarder shall respond to TSC1 control commands as 
+ *                  indicated by Actual Retarder Percent torque within 50 msec 
+ *                  of the TSC1 command.
+ *              3. The engine retarder shall respond to TSC1 commands regardless 
+ *                  of the status of the engine brake control switches on the dash.
+ *              4. The engine retarder shall affect the engine deceleration rate 
+ *                  within 250 msec to 300 msec of the request. Longer response 
+ *                  times will adversely affect the transmission’s upshift capa-
+ *                  bilities on a grade and may limit applications to grades 8% 
+ *                  and lower. Response times greater the 500 msec are not acceptable.
+ *              5. The engine retarder shall respond to zero percent torque control 
+ *                  command by turning off the engine brake within 250 msec. Longer 
+ *                  delay times to turn off may cause harsh gear engagements and 
+ *                  loss of vehicle speed.
+ *              6. The engine shall have a minimum deceleration rate of 1000 rpm/sec
+ *                  with the engine retarder at 100%. The engine is disengaged from
+ *                  the driveline and is virtually unloaded.
+ *              7. The recommended practice is for the exhaust brake on/off switches
+ *                  to be wired in the engine ECM separately from the exhaust brake 
+ *                  solenoid. Failure to comply with this recommended practice can 
+ *                  cause Eaton AutoShift/UltraShift trans- missions to miss shifts 
+ *                  when the exhaust brake is required. For more information contact 
+ *                  Eaton Application Engineering and refer to the J-1939 Engine 
+ *                  Requirements for Eaton Automated Transmissions.
+ *
+ * Remarks
+ *	1.			None
+ * References
+ *		"J1939-21 Data Link Layer", SAE, DEC 2006
+ */
+
+
+/*
+ This is free and unencumbered software released into the public domain.
+ 
+ Anyone is free to copy, modify, publish, use, compile, sell, or
+ distribute this software, either in source code form or as a compiled
+ binary, for any purpose, commercial or non-commercial, and by any
+ means.
+ 
+ In jurisdictions that recognize copyright laws, the author or authors
+ of this software dedicate any and all copyright interest in the
+ software to the public domain. We make this dedication for the benefit
+ of the public at large and to the detriment of our heirs and
+ successors. We intend this dedication to be an overt act of
+ relinquishment in perpetuity of all present and future rights to this
+ software under copyright law.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+ 
+ For more information, please refer to <http://unlicense.org/>
+ */
+
+
+
+
+#include        <j1939_defs.h>
+
+
+#ifndef J1939DG_H
+#define J1939DG_H	1
+
+
+//****************************************************************
+//* * * * * * * * * * * *  Data Definitions  * * * * * * * * * * *
+//****************************************************************
+
+#ifdef	__cplusplus
+extern	"C" {
+#endif
+    
+
+    typedef struct j1939dg_vtbl_s	{
+        OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
+        // Put other methods below this as pointers and add their
+        // method names to the vtbl definition in j1939ca_object.c.
+        // Properties:
+        // Methods:
+    } J1939DG_VTBL;
+    
+    
+    
+    /****************************************************************
+    * * * * * * * * * * *  Routine Definitions	* * * * * * * * * * *
+    ****************************************************************/
+
+    //---------------------------------------------------------------
+    //                      *** Class Methods ***
+    //---------------------------------------------------------------
+
+    // Warning - See J1939CAM, but this function may not change.
+    J1939DG_DATA * j1939dg_Alloc(
+    );
+    
+        
+    
+    //---------------------------------------------------------------
+    //                      *** Properties ***
+    //---------------------------------------------------------------
+
+
+    
+    //---------------------------------------------------------------
+    //                      *** Methods ***
+    //---------------------------------------------------------------
+    
+    // j1939dg_AddData adds Data to the end of the buffer.
+    bool			j1939dg_AddData(
+        J1939DG_DATA	*this,
+        uint16_t        size,
+        void            *data
+    );
+    
+   
+    bool            j1939dg_HandleTimedTransmits(
+        J1939DG_DATA	*this
+    );
+    
+    
+    // j1939dg_Open calculates the needed buffer size, allocates an
+    // area and sets up the control portion of the j1939dg.
+    // Warning - See J1939CAM, but this function may not change.
+    J1939DG_DATA *	j1939dg_Init(
+        J1939DG_DATA	*this,
+        P_XMTMSG_RTN    pXmtMsg,
+        void            *pXmtData,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint8_t         spn2846         // J1939 Industry Group (3 bits)
+    );
+        
+
+    bool            j1939dg_TransmitPgn61440(
+        J1939DG_DATA	*this
+    );
+    
+    
+    bool            j1939dg_TransmitPgn65249(
+        J1939DG_DATA	*this
+    );
+    
+        
+    
+
+    
+#ifdef	__cplusplus
+};
+#endif
+
+
+
+
+#endif

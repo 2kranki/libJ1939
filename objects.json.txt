@@ -1,0 +1,21 @@
+# vi:nu:et:sts=4 ts=4 sw=4
+{
+    "deps":["libCmn"],
+    "headers": [
+        j1939_defs.h
+    ]
+    "objects": [
+        j1939,
+        j1939ca,
+        j1939cam,
+        j1939dg,
+        j1939dl,
+        j1939en,
+        j1939er,
+        j1939tbl,
+        j1939tc,
+    ],
+    "routines": [
+        "j1939msg.c"
+    ]
+}

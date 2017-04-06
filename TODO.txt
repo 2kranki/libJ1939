@@ -1,0 +1,20 @@
+# vi:nu:et:sts=4 ts=4 sw=4
+
+The following are things that are being throught about. Whether they get done or not
+will depend upon time and resources.
+
+
+--  J1939
+    --  Move all System/CAN dependent routines here. So, that they can be
+        initialized before starting the system.
+
+--  J1939tc
+    --  pSystemTimeGet needs initialization
+
+--  ???
+    --  Add CAN restart routine in ???
+
+--  J1939CA(?)
+    --  Add support for large message xmt and rcv
+
+
