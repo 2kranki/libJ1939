@@ -94,20 +94,20 @@ typedef struct j1939_pgn_s  J1939_PGN;
  *      otherwise false
  */
 typedef bool (*P_SRVCMSG_RTN) (
-            OBJ_PTR     ,                       // Object Ptr
+            OBJ_ID      ,                       // Object Ptr
             uint32_t    eid,                    // EID
             J1939_MSG   *
         );
 
 typedef bool (*P_XMTMSG_RTN) (
-            OBJ_PTR     ,                       // Object Ptr
+            OBJ_ID      ,                       // Object Ptr
             uint32_t    ,                       // msTime for Delay or Timeout
                                                 // (-1(0xFFFFFFFF) == WAIT_INFINITE)
             J1939_MSG   *
         );
 
 typedef bool (*P_MSGDATA_RTN) (
-            OBJ_PTR     ,                       // Object Ptr
+            OBJ_ID      ,                       // Object Ptr
             uint32_t    *,                      // EID or PDU (j1939) Ptr
             uint16_t    ,                       // data area size
             void        *                       // Message Data Area

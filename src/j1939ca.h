@@ -213,13 +213,6 @@ extern	"C" {
     );
     
     
-    bool			j1939ca_setXmtMsg(
-        J1939CA_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pData
-    );
-
-    
     bool			j1939ca_setXmtMsgDL(
         J1939CA_DATA	*this,
         P_J1939_XMTRTN  pXmtMsg,
@@ -281,7 +274,7 @@ extern	"C" {
         );
     
     
-    // Request a PGN to be transmitted.
+    // "Request for PGN" to be transmitted.
     bool            j1939ca_TransmitPgn59904(
         J1939CA_DATA	*this,
         J1939_PGN       pgn,                // PGN being requested

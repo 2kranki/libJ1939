@@ -45,6 +45,7 @@
 //===============================================================
 
 
+J1939SYS_DATA   *pSYS = OBJ_NIL;
 
 
 
@@ -81,7 +82,13 @@ bool        xmtHandler(
 )
 {
     if (pMsg) {
-        //FIXME: pMsg->CMSGSID.CMSGTS = tn_time();
+        if (msDelay == -1) {        // *** Transmit ***
+        }
+        else {
+            if (pSYS && ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS) {
+                pMsg->CMSGSID.CMSGTS = ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS(pSYS);
+            }
+        }
         if (cCurMsg < 300) {
             memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
             ++cCurMsg;
@@ -89,8 +96,7 @@ bool        xmtHandler(
         printCanMsg(pMsg);
     }
     else {
-        DEBUG_BREAK();
-        exit(100);
+        fprintf(stderr, "delay: %5d  msg: Time Out\n", msDelay);
     }
     return true;
 }

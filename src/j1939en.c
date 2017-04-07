@@ -283,7 +283,7 @@ extern	"C" {
             return;
         }
 
-        obj_Dealloc( cbp );
+        j1939ca_Dealloc( cbp );
         cbp = NULL;
 
         // Return to caller.

@@ -97,15 +97,16 @@
     J1939ER_DATA    *pER = NULL;
 
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pER = j1939er_Alloc();
     XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
     pER = j1939er_Init(
                        pER,
-                       xmtHandler,      // pXmtMsg
-                       NULL,            // pXmtData
+                       (OBJ_ID)pCAN,
+                       (OBJ_ID)pSYS,
                        1,              // J1939 Identity Number (21 bits)
-                       10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                       0x3FF,          // J1939 Manufacturer Code (11 bits)
                        4               // J1939 Industry Group (3 bits) (Marine)
             );
     XCTAssertFalse( (NULL == pER), @"Could not init pER" );
@@ -135,15 +136,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
     pJ1939er =  j1939er_Init(
                         pJ1939er,
-                        xmtHandler,
-                        NULL,
+                        (OBJ_ID)pCAN,
+                        (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
-                        10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                        0x3FF,          // J1939 Manufacturer Code (11 bits)
                         4               // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not init J1939CA" );
@@ -202,15 +204,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not init J1939CA" );
@@ -269,15 +272,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -335,15 +339,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -400,15 +405,16 @@
     J1939_PDU       pdu;
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -455,15 +461,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -551,15 +558,16 @@
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
     pJ1939er =  j1939er_Init(
                              pJ1939er,
-                             xmtHandler,
-                             NULL,
+                             (OBJ_ID)pCAN,
+                             (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             10,             // J1939 Manufacturer Code (11 bits) (Cummins)
+                             0x3FF,          // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not init J1939CA" );

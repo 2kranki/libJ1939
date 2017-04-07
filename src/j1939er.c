@@ -136,14 +136,14 @@ extern	"C" {
     J1939ER_DATA * j1939er_Alloc(
     )
     {
-        J1939ER_DATA   *cbp;
+        J1939ER_DATA   *this;
 
         // Do initialization.
 
-        cbp = obj_Alloc( sizeof(J1939ER_DATA) );
+        this = obj_Alloc( sizeof(J1939ER_DATA) );
 
         // Return to caller.
-        return( cbp );
+        return this;
     }
 
 
@@ -169,15 +169,15 @@ extern	"C" {
         OBJ_ID          objId
     )
     {
-        J1939ER_DATA	*cbp = objId;
+        J1939ER_DATA	*this = objId;
 
         // Do initialization.
-        if( NULL == cbp ) {
+        if( NULL == this ) {
             return;
         }
 
-        obj_Dealloc( cbp );
-        cbp = NULL;
+        j1939ca_Dealloc(this);
+        this = NULL;
 
         // Return to caller.
     }
@@ -193,7 +193,7 @@ extern	"C" {
     // First 3 bytes of data are the PGN being requested.
 
     bool            j1939er_HandlePgn59904(
-        J1939ER_DATA	*cbp,
+        J1939ER_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     )
@@ -205,7 +205,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939er_Validate( cbp ) ) {
+        if( !j1939er_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -227,7 +227,7 @@ extern	"C" {
         switch (pgn.w) {
 
             case 61440:
-                j1939er_TransmitPgn61440( cbp );
+                j1939er_TransmitPgn61440(this);
                 return true;
                 break;
 
@@ -340,11 +340,11 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //                  H a n d l e  P G N 6 1 4 4 0
+    //     H a n d l e  P G N 6 1 4 4 0 -
     //---------------------------------------------------------------
 
     bool            j1939er_HandlePgn61440(
-        J1939ER_DATA	*cbp,
+        J1939ER_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -355,7 +355,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939er_Validate( cbp ) ) {
+        if( !j1939er_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -364,7 +364,7 @@ extern	"C" {
         pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
 
         // Return to caller.
-        return false;
+        return true;
     }
 
 
@@ -531,7 +531,6 @@ extern	"C" {
         J1939ER_DATA	*this
     )
     {
-        J1939_MSG       msg;
         uint32_t        dlc = 8;
         uint8_t         data[8] = {0};
         J1939_PDU       pdu = {0};
@@ -556,9 +555,7 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
 
-        fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
-
-        j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, sizeof(J1939_MSG), &msg);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
         this->startTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -577,7 +574,6 @@ extern	"C" {
         J1939ER_DATA	*this
     )
     {
-        J1939_MSG       msg;
         uint32_t        dlc = 19;
         uint8_t         data[19] = {0};
         J1939_PDU       pdu = {0};
@@ -603,8 +599,7 @@ extern	"C" {
         pdu.P  = 6;             // Priority
 
         //FIXME: We need to implement 21 Data Link Layer!
-        fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
-        j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, sizeof(J1939_MSG), &msg);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
 
         this->startTime65249 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 

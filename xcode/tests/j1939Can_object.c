@@ -181,7 +181,7 @@ J1939CAN_VTBL     j1939Can_Vtbl = {
     // Put other object method names below this.
     // Properties:
     // Methods:
-    //j1939Can_IsEnabled,
+    j1939Can_XmtMsg
  
 };
 

@@ -184,7 +184,7 @@ extern "C" {
     );
     
     
-    bool            j1939ca_TransmitPgn59392_NAKPGN(
+    bool            j1939ca_TransmitPgn59392_NAK(
         J1939CA_DATA	*cbp,
         J1939_PGN       pgn                 // PGN being requested
     );

@@ -66,8 +66,8 @@ static
 J1939_MSG     lastMsg = { 0 };
 static
 J1939_MSG     testMsg = { 0 };
-
-
+static
+J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
@@ -211,6 +211,8 @@ bool            xmtPGN60928(
     // test method in the class.
     
     mem_Init( );
+    pSYS = j1939Sys_New();
+    pCAN = j1939Can_New();
     
 }
 
@@ -221,6 +223,10 @@ bool            xmtPGN60928(
     // test method in the class.
     [super tearDown];
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
     mem_Dump( );
 }
 
@@ -228,12 +234,10 @@ bool            xmtPGN60928(
 
 - (void)testOpenClose_1_0
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = OBJ_NIL;
     
-    j1939Sys_TimeReset(pSYS, 0);
-
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pJ1939ca = j1939ca_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     pJ1939ca =  j1939ca_Init(
@@ -247,52 +251,12 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
         
+        j1939Sys_TimeReset(pSYS, 0);
+        
         obj_Release(pJ1939ca);
         pJ1939ca = OBJ_NIL;
     }
 
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
-}
-
-
-
-- (void)testCheck_EmptyChain
-{
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939CA_DATA    *pJ1939ca = NULL;
-    
-    j1939Sys_TimeReset(pSYS, 0);
-    
-    pJ1939ca = j1939ca_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    pJ1939ca =  j1939ca_Init(
-                             pJ1939ca,
-                             (OBJ_ID)pCAN,
-                             (OBJ_ID)pSYS,
-                             1,              // J1939 Identity Number (21 bits)
-                             0x3FF,          // J1939 Manufacturer Code (11 bits)
-                             4               // J1939 Industry Group (3 bits) (Marine)
-                );
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    if (pJ1939ca) {
-
-        j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
-
-        //fRc = pJ1939ca_CheckForTimeouts( pHnd, &msWait );
-        //STAssertTrue( (fRc), @"Result was false!" );
-
-        obj_Release(pJ1939ca);
-        pJ1939ca = OBJ_NIL;
-    }
-    
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
 }
 
 
@@ -301,80 +265,81 @@ bool            xmtPGN60928(
 // the address.
 - (void)testCheck_ClaimAddress_clean
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939CA_DATA    *pJ1939ca = NULL;
-    //J1939_PDU       pdu = {0};
+    J1939CA_DATA    *pCA = NULL;
+    J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
     bool            fRc;
     //uint32_t        msWait = 0;
     
-    j1939Sys_TimeReset(pSYS, 0);
-    
-    pJ1939ca = j1939ca_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    pJ1939ca =  j1939ca_Init(
-                             pJ1939ca,
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    pCA = j1939ca_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    pCA =  j1939ca_Init(
+                             pCA,
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             0x3FF,          // J1939 Manufacturer Code (11 bits)
+                             512,            // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                 );
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    if (pJ1939ca) {
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    if (pCA) {
 
-        j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
-
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
         // an Address Claim.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
         
-        //TODO: Check that the claim address message was sent.
-
         // Send "Time Out" which should allow us to accept our claimed address
         // and go into normal operation.
-        //FIXME: timeBump(NULL,255);
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939ca->cs) );
+        j1939Sys_BumpMS(pSYS, 250);
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
 
-        obj_Release(pJ1939ca);
-        pJ1939ca = OBJ_NIL;
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
+
+        obj_Release(pCA);
+        pCA = OBJ_NIL;
     }
     
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
 }
 
 
 - (void)testCheck_ClaimAddress_contested1
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
     bool            fRc;
     //uint32_t        msWait = 0;
     
-    j1939Sys_TimeReset(pSYS, 0);
-    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pJ1939ca = j1939ca_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not alloc J1939CA" );
     pJ1939ca =  j1939ca_Init(
                              pJ1939ca,
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
-                             1,              // J1939 Identity Number (21 bits)
-                             0x3FF,          // J1939 Manufacturer Code (11 bits)
-                             4               // J1939 Industry Group (3 bits) (Marine)
+                             1,             // J1939 Identity Number (21 bits)
+                             512,           // J1939 Manufacturer Code (11 bits)
+                             4              // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
-    j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
     if (pJ1939ca) {
 
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939Can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
+        
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
@@ -394,18 +359,12 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_ClaimAddress_contested2
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
@@ -413,23 +372,24 @@ bool            xmtPGN60928(
     //uint32_t        msWait = 0;
     J1939_NAME      *pName = (J1939_NAME *)&testMsg.DATA.dw;
     
-    j1939Sys_TimeReset(pSYS, 0);
-    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
-    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pJ1939ca = j1939ca_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     pJ1939ca =  j1939ca_Init(
                              pJ1939ca,
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
-                             1,              // J1939 Identity Number (21 bits)
-                             0x3FF,          // J1939 Manufacturer Code (11 bits)
-                             4               // J1939 Industry Group (3 bits) (Marine)
+                             1,             // J1939 Identity Number (21 bits)
+                             512,           // J1939 Manufacturer Code (11 bits)
+                             4              // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
     if (pJ1939ca) {
 
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939Can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
+        
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
@@ -462,76 +422,74 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestNameDirect
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New();
-    J1939CA_DATA    *pJ1939ca = NULL;
+    J1939CA_DATA    *pCA = NULL;
     bool            fRc;
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    j1939Sys_TimeReset(pSYS, 0);
-    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
-    
-    pJ1939ca = j1939ca_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
-    pJ1939ca =  j1939ca_Init(
-                             pJ1939ca,
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    pCA = j1939ca_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    pCA =  j1939ca_Init(
+                             pCA,
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
-                             1,              // J1939 Identity Number (21 bits)
-                             0x3FF,          // J1939 Manufacturer Code (11 bits)
-                             4               // J1939 Industry Group (3 bits) (Marine)
+                             1,             // J1939 Identity Number (21 bits)
+                             512,           // J1939 Manufacturer Code (11 bits)
+                             4              // J1939 Industry Group (3 bits) (Marine)
                 );
-    XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
+    XCTAssertFalse( (OBJ_NIL == pCA) );
     cCurMsg = 0;
-    if (pJ1939ca) {
+    if (pCA) {
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
+        XCTAssertTrue( (1 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
 
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939ca->cs) );
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
         // Setup up msg from #3 Transmission to ER requesting NAME;
         pdu.eid = 0;
         pdu.SA = 3;
         pdu.P = 3;
-        pdu.PF = 0xEA;
+        pdu.PF = 0xEA;          // Request PGN PF
         pdu.PS = 41;
         for (int i=0; i<8; ++i) {
             data[i] = 0xFF;
         }
         data[0] = 0x00;
-        data[1] = 0xEE;
+        data[1] = 0xEE;         // Address Claim PF
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
-        msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
+        msg.CMSGSID.CMSGTS = 0xFFFF;            // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( pJ1939ca, pdu.eid, &msg );
+        fRc = j1939ca_HandleMessages( pCA, pdu.eid, &msg );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (3 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x0CEA2903 == pdu.eid) );
+        XCTAssertTrue( (0x18EEFF00 == pdu.eid) );
         
-        obj_Release(pJ1939ca);
-        pJ1939ca = OBJ_NIL;
+        obj_Release(pCA);
+        pCA = OBJ_NIL;
     }
     
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
 }
 
 

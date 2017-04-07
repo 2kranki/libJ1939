@@ -719,8 +719,8 @@ extern "C" {
     //              T r a n s m i t  M e s s a g e
     //---------------------------------------------------------------
     
-    void            j1939Can_XmtMsg(
-        void            *pObject,
+    bool            j1939Can_XmtMsg(
+        OBJ_ID          pObject,
         uint32_t        msDelay,
         J1939_MSG       *pMsg
     )
@@ -732,7 +732,7 @@ extern "C" {
 #else
         if( !j1939Can_Validate(this) ) {
             DEBUG_BREAK();
-            return;
+            return false;
         }
         if( msDelay ) {                 // *** Temporary ***
             DEBUG_BREAK();
@@ -741,8 +741,13 @@ extern "C" {
         if (this->pXmtMsg) {
             (*this->pXmtMsg)(this->pXmtData, msDelay, pMsg);
         }
+        else {
+            fprintf(stderr, "ERROR - j1939Can_XmtMsg is missing pXmtMsg Handler!\n");
+            DEBUG_BREAK();
+        }
         
         // Return to caller.
+        return true;
     }
     
     

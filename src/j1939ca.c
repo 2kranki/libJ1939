@@ -471,29 +471,6 @@ extern	"C" {
     }
     
     
-    bool			j1939ca_setXmtMsg(
-        J1939CA_DATA	*cbp,
-        P_XMTMSG_RTN    pRoutine,
-        void            *pData
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939ca_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        //cbp->pXmtMsg  = pRoutine;
-        //cbp->pXmtData = pData;
-        
-        return true;
-    }
-
-
     bool			j1939ca_setXmtMsgDL(
         J1939CA_DATA	*cbp,
         P_J1939_XMTRTN  pXmtMsg,
@@ -712,6 +689,7 @@ extern	"C" {
             }
         }
         else {
+            // Address claim procedure is necessary.
             fRc = j1939ca_HandlePgn60928( this, pdu.eid, pMsg );
         }
         
@@ -798,7 +776,7 @@ extern	"C" {
         }
         else {
             if ((requestedPgn.PF < 240) && !(255 == cbp->curDa)) {
-                fRc = j1939ca_TransmitPgn59392_NAKPGN( cbp, requestedPgn );
+                fRc = j1939ca_TransmitPgn59392_NAK( cbp, requestedPgn );
             }
         }
         
@@ -1135,7 +1113,9 @@ extern	"C" {
     //            T r a n s m i t  P G N 5 9 3 9 2  0x00E800
     //---------------------------------------------------------------
     
-    bool            j1939ca_TransmitPgn59392_NAKPGN(
+    // ACK/NAK PGN
+    
+    bool            j1939ca_TransmitPgn59392_NAK(
         J1939CA_DATA	*cbp,
         J1939_PGN       pgn                 // PGN being requested
     )
@@ -1146,7 +1126,7 @@ extern	"C" {
         uint32_t        i;
         bool            fRc = false;
         
-        data[0] = 1;
+        data[0] = 1;                        // NAK
         for (i=1; i<8; ++i) {
             data[i] = 0xFF;
         }
@@ -1256,13 +1236,14 @@ extern	"C" {
         J1939_PDU       pdu = {0};
         bool            fRc = false;
         
-        pdu.PF = 238;
+        pdu.PF = 238;       // Address Claimed
         pdu.PS = 255;       // We must always make this global.
         pdu.SA = this->ca;
         pdu.P  = 7;         // Priority
         
-        //fRc = j1939ca_SetupPgn60928(cbp,&pdu,dlc,&cbp->name);
-        // Not needed since we just get the name from the same place.
+        //fRc = j1939ca_SetupPgn60928(cbp, &pdu, dlc, &cbp->name);
+        // Not needed since we just get the name from the same place
+        // in this object.
         
         if (this->pXmtMsgDL) {
             fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
@@ -1307,6 +1288,11 @@ extern	"C" {
         if( NULL == pData ) {
             DEBUG_BREAK();
             return false;
+        }
+        if (this->pCAN && (obj_getIdent(this->pCAN) == OBJ_IDENT_J1939CAN)) {
+        }
+        else {
+            DEBUG_BREAK();
         }
 #endif
         

@@ -287,7 +287,7 @@ extern	"C" {
         // method names to the vtbl definition in lru_object.c.
         // Properties:
         // Methods:
-        P_XMTMSG_RTN    *pXmt;
+        P_XMTMSG_RTN    pXmt;
     } J1939_CAN_VTBL;
     
 

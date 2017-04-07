@@ -35,7 +35,7 @@
 
 #include    <j1939_defs.h>
 #include    <j1939msg.h>
-#include    <chario.h>
+#include    "j1939Sys.h"
 
 
 
@@ -60,6 +60,8 @@ bool            printCanMsg(
     J1939_MSG       *pMessage
 );
 
+extern
+J1939SYS_DATA   *pSYS;
 
 extern
 J1939_MSG   curMsg[];

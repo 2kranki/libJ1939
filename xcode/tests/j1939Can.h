@@ -81,7 +81,7 @@ extern "C" {
         // method names to the vtbl definition in j1939Can_object.c.
         // Properties:
         // Methods:
-        P_XMTMSG_RTN    *pXmt;
+        bool            (*pXmt)(OBJ_ID,uint32_t,J1939_MSG *);
     } J1939CAN_VTBL;
 
 
@@ -167,6 +167,13 @@ extern "C" {
     ASTR_DATA *    j1939Can_ToDebugString(
         J1939CAN_DATA   *this,
         int             indent
+    );
+    
+    
+    bool            j1939Can_XmtMsg(
+        OBJ_ID          pObject,
+        uint32_t        msDelay,
+        J1939_MSG       *pMsg
     );
     
     

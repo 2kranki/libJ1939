@@ -117,23 +117,24 @@ void        shiftExit(void *ptr,bool fShifting)
 {
     J1939SYS_DATA   *pSYS = j1939Sys_New();
     J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939EN_DATA    *pEN = NULL;
+    J1939EN_DATA    *pEng = NULL;
 
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
     
-    pEN = j1939en_Alloc();
-    XCTAssertFalse( (NULL == pEN), @"Could not alloc pEN" );
-    pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (NULL == pEN), @"Could not init pEN" );
-    if (pEN) {
+    pEng = j1939en_Alloc();
+    XCTAssertFalse( (NULL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (NULL == pEng) );
+    if (pEng) {
 
         //pBase = j1939_getBase( pJ1939 );
         //STAssertFalse( (NULL == pBase), @"Could not open canbase" );
         //STAssertTrue( (OBJ_IDENT_CANBASE == obj_getIdent(pBase)), @"??" );
         //STAssertTrue( (canbase_getBaud(pBase) == CANBASE_BAUD_250000_10), @"??" );
 
-        obj_Release(pEN);
-        pEN = NULL;
+        obj_Release(pEng);
+        pEng = NULL;
     }
 
     obj_Release(pCAN);
@@ -150,29 +151,30 @@ void        shiftExit(void *ptr,bool fShifting)
 {
     J1939SYS_DATA   *pSYS = j1939Sys_New();
     J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939EN_DATA    *pEN = NULL;
+    J1939EN_DATA    *pEng = NULL;
     J1939_PDU       pdu;
     bool            fRc;
         
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
-    pEN = j1939en_Alloc();
-    XCTAssertFalse( (NULL == pEN), @"Could not alloc pEN" );
-    pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (NULL == pEN), @"Could not init pEN" );
-    if (pEN) {
+    pEng = j1939en_Alloc();
+    XCTAssertFalse( (NULL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (NULL == pEng) );
+    if (pEng) {
         
         for (int i=0; i<1000; ++i) {
-            fRc = (*j1939ca_getHandler((J1939CA_DATA *)pEN))( (J1939CA_DATA *)pEN, 0, NULL );
+            fRc = (*j1939ca_getHandler((J1939CA_DATA *)pEng))((J1939CA_DATA *)pEng, 0, NULL);
         }
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (61 == cCurMsg), @"Result was false!" );
+        XCTAssertTrue( (61 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x0CF00300 == pdu.eid), @"Result was false!" );
+        XCTAssertTrue( (0x0CF00300 == pdu.eid) );
         
-        obj_Release(pEN);
-        pEN = NULL;
+        obj_Release(pEng);
+        pEng = NULL;
     }
     
     obj_Release(pCAN);
@@ -189,27 +191,28 @@ void        shiftExit(void *ptr,bool fShifting)
 {
     J1939SYS_DATA   *pSYS = j1939Sys_New();
     J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939EN_DATA    *pJ1939er = NULL;
+    J1939EN_DATA    *pEng = NULL;
     bool            fRc;
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
-    pJ1939er = j1939en_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pJ1939er) );
-    pJ1939er = j1939en_Init( pJ1939er, OBJ_NIL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (OBJ_NIL == pJ1939er) );
+    pEng = j1939en_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
-    if (pJ1939er) {
+    if (pEng) {
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
+        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
         j1939Sys_BumpMS(pSYS, 250);
         // Send "Timed Out".
-        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
+        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs) );
         
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
@@ -226,12 +229,12 @@ void        shiftExit(void *ptr,bool fShifting)
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
-        XCTAssertTrue( (true == pJ1939er->fActive), @"" );
-        XCTAssertTrue( (3 == pJ1939er->spn1480), @"" );
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
+        XCTAssertTrue( (true == pEng->fActive) );
+        XCTAssertTrue( (3 == pEng->spn1480) );
         
         for (int i=0; i<500; ++i) {
-            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, 0, NULL );
+            fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
         }
         
         // Setup up msg from #3 Transmission to TSC1;
@@ -249,20 +252,20 @@ void        shiftExit(void *ptr,bool fShifting)
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
-        XCTAssertTrue( (false == pJ1939er->fActive), @"" );
-        XCTAssertTrue( (255 == pJ1939er->spn1480), @"" );
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, pdu.eid, &msg);
+        XCTAssertTrue( (false == pEng->fActive) );
+        XCTAssertTrue( (255 == pEng->spn1480) );
         
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (29 == cCurMsg), @"Result was false!" );
+        XCTAssertTrue( (29 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
-        XCTAssertTrue( (0x0CF00300 == pdu.eid), @"Result was false!" );
+        XCTAssertTrue( (0x0CF00300 == pdu.eid) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x0C000003 == pdu.eid), @"Result was false!" );
+        XCTAssertTrue( (0x0C000003 == pdu.eid) );
         
-        obj_Release(pJ1939er);
-        pJ1939er = OBJ_NIL;
+        obj_Release(pEng);
+        pEng = OBJ_NIL;
     }
     
     obj_Release(pCAN);
@@ -279,27 +282,28 @@ void        shiftExit(void *ptr,bool fShifting)
 {
     J1939SYS_DATA   *pSYS = j1939Sys_New();
     J1939CAN_DATA   *pCAN = j1939Can_New(1);
-    J1939EN_DATA    *pJ1939er = NULL;
+    J1939EN_DATA    *pEng = NULL;
     bool            fRc;
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
 
-    pJ1939er = j1939en_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
-    pJ1939er = j1939en_Init( pJ1939er, OBJ_NIL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not init J1939CA" );
+    pEng = j1939en_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
-    if (pJ1939er) {
+    if (pEng) {
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
+        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
         j1939Sys_BumpMS(pSYS, 250);
         // Send "Timed Out".
-        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
+        fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs) );
         
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
@@ -316,12 +320,12 @@ void        shiftExit(void *ptr,bool fShifting)
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
-        XCTAssertTrue( (true == pJ1939er->fActive), @"" );
-        XCTAssertTrue( (3 == pJ1939er->spn1480), @"" );
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
+        XCTAssertTrue( (true == pEng->fActive) );
+        XCTAssertTrue( (3 == pEng->spn1480) );
         
         for (int i=0; i<200; ++i) {
-            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, 0, NULL );
+            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, 0, NULL );
         }
         
 #ifdef XYZZY
@@ -340,21 +344,21 @@ void        shiftExit(void *ptr,bool fShifting)
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
 #endif
-        XCTAssertTrue( (false == pJ1939er->fActive), @"" );
-        XCTAssertTrue( (255 == pJ1939er->spn1480), @"" );
+        XCTAssertTrue( (false == pEng->fActive) );
+        XCTAssertTrue( (255 == pEng->spn1480) );
         
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (15 == cCurMsg), @"Result was false!" );
+        XCTAssertTrue( (15 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
-        XCTAssertTrue( (0x18FEDF00 == pdu.eid), @"Result was false!" );
+        XCTAssertTrue( (0x18FEDF00 == pdu.eid) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x0CF00300 == pdu.eid), @"Result was false!" );
+        XCTAssertTrue( (0x0CF00300 == pdu.eid) );
         
-        obj_Release(pJ1939er);
-        pJ1939er = OBJ_NIL;
+        obj_Release(pEng);
+        pEng = OBJ_NIL;
     }
     
     obj_Release(pCAN);
@@ -378,26 +382,27 @@ void        shiftExit(void *ptr,bool fShifting)
     int             count = 0;
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
     
     shiftsT = 0;
     shiftsF = 0;
     
     pEng = j1939en_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pEng), @"Could not alloc J1939CA" );
-    pEng = j1939en_Init( pEng, OBJ_NIL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (OBJ_NIL == pEng), @"Could not init J1939CA" );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
-        XCTAssertTrue( (fRc), @"" );
+        XCTAssertTrue( (fRc) );
         
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
         j1939Sys_BumpMS(pSYS, 250);
         // Send "Timed Out".
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs), @"" );
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs) );
         
         // Send all msg02 msgs.
         for (i=0; i<cMsgs02; ++i) {
@@ -406,7 +411,7 @@ void        shiftExit(void *ptr,bool fShifting)
             printCanMsg(&msg);
             //fRc = xmtHandler(NULL, 0, &msg);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, Msgs02[i].pdu, &msg );
-            XCTAssertTrue( (true == pEng->fActive), @"" );
+            XCTAssertTrue( (true == pEng->fActive) );
             if (pEng->fShifting) {
                 fprintf(stderr, "\tShifting with detorque!\n");
                 ++count;
@@ -415,8 +420,8 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf(stderr, "Number of messages in shift mode: %d\n",count);
         fprintf(stderr, "Number of true shifts: %d\n",shiftsT);
         fprintf(stderr, "Number of false shifts: %d\n",shiftsF);
-        XCTAssertTrue( (shiftsT == shiftsF), @"" );
-        XCTAssertTrue( (shiftsT == 15), @"" );
+        XCTAssertTrue( (shiftsT == shiftsF) );
+        XCTAssertTrue( (shiftsT == 15) );
         
         obj_Release(pEng);
         pEng = OBJ_NIL;
@@ -443,26 +448,27 @@ void        shiftExit(void *ptr,bool fShifting)
     int             count = 0;
     
     j1939Sys_TimeReset(pSYS, 0);
+    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
     
     shiftsT = 0;
     shiftsF = 0;
     
     pEng = j1939en_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pEng), @"Could not alloc J1939CA" );
-    pEng = j1939en_Init( pEng, OBJ_NIL, xmtHandler, NULL, 0, 0, 0 );
-    XCTAssertFalse( (OBJ_NIL == pEng), @"Could not init J1939CA" );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
+    pEng = j1939en_Init( pEng, OBJ_NIL, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 0x3FF, 4 );
+    XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
-        XCTAssertTrue( (fRc), @"" );
+        XCTAssertTrue( (fRc) );
         
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
         j1939Sys_BumpMS(pSYS, 250);
         // Send "Timed Out".
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pEng, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs), @"" );
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs) );
         
         // Send all msg03 msgs.
         for (i=0; i<cMsgs03; ++i) {
@@ -480,7 +486,7 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf(stderr, "Number of messages in shift mode: %d\n",count);
         fprintf(stderr, "Number of true shifts: %d\n",shiftsT);
         fprintf(stderr, "Number of false shifts: %d\n",shiftsF);
-        XCTAssertTrue( (shiftsT == shiftsF), @"" );
+        XCTAssertTrue( (shiftsT == shiftsF) );
         
         obj_Release(pEng);
         pEng = OBJ_NIL;
