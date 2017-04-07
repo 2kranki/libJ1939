@@ -150,7 +150,7 @@ extern "C" {
         // The last spn is used in Init() to establish size of area to initialize.
 
         uint32_t            timeOut;
-        uint8_t             fActive;
+        uint8_t             fActive;            // Retarding is Active
         uint8_t             fShifting;          // Shift in progress
         uint8_t             reserved8c[2];
         P_VOIDEXIT12        pShiftExit;

@@ -98,8 +98,8 @@ extern "C" {
         OBJ_DATA            super;
         OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
-        J1939_SYS_VTBL      *pSYS;
-        J1939_CAN_VTBL      *pCAN;
+        OBJ_DATA            *pSYS;
+        OBJ_DATA            *pCAN;
         
         J1939_DATA          *pJ1939;
 
@@ -109,8 +109,6 @@ extern "C" {
 
         P_XMTMSG_RTN        pReflectMsg;
         OBJ_PTR             pReflectData;
-        P_XMTMSG_RTN        pXmtMsg;
-        OBJ_PTR             pXmtData;
         
         J1939CA_DATA        *pCAs[4];
         uint8_t             cCAs;

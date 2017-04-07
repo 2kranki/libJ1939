@@ -82,6 +82,7 @@ extern "C" {
         // Properties:
         // Methods:
         bool            (*pXmt)(OBJ_ID,uint32_t,J1939_MSG *);
+        bool            (*pReflect)(OBJ_ID,uint32_t,J1939_MSG *);
     } J1939CAN_VTBL;
 
 
@@ -119,6 +120,19 @@ extern "C" {
     );
 
 
+    bool            j1939Can_setReflect(
+        J1939CAN_DATA   *this,
+        bool            value
+    );
+    
+    
+    bool            j1939Can_setReflectMsg(
+        J1939CAN_DATA	*this,
+        P_XMTMSG_RTN    pRoutine,
+        void            *pData
+    );
+    
+    
     bool            j1939Can_setXmtMsg(
         J1939CAN_DATA	*this,
         P_XMTMSG_RTN    pRoutine,
@@ -152,6 +166,13 @@ extern "C" {
     );
     
  
+    bool            j1939Can_ReflectMsg(
+        OBJ_ID          pObject,
+        uint32_t        msDelay,
+        J1939_MSG       *pMsg
+    );
+    
+    
     /*!
      Create a string that describes this object and the objects within it.
      Example:

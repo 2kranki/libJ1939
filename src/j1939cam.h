@@ -108,8 +108,8 @@ extern	"C" {
         J1939_DATA      *pJ1939,
         P_XMTMSG_RTN    pReflectMsg,
         OBJ_ID          *pReflectData,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          *pXmtData,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)
@@ -120,8 +120,8 @@ extern	"C" {
         J1939_DATA      *pJ1939,
         P_XMTMSG_RTN    pReflectMsg,
         OBJ_ID          *pReflectData,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          *pXmtData,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)
@@ -139,13 +139,13 @@ extern	"C" {
     );
     
     
-    J1939_CAN_VTBL * j1939cam_getCAN(
+    OBJ_ID          j1939cam_getCAN(
         J1939CAM_DATA	*this
     );
     
     bool            j1939cam_setCAN(
         J1939CAM_DATA	*this,
-        J1939_CAN_VTBL  *pValue
+        OBJ_ID          pValue
     );
     
     
@@ -172,22 +172,15 @@ extern	"C" {
     );
     
     
-    J1939_SYS_VTBL * j1939cam_getSYS(
+    OBJ_ID          j1939cam_getSYS(
         J1939CAM_DATA	*this
     );
     
     bool            j1939cam_setSYS(
         J1939CAM_DATA	*this,
-        J1939_SYS_VTBL  *pValue
+        OBJ_ID          pValue
     );
     
-    
-    bool			j1939cam_setXmtMsg(
-        J1939CAM_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pData
-    );
-
     
 
     
@@ -204,7 +197,10 @@ extern	"C" {
     /*!
      Passed messages from a message source such as a CAN FIFO Receive
      Queue. This routine handles the message either internally or via
-     its responder chain.
+     its responder chain. It should be called about every 20ms even
+     if a message is not available. A NULL message pointer and zero
+     eid, tell the Handler to simply process any time transmitted
+     messages.
      @param:    this    J1939CAM object pointer
      @param:    eid     Message EID
      @param:    pMsg    Message Pointer or NULL
@@ -221,8 +217,8 @@ extern	"C" {
     J1939CAM_DATA *	j1939cam_Init(
         J1939CAM_DATA	*this,
         J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          pData
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS
     );
         
     

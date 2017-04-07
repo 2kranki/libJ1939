@@ -7,6 +7,7 @@ will depend upon time and resources.
 --  J1939
     --  Move all System/CAN dependent routines here. So, that they can be
         initialized before starting the system.
+    --  Merge in CAM ????
 
 --  J1939ca - CA
     --  Make sure time handling is consistant with CA, DG, ER and TC
@@ -19,10 +20,14 @@ will depend upon time and resources.
 --  J1939en - Engine CA
     --  Make sure time handling is consistant with CA, DG, ER and TC
     --  Look at time rollover in message handlers and timed msgs
+    --  Find out why test testCheck_MSG02_Clean and testCheck_MSG03_Clean
+        thinks that the engine should be constantly retarded
 
 --  J1939er - Engine Retarder CA
     --  Make sure time handling is consistant with CA, DG, EN, and TC
     --  Look at time rollover in message handlers and timed msgs
+    --  Figure out how to time out testCheck_TSC1_Direct_Timeout. So,
+        that the proper test is performed.
 
 --  J1939tc - Transmission CA
     --  Make sure time handling is consistant with CA, DG, EN, and ER

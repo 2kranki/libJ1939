@@ -630,6 +630,11 @@ extern	"C" {
         this->super.pTimedTransmit =
                         (P_HANDLE_TIMED_TRANSMITS)&j1939tc_HandleTimedTransmits;
 
+        // All of our tests that captured messages from startup in a real truck
+        // did not show the engine or transmission claiming their name.  They
+        // just assumed they had the names.
+        this->super.cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
+
         // Default all SPNs to unsupported values.
         memset(
                &this->spn522,

@@ -816,7 +816,10 @@ extern	"C" {
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939en_Vtbl );
 
-        this->super.cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we are the engine.
+        // All of our tests that captured messages from startup in a real truck
+        // did not show the engine or transmission claiming their name.  They
+        // just assumed they had the names.
+        this->super.cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
         this->super.pRcvPgnTbl = &rcvPgnTbl;
         this->super.pXmtPgnTbl = &xmtPgnTbl;
         this->super.pTimedTransmit =

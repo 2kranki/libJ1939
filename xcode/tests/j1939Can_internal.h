@@ -57,15 +57,22 @@ extern "C" {
 struct j1939Can_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
-    OBJ_DATA        super;
-    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+    OBJ_DATA            super;
+    OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
     // Common Data
-    ERESULT         eRc;
-    uint16_t        size;		/* maximum number of elements           */
-    uint16_t        reserved;
-    ASTR_DATA       *pStr;
+    ERESULT             eRc;
+    uint16_t            size;		/* maximum number of elements           */
+    uint16_t            reserved;
+    ASTR_DATA           *pStr;
 
+    /* ReflectMsg() is the routine called to transmit an 8-byte
+     * message. All messages must be sent via this routine.
+     */
+    bool                fReflect;
+    P_XMTMSG_RTN        pReflectMsg;
+    OBJ_PTR             pReflectData;
+    
     /* XmtMsg() is the routine called to transmit an 8-byte
      * message. All messages must be sent via this routine.
      */

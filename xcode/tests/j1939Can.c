@@ -195,25 +195,50 @@ extern "C" {
 
 
 
-    uint32_t        j1939Can_getSize(
-        J1939CAN_DATA       *this
+    bool            j1939Can_setReflect(
+        J1939CAN_DATA   *this,
+        bool            value
     )
     {
 #ifdef NDEBUG
 #else
         if( !j1939Can_Validate(this) ) {
             DEBUG_BREAK();
-            return 0;
+            return false;
         }
 #endif
-
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
-        return 0;
+        
+        this->fReflect = value;
+        
+        return true;
     }
-
-
-
-
+    
+    
+    
+    bool                j1939Can_setReflectMsg(
+        J1939CAN_DATA		*this,
+        P_XMTMSG_RTN        pRoutine,
+        void                *pData
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939Can_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pReflectMsg  = pRoutine;
+        this->pReflectData = pData;
+        
+        return true;
+    }
+    
+    
+    
     ASTR_DATA * j1939Can_getStr(
         J1939CAN_DATA     *this
     )
@@ -597,6 +622,39 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //              R e f l e c t  M e s s a g e
+    //---------------------------------------------------------------
+    
+    bool            j1939Can_ReflectMsg(
+        OBJ_ID          pObject,
+        uint32_t        msDelay,
+        J1939_MSG       *pMsg
+    )
+    {
+        J1939CAN_DATA	*this = pObject;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939Can_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+        if( msDelay ) {                 // *** Temporary ***
+            DEBUG_BREAK();
+        }
+#endif
+        if (this->pReflectMsg && this->fReflect) {
+            (*this->pReflectMsg)(this->pReflectData, msDelay, pMsg);
+        }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                       T o  S t r i n g
     //---------------------------------------------------------------
     
@@ -641,9 +699,8 @@ extern "C" {
         j = snprintf(
                      str,
                      sizeof(str),
-                     "{%p(j1939Can) size=%d\n",
-                     this,
-                     j1939Can_getSize(this)
+                     "{%p(j1939Can)\n",
+                     this
             );
         AStr_AppendA(pStr, str);
 

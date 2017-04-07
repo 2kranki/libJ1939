@@ -25,7 +25,8 @@
  *
  *
  * Remarks
- *	1.			None
+ *	1.			This object does not claim its name. It just assumes that it
+ *              has it.
  * References
  *		"J1939-21 Data Link Layer", SAE, DEC 2006
  */
@@ -80,7 +81,7 @@ extern	"C" {
     //* * * * * * * * * * * *  Data Definitions  * * * * * * * * * * *
     //****************************************************************
     
-    //typedef struct j1939en_data_s	J1939EN_DATA;     // Inherits from OBJ.
+    //typedef struct j1939en_data_s	J1939EN_DATA;     // Inherits from J1939CA.
     //          defined in j1939_defs.h
     
     typedef struct j1939en_vtbl_s	{

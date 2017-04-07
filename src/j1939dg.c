@@ -99,6 +99,15 @@ extern	"C" {
     * * * * * * * * * * *  Internal Subroutines * * * * * * * * * * *
     ****************************************************************/
 
+#ifdef NDEBUG
+#else
+    static
+    bool            j1939dg_Validate(
+        J1939DG_DATA      *cbp
+    );
+#endif
+    
+    
 
 
 
@@ -414,8 +423,8 @@ extern	"C" {
 
     J1939DG_DATA *	j1939dg_Init(
         J1939DG_DATA    *this,
-        OBJ_ID          *pCAN,
-        OBJ_ID          *pSYS,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
@@ -493,7 +502,6 @@ extern	"C" {
         J1939DG_DATA	*this
     )
     {
-        J1939_MSG       msg;
         uint32_t        dlc = 8;
         uint8_t         data[8] = {0};
         J1939_PDU       pdu = {0};
@@ -518,9 +526,7 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
 
-        fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
-
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &msg);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
         this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
 
         // Return to caller.
@@ -539,7 +545,6 @@ extern	"C" {
         J1939DG_DATA	*this
     )
     {
-        J1939_MSG       msg;
         uint32_t        dlc = 19;
         uint8_t         data[19] = {0};
         J1939_PDU       pdu = {0};
@@ -564,9 +569,7 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
 
-        //FIXME: We need to implement 21 Data Link Layer!
-        fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, 8, &msg);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
         this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
 
         // Return to caller.

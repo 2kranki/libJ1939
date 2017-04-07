@@ -227,6 +227,7 @@ bool            xmtPGN60928(
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
+    j1939_SharedReset( );
 
     mem_Dump( );
 }

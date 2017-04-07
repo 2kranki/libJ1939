@@ -59,6 +59,11 @@
 
 
 
+static
+J1939CAN_DATA   *pCAN = OBJ_NIL;
+
+
+
 @interface j1939dgTests : XCTestCase
 
 @end
@@ -73,6 +78,8 @@
     // test method in the class.
     
     mem_Init( );
+    pSYS = j1939Sys_New();
+    pCAN = j1939Can_New();
     
 }
 
@@ -83,6 +90,12 @@
     // test method in the class.
     [super tearDown];
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
+    j1939_SharedReset( );
+    
     mem_Dump( );
 }
 
@@ -90,33 +103,31 @@
 
 - (void)testOpenClose_1_0
 {
-    J1939SYS_DATA   *pSYS = j1939Sys_New();
-    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939DG_DATA    *pDG = NULL;
+    //J1939_MSG       msg;
+    J1939_PDU       pdu;
+    bool            fRc;
 
     pDG = j1939dg_Alloc();
     XCTAssertFalse( (NULL == pDG), @"Could not alloc pDG" );
     pDG = j1939dg_Init(
                        pDG,
-                       NULL,            // pJ1939 - 
-                       xmtHandler,      // pXmtMsg
-                       0,            // pXmtData
+                       pCAN,
+                       pSYS,
                        0,
+                       512,
                        0
             );
     XCTAssertFalse( (NULL == pDG), @"Could not init pDG" );
     if (pDG) {
 
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        
         obj_Release(pDG);
         pDG = NULL;
     }
 
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
-    j1939_SharedReset( );
-    
 }
 
 

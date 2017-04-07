@@ -94,6 +94,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
+    j1939_SharedReset( );
     
     mem_Dump( );
 }

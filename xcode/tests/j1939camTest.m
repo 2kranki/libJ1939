@@ -62,6 +62,12 @@
 #include    "common.h"
 
 
+static
+J1939CAN_DATA   *pCAN = OBJ_NIL;
+
+
+
+
 @interface j1939camTests : XCTestCase
 
 @end
@@ -76,6 +82,8 @@
     // test method in the class.
     
     mem_Init( );
+    pSYS = j1939Sys_New();
+    pCAN = j1939Can_New();
     
 }
 
@@ -86,6 +94,12 @@
     // test method in the class.
     [super tearDown];
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
+    j1939_SharedReset( );
+
     mem_Dump( );
 }
 
@@ -119,8 +133,6 @@
 
 - (void)testTimedMessages
 {
-    J1939SYS_DATA   *pSYS = NULL;
-    J1939CAN_DATA   *pCAN = NULL;
     J1939CAM_DATA   *pCAM = NULL;
     J1939EN_DATA    *pEN = NULL;
     J1939ER_DATA    *pER = NULL;

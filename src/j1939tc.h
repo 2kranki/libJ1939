@@ -57,7 +57,8 @@
  *                  Requirements for Eaton Automated Transmissions.
  *
  * Remarks
- *	1.			None
+ *	1.			This object does not claim its name. It just assumes that it
+ *              has it.
  * References
  *		"J1939-21 Data Link Layer", SAE, DEC 2006
  */

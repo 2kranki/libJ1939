@@ -185,8 +185,8 @@ extern	"C" {
         J1939_DATA      *pJ1939,
         P_XMTMSG_RTN    pReflectMsg,
         OBJ_ID          *pReflectData,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          *pXmtData,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)
@@ -208,11 +208,10 @@ extern	"C" {
                 return OBJ_NIL;
             }
         }
-        BREAK_NULL(pXmtMsg);
 #endif
         
         pCAM = j1939cam_Alloc();
-        pCAM = j1939cam_Init( pCAM, pJ1939, pXmtMsg, pXmtData );
+        pCAM = j1939cam_Init( pCAM, pJ1939, pCAN, pSYS );
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
@@ -262,8 +261,8 @@ extern	"C" {
         J1939_DATA      *pJ1939,
         P_XMTMSG_RTN    pReflectMsg,
         OBJ_ID          *pReflectData,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          *pXmtData,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)
@@ -280,11 +279,10 @@ extern	"C" {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
-        BREAK_NULL(pXmtMsg);
 #endif
         
         pCAM = j1939cam_Alloc();
-        pCAM = j1939cam_Init( pCAM, pJ1939, pXmtMsg, pXmtData );
+        pCAM = j1939cam_Init( pCAM, pJ1939, pCAN, pSYS );
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
@@ -296,8 +294,8 @@ extern	"C" {
         pTC =   j1939tc_Init(
                              pTC,
                              pCAM,
-                             j1939cam_TransmitDelayedMsg,
-                             pCAM,
+                             pCAM->pCAN,
+                             pCAM->pSYS,
                              spn2837,
                              spn2838,
                              spn2846
@@ -355,7 +353,7 @@ extern	"C" {
     //                          C A N
     //---------------------------------------------------------------
     
-    J1939_CAN_VTBL * j1939cam_getCAN(
+    OBJ_ID          j1939cam_getCAN(
         J1939CAM_DATA	*this
     )
     {
@@ -376,7 +374,7 @@ extern	"C" {
     
     bool            j1939cam_setCAN(
         J1939CAM_DATA	*this,
-        J1939_CAN_VTBL  *pValue
+        OBJ_ID          pValue
     )
     {
         
@@ -514,7 +512,7 @@ extern	"C" {
     //                          S Y S
     //---------------------------------------------------------------
     
-    J1939_SYS_VTBL * j1939cam_getSYS(
+    OBJ_ID          j1939cam_getSYS(
         J1939CAM_DATA	*this
     )
     {
@@ -535,7 +533,7 @@ extern	"C" {
     
     bool            j1939cam_setSYS(
         J1939CAM_DATA	*this,
-        J1939_SYS_VTBL  *pValue
+        OBJ_ID          pValue
     )
     {
         
@@ -560,30 +558,6 @@ extern	"C" {
     
     
     
-    bool			j1939cam_setXmtMsg(
-        J1939CAM_DATA	*this,
-        P_XMTMSG_RTN    pRoutine,
-        void            *pData
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939cam_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        this->pXmtMsg  = pRoutine;
-        this->pXmtData = pData;
-        
-        return true;
-    }
-
-
-
 
 
     //===============================================================
@@ -805,8 +779,8 @@ extern	"C" {
     J1939CAM_DATA *	j1939cam_Init(
         J1939CAM_DATA   *this,
         J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_ID          pXmtData
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS
     )
     {
         uint16_t		cbSize = sizeof(J1939CAM_DATA);
@@ -822,7 +796,8 @@ extern	"C" {
         }
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939cam_Vtbl);
         
-        j1939cam_setXmtMsg(this, pXmtMsg, pXmtData);
+        j1939cam_setCAN(this, pCAN);
+        j1939cam_setSYS(this, pSYS);
         
         this->pJ1939   = pJ1939;
         this->fReflectMsg = true;
@@ -842,6 +817,10 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //              T r a n s m i t  D e l a y e d  M s g
+    //---------------------------------------------------------------
+    
     bool            j1939cam_TransmitDelayedMsg(
         void            *pData,
         uint32_t        msDelay,
@@ -855,8 +834,12 @@ extern	"C" {
             fRc = (*this->pReflectMsg)(this->pReflectData,msDelay,pMsg);
             fRc = true;
         }
-        if( this->pXmtMsg ) {
-            fRc = (*this->pXmtMsg)(this->pXmtData,msDelay,pMsg);
+        if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+            fRc =   (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                        this->pCAN,
+                                                        msDelay,
+                                                        pMsg
+                    );
         }
         
         // Return to caller.
