@@ -1020,7 +1020,7 @@ extern	"C" {
         }
         
         // Create the ECU.
-        // Note: Setup() establishes the pXmtMsg from the Xmt Fifo.
+        // Note: Setup() establishes the pXmtMsg from the CAN Xmt Fifo.
         pCAM =  j1939cam_NewEngine(
                             pJ1939,
                             NULL,
@@ -1090,8 +1090,8 @@ extern	"C" {
         // Create the TCU.
         pCAM =  j1939cam_NewTransmission(
                                     pJ1939,
-                                    NULL,
-                                    NULL,
+                                    NULL,               // Reflect Msg routine
+                                    NULL,               // Reflect Msg Object
                                     pJ1939->pXmtMsg,
                                     pJ1939->pXmtData,
                                     pJ1939->spn2837,
@@ -1718,24 +1718,20 @@ extern	"C" {
             return true;
         }
         
-#ifdef XYZZY
-        if (this->pBase) {
-            fRc = canbase_Enable(this->pBase);
-            canbase_setTimestamp(this->pBase, true);
-        }
-#endif
         obj_Enable(this);
         
-        this->pCAM = j1939cam_Alloc();
-        this->pCAM = j1939cam_Init( this->pCAM, this, this->pXmtMsg, this->pXmtData );
         if (OBJ_NIL == this->pCAM) {
-            DEBUG_BREAK();
-            obj_Release(this);
-            return OBJ_NIL;
+            this->pCAM = j1939cam_Alloc();
+            this->pCAM = j1939cam_Init( this->pCAM, this, this->pXmtMsg, this->pXmtData );
+            if (OBJ_NIL == this->pCAM) {
+                DEBUG_BREAK();
+                obj_Release(this);
+                return OBJ_NIL;
+            }
         }
         
         // Return to caller.
-        return( fRc );
+        return fRc;
     }
     
     
@@ -1746,7 +1742,7 @@ extern	"C" {
     //---------------------------------------------------------------
     
     bool            j1939_HandleMessages(
-        J1939_DATA      *cbp,
+        J1939_DATA      *this,
         uint32_t        eid,
         J1939_MSG       *pMsg           // if NULL, receive timed out
     )
@@ -1758,22 +1754,22 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939_Validate( cbp ) ) {
+        if( !j1939_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
         
         // Broadcast the message to everyone.
-        for (i=0; i<cbp->cResponders; ++i) {
-            pResponder = cbp->pResponders[i];
+        for (i=0; i<this->cResponders; ++i) {
+            pResponder = this->pResponders[i];
             if (pResponder) {
-                fRc = (*pResponder)( cbp->pRespondersData[i], eid, pMsg );
+                fRc = (*pResponder)( this->pRespondersData[i], eid, pMsg );
             }
         }
         
         // Return to caller.
-        return false;
+        return true;
     }
     
     

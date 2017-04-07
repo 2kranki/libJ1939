@@ -153,18 +153,28 @@ extern	"C" {
     );
     
         
+    J1939CA_DATA *	j1939ca_New(
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint8_t         spn2846         // J1939 Industry Group (3 bits)
+    );
+    
+    
+    
     
     //---------------------------------------------------------------
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    J1939_CAN_VTBL * j1939ca_getCAN(
+    OBJ_ID          j1939ca_getCAN(
         J1939CA_DATA	*this
     );
     
     bool            j1939ca_setCAN(
         J1939CA_DATA	*this,
-        J1939_CAN_VTBL  *pValue
+        OBJ_ID          pValue
     );
     
     
@@ -183,13 +193,13 @@ extern	"C" {
     );
     
     
-    J1939_SYS_VTBL * j1939ca_getSYS(
+    OBJ_ID          j1939ca_getSYS(
         J1939CA_DATA	*this
     );
     
     bool            j1939ca_setSYS(
         J1939CA_DATA	*this,
-        J1939_SYS_VTBL  *pValue
+        OBJ_ID          pValue
     );
     
     
@@ -241,8 +251,8 @@ extern	"C" {
     // area and sets up the control portion of the j1939ca.
     J1939CA_DATA *	j1939ca_Init(
         J1939CA_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_PTR         pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 NAME Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 NAME Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 NAME Industry Group (3 bits)
@@ -276,6 +286,15 @@ extern	"C" {
         J1939CA_DATA	*this,
         J1939_PGN       pgn,                // PGN being requested
         uint8_t         da                  // Destination Address
+    );
+    
+    
+    bool            j1939ca_XmtMsgDL(
+        J1939CA_DATA	*this,
+        uint32_t        msDelay,
+        J1939_PDU       pdu,
+        uint16_t        cData,
+        void            *pData
     );
     
     

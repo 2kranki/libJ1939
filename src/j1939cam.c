@@ -793,7 +793,7 @@ extern	"C" {
         }
         
         // Return to caller.
-        return false;
+        return true;
     }
 
     

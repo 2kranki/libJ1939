@@ -81,10 +81,7 @@ extern "C" {
         // method names to the vtbl definition in j1939Can_object.c.
         // Properties:
         // Methods:
-        P_SRVCMSG_RTN   *pSvc;
         P_XMTMSG_RTN    *pXmt;
-        bool            (*pSetLoopBackMode)(OBJ_ID);
-        bool            (*pSetNormalMode)(OBJ_ID);
     } J1939CAN_VTBL;
 
 
@@ -105,12 +102,10 @@ extern "C" {
      @return:   pointer to j1939Can object if successful, otherwise OBJ_NIL.
      */
     J1939CAN_DATA *     j1939Can_Alloc(
-        uint16_t    stackSize           // Stack Size in Words
     );
     
     
     J1939CAN_DATA *     j1939Can_New(
-        uint16_t    stackSize           // Stack Size in Words
     );
     
     
@@ -119,11 +114,18 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939Can_getLastError(
-        J1939CAN_DATA		*this
+    ERESULT         j1939Can_getLastError(
+        J1939CAN_DATA	*this
     );
 
 
+    bool            j1939Can_setXmtMsg(
+        J1939CAN_DATA	*this,
+        P_XMTMSG_RTN    pRoutine,
+        void            *pData
+    );
+    
+    
 
     
     //---------------------------------------------------------------
@@ -131,22 +133,22 @@ extern "C" {
     //---------------------------------------------------------------
 
     ERESULT     j1939Can_Disable(
-        J1939CAN_DATA		*this
+        J1939CAN_DATA	*this
     );
 
 
     ERESULT     j1939Can_Enable(
-        J1939CAN_DATA		*this
+        J1939CAN_DATA	*this
     );
 
    
-    J1939CAN_DATA *   j1939Can_Init(
-        J1939CAN_DATA     *this
+    J1939CAN_DATA * j1939Can_Init(
+        J1939CAN_DATA   *this
     );
 
 
     ERESULT     j1939Can_IsEnabled(
-        J1939CAN_DATA		*this
+        J1939CAN_DATA	*this
     );
     
  
@@ -163,7 +165,7 @@ extern "C" {
      @warning: Remember to release the returned AStr object.
      */
     ASTR_DATA *    j1939Can_ToDebugString(
-        J1939CAN_DATA     *this,
+        J1939CAN_DATA   *this,
         int             indent
     );
     

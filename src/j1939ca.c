@@ -196,18 +196,43 @@ extern	"C" {
     J1939CA_DATA * j1939ca_Alloc(
     )
     {
-        J1939CA_DATA   *cbp;
+        J1939CA_DATA   *this;
         
         // Do initialization.
         
-        cbp = obj_Alloc( sizeof(J1939CA_DATA) );
+        this = obj_Alloc( sizeof(J1939CA_DATA) );
         
         // Return to caller.
-        return( cbp );
+        return this;
     }
     
     
         
+    J1939CA_DATA *	j1939ca_New(
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint8_t         spn2846         // J1939 Industry Group (3 bits)
+    )
+    {
+        J1939CA_DATA   *this;
+        
+        // Do initialization.
+        
+        this = j1939ca_Alloc( );
+        if (this) {
+            this = j1939ca_New(pCAN, pSYS, spn2837, spn2838, spn2846);
+        }
+        
+        // Return to caller.
+        return this;
+    }
+
+    
+    
+    
+    
     
     //===============================================================
     //                      *** Properties ***
@@ -217,7 +242,7 @@ extern	"C" {
     //                          C A N
     //---------------------------------------------------------------
     
-    J1939_CAN_VTBL * j1939ca_getCAN(
+    OBJ_ID          j1939ca_getCAN(
         J1939CA_DATA	*this
     )
     {
@@ -238,7 +263,7 @@ extern	"C" {
     
     bool            j1939ca_setCAN(
         J1939CA_DATA	*this,
-        J1939_CAN_VTBL  *pValue
+        OBJ_ID          pValue
     )
     {
         
@@ -357,7 +382,7 @@ extern	"C" {
     //                          S Y S
     //---------------------------------------------------------------
     
-    J1939_SYS_VTBL * j1939ca_getSYS(
+    OBJ_ID          j1939ca_getSYS(
         J1939CA_DATA	*this
     )
     {
@@ -378,7 +403,7 @@ extern	"C" {
     
     bool            j1939ca_setSYS(
         J1939CA_DATA	*this,
-        J1939_SYS_VTBL  *pValue
+        OBJ_ID          pValue
     )
     {
         
@@ -462,8 +487,8 @@ extern	"C" {
         }
 #endif
         
-        cbp->pXmtMsg  = pRoutine;
-        cbp->pXmtData = pData;
+        //cbp->pXmtMsg  = pRoutine;
+        //cbp->pXmtData = pData;
         
         return true;
     }
@@ -508,15 +533,25 @@ extern	"C" {
         OBJ_ID          objId
     )
     {
-        J1939CA_DATA	*cbp = objId;
+        J1939CA_DATA	*this = objId;
         
         // Do initialization.
-        if( NULL == cbp ) {
+        if( NULL == this ) {
             return;
         }
         
-        obj_Dealloc( cbp );
-        cbp = NULL;
+        if (this->pCAN) {
+            obj_Release(this->pCAN);
+            this->pCAN = OBJ_NIL;
+        }
+        
+        if (this->pSYS) {
+            obj_Release(this->pSYS);
+            this->pSYS = OBJ_NIL;
+        }
+        
+        obj_Dealloc(this);
+        this = NULL;
         
         // Return to caller.
     }
@@ -768,7 +803,7 @@ extern	"C" {
         }
         
         // Return to caller.
-        return false;
+        return true;
     }
     
     
@@ -811,8 +846,8 @@ extern	"C" {
     claimAddress:
                 // Send Claim Address msg.
                 fRc = j1939ca_TransmitPgn60928(this);
-                if (this->pSYS && this->pSYS->pGetTimeMS) {
-                    this->startTime = this->pSYS->pGetTimeMS(this->pSYS);
+                if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+                    this->startTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
                 }
                 this->cs = J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS;
                 break;
@@ -856,8 +891,8 @@ extern	"C" {
                 else {
                     // The clock wraps since it is in ms and only 32 bits.
                     // The following statement should still work.
-                    if (this->pSYS && this->pSYS->pGetTimeMS) {
-                        msTime = this->pSYS->pGetTimeMS(this->pSYS);
+                    if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+                        msTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
                     }
                     if (msTime >= (this->startTime + 250)) {
                         // Timed out, so we should be able to use the address.
@@ -887,8 +922,8 @@ extern	"C" {
                 if (pMsg) {
                     if (60298 == pgn.pgn) {
                         if (pdu.SA == this->ca) {
-                            if (this->pSYS && this->pSYS->pSleepMS) {
-                                msTime = this->pSYS->pSleepMS(this->pSYS, 100);
+                            if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+                                msTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
                             }
                             this->ca = 254;
                             fRc = j1939ca_TransmitPgn60928(this);
@@ -903,7 +938,7 @@ extern	"C" {
         }
         
         // Return to caller.
-        return false;
+        return true;
     }
     
     
@@ -914,8 +949,8 @@ extern	"C" {
 
     J1939CA_DATA *	j1939ca_Init(
         J1939CA_DATA    *this,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_PTR         pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
@@ -927,7 +962,6 @@ extern	"C" {
         if (NULL == this) {
             return NULL;
         }
-        BREAK_NULL(pXmtMsg);
         
         this = obj_Init( this, cbSize, OBJ_IDENT_J1939CA );
         if (NULL == this) {
@@ -938,7 +972,8 @@ extern	"C" {
         this->cs = J1939CA_STATE_START;
         this->pHandler = (P_SRVCMSG_RTN)j1939ca_HandleMessages;
         this->fTimedTransmit = true;
-        j1939ca_setXmtMsg(this, pXmtMsg, pXmtData);
+        j1939ca_setCAN(this, pCAN);
+        j1939ca_setSYS(this, pSYS);
         j1939ca_setXmtMsgDL(this, (P_J1939_XMTRTN)j1939ca_XmtMsgDL, this);
         
         this->name.IDN = spn2837;
@@ -988,8 +1023,8 @@ extern	"C" {
         }
 #endif
         
-        if (this->pSYS && this->pSYS->pGetTimeMS) {
-            msTime = this->pSYS->pGetTimeMS(this->pSYS);
+        if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+            msTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
         }
         
         // Return to caller.
@@ -1084,8 +1119,8 @@ extern	"C" {
         if ((pPgnEntry->pDef->msFreq) && pPgnEntry->xmtTimeoutOff) {
             uint32_t        msTime = 0;
             BREAK_NOT_BOUNDARY4(pPgnEntry->xmtTimeoutOff);
-            if (this->pSYS && this->pSYS->pGetTimeMS) {
-                msTime = this->pSYS->pGetTimeMS(this->pSYS);
+            if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+                msTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
             }
             *((uint32_t *)((uint8_t *)this)+pPgnEntry->xmtTimeoutOff) = msTime;
         }
@@ -1202,19 +1237,6 @@ extern	"C" {
     {
         J1939_NAME      *pName = (J1939_NAME *)pData;
         
-        // Example for ON-ROAD Vehicle - Cummins - 10 (mc), Identity - 1 (in)
-        /*      vvvv
-         *  iii ssss vvvv vvv            ffff feee mmmm mmmm mmmi iiii iiii iiii iiii iiii
-         * aggg iiii ssss sssr ffff ffff iiii iiii cccc cccc cccn nnnn nnnn nnnn nnnn nnnn
-         * 0001 0000 0000 0010 0000 0000 0000 0000 0000 0001 0100 0000 0000 0000 0000 0001
-         *
-         * Remember to reverse order:
-         *                                                                       vvvv
-         * iiii iiii iiii iiii iiii immm mmmm mmmm eeef ffff            vvv vvvv ssss iii
-         * nnnn nnnn nnnn nnnn nnnn nccc cccc cccc iiii iiii ffff ffff rsss ssss iiii ggga
-         * 1000 0000 0000 0000 0000 0010 1000 0000 0000 0000 0000 0000 0100 0000 0000 1000
-         */
-        
         if (pData) {
             pName->w0 = this->name.w0;
             pName->w1 = this->name.w1;
@@ -1290,9 +1312,16 @@ extern	"C" {
         
         if (cData < 9) {
             fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, cData, pData);
-            if (this->pXmtMsg) {
-                fRc = (*this->pXmtMsg)(this->pXmtData, msDelay, &msg);
+            if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+                fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                            this->pCAN,
+                                                            msDelay,
+                                                            &msg
+                                            );
             }
+            //if (this->pXmtMsg) {
+                //fRc = (*this->pXmtMsg)(this->pXmtData, msDelay, &msg);
+            //}
         }
         else {
             //TODO: Complete Transport Protocol Transmit side

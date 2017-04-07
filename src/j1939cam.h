@@ -201,6 +201,16 @@ extern	"C" {
     );
     
     
+    /*!
+     Passed messages from a message source such as a CAN FIFO Receive
+     Queue. This routine handles the message either internally or via
+     its responder chain.
+     @param:    this    J1939CAM object pointer
+     @param:    eid     Message EID
+     @param:    pMsg    Message Pointer or NULL
+     @return:   if successful, true otherwise, false
+     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
+     */
     bool            j1939cam_HandleMessages(
         J1939CAM_DATA	*this,
         uint32_t        eid,
@@ -208,8 +218,6 @@ extern	"C" {
     );
     
     
-    // j1939cam_Open calculates the needed buffer size, allocates an
-    // area and sets up the control portion of the j1939cam.
     J1939CAM_DATA *	j1939cam_Init(
         J1939CAM_DATA	*this,
         J1939_DATA      *pJ1939,
@@ -218,6 +226,15 @@ extern	"C" {
     );
         
     
+    /*!
+     Transmist the given message reflecting it if necessary. Reflection
+     is used primarily for debugging and is immediate.
+     @param:    this    J1939CAM object pointer
+     @param:    msDelay Message EID
+     @param:    pMsg    Message Pointer or NULL
+     @return:   if successful, true otherwise, false
+     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
+     */
     bool            j1939cam_TransmitDelayedMsg(
         void            *pData,
         uint32_t        msDelay,

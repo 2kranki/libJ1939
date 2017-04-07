@@ -278,28 +278,6 @@ extern	"C" {
 
 
 
-    bool			j1939tc_setSystemTimeGet(
-        J1939TC_DATA	*this,
-        uint32_t        (*pSystemTimeGet)()
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939tc_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        this->pSystemTimeGet = pSystemTimeGet;
-        
-        return true;
-    }
-    
-    
-    
 
 
     //===============================================================
@@ -421,7 +399,7 @@ extern	"C" {
                 goto exit00;
             }
             if ((2 == spn695) || (3 == spn695)) {
-                cbp->timeOut = tn_sys_time_get() + 150;
+                cbp->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
                 if (cbp->fActive) {
                     // Just update time
                 }
@@ -435,7 +413,7 @@ extern	"C" {
             }
         }
         else {
-            if ( cbp->fActive && (cbp->timeOut <= tn_sys_time_get()) ) {
+            if ( cbp->fActive && (cbp->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
                 cbp->fActive = false;
                 cbp->timeOut = 0;
                 cbp->spn1480 = 255;
@@ -498,7 +476,7 @@ extern	"C" {
                 goto exit00;
             }
             if ((2 == type) || (3 == type)) {
-                this->timeOut = this->pSystemTimeGet() + 150;
+                this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
                 if (this->fActive) {
                     // Just update time
                 }
@@ -512,7 +490,7 @@ extern	"C" {
             }
         }
         else {
-            if ( this->fActive && (this->timeOut <= this->pSystemTimeGet()) ) {
+            if ( this->fActive && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
                 this->fActive = false;
                 this->timeOut = 0;
                 this->spn1482 = 255;
@@ -577,7 +555,7 @@ extern	"C" {
             return false;
         }
 #endif
-        curTime = this->pSystemTimeGet();
+        curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         if (j1939ca_getTimedTransmits((J1939CA_DATA *)this)) {
             if ((curTime - this->startTime61442) >= 10) {
@@ -610,8 +588,8 @@ extern	"C" {
     J1939TC_DATA *	j1939tc_Init(
         J1939TC_DATA    *this,
         J1939CAM_DATA   *pCAM,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
@@ -626,12 +604,11 @@ extern	"C" {
 #ifdef NDEBUG
 #else
 #endif
-        BREAK_NULL(pXmtMsg);
 
         this =   (J1939TC_DATA *)j1939ca_Init(
                         (J1939CA_DATA *)this,
-                        pXmtMsg,
-                        pXmtData,
+                        pCAN,
+                        pSYS,
                         spn2837,        // J1939 Identity Number (21 bits)
                         spn2838,        // J1939 Manufacturer Code (11 bits)
                         spn2846         // J1939 Industry Group (3 bits)

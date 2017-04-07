@@ -162,8 +162,8 @@ extern	"C" {
     // Warning - See J1939CAM, but this function may not change.
     J1939ER_DATA *	j1939er_Init(
         J1939ER_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)

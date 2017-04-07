@@ -80,21 +80,15 @@ extern "C" {
     //                      *** Class Methods ***
     //===============================================================
 
-    J1939CAN_DATA *     j1939Can_Alloc(
-        uint16_t        stackSize
+    J1939CAN_DATA * j1939Can_Alloc(
     )
     {
-        J1939CAN_DATA       *this;
+        J1939CAN_DATA   *this;
         uint32_t        cbSize = sizeof(J1939CAN_DATA);
         
         // Do initialization.
         
-        if (0 == stackSize) {
-            stackSize = 256;
-        }
-        cbSize += stackSize << 2;
         this = obj_Alloc( cbSize );
-        obj_setMisc1(this, stackSize);
         
         // Return to caller.
         return this;
@@ -103,12 +97,11 @@ extern "C" {
 
 
     J1939CAN_DATA *     j1939Can_New(
-        uint16_t        stackSize
     )
     {
         J1939CAN_DATA       *this;
         
-        this = j1939Can_Alloc(stackSize);
+        this = j1939Can_Alloc( );
         if (this) {
             this = j1939Can_Init(this);
         } 
@@ -265,6 +258,30 @@ extern "C" {
     
     
     
+    bool                j1939Can_setXmtMsg(
+        J1939CAN_DATA		*this,
+        P_XMTMSG_RTN        pRoutine,
+        void                *pData
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939Can_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pXmtMsg  = pRoutine;
+        this->pXmtData = pData;
+        
+        return true;
+    }
+    
+    
+
     
 
     //===============================================================
@@ -375,7 +392,7 @@ extern "C" {
         }
 #endif
         
-        pOther = j1939Can_New(obj_getSize(this));
+        pOther = j1939Can_New( );
         if (pOther) {
             eRc = j1939Can_Assign(this, pOther);
             if (ERESULT_HAS_FAILED(eRc)) {
@@ -697,6 +714,38 @@ extern "C" {
     #endif
 
 
+    
+    //---------------------------------------------------------------
+    //              T r a n s m i t  M e s s a g e
+    //---------------------------------------------------------------
+    
+    void            j1939Can_XmtMsg(
+        void            *pObject,
+        uint32_t        msDelay,
+        J1939_MSG       *pMsg
+    )
+    {
+        J1939CAN_DATA	*this = pObject;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939Can_Validate(this) ) {
+            DEBUG_BREAK();
+            return;
+        }
+        if( msDelay ) {                 // *** Temporary ***
+            DEBUG_BREAK();
+        }
+#endif
+        if (this->pXmtMsg) {
+            (*this->pXmtMsg)(this->pXmtData, msDelay, pMsg);
+        }
+        
+        // Return to caller.
+    }
+    
+    
     
     
     

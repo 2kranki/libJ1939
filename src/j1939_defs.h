@@ -287,10 +287,7 @@ extern	"C" {
         // method names to the vtbl definition in lru_object.c.
         // Properties:
         // Methods:
-        P_SRVCMSG_RTN   *pSvc;
         P_XMTMSG_RTN    *pXmt;
-        bool            (*pSetLoopBackMode)(OBJ_ID);
-        bool            (*pSetNormalMode)(OBJ_ID);
     } J1939_CAN_VTBL;
     
 

@@ -66,11 +66,12 @@ struct j1939Can_data_s	{
     uint16_t        reserved;
     ASTR_DATA       *pStr;
 
-    volatile
-    int32_t         numRead;
-    // WARNING - 'elems' must be last element of this structure!
-    uint32_t        elems[0];
-
+    /* XmtMsg() is the routine called to transmit an 8-byte
+     * message. All messages must be sent via this routine.
+     */
+    P_XMTMSG_RTN        pXmtMsg;
+    OBJ_PTR             pXmtData;
+    
 };
 #pragma pack(pop)
 

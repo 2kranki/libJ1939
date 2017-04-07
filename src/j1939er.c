@@ -409,8 +409,8 @@ extern	"C" {
 
     J1939ER_DATA *	j1939er_Init(
         J1939ER_DATA   *this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
@@ -425,12 +425,11 @@ extern	"C" {
 #ifdef NDEBUG
 #else
 #endif
-        BREAK_NULL(pXmtMsg);
 
         this =  (J1939ER_DATA *)j1939ca_Init(
                         (J1939CA_DATA *)this,
-                        pXmtMsg,
-                        pXmtData,
+                        pCAN,
+                        pSYS,
                         spn2837,
                         spn2838,
                         spn2846
@@ -559,8 +558,7 @@ extern	"C" {
 
         fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
 
-        BREAK_NULL(this->super.pXmtMsg);
-        (*this->super.pXmtMsg)(this->super.pXmtData, 0, &msg);
+        j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, sizeof(J1939_MSG), &msg);
         this->startTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -606,8 +604,7 @@ extern	"C" {
 
         //FIXME: We need to implement 21 Data Link Layer!
         fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&data );
-        BREAK_NULL(this->super.pXmtMsg);
-        (*this->super.pXmtMsg)(this->super.pXmtData, 0, &msg);
+        j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, sizeof(J1939_MSG), &msg);
 
         this->startTime65249 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 

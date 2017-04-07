@@ -70,7 +70,6 @@ extern "C" {
          */
         J1939CA_DATA        super;
         J1939CA_VTBL        *pCaVtbl;
-        uint32_t            (*pSystemTimeGet)();
 
         uint32_t            startTime61443;     // Repeat every 50ms
         uint32_t            startTime61444;     // Repeat engine speed dependent

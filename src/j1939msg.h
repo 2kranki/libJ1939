@@ -102,7 +102,7 @@ typedef bool (*P_SRVCMSG_RTN) (
 typedef bool (*P_XMTMSG_RTN) (
             OBJ_PTR     ,                       // Object Ptr
             uint32_t    ,                       // msTime for Delay or Timeout
-                                                // (-1(0xFFFFFFFF) == TN_WAIT_INFINITE)
+                                                // (-1(0xFFFFFFFF) == WAIT_INFINITE)
             J1939_MSG   *
         );
 

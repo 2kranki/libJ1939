@@ -117,12 +117,6 @@ extern	"C" {
     );
     
     
-    bool			j1939en_setSystemTimeGet(
-        J1939EN_DATA	*this,
-        uint32_t        (*pSystemTimeGet)()
-    );
-    
-    
 
     
     //---------------------------------------------------------------
@@ -143,8 +137,8 @@ extern	"C" {
     J1939EN_DATA *	j1939en_Init(
         J1939EN_DATA	*this,
         J1939CAM_DATA   *pCAM,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)

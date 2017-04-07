@@ -261,28 +261,6 @@ extern	"C" {
 
 
 
-    bool			j1939en_setSystemTimeGet(
-        J1939EN_DATA	*this,
-        uint32_t        (*pSystemTimeGet)()
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939en_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        this->pSystemTimeGet = pSystemTimeGet;
-        
-        return true;
-    }
-    
-    
-    
 
 
     //===============================================================
@@ -378,7 +356,7 @@ extern	"C" {
                 goto exit00;
             }
             if ((1 == spn695) || (3 == spn695)) {
-                this->timeOut = this->pSystemTimeGet() + 150;
+                this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
                 if (this->fActive) {
                     // Just update time
                 }
@@ -392,7 +370,7 @@ extern	"C" {
             }
         }
         else {
-            if ( this->fActive && (this->timeOut <= this->pSystemTimeGet()) ) {
+            if ( this->fActive && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
                 this->fActive = false;
                 this->timeOut = 0;
                 this->spn1480 = 255;
@@ -760,7 +738,7 @@ extern	"C" {
             return false;
         }
 #endif
-        curTime = this->pSystemTimeGet();
+        curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         if (j1939ca_getTimedTransmits((J1939CA_DATA *)this)) {
             if ((curTime - this->startTime61443) >= 50) {
@@ -805,8 +783,8 @@ extern	"C" {
     J1939EN_DATA *	j1939en_Init(
         J1939EN_DATA    *this,
         J1939CAM_DATA   *pCAM,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pXmtData,
+        OBJ_ID          *pCAN,
+        OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint32_t        spn2846         // J1939 Industry Group (3 bits)
@@ -821,12 +799,11 @@ extern	"C" {
 #ifdef NDEBUG
 #else
 #endif
-        BREAK_NULL(pXmtMsg);
 
         this =   (J1939EN_DATA *)j1939ca_Init(
                         (J1939CA_DATA *)this,
-                        pXmtMsg,
-                        pXmtData,
+                        pCAN,
+                        pSYS,
                         spn2837,        // J1939 Identity Number (21 bits)
                         spn2838,        // J1939 Manufacturer Code (11 bits)
                         spn2846         // J1939 Industry Group (3 bits)
@@ -939,9 +916,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 3;             // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)(this->super.pXmtDataDL, 0, pdu, dlc, &data );
-        this->startTime61443 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime61443 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
@@ -1015,9 +991,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 3;             // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)( this->super.pXmtDataDL, 0, pdu, dlc, &data );
-        this->startTime61444 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime61444 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
@@ -1087,9 +1062,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;         // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)( this->super.pXmtDataDL, 0, pdu, dlc, &data );
-        this->startTime65129 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65129 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
@@ -1162,9 +1136,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;         // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)(this->super.pXmtDataDL, 0, pdu, dlc, &data);
-        this->startTime65247 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
@@ -1234,9 +1207,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;         // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)(this->super.pXmtDataDL, 0, pdu, dlc, &data);
-        this->startTime65262 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65262 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
@@ -1340,9 +1312,8 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;         // Priority
 
-        BREAK_NULL(this->super.pXmtMsgDL);
-        fRc = (*this->super.pXmtMsgDL)(this->super.pXmtDataDL, 0, pdu, dlc, &data);
-        this->startTime65265 = this->pSystemTimeGet();
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65265 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return true;
