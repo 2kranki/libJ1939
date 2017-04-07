@@ -81,12 +81,16 @@ extern "C" {
         OBJ_DATA            super;
         OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
+        J1939_SYS_VTBL      *pSYS;
+        J1939_CAN_VTBL      *pCAN;
+        
         P_HANDLE_TIMED_TRANSMITS
                             pTimedTransmit;
         uint8_t             fTimedTransmit;
         uint8_t             rsvd8[3];
         
-        P_SRVCMSG_RTN       pHandler;
+        P_SRVCMSG_RTN       pHandler;           // CAM needs this
+        
         /* XmtMsg() is the routine called to transmit an 8-byte
          * message. All messages must be sent via this routine.
          */
@@ -95,7 +99,6 @@ extern "C" {
         P_J1939_XMTRTN      pXmtMsgDL;
         OBJ_PTR             pXmtDataDL;
         
-        J1939_SYS_VTBL      *pSys;
         uint32_t            startTime;
         
         uint8_t             ca;             // Claimed Address

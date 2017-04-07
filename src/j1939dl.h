@@ -108,6 +108,16 @@ extern	"C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
+    J1939_CAN_VTBL * j1939dl_getCAN(
+        J1939DL_DATA	*this
+    );
+    
+    bool            j1939dl_setCAN(
+        J1939DL_DATA	*this,
+        J1939_CAN_VTBL  *pValue
+    );
+    
+    
     uint8_t         j1939dl_getClaimedAddress(
         J1939DL_DATA	*this
     );
@@ -142,6 +152,16 @@ extern	"C" {
         J1939DL_DATA	*this,
         void            (*receivePacket)(void *, void *),
         void            *pData
+    );
+    
+    
+    J1939_SYS_VTBL * j1939dl_getSYS(
+        J1939DL_DATA	*this
+    );
+    
+    bool            j1939dl_setSYS(
+        J1939DL_DATA	*this,
+        J1939_SYS_VTBL  *pValue
     );
     
     

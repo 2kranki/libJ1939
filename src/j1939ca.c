@@ -214,6 +214,56 @@ extern	"C" {
     //===============================================================
 
     //---------------------------------------------------------------
+    //                          C A N
+    //---------------------------------------------------------------
+    
+    J1939_CAN_VTBL * j1939ca_getCAN(
+        J1939CA_DATA	*this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        // Return to caller.
+        return  this->pCAN;
+    }
+    
+    
+    bool            j1939ca_setCAN(
+        J1939CA_DATA	*this,
+        J1939_CAN_VTBL  *pValue
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        obj_Retain(pValue);         // This is our object.
+        if (this->pCAN) {
+            obj_Release(this->pCAN);
+        }
+        this->pCAN = pValue;
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                  C l a i m e d  A d d r e s s
     //---------------------------------------------------------------
     
@@ -257,25 +307,33 @@ extern	"C" {
     
     
     
+    //---------------------------------------------------------------
+    //                          H a n d l e r
+    //---------------------------------------------------------------
+    
     P_SRVCMSG_RTN   j1939ca_getHandler(
-        J1939CA_DATA	*this
+        J1939CA_DATA	*cbp
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate(this) ) {
+        if( !j1939ca_Validate( cbp ) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
         
-        return this->pHandler;
+        return cbp->pHandler;
     }
     
     
-
+    
+    //---------------------------------------------------------------
+    //                            N a m e
+    //---------------------------------------------------------------
+    
     J1939_NAME *    j1939ca_getName(
         J1939CA_DATA	*this
     )
@@ -296,34 +354,35 @@ extern	"C" {
     
     
     //---------------------------------------------------------------
-    //            S y s t e m  S u p p o r t  O b j e c t
+    //                          S Y S
     //---------------------------------------------------------------
     
-    OBJ_ID          j1939ca_getSystemSupport(
+    J1939_SYS_VTBL * j1939ca_getSYS(
         J1939CA_DATA	*this
     )
     {
         
-        // Do initialization.
+        // Validate the input parameters.
 #ifdef NDEBUG
 #else
         if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
-            return OBJ_NIL;
+            return 0;
         }
 #endif
         
-        return this->pSys;
+        // Return to caller.
+        return  this->pSYS;
     }
     
     
-    bool			j1939ca_setSystemSupport(
+    bool            j1939ca_setSYS(
         J1939CA_DATA	*this,
-        OBJ_ID          pValue
+        J1939_SYS_VTBL  *pValue
     )
     {
         
-        // Do initialization.
+        // Validate the input parameters.
 #ifdef NDEBUG
 #else
         if( !j1939ca_Validate(this) ) {
@@ -332,13 +391,13 @@ extern	"C" {
         }
 #endif
         
-        obj_Retain(pValue);
-        if (this->pSys) {
-            obj_Release(this->pSys);
-            //this->pSys = OBJ_NIL;
+        obj_Retain(pValue);         // This is our object.
+        if (this->pSYS) {
+            obj_Release(this->pSYS);
         }
-        this->pSys = pValue;
+        this->pSYS = pValue;
         
+        // Return to caller.
         return true;
     }
     
@@ -752,8 +811,8 @@ extern	"C" {
     claimAddress:
                 // Send Claim Address msg.
                 fRc = j1939ca_TransmitPgn60928(this);
-                if (this->pSys) {
-                    this->startTime = this->pSys->pGetTimeMS(this->pSys);
+                if (this->pSYS && this->pSYS->pGetTimeMS) {
+                    this->startTime = this->pSYS->pGetTimeMS(this->pSYS);
                 }
                 this->cs = J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS;
                 break;
@@ -797,8 +856,8 @@ extern	"C" {
                 else {
                     // The clock wraps since it is in ms and only 32 bits.
                     // The following statement should still work.
-                    if (this->pSys) {
-                        msTime = this->pSys->pGetTimeMS(this->pSys);
+                    if (this->pSYS && this->pSYS->pGetTimeMS) {
+                        msTime = this->pSYS->pGetTimeMS(this->pSYS);
                     }
                     if (msTime >= (this->startTime + 250)) {
                         // Timed out, so we should be able to use the address.
@@ -828,8 +887,8 @@ extern	"C" {
                 if (pMsg) {
                     if (60298 == pgn.pgn) {
                         if (pdu.SA == this->ca) {
-                            if (this->pSys) {
-                                this->pSys->pSleepMS(this->pSys, 100);
+                            if (this->pSYS && this->pSYS->pSleepMS) {
+                                msTime = this->pSYS->pSleepMS(this->pSYS, 100);
                             }
                             this->ca = 254;
                             fRc = j1939ca_TransmitPgn60928(this);
@@ -929,8 +988,8 @@ extern	"C" {
         }
 #endif
         
-        if (this->pSys) {
-            msTime = this->pSys->pGetTimeMS(this->pSys);
+        if (this->pSYS && this->pSYS->pGetTimeMS) {
+            msTime = this->pSYS->pGetTimeMS(this->pSYS);
         }
         
         // Return to caller.
@@ -1025,8 +1084,8 @@ extern	"C" {
         if ((pPgnEntry->pDef->msFreq) && pPgnEntry->xmtTimeoutOff) {
             uint32_t        msTime = 0;
             BREAK_NOT_BOUNDARY4(pPgnEntry->xmtTimeoutOff);
-            if (this->pSys) {
-                msTime = this->pSys->pGetTimeMS(this->pSys);
+            if (this->pSYS && this->pSYS->pGetTimeMS) {
+                msTime = this->pSYS->pGetTimeMS(this->pSYS);
             }
             *((uint32_t *)((uint8_t *)this)+pPgnEntry->xmtTimeoutOff) = msTime;
         }

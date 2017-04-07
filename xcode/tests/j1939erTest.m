@@ -32,6 +32,8 @@
 #include    <j1939.h>
 #include    "j1939er_internal.h"
 #include    "common.h"              // Tests Common Routines
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 
 
 // All code under test must be linked into the Unit Test bundle
@@ -90,9 +92,12 @@
 
 - (void)testOpenClose_1_0
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pER = NULL;
 
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
+
     pER = j1939er_Alloc();
     XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
     pER = j1939er_Init(
@@ -111,19 +116,25 @@
         pER = NULL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestNameDirect
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
@@ -142,7 +153,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
 
@@ -158,33 +169,39 @@
         data[0] = 0x00;
         data[1] = 0xEE;
         data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18EEFF29 == pdu.eid), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
 
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestBadNameDirect
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
@@ -203,7 +220,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
@@ -219,33 +236,39 @@
         data[0] = 0x00;
         data[1] = 0x23;         // Not Sure what this is! lol
         data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18E80329 == pdu.eid), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestBadNameGlobal
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -264,7 +287,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
@@ -280,32 +303,38 @@
         data[0] = 0x00;
         data[1] = 0x23;         // Not Sure what this is! lol
         data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
         // It will not nak since we asked globablly.
         XCTAssertTrue( (3 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestIRC1Direct
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -324,7 +353,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
@@ -340,31 +369,37 @@
         data[0] = 0;                // IRC1 PGN
         data[1] = 240;
         data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_TimedIRC1
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
     J1939_PDU       pdu;
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -383,37 +418,43 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
         for (int i=0; i<200; ++i) {
-            timeBump(NULL,10);
+            j1939Sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, 0, NULL );
         }        
 
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_TSC1_Direct_Clean
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er) );
@@ -432,7 +473,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
@@ -448,7 +489,7 @@
         data[0] = 2;                // Brake
         //data[1] = 240;
         //data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
@@ -456,7 +497,7 @@
         XCTAssertTrue( (3 == pJ1939er->spn1480), @"" );
 
         for (int i=0; i<100; ++i) {
-            timeBump(NULL,10);
+            j1939Sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, 0, NULL );
         }
         
@@ -472,7 +513,7 @@
         data[0] = 0;                // Disable Brake
         //data[1] = 240;
         //data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
@@ -482,28 +523,34 @@
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (5 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x0C002903 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_TSC1_Direct_Timeout
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939ER_DATA    *pJ1939er = NULL;
     bool            fRc;
-    CAN_MSG         msg;
+    J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
 
     pJ1939er = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939er), @"Could not alloc J1939CA" );
@@ -522,7 +569,7 @@
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         // Send "Timed Out".
-        timeBump(NULL,250);
+        j1939Sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandlePgn60928((J1939CA_DATA *)pJ1939er, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939er->super.cs), @"" );
         
@@ -538,7 +585,7 @@
         data[0] = 2;                // Brake
         //data[1] = 240;
         //data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
@@ -546,11 +593,10 @@
         XCTAssertTrue( (3 == pJ1939er->spn1480), @"" );
         
         for (int i=0; i<200; ++i) {
-            timeBump(NULL,10);
+            j1939Sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, 0, NULL );
         }
         
-#ifdef XYZZY
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
         pdu.SA = 3;
@@ -563,26 +609,29 @@
         data[0] = 0;                // Disable Brake
         //data[1] = 240;
         //data[2] = 0x00;
-        canmsg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
+        j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pJ1939er, pdu.eid, &msg );
-#endif
         XCTAssertTrue( (false == pJ1939er->fActive), @"" );
         XCTAssertTrue( (255 == pJ1939er->spn1480), @"" );
         
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (5 == cCurMsg), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = canmsg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pJ1939er);
         pJ1939er = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 

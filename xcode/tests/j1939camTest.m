@@ -55,6 +55,8 @@
 #include    "j1939cam_internal.h"
 #include    "j1939en_internal.h"
 #include    "j1939er_internal.h"
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 
 
 #include    "common.h"
@@ -117,10 +119,11 @@
 
 - (void)testTimedMessages
 {
+    J1939SYS_DATA   *pSYS = NULL;
+    J1939CAN_DATA   *pCAN = NULL;
     J1939CAM_DATA   *pCAM = NULL;
     J1939EN_DATA    *pEN = NULL;
     J1939ER_DATA    *pER = NULL;
-	//CANBASE_DATA    *pBase = NULL;
     J1939_PDU       pdu;
     bool            fRc;
     
@@ -134,7 +137,7 @@
         
         pEN = j1939en_Alloc();
         XCTAssertFalse( (NULL == pEN), @"Could not alloc pEN" );
-        pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL );
+        pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL, 0, 0, 0 );
         XCTAssertFalse( (NULL == pEN), @"Could not init pEN" );
         fRc = j1939cam_AddCA( pCAM, (J1939CA_DATA *)pEN );
         XCTAssertTrue( (fRc), @"fRc is false" );
@@ -143,7 +146,7 @@
         
         pER = j1939er_Alloc();
         XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
-        pER = j1939er_Init( pER, NULL, xmtHandler, NULL );
+        pER = j1939er_Init( pER, xmtHandler, NULL, 0, 0, 0 );
         XCTAssertFalse( (NULL == pER), @"Could not init pER" );
         fRc = j1939cam_AddCA( pCAM, (J1939CA_DATA *)pER );
         XCTAssertTrue( (fRc), @"fRc is false" );
@@ -190,7 +193,7 @@
         
         pEN = j1939en_Alloc();
         XCTAssertFalse( (NULL == pEN), @"Could not alloc pEN" );
-        pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL );
+        pEN = j1939en_Init( pEN, NULL, xmtHandler, NULL, 0, 0, 0 );
         XCTAssertFalse( (NULL == pEN), @"Could not init pEN" );
         fRc = j1939cam_AddCA( pCAM, (J1939CA_DATA *)pEN );
         XCTAssertTrue( (fRc), @"fRc is false" );
@@ -199,7 +202,7 @@
         
         pER = j1939er_Alloc();
         XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
-        pER = j1939er_Init( pER, NULL, xmtHandler, NULL );
+        pER = j1939er_Init( pER, xmtHandler, NULL, 0, 0, 0 );
         XCTAssertFalse( (NULL == pER), @"Could not init pER" );
         fRc = j1939cam_AddCA( pCAM, (J1939CA_DATA *)pER );
         XCTAssertTrue( (fRc), @"fRc is false" );
@@ -226,8 +229,8 @@
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939cam_HandleMessages( pCAM, j1939msg_getEid(&msg), &msg );
-        XCTAssertTrue( (true == pEN->fActive), @"" );
-        XCTAssertTrue( (3 == pEN->spn1480), @"" );
+        XCTAssertTrue( (true == pEN->fActive) );
+        XCTAssertTrue( (3 == pEN->spn1480) );
         
         for (int i=0; i<50; ++i) {
             fRc = j1939cam_HandleMessages( pCAM, 0, NULL );
@@ -270,7 +273,7 @@
     
     cCurMsg = 0;
     //FIXME: tn_time_reset();
-    pCAM = j1939cam_NewEngine( NULL, NULL, NULL, xmtHandler, NULL );
+    pCAM = j1939cam_NewEngine( NULL, NULL, NULL, xmtHandler, NULL, 0, 0, 0 );
     XCTAssertFalse( (NULL == pCAM), @"Could not init pCAM" );
     if (pCAM) {
         

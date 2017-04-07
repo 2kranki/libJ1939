@@ -139,6 +139,16 @@ extern	"C" {
     );
     
     
+    J1939_CAN_VTBL * j1939cam_getCAN(
+        J1939CAM_DATA	*this
+    );
+    
+    bool            j1939cam_setCAN(
+        J1939CAM_DATA	*this,
+        J1939_CAN_VTBL  *pValue
+    );
+    
+    
     J1939_DATA *    j1939cam_getJ1939(
         J1939CAM_DATA	*this
     );
@@ -159,6 +169,16 @@ extern	"C" {
     bool			j1939cam_setReflectMsgFlag(
         J1939CAM_DATA	*this,
         bool            value
+    );
+    
+    
+    J1939_SYS_VTBL * j1939cam_getSYS(
+        J1939CAM_DATA	*this
+    );
+    
+    bool            j1939cam_setSYS(
+        J1939CAM_DATA	*this,
+        J1939_SYS_VTBL  *pValue
     );
     
     

@@ -40,6 +40,8 @@
 
 #include    <j1939.h>
 #include    "j1939tbl_internal.h"
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 
 
 

@@ -51,7 +51,8 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 #include    "j1939_internal.h"
 
 
@@ -90,9 +91,9 @@
     J1939_DATA      *pJ1939 = NULL;
 
     pJ1939 = j1939_Alloc();
-    XCTAssertFalse( (NULL == pJ1939), @"Could not alloc J1939" );
-    pJ1939 = j1939_Init( pJ1939, 0 );
-    XCTAssertFalse( (NULL == pJ1939), @"Could not init J1939" );
+    XCTAssertFalse( (NULL == pJ1939) );
+    pJ1939 = j1939_Init( pJ1939, 1 );
+    XCTAssertFalse( (NULL == pJ1939) );
     if (pJ1939) {
 
 

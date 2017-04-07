@@ -351,6 +351,55 @@ extern	"C" {
     
     
     
+    //---------------------------------------------------------------
+    //                          C A N
+    //---------------------------------------------------------------
+    
+    J1939_CAN_VTBL * j1939cam_getCAN(
+        J1939CAM_DATA	*this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cam_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        // Return to caller.
+        return  this->pCAN;
+    }
+    
+    
+    bool            j1939cam_setCAN(
+        J1939CAM_DATA	*this,
+        J1939_CAN_VTBL  *pValue
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cam_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        obj_Retain(pValue);         // This is our object.
+        if (this->pCAN) {
+            obj_Release(this->pCAN);
+        }
+        this->pCAN = pValue;
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
     
     J1939_DATA *    j1939cam_getJ1939(
         J1939CAM_DATA	*this
@@ -456,6 +505,56 @@ extern	"C" {
         
         this->fReflectMsg  = value;
         
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                          S Y S
+    //---------------------------------------------------------------
+    
+    J1939_SYS_VTBL * j1939cam_getSYS(
+        J1939CAM_DATA	*this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cam_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        // Return to caller.
+        return  this->pSYS;
+    }
+    
+    
+    bool            j1939cam_setSYS(
+        J1939CAM_DATA	*this,
+        J1939_SYS_VTBL  *pValue
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cam_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        obj_Retain(pValue);         // This is our object.
+        if (this->pSYS) {
+            obj_Release(this->pSYS);
+        }
+        this->pSYS = pValue;
+        
+        // Return to caller.
         return true;
     }
     

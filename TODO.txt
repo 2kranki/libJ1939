@@ -11,6 +11,9 @@ will depend upon time and resources.
 --  J1939tc
     --  pSystemTimeGet needs initialization
 
+--  J1939dg
+    --  need to complete, currently not implemented
+
 --  ???
     --  Add CAN restart routine in ???
 

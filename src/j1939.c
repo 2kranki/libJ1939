@@ -1291,7 +1291,7 @@ extern	"C" {
     //                          C A N
     //---------------------------------------------------------------
     
-    OBJ_ID          j1939_getCAN(
+    J1939_CAN_VTBL * j1939_getCAN(
         J1939_DATA		*this
     )
     {
@@ -1312,7 +1312,7 @@ extern	"C" {
     
     bool            j1939_setCAN(
         J1939_DATA		*this,
-        OBJ_ID          pValue
+        J1939_CAN_VTBL  *pValue
     )
     {
         
@@ -1523,6 +1523,56 @@ extern	"C" {
         
         return true;
     }
+    
+    
+    //---------------------------------------------------------------
+    //                          S Y S
+    //---------------------------------------------------------------
+    
+    J1939_SYS_VTBL * j1939_getSYS(
+        J1939_DATA		*this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        // Return to caller.
+        return  this->pSYS;
+    }
+    
+    
+    bool            j1939_setSYS(
+        J1939_DATA		*this,
+        J1939_SYS_VTBL  *pValue
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        obj_Retain(pValue);         // This is our object.
+        if (this->pSYS) {
+            obj_Release(this->pSYS);
+        }
+        this->pSYS = pValue;
+        
+        // Return to caller.
+        return true;
+    }
+    
     
     
 
@@ -1743,7 +1793,7 @@ extern	"C" {
         if (NULL == this) {
             return OBJ_NIL;
         }
-        if (port < J1939_MAX_CAN_PORTS) {
+        if (port && (port <= J1939_MAX_CAN_PORTS)) {
         }
         else {
             return OBJ_NIL;

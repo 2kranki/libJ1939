@@ -127,6 +127,7 @@ extern "C" {
         // Common Data
         J1939_CAN_VTBL      *pCAN;
         J1939_SYS_VTBL      *pSYS;
+
         J1939CAM_DATA       *pCAM;
         
         // Message Handlers/Responders

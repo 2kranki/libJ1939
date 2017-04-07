@@ -308,6 +308,8 @@ extern	"C" {
         OBJ_IDENT_J1939CA_CLASS,
         OBJ_IDENT_J1939CAM,
         OBJ_IDENT_J1939CAM_CLASS,
+        OBJ_IDENT_J1939CAN,             // CAN Test Module
+        OBJ_IDENT_J1939CAN_CLASS,
         OBJ_IDENT_J1939DG,              // J1939 Diagnostic/Test CA
         OBJ_IDENT_J1939DG_CLASS,
         OBJ_IDENT_J1939DL,              // J1939 Data Link Layer
@@ -320,6 +322,8 @@ extern	"C" {
         OBJ_IDENT_J1939MSG_CLASS,
         OBJ_IDENT_J1939RQ,
         OBJ_IDENT_J1939RQ_CLASS,
+        OBJ_IDENT_J1939SYS,             // SYS Test Module
+        OBJ_IDENT_J1939SYS_CLASS,
         OBJ_IDENT_J1939TBL,             // J1939 SPN & PGN Tables
         OBJ_IDENT_J1939TBL_CLASS,
         OBJ_IDENT_J1939TC,              // J1939 Transmission #1 CA

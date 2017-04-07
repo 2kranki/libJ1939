@@ -32,6 +32,8 @@
 #include    <j1939.h>
 #include    "j1939ca_internal.h"
 #include    "common.h"              // Tests Common Routines
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 
 
 // All code under test must be linked into the Unit Test bundle
@@ -227,15 +229,18 @@ bool            xmtPGN60928(
 
 - (void)testOpenClose_1_0
 {
-    J1939CA_DATA    *pJ1939ca = NULL;
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
+    J1939CA_DATA    *pJ1939ca = OBJ_NIL;
     uint32_t        a = 4;
     uint32_t        b = 2;
 
-    fprintf(stderr, "b-a = %u\n", (b-a));
-    fprintf(stderr, "b-a+max32 = %u\n", (uint32_t)(b - a + 4294967296));
+    //fprintf(stderr, "b-a = %u\n", (b-a));
+    //fprintf(stderr, "b-a+max32 = %u\n", (uint32_t)(b - a + 4294967296));
     //FIXME: fprintf(stderr, "diff(b-a) = %u\n", timeDiff(NULL,a,b));
     
-    //FIXME: timeReset(NULL);
+    j1939Sys_TimeReset(pSYS, 0);
+
     pJ1939ca = j1939ca_Alloc();
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     pJ1939ca =  j1939ca_Init(
@@ -248,17 +253,26 @@ bool            xmtPGN60928(
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
+        
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
+        
         obj_Release(pJ1939ca);
         pJ1939ca = OBJ_NIL;
     }
 
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_EmptyChain
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     
     //FIXME: timeReset(NULL);
@@ -274,7 +288,10 @@ bool            xmtPGN60928(
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
+
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
+        
         j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
 
         //fRc = pJ1939ca_CheckForTimeouts( pHnd, &msWait );
@@ -284,6 +301,10 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
@@ -292,6 +313,8 @@ bool            xmtPGN60928(
 // the address.
 - (void)testCheck_ClaimAddress_clean
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     //J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
@@ -311,7 +334,10 @@ bool            xmtPGN60928(
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
+
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
+        
         j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
 
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
@@ -330,11 +356,17 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 - (void)testCheck_ClaimAddress_contested1
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
@@ -355,8 +387,10 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
     j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
 
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
+        
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
@@ -376,12 +410,18 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_ClaimAddress_contested2
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     J1939_PDU       pdu = {0};
     //J1939_PGN       pgn = {0};
@@ -403,7 +443,10 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
     j1939ca_setXmtMsg( pJ1939ca, xmtPGN60928, pJ1939ca );
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
+
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
+        
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
@@ -436,12 +479,18 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 
 
 - (void)testCheck_RequestNameDirect
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939CA_DATA    *pJ1939ca = NULL;
     bool            fRc;
     J1939_MSG         msg;
@@ -462,13 +511,15 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
     cCurMsg = 0;
     if (pJ1939ca) {
-        j1939ca_setMsClock(pJ1939ca, timeGet, timeSleep, NULL);
+        
+        j1939ca_setCAN(pJ1939ca, pCAN);
+        j1939ca_setSYS(pJ1939ca, pSYS);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
 
         // Send "Timed Out".
-        timeBump(NULL,250);
+        //FIXME: timeBump(NULL,250);
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pJ1939ca->cs), @"" );
         
@@ -496,6 +547,10 @@ bool            xmtPGN60928(
         pJ1939ca = OBJ_NIL;
     }
     
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
 }
 
 

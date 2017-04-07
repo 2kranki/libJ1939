@@ -157,9 +157,16 @@ extern	"C" {
         J1939_DATA		*this
     );
     
-    OBJ_ID          j1939_getCAN(
+    
+    J1939_CAN_VTBL * j1939_getCAN(
         J1939_DATA		*this
     );
+    
+    bool            j1939_setCAN(
+        J1939_DATA		*this,
+        J1939_CAN_VTBL  *pValue
+    );
+    
     
     // Claimed Address
     uint8_t         j1939_getClaimed(
@@ -200,6 +207,16 @@ extern	"C" {
     );
     
     
+    J1939_SYS_VTBL * j1939_getSYS(
+        J1939_DATA		*this
+    );
+    
+    bool            j1939_setSYS(
+        J1939_DATA		*this,
+        J1939_SYS_VTBL  *pValue
+    );
+    
+
 
     
     //---------------------------------------------------------------

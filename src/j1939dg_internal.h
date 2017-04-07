@@ -46,7 +46,6 @@
 
 #include        "j1939dg.h"
 #include        "j1939ca_internal.h"
-//#include        "canrsp.h"
 
 
 #ifndef J1939DG_INTERNAL_H

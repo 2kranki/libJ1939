@@ -69,6 +69,9 @@ extern "C" {
         OBJ_DATA            super;
         OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
+        J1939_CAN_VTBL      *pCAN;
+        J1939_SYS_VTBL      *pSYS;
+        
         uint16_t            maxLayers;
         uint16_t            curLayers;
         //RECEIVE_HANDLER     *pHandlers;

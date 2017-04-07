@@ -54,6 +54,8 @@
 #include    <j1939.h>
 #include    "j1939dg_internal.h"
 #include    "common.h"
+#include    "j1939Can.h"
+#include    "j1939Sys.h"
 
 
 
@@ -88,6 +90,8 @@
 
 - (void)testOpenClose_1_0
 {
+    J1939SYS_DATA   *pSYS = j1939Sys_New();
+    J1939CAN_DATA   *pCAN = j1939Can_New(1);
     J1939DG_DATA    *pDG = NULL;
 
     pDG = j1939dg_Alloc();
@@ -96,7 +100,9 @@
                        pDG,
                        NULL,            // pJ1939 - 
                        xmtHandler,      // pXmtMsg
-                       NULL             // pXmtData
+                       0,            // pXmtData
+                       0,
+                       0
             );
     XCTAssertFalse( (NULL == pDG), @"Could not init pDG" );
     if (pDG) {
@@ -105,6 +111,10 @@
         pDG = NULL;
     }
 
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
     j1939_SharedReset( );
     
 }

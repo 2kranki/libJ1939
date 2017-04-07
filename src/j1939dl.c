@@ -207,6 +207,56 @@ extern	"C" {
     
     
     //---------------------------------------------------------------
+    //                          S Y S
+    //---------------------------------------------------------------
+    
+    J1939_SYS_VTBL * j1939dl_getSYS(
+        J1939DL_DATA	*this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        // Return to caller.
+        return  this->pSYS;
+    }
+    
+    
+    bool            j1939dl_setSYS(
+        J1939DL_DATA	*this,
+        J1939_SYS_VTBL  *pValue
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        obj_Retain(pValue);         // This is our object.
+        if (this->pSYS) {
+            obj_Release(this->pSYS);
+        }
+        this->pSYS = pValue;
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                          X m t  M s g
     //---------------------------------------------------------------
     

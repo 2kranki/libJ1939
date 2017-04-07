@@ -1,6 +1,13 @@
-// Common Routines and Data that can be used by all
-// Tests
-//
+// vi:nu:et:sts=4 ts=4 sw=4
+/* 
+ * File:   j1939Sys_internal.h
+ *	Generated 04/06/2017 16:09:23
+ *
+ * Notes:
+ *  --	N/A
+ *
+ */
+
 
 /*
  This is free and unencumbered software released into the public domain.
@@ -31,72 +38,69 @@
 
 
 
-#include    "common.h"
-#include    <string.h>
+#include    "j1939Sys.h"
+
+
+#ifndef J1939SYS_INTERNAL_H
+#define	J1939SYS_INTERNAL_H
+
+
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 
 
 
+#pragma pack(push, 1)
+struct j1939Sys_data_s	{
+    /* Warning - OBJ_DATA must be first in this object!
+     */
+    OBJ_DATA        super;
+    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+
+    // Common Data
+    ERESULT         eRc;
+    uint32_t        time;
+
+};
+#pragma pack(pop)
+
+    extern
+    const
+    struct j1939Sys_class_data_s  j1939Sys_ClassObj;
+
+    extern
+    const
+    J1939SYS_VTBL         j1939Sys_Vtbl;
 
 
-
-//===============================================================
-//              *** CAN/J1939 Message Mock ***
-//===============================================================
-
-
-
-
-
-
-bool            printCanMsg(
-    J1939_MSG       *pMessage
-)
-{
-    char            data[64];
-    
-    data[0] = 0;
-    j1939msg_CreatePrintable( pMessage, data );
-    fprintf(    stderr,
-                "time: %5d  pgn: %08X  msg: %s",
-                pMessage->CMSGSID.CMSGTS,
-                j1939msg_getJ1939_PGN(pMessage).w,
-                data
+    // Internal Functions
+    void            j1939Sys_Dealloc(
+        OBJ_ID          objId
     );
-    return true;
+
+    bool            j1939Sys_setLastError(
+        J1939SYS_DATA     *this,
+        ERESULT         value
+    );
+
+
+
+
+#ifdef NDEBUG
+#else
+    bool			j1939Sys_Validate(
+        J1939SYS_DATA       *this
+    );
+#endif
+
+
+
+#ifdef	__cplusplus
 }
+#endif
 
-
-
-J1939_MSG   curMsg[300];
-uint16_t    cCurMsg = 0;
-uint8_t     fSkipMsg = false;
-
-
-// This must conform to P_XMTMSG_RTN!
-bool        xmtHandler(
-    OBJ_PTR     pObj,
-    uint32_t    msDelay,
-    J1939_MSG   *pMsg
-)
-{
-    if (pMsg) {
-        //FIXME: pMsg->CMSGSID.CMSGTS = tn_time();
-        if (cCurMsg < 300) {
-            memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
-            ++cCurMsg;
-        }
-        printCanMsg(pMsg);
-    }
-    else {
-        DEBUG_BREAK();
-        exit(100);
-    }
-    return true;
-}
-
-
-
-
-
+#endif	/* J1939SYS_INTERNAL_H */
 

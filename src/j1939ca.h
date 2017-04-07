@@ -40,6 +40,7 @@
  */
 
 
+
 /*
  This is free and unencumbered software released into the public domain.
  
@@ -157,6 +158,16 @@ extern	"C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
+    J1939_CAN_VTBL * j1939ca_getCAN(
+        J1939CA_DATA	*this
+    );
+    
+    bool            j1939ca_setCAN(
+        J1939CA_DATA	*this,
+        J1939_CAN_VTBL  *pValue
+    );
+    
+    
     uint8_t         j1939ca_getClaimedAddress(
         J1939CA_DATA	*this
     );
@@ -167,16 +178,18 @@ extern	"C" {
     );
 
     
-    bool			j1939ca_setMsClock(
-        J1939CA_DATA	*this,
-        P_VOIDEXIT1_U32 pGet,               // Get the MS Clock.
-        P_VOIDEXIT2_U32_U32 pSleep,         // Sleep the specified MS.
-        OBJ_PTR         *pData
+    J1939_NAME *    j1939ca_getName(
+        J1939CA_DATA	*this
     );
     
     
-    J1939_NAME *    j1939ca_getName(
+    J1939_SYS_VTBL * j1939ca_getSYS(
         J1939CA_DATA	*this
+    );
+    
+    bool            j1939ca_setSYS(
+        J1939CA_DATA	*this,
+        J1939_SYS_VTBL  *pValue
     );
     
     

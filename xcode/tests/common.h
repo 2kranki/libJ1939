@@ -33,49 +33,10 @@
 #include    <stdbool.h>
 #include    <stdint.h>
 
+#include    <j1939_defs.h>
 #include    <j1939msg.h>
 #include    <chario.h>
 
-
-
-
-//===============================================================
-//                    *** Char I/O Mock ***
-//===============================================================
-
-bool        chrInputAdd(
-    char        *pMsg
-);
-
-bool        chrInputGet(
-    void            *pObjectRx,
-    uint16_t        *pData,         // Return Data ptr,
-                                    // if NULL, return data is flushed.
-    uint32_t        timeOut_ms      // Time Out in ms to wait
-                                    // (0 == no wait, 0xFFFFFFFF == infinite)
-);
-
-void        chrInputReset(
-);
-
-
-bool        chrOutputPut(
-    void            *pObjectTx,
-    uint16_t        data,
-    uint32_t        timeOut_ms      // Time Out in ms to wait
-                                    // (0 == no wait, 0xFFFFFFFF == infinite)
-);
-
-char *      chrOutputData(
-    int         *pLen
-);
-
-void        chrOutputReset(
-);
-
-
-extern
-CHARIO_DATA chrIO;
 
 
 
@@ -89,6 +50,9 @@ typedef struct j1939_msg_data_s {
 	uint16_t	len;
 	uint8_t		data[8];
 } J1939_MSG_DATA;
+
+
+
 
 
 
