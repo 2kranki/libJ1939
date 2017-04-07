@@ -173,9 +173,8 @@ extern	"C" {
     
     J1939TC_DATA *	j1939tc_Init(
         J1939TC_DATA	*this,
-        J1939CAM_DATA   *pCAM,
-        OBJ_ID          *pCAN,
-        OBJ_ID          *pSYS,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
         uint8_t         spn2846         // J1939 Industry Group (3 bits)

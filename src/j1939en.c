@@ -782,7 +782,6 @@ extern	"C" {
 
     J1939EN_DATA *	j1939en_Init(
         J1939EN_DATA    *this,
-        J1939CAM_DATA   *pCAM,
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)

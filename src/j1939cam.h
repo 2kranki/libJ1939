@@ -8,13 +8,17 @@
  *				This object provides the Controller Application
  *              Management for the J1939 object. It handles all 
  *              its messages as well as other housekeeping func-
- *              tions and forms the foundation for the ECU.
+ *              tions and forms the foundation for an ECU.
  *
- *              It maintains a NAME and Claimed address.
+ *              An ECU consists of one or more Controller Ap-
+ *              plications. Each Controller Application normally
+ *              goes through an address claim procedure before 
+ *              they have an address that they can use for talking
+ *              to other CAs.
  *
- *              Each Controller Application must go through an
- *              address claim procedure before they have an address
- *              that they can use for talking to other CAs.
+ *              These CAs may have predefined names and addresses
+ *              which doesn't require them to go through the
+ *              naming process.
  *
  *              Since all messages for the CA are funneled through
  *              this object, we handle the Data Link Support here
@@ -22,7 +26,9 @@
  *              Protocol messages.
  *
  * Remarks
- *	**			None
+ *	**			Currently, this module only dispatches the in-
+ *              coming messages to the appropriate CAs.
+ *
  * References
  *		"Data Structures and Algorithms", Alfred V. Aho et al,
  *			Addison-Wesley, 1985
@@ -105,9 +111,6 @@ extern	"C" {
     
         
     J1939CAM_DATA * j1939cam_NewEngine(
-        J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pReflectMsg,
-        OBJ_ID          *pReflectData,
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -117,9 +120,6 @@ extern	"C" {
     
     
     J1939CAM_DATA * j1939cam_NewTransmission(
-        J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pReflectMsg,
-        OBJ_ID          *pReflectData,
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -146,11 +146,6 @@ extern	"C" {
     bool            j1939cam_setCAN(
         J1939CAM_DATA	*this,
         OBJ_ID          pValue
-    );
-    
-    
-    J1939_DATA *    j1939cam_getJ1939(
-        J1939CAM_DATA	*this
     );
     
     
@@ -197,7 +192,7 @@ extern	"C" {
     /*!
      Passed messages from a message source such as a CAN FIFO Receive
      Queue. This routine handles the message either internally or via
-     its responder chain. It should be called about every 20ms even
+     its responder chain. It should be called about every 10ms even
      if a message is not available. A NULL message pointer and zero
      eid, tell the Handler to simply process any time transmitted
      messages.
@@ -216,9 +211,8 @@ extern	"C" {
     
     J1939CAM_DATA *	j1939cam_Init(
         J1939CAM_DATA	*this,
-        J1939_DATA      *pJ1939,
-        OBJ_ID          *pCAN,
-        OBJ_ID          *pSYS
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS
     );
         
     

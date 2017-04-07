@@ -101,8 +101,6 @@ extern "C" {
         OBJ_DATA            *pSYS;
         OBJ_DATA            *pCAN;
         
-        J1939_DATA          *pJ1939;
-
         bool                (*setWaitTime)( void *, uint32_t );
         void                *pSetTimeData;
         uint32_t            normalWaitTime;

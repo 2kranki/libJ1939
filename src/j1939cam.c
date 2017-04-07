@@ -1,6 +1,6 @@
-/****************************************************************
- *          Data j1939cam (j1939cam) Support Subroutines           *
- ****************************************************************/
+//****************************************************************
+//        Data j1939cam (j1939cam) Support Subroutines
+//****************************************************************
 /*
  * Program
  *              Data j1939cam (j1939cam) Subroutines
@@ -182,9 +182,6 @@ extern	"C" {
     
         
     J1939CAM_DATA * j1939cam_NewEngine(
-        J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pReflectMsg,
-        OBJ_ID          *pReflectData,
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -200,35 +197,30 @@ extern	"C" {
         
 #ifdef NDEBUG
 #else
-        if( pJ1939 ) {
-            if ( obj_IsKindOf(pJ1939, OBJ_IDENT_J1939) ) {
-            }
-            else {
-                DEBUG_BREAK();
-                return OBJ_NIL;
-            }
+        if( pCAN && (obj_IsKindOf(pCAN, OBJ_IDENT_J1939CAN)) ) {
+        }
+        else {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+        if( pSYS && (obj_IsKindOf(pSYS, OBJ_IDENT_J1939SYS)) ) {
+        }
+        else {
+            DEBUG_BREAK();
+            return OBJ_NIL;
         }
 #endif
         
         pCAM = j1939cam_Alloc();
-        pCAM = j1939cam_Init( pCAM, pJ1939, pCAN, pSYS );
+        pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
-        j1939cam_setReflectMsg(pCAM, pReflectMsg, pReflectData);
         
         // Create the Engine #1.
         pEN = j1939en_Alloc();
-        pEN =   j1939en_Init(
-                           pEN,
-                           pCAM,
-                           j1939cam_TransmitDelayedMsg,
-                           pCAM,
-                           spn2837,
-                           spn2838,
-                           spn2846
-                );
+        pEN = j1939en_Init(pEN, pCAN, pSYS, spn2837, spn2838, spn2846);
         if( OBJ_NIL == pEN ) {
             DEBUG_BREAK();
             obj_Release(pCAM);
@@ -258,9 +250,6 @@ extern	"C" {
     
     
     J1939CAM_DATA * j1939cam_NewTransmission(
-        J1939_DATA      *pJ1939,
-        P_XMTMSG_RTN    pReflectMsg,
-        OBJ_ID          *pReflectData,
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -273,7 +262,13 @@ extern	"C" {
         
 #ifdef NDEBUG
 #else
-        if( pJ1939 && (obj_IsKindOf(pJ1939, OBJ_IDENT_J1939)) ) {
+        if( pCAN && (obj_IsKindOf(pCAN, OBJ_IDENT_J1939CAN)) ) {
+        }
+        else {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+        if( pSYS && (obj_IsKindOf(pSYS, OBJ_IDENT_J1939SYS)) ) {
         }
         else {
             DEBUG_BREAK();
@@ -282,24 +277,15 @@ extern	"C" {
 #endif
         
         pCAM = j1939cam_Alloc();
-        pCAM = j1939cam_Init( pCAM, pJ1939, pCAN, pSYS );
+        pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
-        j1939cam_setReflectMsg(pCAM, pReflectMsg, pReflectData);
         
         // Create the Transmission #1.
         pTC = j1939tc_Alloc();
-        pTC =   j1939tc_Init(
-                             pTC,
-                             pCAM,
-                             pCAM->pCAN,
-                             pCAM->pSYS,
-                             spn2837,
-                             spn2838,
-                             spn2846
-                );
+        pTC = j1939tc_Init(pTC, pCAN, pSYS, spn2837, spn2838, spn2846);
         if( OBJ_NIL == pTC ) {
             DEBUG_BREAK();
             obj_Release(pCAM);
@@ -414,7 +400,8 @@ extern	"C" {
 #endif
         
         // Return to caller.
-        return( this->pJ1939 );
+        //return this->pJ1939;
+        return OBJ_NIL;
     }
     
     
@@ -434,7 +421,7 @@ extern	"C" {
 #endif
         
         //obj_Retain(pValue);         // We dont own this.
-        this->pJ1939 = pValue;
+        //this->pJ1939 = pValue;
         
         // Return to caller.
         return true;
@@ -635,6 +622,9 @@ extern	"C" {
         }
         this->cCAs = 0;
         
+        j1939cam_setCAN(this, OBJ_NIL);
+        j1939cam_setSYS(this, OBJ_NIL);
+        
         obj_Dealloc(this);
         this = NULL;
         
@@ -778,9 +768,8 @@ extern	"C" {
 
     J1939CAM_DATA *	j1939cam_Init(
         J1939CAM_DATA   *this,
-        J1939_DATA      *pJ1939,
-        OBJ_ID          *pCAN,
-        OBJ_ID          *pSYS
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS
     )
     {
         uint16_t		cbSize = sizeof(J1939CAM_DATA);
@@ -799,7 +788,7 @@ extern	"C" {
         j1939cam_setCAN(this, pCAN);
         j1939cam_setSYS(this, pSYS);
         
-        this->pJ1939   = pJ1939;
+        //this->pJ1939   = pJ1939;
         this->fReflectMsg = true;
 
 #ifdef NDEBUG

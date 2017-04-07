@@ -1021,6 +1021,7 @@ extern	"C" {
         
         // Create the ECU.
         // Note: Setup() establishes the pXmtMsg from the CAN Xmt Fifo.
+#ifdef XYZZY
         pCAM =  j1939cam_NewEngine(
                             pJ1939,
                             NULL,
@@ -1031,6 +1032,7 @@ extern	"C" {
                             pJ1939->spn2838,
                             pJ1939->spn2846
                 );
+#endif
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
@@ -1088,8 +1090,8 @@ extern	"C" {
         }
         
         // Create the TCU.
+#ifdef XYZZY
         pCAM =  j1939cam_NewTransmission(
-                                    pJ1939,
                                     NULL,               // Reflect Msg routine
                                     NULL,               // Reflect Msg Object
                                     pJ1939->pXmtMsg,
@@ -1098,6 +1100,7 @@ extern	"C" {
                                     pJ1939->spn2838,
                                     pJ1939->spn2846
                 );
+#endif
         if( OBJ_NIL == pCAM ) {
             DEBUG_BREAK();
             return OBJ_NIL;
@@ -1722,7 +1725,7 @@ extern	"C" {
         
         if (OBJ_NIL == this->pCAM) {
             this->pCAM = j1939cam_Alloc();
-            this->pCAM = j1939cam_Init( this->pCAM, this, this->pXmtMsg, this->pXmtData );
+            this->pCAM = j1939cam_Init( this->pCAM, this->pCAN, this->pSYS );
             if (OBJ_NIL == this->pCAM) {
                 DEBUG_BREAK();
                 obj_Release(this);
