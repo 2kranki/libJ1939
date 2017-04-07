@@ -227,6 +227,7 @@ bool            xmtPGN60928(
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
+
     mem_Dump( );
 }
 

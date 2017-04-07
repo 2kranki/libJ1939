@@ -8,11 +8,25 @@ will depend upon time and resources.
     --  Move all System/CAN dependent routines here. So, that they can be
         initialized before starting the system.
 
---  J1939tc
-    --  pSystemTimeGet needs initialization
+--  J1939ca - CA
+    --  Make sure time handling is consistant with CA, DG, ER and TC
+    --  Look at time rollover in message handlers and timed msgs
 
---  J1939dg
+--  J1939dg - Diagnostics
     --  need to complete, currently not implemented
+    --  Look at time rollover in message handlers and timed msgs
+
+--  J1939en - Engine CA
+    --  Make sure time handling is consistant with CA, DG, ER and TC
+    --  Look at time rollover in message handlers and timed msgs
+
+--  J1939er - Engine Retarder CA
+    --  Make sure time handling is consistant with CA, DG, EN, and TC
+    --  Look at time rollover in message handlers and timed msgs
+
+--  J1939tc - Transmission CA
+    --  Make sure time handling is consistant with CA, DG, EN, and ER
+    --  Look at time rollover in message handlers and timed msgs
 
 --  ???
     --  Add CAN restart routine in ???

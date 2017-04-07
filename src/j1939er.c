@@ -243,7 +243,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //                  H a n d l e  P G N 0    0x000000
+    //                  H a n d l e  P G N 0    0x000000 (TSC1)
     //---------------------------------------------------------------
 
     /*
@@ -321,7 +321,7 @@ extern	"C" {
             }
         }
         else {
-            //TODO: This doesnt account for clock rollover.
+            //TODO: This might not account for clock rollover.
             if ( this->fActive && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
                 this->fActive = false;
                 this->timeOut = 0;
@@ -389,7 +389,7 @@ extern	"C" {
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
-        //TODO: doesnt consider clock rollover
+        //TODO: maybe doesn't consider clock rollover
         if ((curTime - this->startTime61440) >= 100) {
             j1939er_TransmitPgn61440(this);
         }
@@ -550,7 +550,7 @@ extern	"C" {
         data[6]  = this->spn1716;
         data[7]  = this->spn1717;
 
-        pdu.PF = 240;
+        pdu.PF = 240;           // ERC1 PF
         pdu.PS = 0;
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
