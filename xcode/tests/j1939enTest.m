@@ -51,7 +51,6 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
 #include    "j1939en_internal.h"
 
 
@@ -102,7 +101,8 @@ void        shiftExit(void *ptr,bool fShifting)
     
     mem_Init( );
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
 }
 
@@ -117,7 +117,7 @@ void        shiftExit(void *ptr,bool fShifting)
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
     
     mem_Dump( );
 }
@@ -130,6 +130,8 @@ void        shiftExit(void *ptr,bool fShifting)
     //J1939_PDU       pdu;
     bool            fRc;
 
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -137,7 +139,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
@@ -159,6 +161,8 @@ void        shiftExit(void *ptr,bool fShifting)
     J1939_PDU       pdu;
     bool            fRc;
         
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -166,7 +170,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
@@ -212,6 +216,8 @@ void        shiftExit(void *ptr,bool fShifting)
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -220,7 +226,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
@@ -297,6 +303,8 @@ void        shiftExit(void *ptr,bool fShifting)
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -305,7 +313,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
@@ -386,6 +394,8 @@ void        shiftExit(void *ptr,bool fShifting)
     shiftsT = 0;
     shiftsF = 0;
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -394,7 +404,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
         XCTAssertTrue( (fRc) );
@@ -445,6 +455,8 @@ void        shiftExit(void *ptr,bool fShifting)
     shiftsT = 0;
     shiftsF = 0;
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4 );
@@ -453,7 +465,7 @@ void        shiftExit(void *ptr,bool fShifting)
     if (pEng) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
         XCTAssertTrue( (fRc) );

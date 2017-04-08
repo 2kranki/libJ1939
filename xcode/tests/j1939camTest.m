@@ -51,7 +51,6 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
 #include    "j1939cam_internal.h"
 #include    "j1939en_internal.h"
 #include    "j1939er_internal.h"
@@ -83,7 +82,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     mem_Init( );
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
 }
 
@@ -98,7 +98,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
 
     mem_Dump( );
 }
@@ -117,7 +117,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 {
     J1939CAM_DATA   *pCAM = NULL;
 
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pCAM = j1939cam_Alloc();
     XCTAssertFalse( (NULL == pCAM) );
     pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
@@ -125,7 +126,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pCAM) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pCAM);
         pCAM = NULL;
@@ -143,7 +144,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     bool            fRc;
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pCAM = j1939cam_Alloc();
     XCTAssertFalse( (NULL == pCAM) );
     pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
@@ -151,7 +153,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pCAM) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pEN = j1939en_Alloc();
         XCTAssertFalse( (NULL == pEN) );
@@ -199,7 +201,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     uint8_t         data[8];
     bool            fRc;
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pCAM = j1939cam_Alloc();
     XCTAssertFalse( (NULL == pCAM) );
     pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
@@ -207,7 +210,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pCAM) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pEN = j1939en_Alloc();
         XCTAssertFalse( (NULL == pEN) );
@@ -288,13 +291,14 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     uint8_t         data[8];
     bool            fRc;
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 512, 4);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         for (int i=0; i<250; ++i) {
             fRc = j1939cam_HandleMessages( pCAM, 0, NULL );

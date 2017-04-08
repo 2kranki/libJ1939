@@ -54,6 +54,16 @@
 #include    "j1939Can.h"
 #include    "j1939Sys.h"
 #include    "j1939_internal.h"
+#include    "j1939cam_internal.h"
+#include    "j1939en_internal.h"
+#include    "j1939er_internal.h"
+#include    "common.h"              // Tests Common Routines
+
+
+
+
+static
+J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
@@ -71,6 +81,9 @@
     // test method in the class.
     
     mem_Init( );
+    pSYS = j1939Sys_New();
+    pCAN = j1939Can_New();
+    cCurMsg = 0;
     
 }
 
@@ -80,6 +93,12 @@
     // Put teardown code here. This method is called after the invocation of each
     // test method in the class.
     [super tearDown];
+    
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
+    j1939_SharedReset( );
     
     mem_Dump( );
 }

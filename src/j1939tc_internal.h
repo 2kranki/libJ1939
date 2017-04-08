@@ -50,7 +50,6 @@
 
 #include        "j1939tc.h"
 #include        "j1939ca_internal.h"
-//#include        "canrsp.h"
 
 
 #ifdef	__cplusplus

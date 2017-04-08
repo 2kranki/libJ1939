@@ -116,15 +116,21 @@ extern	"C" {
         
     J1939_DATA *    j1939_NewEngine(
         uint8_t         port,
-        P_SRVCMSG_RTN   pSrvcMsg,
-        void            *pSrvcData
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint32_t        spn2846         // J1939 Industry Group (3 bits)
     );
     
     
     J1939_DATA *    j1939_NewTransmission(
         uint8_t         port,
-        P_SRVCMSG_RTN   pSrvcMsg,
-        void            *pSrvcData
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint32_t        spn2846         // J1939 Industry Group (3 bits)
     );
     
     

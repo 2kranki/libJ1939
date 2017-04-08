@@ -1,6 +1,6 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /*
- * File:   j1939Can.c
+ * File:   j1939can.c
  *	Generated 04/06/2017 16:09:16
  *
  */
@@ -41,7 +41,7 @@
 //*****************************************************************
 
 /* Header File Inclusion */
-#include "j1939Can_internal.h"
+#include "j1939can_internal.h"
 
 
 
@@ -58,16 +58,6 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
-#ifdef XYZZY
-    static
-    void            j1939Can_task_body(
-        void            *pData
-    )
-    {
-        //J1939CAN_DATA  *this = pData;
-        
-    }
-#endif
 
 
 
@@ -80,7 +70,7 @@ extern "C" {
     //                      *** Class Methods ***
     //===============================================================
 
-    J1939CAN_DATA * j1939Can_Alloc(
+    J1939CAN_DATA * j1939can_Alloc(
     )
     {
         J1939CAN_DATA   *this;
@@ -96,14 +86,14 @@ extern "C" {
 
 
 
-    J1939CAN_DATA *     j1939Can_New(
+    J1939CAN_DATA *     j1939can_New(
     )
     {
         J1939CAN_DATA       *this;
         
-        this = j1939Can_Alloc( );
+        this = j1939can_Alloc( );
         if (this) {
-            this = j1939Can_Init(this);
+            this = j1939can_Init(this);
         } 
         return this;
     }
@@ -116,7 +106,7 @@ extern "C" {
     //                      P r o p e r t i e s
     //===============================================================
 
-    ERESULT         j1939Can_getLastError(
+    ERESULT         j1939can_getLastError(
         J1939CAN_DATA     *this
     )
     {
@@ -124,7 +114,7 @@ extern "C" {
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return this->eRc;
         }
@@ -135,14 +125,14 @@ extern "C" {
     }
 
 
-    bool            j1939Can_setLastError(
+    bool            j1939can_setLastError(
         J1939CAN_DATA     *this,
         ERESULT         value
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -155,7 +145,7 @@ extern "C" {
     
     
 
-    uint16_t        j1939Can_getPriority(
+    uint16_t        j1939can_getPriority(
         J1939CAN_DATA     *this
     )
     {
@@ -163,25 +153,25 @@ extern "C" {
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
 
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         //return this->priority;
         return 0;
     }
 
-    bool            j1939Can_setPriority(
+    bool            j1939can_setPriority(
         J1939CAN_DATA     *this,
         uint16_t        value
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -189,20 +179,20 @@ extern "C" {
 
         //this->priority = value;
 
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
 
 
 
-    bool            j1939Can_setReflect(
+    bool            j1939can_setReflect(
         J1939CAN_DATA   *this,
         bool            value
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -215,7 +205,7 @@ extern "C" {
     
     
     
-    bool                j1939Can_setReflectMsg(
+    bool                j1939can_setReflectMsg(
         J1939CAN_DATA		*this,
         P_XMTMSG_RTN        pRoutine,
         void                *pData
@@ -225,7 +215,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -239,7 +229,7 @@ extern "C" {
     
     
     
-    ASTR_DATA * j1939Can_getStr(
+    ASTR_DATA * j1939can_getStr(
         J1939CAN_DATA     *this
     )
     {
@@ -247,25 +237,25 @@ extern "C" {
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
 #endif
         
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return this->pStr;
     }
     
     
-    bool        j1939Can_setStr(
+    bool        j1939can_setStr(
         J1939CAN_DATA     *this,
         ASTR_DATA   *pValue
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -277,13 +267,13 @@ extern "C" {
         }
         this->pStr = pValue;
         
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
     
     
     
-    bool                j1939Can_setXmtMsg(
+    bool                j1939can_setXmtMsg(
         J1939CAN_DATA		*this,
         P_XMTMSG_RTN        pRoutine,
         void                *pData
@@ -293,7 +283,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -324,14 +314,14 @@ extern "C" {
      a copy of the object is performed.
      Example:
      @code:
-        ERESULT eRc = j1939Can__Assign(this,pOther);
+        ERESULT eRc = j1939can__Assign(this,pOther);
      @endcode:
      @param:    this    J1939CAN object pointer
      @param:    pOther  a pointer to another J1939CAN object
      @return:   If successful, ERESULT_SUCCESS otherwise an 
                 ERESULT_* error 
      */
-    ERESULT         j1939Can_Assign(
+    ERESULT         j1939can_Assign(
         J1939CAN_DATA		*this,
         J1939CAN_DATA      *pOther
     )
@@ -340,13 +330,13 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Can_getLastError(this);
+            return j1939can_getLastError(this);
         }
-        if( !j1939Can_Validate(pOther) ) {
+        if( !j1939can_Validate(pOther) ) {
             DEBUG_BREAK();
-            return j1939Can_getLastError(pOther);
+            return j1939can_getLastError(pOther);
         }
 #endif
 
@@ -377,11 +367,11 @@ extern "C" {
         //goto eom;
 
         // Return to caller.
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
     eom:
         //FIXME: Implement the assignment.        
-        j1939Can_setLastError(this, ERESULT_NOT_IMPLEMENTED);
-        return j1939Can_getLastError(this);
+        j1939can_setLastError(this, ERESULT_NOT_IMPLEMENTED);
+        return j1939can_getLastError(this);
     }
     
     
@@ -394,14 +384,14 @@ extern "C" {
      Copy the current object creating a new object.
      Example:
      @code:
-        j1939Can      *pCopy = j1939Can_Copy(this);
+        j1939Can      *pCopy = j1939can_Copy(this);
      @endcode:
      @param:    this    J1939CAN object pointer
      @return:   If successful, a J1939CAN object which must be released,
                 otherwise OBJ_NIL.
      @warning: Remember to release the returned the J1939CAN object.
      */
-    J1939CAN_DATA *     j1939Can_Copy(
+    J1939CAN_DATA *     j1939can_Copy(
         J1939CAN_DATA       *this
     )
     {
@@ -411,15 +401,15 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
 #endif
         
-        pOther = j1939Can_New( );
+        pOther = j1939can_New( );
         if (pOther) {
-            eRc = j1939Can_Assign(this, pOther);
+            eRc = j1939can_Assign(this, pOther);
             if (ERESULT_HAS_FAILED(eRc)) {
                 obj_Release(pOther);
                 pOther = OBJ_NIL;
@@ -428,7 +418,7 @@ extern "C" {
         
         // Return to caller.
         //obj_Release(pOther);
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return pOther;
     }
     
@@ -438,7 +428,7 @@ extern "C" {
     //                        D e a l l o c
     //---------------------------------------------------------------
 
-    void            j1939Can_Dealloc(
+    void            j1939can_Dealloc(
         OBJ_ID          objId
     )
     {
@@ -450,7 +440,7 @@ extern "C" {
         }        
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return;
         }
@@ -462,7 +452,7 @@ extern "C" {
         }
 #endif
 
-        j1939Can_setStr(this, OBJ_NIL);
+        j1939can_setStr(this, OBJ_NIL);
 
         obj_setVtbl(this, this->pSuperVtbl);
         //other_Dealloc(this);          // Needed for inheritance
@@ -478,21 +468,21 @@ extern "C" {
     //                      D i s a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939Can_Disable(
+    ERESULT         j1939can_Disable(
         J1939CAN_DATA		*this
     )
     {
 
         // Do initialization.
         if (NULL == this) {
-            j1939Can_setLastError(this, ERESULT_INVALID_OBJECT);
-            return j1939Can_getLastError(this);
+            j1939can_setLastError(this, ERESULT_INVALID_OBJECT);
+            return j1939can_getLastError(this);
         }
     #ifdef NDEBUG
     #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Can_getLastError(this);
+            return j1939can_getLastError(this);
         }
     #endif
 
@@ -501,8 +491,8 @@ extern "C" {
         obj_Disable(this);
         
         // Return to caller.
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
-        return j1939Can_getLastError(this);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
+        return j1939can_getLastError(this);
     }
 
 
@@ -511,7 +501,7 @@ extern "C" {
     //                          E n a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939Can_Enable(
+    ERESULT         j1939can_Enable(
         J1939CAN_DATA		*this
     )
     {
@@ -519,9 +509,9 @@ extern "C" {
         // Do initialization.
     #ifdef NDEBUG
     #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Can_getLastError(this);
+            return j1939can_getLastError(this);
         }
     #endif
         
@@ -530,8 +520,8 @@ extern "C" {
         // Put code here...
         
         // Return to caller.
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
-        return j1939Can_getLastError(this);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
+        return j1939can_getLastError(this);
     }
 
 
@@ -540,7 +530,7 @@ extern "C" {
     //                          I n i t
     //---------------------------------------------------------------
 
-    J1939CAN_DATA *   j1939Can_Init(
+    J1939CAN_DATA *   j1939can_Init(
         J1939CAN_DATA       *this
     )
     {
@@ -570,15 +560,15 @@ extern "C" {
         //obj_setSize(this, cbSize);                        // Needed for Inheritance
         //obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939CAN);         // Needed for Inheritance
         this->pSuperVtbl = obj_getVtbl(this);
-        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939Can_Vtbl);
+        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939can_Vtbl);
         
-        j1939Can_setLastError(this, ERESULT_GENERAL_FAILURE);
+        j1939can_setLastError(this, ERESULT_GENERAL_FAILURE);
         //this->stackSize = obj_getMisc1(this);
         //this->pArray = objArray_New( );
 
     #ifdef NDEBUG
     #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
@@ -595,7 +585,7 @@ extern "C" {
     //                       I s E n a b l e d
     //---------------------------------------------------------------
     
-    ERESULT         j1939Can_IsEnabled(
+    ERESULT         j1939can_IsEnabled(
         J1939CAN_DATA		*this
     )
     {
@@ -603,20 +593,20 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Can_getLastError(this);
+            return j1939can_getLastError(this);
         }
 #endif
         
         if (obj_IsEnabled(this)) {
-            j1939Can_setLastError(this, ERESULT_SUCCESS_TRUE);
-            return j1939Can_getLastError(this);
+            j1939can_setLastError(this, ERESULT_SUCCESS_TRUE);
+            return j1939can_getLastError(this);
         }
         
         // Return to caller.
-        j1939Can_setLastError(this, ERESULT_SUCCESS_FALSE);
-        return j1939Can_getLastError(this);
+        j1939can_setLastError(this, ERESULT_SUCCESS_FALSE);
+        return j1939can_getLastError(this);
     }
     
     
@@ -625,7 +615,7 @@ extern "C" {
     //              R e f l e c t  M e s s a g e
     //---------------------------------------------------------------
     
-    bool            j1939Can_ReflectMsg(
+    bool            j1939can_ReflectMsg(
         OBJ_ID          pObject,
         uint32_t        msDelay,
         J1939_MSG       *pMsg
@@ -636,7 +626,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -662,7 +652,7 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939Can_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939can_ToDebugString(this,4);
      @endcode:
      @param:    this    J1939CAN object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
@@ -670,7 +660,7 @@ extern "C" {
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *     j1939Can_ToDebugString(
+    ASTR_DATA *     j1939can_ToDebugString(
         J1939CAN_DATA      *this,
         int             indent
     )
@@ -685,7 +675,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
@@ -723,7 +713,7 @@ extern "C" {
         j = snprintf(str, sizeof(str), " %p(j1939Can)}\n", this);
         AStr_AppendA(pStr, str);
         
-        j1939Can_setLastError(this, ERESULT_SUCCESS);
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return pStr;
     }
     
@@ -735,7 +725,7 @@ extern "C" {
 
     #ifdef NDEBUG
     #else
-    bool            j1939Can_Validate(
+    bool            j1939can_Validate(
         J1939CAN_DATA      *this
     )
     {
@@ -776,7 +766,7 @@ extern "C" {
     //              T r a n s m i t  M e s s a g e
     //---------------------------------------------------------------
     
-    bool            j1939Can_XmtMsg(
+    bool            j1939can_XmtMsg(
         OBJ_ID          pObject,
         uint32_t        msDelay,
         J1939_MSG       *pMsg
@@ -787,7 +777,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Can_Validate(this) ) {
+        if( !j1939can_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -799,7 +789,7 @@ extern "C" {
             (*this->pXmtMsg)(this->pXmtData, msDelay, pMsg);
         }
         else {
-            fprintf(stderr, "ERROR - j1939Can_XmtMsg is missing pXmtMsg Handler!\n");
+            fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
             DEBUG_BREAK();
         }
         

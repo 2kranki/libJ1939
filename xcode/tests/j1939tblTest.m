@@ -38,7 +38,7 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
+#include    <j1939_defs.h>
 #include    "j1939tbl_internal.h"
 #include    "j1939Can.h"
 #include    "j1939Sys.h"
@@ -83,6 +83,7 @@
     pObj = j1939tbl_Init( pObj );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
+        
         obj_Release(pObj);
         pObj = OBJ_NIL;
     }

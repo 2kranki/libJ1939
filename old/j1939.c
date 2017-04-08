@@ -942,20 +942,24 @@ extern	"C" {
     //      rannum = a + (pm_random(0) / ((RANDMAX / (b - a + 1)) + 1)) 
 #define RANDMAX 2147483646 // RANDMAX = M - 1
     static
-    int         pm_random(
+    int32_t     pm_random(
         int         seed
     )
     {
         static
-        int         next = 1;
+        int32_t    next = 1;
         static
-        int         A = 16807;
+        const
+        int32_t     A = 16807;
         static
-        int         M = 2147483647;   // 2^31 - 1
+        const
+        int32_t     M = 2147483647;   // 2^31 - 1
         static
-        int         q = 127773;       // M / A
+        const
+        int32_t     q = 127773;       // M / A
         static
-        int         r = 2836;         // M % A
+        const
+        int32_t     r = 2836;         // M % A
         
         if (seed) {
             next = seed;
@@ -986,8 +990,11 @@ extern	"C" {
     
     J1939_DATA *    j1939_NewEngine(
         uint8_t         port,
-        P_SRVCMSG_RTN   pSrvcMsg,
-        void            *pSrvcData
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint32_t        spn2846         // J1939 Industry Group (3 bits)
     )
     {
         J1939_DATA      *pJ1939;
@@ -1009,6 +1016,7 @@ extern	"C" {
             return OBJ_NIL;
         }
         
+#ifdef XYZZY
         if (pSrvcMsg) {
             fRc = j1939_AddMessageResponder( pJ1939, pSrvcMsg, pSrvcData );
             if(!fRc) {
@@ -1018,6 +1026,7 @@ extern	"C" {
                 return OBJ_NIL;
             }
         }
+#endif
         
         // Create the ECU.
         // Note: Setup() establishes the pXmtMsg from the CAN Xmt Fifo.

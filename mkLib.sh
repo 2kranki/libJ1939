@@ -251,12 +251,14 @@ main( ) {
     doCmd "rm -fr ${tmpDir}"
     doCmd "mkdir -p ${tmpDir}"
 
-    doCompile   j1939
-    doCompile   j1939_object
+    #doCompile   j1939
+    #doCompile   j1939_object
     doCompile   j1939ca
     doCompile   j1939ca_object
     doCompile   j1939cam
     doCompile   j1939cam_object
+    doCompile   j1939can
+    doCompile   j1939can_object
     doCompile   j1939dg
     doCompile   j1939dg_object
     doCompile   j1939dl

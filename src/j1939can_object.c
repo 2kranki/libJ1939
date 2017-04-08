@@ -1,6 +1,6 @@
 // vi: nu:noai:ts=4:sw=4
 
-//	Class Object Metods and Tables for 'j1939Can'
+//	Class Object Metods and Tables for 'j1939can'
 //	Generated 04/06/2017 16:09:16
 
 
@@ -33,7 +33,7 @@
 
 
 #define			J1939CAN_OBJECT_C	    1
-#include        "j1939Can_internal.h"
+#include        "j1939can_internal.h"
 
 
 
@@ -41,14 +41,14 @@
 //                  Class Object Definition
 //-----------------------------------------------------------
 
-struct j1939Can_class_data_s	{
+struct j1939can_class_data_s	{
     // Warning - OBJ_DATA must be first in this object!
     OBJ_DATA        super;
     
     // Common Data
     //uint32_t        misc;
 };
-typedef struct j1939Can_class_data_s J1939CAN_CLASS_DATA;
+typedef struct j1939can_class_data_s J1939CAN_CLASS_DATA;
 
 
 
@@ -61,18 +61,18 @@ typedef struct j1939Can_class_data_s J1939CAN_CLASS_DATA;
 
 static
 const
-OBJ_INFO        j1939Can_Info;            // Forward Reference
+OBJ_INFO        j1939can_Info;            // Forward Reference
 
 
 
-OBJ_ID          j1939Can_Class(
+OBJ_ID          j1939can_Class(
     OBJ_ID          objId
 );
 
 
 
 static
-bool            j1939Can_ClassIsKindOf(
+bool            j1939can_ClassIsKindOf(
     uint16_t		classID
 )
 {
@@ -98,8 +98,8 @@ uint16_t		obj_ClassWhoAmI(
 static
 const
 OBJ_IUNKNOWN    obj_Vtbl = {
-	&j1939Can_Info,
-    j1939Can_ClassIsKindOf,
+	&j1939can_Info,
+    j1939can_ClassIsKindOf,
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
@@ -114,7 +114,7 @@ OBJ_IUNKNOWN    obj_Vtbl = {
 //-----------------------------------------------------------
 
 const
-J1939CAN_CLASS_DATA  j1939Can_ClassObj = {
+J1939CAN_CLASS_DATA  j1939can_ClassObj = {
     {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939CAN_CLASS, 0, 1},
 	//0
 };
@@ -122,7 +122,7 @@ J1939CAN_CLASS_DATA  j1939Can_ClassObj = {
 
 
 static
-bool            j1939Can_IsKindOf(
+bool            j1939can_IsKindOf(
     uint16_t		classID
 )
 {
@@ -138,21 +138,21 @@ bool            j1939Can_IsKindOf(
 
 // Dealloc() should be put into the Internal Header as well
 // for classes that get inherited from.
-void            j1939Can_Dealloc(
+void            j1939can_Dealloc(
     OBJ_ID          objId
 );
 
 
-OBJ_ID          j1939Can_Class(
+OBJ_ID          j1939can_Class(
     OBJ_ID          objId
 )
 {
-    return (OBJ_ID)&j1939Can_ClassObj;
+    return (OBJ_ID)&j1939can_ClassObj;
 }
 
 
 static
-uint16_t		j1939Can_WhoAmI(
+uint16_t		j1939can_WhoAmI(
     OBJ_ID          objId
 )
 {
@@ -161,28 +161,28 @@ uint16_t		j1939Can_WhoAmI(
 
 
 const
-J1939CAN_VTBL     j1939Can_Vtbl = {
+J1939CAN_VTBL     j1939can_Vtbl = {
     {
-        &j1939Can_Info,
-        j1939Can_IsKindOf,
+        &j1939can_Info,
+        j1939can_IsKindOf,
         obj_RetainStandard,
         obj_ReleaseStandard,
-        j1939Can_Dealloc,
-        j1939Can_Class,
-        j1939Can_WhoAmI,
-        NULL,			// j1939Can_Enable,
-        NULL,			// j1939Can_Disable,
-        (P_OBJ_TOSTRING)j1939Can_ToDebugString,
-        NULL,			// (P_OBJ_ASSIGN)j1939Can_Assign,
-        NULL,			// (P_OBJ_COMPARE)j1939Can_Compare,
-        NULL, 			// (P_OBJ_PTR)j1939Can_Copy,
-        NULL 			// (P_OBJ_HASH)j1939Can_Hash,
+        j1939can_Dealloc,
+        j1939can_Class,
+        j1939can_WhoAmI,
+        NULL,			// j1939can_Enable,
+        NULL,			// j1939can_Disable,
+        (P_OBJ_TOSTRING)j1939can_ToDebugString,
+        NULL,			// (P_OBJ_ASSIGN)j1939can_Assign,
+        NULL,			// (P_OBJ_COMPARE)j1939can_Compare,
+        NULL, 			// (P_OBJ_PTR)j1939can_Copy,
+        NULL 			// (P_OBJ_HASH)j1939can_Hash,
     },
     // Put other object method names below this.
     // Properties:
     // Methods:
-    j1939Can_XmtMsg,
-    j1939Can_ReflectMsg
+    j1939can_XmtMsg,
+    j1939can_ReflectMsg
  
 };
 
@@ -191,11 +191,11 @@ J1939CAN_VTBL     j1939Can_Vtbl = {
 static
 const
 OBJ_INFO        j1939Can_Info = {
-    "j1939Can",
-    "j1939 CAN Test Object",
-    (OBJ_DATA *)&j1939Can_ClassObj,
+    "j1939can",
+    "j1939 CAN Substitute Object",
+    (OBJ_DATA *)&j1939can_ClassObj,
     (OBJ_DATA *)&obj_ClassObj,
-    (OBJ_IUNKNOWN *)&j1939Can_Vtbl
+    (OBJ_IUNKNOWN *)&j1939can_Vtbl
 };
 
 

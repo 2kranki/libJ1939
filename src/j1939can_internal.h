@@ -1,6 +1,6 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /* 
- * File:   j1939Can_internal.h
+ * File:   j1939can_internal.h
  *	Generated 04/06/2017 16:09:16
  *
  * Notes:
@@ -38,7 +38,7 @@
 
 
 
-#include    "j1939Can.h"
+#include    "j1939can.h"
 
 
 #ifndef J1939CAN_INTERNAL_H
@@ -54,7 +54,7 @@ extern "C" {
 
 
 #pragma pack(push, 1)
-struct j1939Can_data_s	{
+struct j1939can_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     OBJ_DATA            super;
@@ -84,19 +84,19 @@ struct j1939Can_data_s	{
 
     extern
     const
-    struct j1939Can_class_data_s  j1939Can_ClassObj;
+    struct j1939can_class_data_s  j1939can_ClassObj;
 
     extern
     const
-    J1939CAN_VTBL         j1939Can_Vtbl;
+    J1939CAN_VTBL         j1939can_Vtbl;
 
 
     // Internal Functions
-    void            j1939Can_Dealloc(
+    void            j1939can_Dealloc(
         OBJ_ID          objId
     );
 
-    bool            j1939Can_setLastError(
+    bool            j1939can_setLastError(
         J1939CAN_DATA     *this,
         ERESULT         value
     );
@@ -106,7 +106,7 @@ struct j1939Can_data_s	{
 
 #ifdef NDEBUG
 #else
-    bool			j1939Can_Validate(
+    bool			j1939can_Validate(
         J1939CAN_DATA       *this
     );
 #endif

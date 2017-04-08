@@ -5,15 +5,14 @@
         j1939_defs.h
     ]
     "objects": [
-        j1939,
         j1939ca,
         j1939cam,
+        j1939Can,
         j1939dg,
         j1939dl,
         j1939en,
         j1939er,
         j1939tbl,
-        j1939tc,
     ],
     "routines": [
         "j1939msg.c"

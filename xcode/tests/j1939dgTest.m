@@ -51,7 +51,6 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
 #include    "j1939dg_internal.h"
 #include    "common.h"
 #include    "j1939Can.h"
@@ -79,7 +78,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     mem_Init( );
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
 }
 
@@ -94,7 +94,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
     
     mem_Dump( );
 }
@@ -105,9 +105,11 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 {
     J1939DG_DATA    *pDG = NULL;
     //J1939_MSG       msg;
-    J1939_PDU       pdu;
-    bool            fRc;
+    //J1939_PDU       pdu;
+    //bool            fRc;
 
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pDG = j1939dg_Alloc();
     XCTAssertFalse( (NULL == pDG), @"Could not alloc pDG" );
     pDG = j1939dg_Init(
@@ -122,7 +124,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pDG) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pDG);
         pDG = NULL;

@@ -29,7 +29,7 @@
 
 #import     <XCTest/XCTest.h>
 #import     <cmn_defs.h>
-#include    <j1939.h>
+//#include    <j1939.h>
 #include    "j1939ca_internal.h"
 #include    "common.h"              // Tests Common Routines
 #include    "j1939Can.h"
@@ -212,7 +212,8 @@ bool            xmtPGN60928(
     
     mem_Init( );
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
 }
 
@@ -227,7 +228,7 @@ bool            xmtPGN60928(
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
 
     mem_Dump( );
 }
@@ -254,6 +255,7 @@ bool            xmtPGN60928(
     if (pJ1939ca) {
         
         j1939Sys_TimeReset(pSYS, 0);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pJ1939ca);
         pJ1939ca = OBJ_NIL;
@@ -289,7 +291,7 @@ bool            xmtPGN60928(
     if (pCA) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
         // an Address Claim.
@@ -340,7 +342,7 @@ bool            xmtPGN60928(
     if (pJ1939ca) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
+        j1939can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
@@ -390,7 +392,7 @@ bool            xmtPGN60928(
     if (pJ1939ca) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
+        j1939can_setXmtMsg(pCAN, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
@@ -453,7 +455,7 @@ bool            xmtPGN60928(
     if (pCA) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);

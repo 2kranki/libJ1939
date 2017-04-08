@@ -22,6 +22,7 @@ is ANSI C and should be compilable with any ANSI C compiler. Use
 using Xcode, you will find a test program for almost every object.
 Some tests are pretty complete, but they are always a work in-progress.
 
+This library relies on libCmn being available.
 
 *** Use at your own risk. ***
 
@@ -30,11 +31,13 @@ Some tests are pretty complete, but they are always a work in-progress.
 J1939 Objects
 ===============
 
-J1939       -   Central Object which must be used in all cases
-
 J1939cam    -   Controller Application Manager
                 --  Receives all messages and dispatches them to the
                     appropriate Controller Application(s)
+
+J1939can    -   Substitute CAN Object
+                --  Can be used in leiu of creating another object if 
+                    desired
 
 J1939ca     -   Controller Application
                 --  Handles appropriate messages
@@ -45,14 +48,15 @@ J1939en     -   Engine Application which inherits from J1939ca
 J1939er     -   Engine Retarder Application which inherits from J1939ca
 
 J1939tc     -   Transmission Application which inherits from 1939ca
+                (Currently Not Operational)
 
 
 
-The normal operation would be to have an Engine Application and an Engine Retarder
-Application running under a task or a Transmission Application. If you use J1939
-to start either the Engine Application or the Transmission Application, it will
-take care of the underlying linkages. This system was originally designed to run
-in a multi-tasking operating system.
+The normal operation would be to have an Engine Application and optionally an 
+Engine Retarder Application running under a task or a Transmission Application. 
+If you use J1939 to start either the Engine Application or the Transmission 
+Application, it will take care of the underlying linkages. This system was
+originally designed to run in a multi-tasking operating system.
 
 
 

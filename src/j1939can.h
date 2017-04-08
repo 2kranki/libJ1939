@@ -1,11 +1,11 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 CAN Test Object (j1939Can) Header
+//          J1939 CAN Test Object (j1939can) Header
 //****************************************************************
 /*
  * Program
- *			J1939 CAN Test Object (j1939Can)
+ *			J1939 CAN Test Object (j1939can)
  * Purpose
  *			This object provides a means of testing the operation
  *          of libJ1939 without actually having the library connected
@@ -73,9 +73,9 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939Can_data_s	J1939CAN_DATA;    // Inherits from OBJ.
+    typedef struct j1939can_data_s	J1939CAN_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939Can_vtbl_s	{
+    typedef struct j1939can_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
         // method names to the vtbl definition in j1939Can_object.c.
@@ -102,11 +102,11 @@ extern "C" {
      released.
      @return:   pointer to j1939Can object if successful, otherwise OBJ_NIL.
      */
-    J1939CAN_DATA *     j1939Can_Alloc(
+    J1939CAN_DATA *     j1939can_Alloc(
     );
     
     
-    J1939CAN_DATA *     j1939Can_New(
+    J1939CAN_DATA *     j1939can_New(
     );
     
     
@@ -115,25 +115,25 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT         j1939Can_getLastError(
+    ERESULT         j1939can_getLastError(
         J1939CAN_DATA	*this
     );
 
 
-    bool            j1939Can_setReflect(
+    bool            j1939can_setReflect(
         J1939CAN_DATA   *this,
         bool            value
     );
     
     
-    bool            j1939Can_setReflectMsg(
+    bool            j1939can_setReflectMsg(
         J1939CAN_DATA	*this,
         P_XMTMSG_RTN    pRoutine,
         void            *pData
     );
     
     
-    bool            j1939Can_setXmtMsg(
+    bool            j1939can_setXmtMsg(
         J1939CAN_DATA	*this,
         P_XMTMSG_RTN    pRoutine,
         void            *pData
@@ -146,27 +146,12 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939Can_Disable(
-        J1939CAN_DATA	*this
-    );
-
-
-    ERESULT     j1939Can_Enable(
-        J1939CAN_DATA	*this
-    );
-
-   
-    J1939CAN_DATA * j1939Can_Init(
+    J1939CAN_DATA * j1939can_Init(
         J1939CAN_DATA   *this
     );
 
 
-    ERESULT     j1939Can_IsEnabled(
-        J1939CAN_DATA	*this
-    );
-    
- 
-    bool            j1939Can_ReflectMsg(
+    bool            j1939can_ReflectMsg(
         OBJ_ID          pObject,
         uint32_t        msDelay,
         J1939_MSG       *pMsg
@@ -177,7 +162,7 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939Can_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939can_ToDebugString(this,4);
      @endcode:
      @param:    this    J1939CAN object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
@@ -185,13 +170,13 @@ extern "C" {
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *    j1939Can_ToDebugString(
+    ASTR_DATA *    j1939can_ToDebugString(
         J1939CAN_DATA   *this,
         int             indent
     );
     
     
-    bool            j1939Can_XmtMsg(
+    bool            j1939can_XmtMsg(
         OBJ_ID          pObject,
         uint32_t        msDelay,
         J1939_MSG       *pMsg

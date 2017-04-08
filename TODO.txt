@@ -30,6 +30,7 @@ will depend upon time and resources.
         that the proper test is performed.
 
 --  J1939tc - Transmission CA
+    --  Rebuild after editing it without backup. ugh
     --  Make sure time handling is consistant with CA, DG, EN, and ER
     --  Look at time rollover in message handlers and timed msgs
 

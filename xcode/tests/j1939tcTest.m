@@ -83,6 +83,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pSYS = j1939Sys_New();
     pCAN = j1939Can_New();
+    cCurMsg = 0;
     
 }
 
@@ -97,7 +98,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
     
     mem_Dump( );
 }
@@ -110,7 +111,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
     j1939Sys_TimeReset(pSYS, 0);
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -136,7 +138,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -168,10 +171,12 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
-        XCTAssertTrue( (4 == cCurMsg) );
+        XCTAssertTrue( (3 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
 
         obj_Release(pTC);
@@ -190,9 +195,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    j1939Sys_TimeReset(pSYS, 0);
-
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -246,7 +250,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -299,7 +304,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -351,7 +357,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     bool            fRc;
     J1939_PDU       pdu;
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -392,7 +399,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
@@ -474,7 +482,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    cCurMsg = 0;
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);

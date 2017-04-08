@@ -29,7 +29,6 @@
 
 #import     <XCTest/XCTest.h>
 #import     <cmn_defs.h>
-#include    <j1939.h>
 #include    "j1939er_internal.h"
 #include    "common.h"              // Tests Common Routines
 #include    "j1939Can.h"
@@ -79,7 +78,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     mem_Init( );
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
 }
 
@@ -94,7 +94,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    j1939_SharedReset( );
+    //j1939_SharedReset( );
     
     mem_Dump( );
 }
@@ -107,6 +107,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     bool            fRc;
 
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
     pER = j1939er_Init(
@@ -122,7 +124,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -148,6 +150,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -163,7 +167,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -216,6 +220,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -231,7 +237,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -288,9 +294,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
-    j1939Sys_TimeReset(pSYS, 0);
-    j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
-
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -304,6 +309,9 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pER) );
     cCurMsg = 0;
     if (pER) {
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -358,6 +366,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -373,7 +383,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -428,6 +438,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     bool            fRc;
     J1939_PDU       pdu;
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -443,7 +455,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -489,6 +501,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -504,7 +518,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
@@ -606,6 +620,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939_PDU       pdu;
     uint8_t         data[8];
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -621,7 +637,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pER) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
