@@ -491,39 +491,48 @@ extern	"C" {
     // in this message and try to control the Engine Retarder via the
     // TSC1 message.
     bool            j1939er_Pgn61440Setup(
-        J1939ER_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
-        bool            fRc = true;
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = 0x00;
-            *pData |= cbp->spn900 & 0xF;
-            *pData |= (cbp->spn571 & 0x3) << 4;
-            *pData |= (cbp->spn572 & 0x3) << 6;
+            *pData |= this->spn900 & 0xF;
+            *pData |= (this->spn571 & 0x3) << 4;
+            *pData |= (this->spn572 & 0x3) << 6;
             ++pData;
-            *pData  = cbp->spn520;
+            *pData  = this->spn520;
             ++pData;
-            *pData  = cbp->spn1085;
+            *pData  = this->spn1085;
             ++pData;
             *pData  = 0xF0;
-            *pData |= (cbp->spn1082 & 0x3);
-            *pData |= (cbp->spn1667 & 0x3) << 2;
+            *pData |= (this->spn1082 & 0x3);
+            *pData |= (this->spn1667 & 0x3) << 2;
             ++pData;
-            *pData  = cbp->spn1480;
+            *pData  = this->spn1480;
             ++pData;
-            *pData  = cbp->spn1715;
+            *pData  = this->spn1715;
             ++pData;
-            *pData  = cbp->spn1716;
+            *pData  = this->spn1716;
             ++pData;
-            *pData  = cbp->spn1717;
+            *pData  = this->spn1717;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
-        return fRc;
+        return true;
     }
 
 

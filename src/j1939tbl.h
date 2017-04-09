@@ -97,7 +97,6 @@ extern "C" {
     //---------------------------------------------------------------
 
     J1939TBL_DATA * j1939tbl_Alloc(
-        uint16_t        stackSize           // Stack Size in Words
     );
     
     
@@ -106,9 +105,6 @@ extern "C" {
         uint16_t        data
     );
     
-    
-    OBJ_ID          j1939tbl_Class(
-    );
     
     
 
@@ -150,33 +146,12 @@ extern "C" {
     );
 
 
-    /* TaskBody() is the primary function run by the separate j1939tbl.
-     * It is defaulted to running a function that waits for data
-     * from the queue and processes it. By overriding this, the
-     * j1939tbl will perform this routine instead.
-     */
-    bool			j1939tbl_setTaskBody(
-        J1939TBL_DATA   *this,
-        void            (*function)(void *),
-        void            *pData                  // Data passed as void *
-    );
-    
-
 
     
     //---------------------------------------------------------------
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    bool            j1939tbl_IsEmpty(
-        J1939TBL_DATA     *this
-    );
-
-
-    /* Init() sets up the default TaskBody() outlined above
-     * and initializes other fields needed. Init() assumes 
-     * that the size of the stack is passed to in obj_misc1.
-     */
     J1939TBL_DATA *     j1939tbl_Init(
         J1939TBL_DATA       *this
     );

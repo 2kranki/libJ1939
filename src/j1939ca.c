@@ -1045,6 +1045,7 @@ extern	"C" {
     )
     {
         uint16_t        dlc = pPgnEntry->pDef->dlc;
+        uint16_t        lenUsed = 0;
         uint8_t         data[8];
         uint8_t         *pData = data;
         J1939_PGN       pgn;
@@ -1079,11 +1080,11 @@ extern	"C" {
         }
         
         if (pPgnEntry->pDataSetup) {
-            fRc = (*pPgnEntry->pDataSetup)(this,(uint32_t *)&pdu,dlc,pData);
+            fRc = (*pPgnEntry->pDataSetup)(this,(uint32_t *)&pdu,dlc,pData,&lenUsed);
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, lenUsed, &data);
         }
         
         if (pData == data) {
@@ -1210,16 +1211,26 @@ extern	"C" {
 
     bool            j1939ca_SetupPgn60928(
         J1939CA_DATA	*this,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
         J1939_NAME      *pName = (J1939_NAME *)pData;
         
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             pName->w0 = this->name.w0;
             pName->w1 = this->name.w1;
+        }
+        else {
+            return false;
         }
         
         // Return to caller.

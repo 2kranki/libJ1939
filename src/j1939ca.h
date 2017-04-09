@@ -97,11 +97,21 @@ extern	"C" {
     
     
     // J1939CA Message Setup Routine definition
+    /*! 
+     Set up PDU and Msg using object data.
+     @param:    this    object pointer
+     @param:    pPDU    input PDU pointer
+     @param:    cData   size of the supplied message data area
+     @param:    pData   Message Output Data Area Ptr
+     @param:    pLen    returned size actually used in the data area
+     @param:    this    object pointer
+     */
     typedef bool (*P_CA_MSGSETUP_RTN) (
-    OBJ_PTR     ,                       // Object Ptr
-    uint32_t    *,                      // PDU (j1939) Ptr
-    uint16_t    ,                       // data area size
-    void        *                       // Message Data Area
+        OBJ_ID          this,           // Object Ptr
+        J1939_PDU       *pPDU,          // PDU (J1939) Ptr
+        uint16_t        cData,          // data area size
+        void            *pData,         // Message Output Data Area Ptr
+        uint16_t        *pLen           // data output actually used size (returned)
     );
 
     
@@ -112,7 +122,7 @@ extern	"C" {
         J1939_PGN_ENTRY *pDef;          // Definition
         const
         P_SRVCMSG_RTN   pService;       // First parameter is assumed to be the responder
-                                        // object ptr who handles the message.
+                                        // object ptr who handles the incoming message.
         const
         P_MSGDATA_RTN   pDataSetup;
         const

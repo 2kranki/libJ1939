@@ -95,7 +95,7 @@ typedef struct j1939_pgn_s  J1939_PGN;
  */
 typedef bool (*P_SRVCMSG_RTN) (
             OBJ_ID      ,                       // Object Ptr
-            uint32_t    eid,                    // EID
+            uint32_t    ,                       // EID
             J1939_MSG   *
         );
 
@@ -106,11 +106,14 @@ typedef bool (*P_XMTMSG_RTN) (
             J1939_MSG   *
         );
 
+/*! Set up PDU and Msg using object data.
+ */
 typedef bool (*P_MSGDATA_RTN) (
             OBJ_ID      ,                       // Object Ptr
             uint32_t    *,                      // EID or PDU (j1939) Ptr
             uint16_t    ,                       // data area size
-            void        *                       // Message Data Area
+            void        *,                      // Message Data Area
+            uint16_t    *                       // data used size
 );
 
 

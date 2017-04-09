@@ -15,46 +15,11 @@
  *              One message is expected every 50ms. Others are
  *              at larger intervals.
  *              
- *              The PGNs associated with the Engine Retarder are:
+ *              The PGNs associated with the Transmission are:
  *                  0 TSC1 : spn 695, 897,518 (rcv from Transmission (SA == 3))
  *                  61440 ERC1 : spn 571,520  (xmt)
  *                  65249 RC :   spn  (xmt)
  *
- *              An engine retarder (compression or exhaust) is required on Eaton
- *              AutoShift 10 and 18-Speed and 13-Speed UltraShift transmissions. 
- *              It is recommended on the 10-Speed UltraShift transmission.
- *
- *              1. The transmission sends J-1939 Torque/Speed Control 1 (TSC1) 
- *                  torque control commands to the engine retarder (compression 
- *                  or exhaust) when deceleration assistance during a shift is 
- *                  required. The transmission automatically detects the retarder
- *                  source address (compression or exhaust) and addresses the 
- *                  TSC1 accordingly. If both compression and exhaust are present,
- *                  the transmission will address exhaust only.
- *              2. The engine retarder shall respond to TSC1 control commands as 
- *                  indicated by Actual Retarder Percent torque within 50 msec 
- *                  of the TSC1 command.
- *              3. The engine retarder shall respond to TSC1 commands regardless 
- *                  of the status of the engine brake control switches on the dash.
- *              4. The engine retarder shall affect the engine deceleration rate 
- *                  within 250 msec to 300 msec of the request. Longer response 
- *                  times will adversely affect the transmission’s upshift capa-
- *                  bilities on a grade and may limit applications to grades 8% 
- *                  and lower. Response times greater the 500 msec are not acceptable.
- *              5. The engine retarder shall respond to zero percent torque control 
- *                  command by turning off the engine brake within 250 msec. Longer 
- *                  delay times to turn off may cause harsh gear engagements and 
- *                  loss of vehicle speed.
- *              6. The engine shall have a minimum deceleration rate of 1000 rpm/sec
- *                  with the engine retarder at 100%. The engine is disengaged from
- *                  the driveline and is virtually unloaded.
- *              7. The recommended practice is for the exhaust brake on/off switches
- *                  to be wired in the engine ECM separately from the exhaust brake 
- *                  solenoid. Failure to comply with this recommended practice can 
- *                  cause Eaton AutoShift/UltraShift trans- missions to miss shifts 
- *                  when the exhaust brake is required. For more information contact 
- *                  Eaton Application Engineering and refer to the J-1939 Engine 
- *                  Requirements for Eaton Automated Transmissions.
  *
  * Remarks
  *	1.			This object does not claim its name. It just assumes that it
@@ -146,10 +111,6 @@ extern	"C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    bool			j1939tc_setSystemTimeGet(
-        J1939TC_DATA	*this,
-        uint32_t        (*pSystemTimeGet)()
-    );
     
     
 
@@ -158,14 +119,6 @@ extern	"C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
     
-    // j1939tc_AddData adds Data to the end of the buffer.
-    bool			j1939tc_AddData(
-        J1939TC_DATA	*this,
-        uint16_t        size,
-        void            *data
-    );
-    
-   
     bool            j1939tc_HandleTimedTransmits(
         J1939TC_DATA	*this
     );

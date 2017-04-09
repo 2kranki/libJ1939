@@ -197,9 +197,10 @@ extern "C" {
 
     bool            j1939er_Pgn61440Setup(
         J1939ER_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 

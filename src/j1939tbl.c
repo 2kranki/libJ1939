@@ -923,23 +923,18 @@ extern "C" {
     //                      *** Class Methods ***
     //===============================================================
 
-    J1939TBL_DATA *     j1939tbl_Alloc(
-        uint16_t        stackSize
+    J1939TBL_DATA * j1939tbl_Alloc(
     )
     {
-        J1939TBL_DATA       *cbp;
+        J1939TBL_DATA   *this;
         uint32_t        cbSize = sizeof(J1939TBL_DATA);
         
         // Do initialization.
         
-        if (0 == stackSize) {
-            stackSize = 256;
-        }
-        cbp = obj_Alloc( cbSize + (stackSize << 2) );
-        obj_setMisc1(cbp, stackSize);
+        this = obj_Alloc( cbSize );
         
         // Return to caller.
-        return( cbp );
+        return this;
     }
 
 
@@ -1043,7 +1038,7 @@ extern "C" {
             DEBUG_BREAK();
         }
 #endif
-        return( 0 );
+        return 0;
     }
 
 
@@ -1063,22 +1058,22 @@ extern "C" {
         OBJ_ID          objId
     )
     {
-        J1939TBL_DATA   *cbp = objId;
+        J1939TBL_DATA   *this = objId;
 
         // Do initialization.
-        if (NULL == cbp) {
+        if (NULL == this) {
             return;
         }        
 #ifdef NDEBUG
 #else
-        if( !j1939tbl_Validate( cbp ) ) {
+        if( !j1939tbl_Validate(this) ) {
             DEBUG_BREAK();
             return;
         }
 #endif
 
-        obj_Dealloc( cbp );
-        cbp = NULL;
+        obj_Dealloc(this);
+        this = NULL;
 
         // Return to caller.
     }
@@ -1090,32 +1085,33 @@ extern "C" {
     //---------------------------------------------------------------
 
     J1939TBL_DATA *   j1939tbl_Init(
-        J1939TBL_DATA       *cbp
+        J1939TBL_DATA       *this
     )
     {
+        uint32_t        cbSize = sizeof(J1939TBL_DATA);
         
-        if (OBJ_NIL == cbp) {
+        if (OBJ_NIL == this) {
             return OBJ_NIL;
         }
         
-        cbp = obj_Init( cbp, obj_getSize(cbp), OBJ_IDENT_J1939TBL );
-        if (OBJ_NIL == cbp) {
+        this = obj_Init( this, cbSize, OBJ_IDENT_J1939TBL );
+        if (OBJ_NIL == this) {
             return OBJ_NIL;
         }
-        obj_setVtbl(cbp, (OBJ_IUNKNOWN *)&j1939tbl_Vtbl);
+        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939tbl_Vtbl);
         
-        //cbp->stackSize = obj_getMisc1(cbp);
+        //this->stackSize = obj_getMisc1(this);
 
     #ifdef NDEBUG
     #else
-        if( !j1939tbl_Validate( cbp ) ) {
+        if( !j1939tbl_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
         //BREAK_NOT_BOUNDARY4(&cbp->thread);
     #endif
 
-        return cbp;
+        return this;
     }
 
      
@@ -1127,18 +1123,18 @@ extern "C" {
     #ifdef NDEBUG
     #else
     bool            j1939tbl_Validate(
-        J1939TBL_DATA      *cbp
+        J1939TBL_DATA      *this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf(cbp,OBJ_IDENT_J1939TBL) )
+        if(this) {
+            if ( obj_IsKindOf(this, OBJ_IDENT_J1939TBL) )
                 ;
             else
                 return false;
         }
         else
             return false;
-        if( !(obj_getSize(cbp) >= sizeof(J1939TBL_DATA)) )
+        if( !(obj_getSize(this) >= sizeof(J1939TBL_DATA)) )
             return false;
 
         // Return to caller.

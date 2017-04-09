@@ -51,7 +51,6 @@
 //                                  failure_description, ...)
 
 
-#include    <j1939.h>
 #include    "j1939tc_internal.h"
 
 #include	"common.h"
@@ -82,7 +81,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     mem_Init( );
     
     pSYS = j1939Sys_New();
-    pCAN = j1939Can_New();
+    pCAN = j1939can_New();
     cCurMsg = 0;
     
 }
@@ -120,7 +119,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pTC);
         pTC = NULL;
@@ -130,6 +129,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
+#ifdef XYZZY
 - (void)testCheck_RequestNameDirect
 {
     J1939TC_DATA    *pTC = NULL;
@@ -556,6 +556,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     }
     
 }
+#endif
 
 
 

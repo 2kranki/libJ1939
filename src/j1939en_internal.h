@@ -247,49 +247,55 @@ extern "C" {
 
     bool            j1939en_SetupPgn61443(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939en_SetupPgn61444(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939en_SetupPgn65129(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939en_SetupPgn65247(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939en_SetupPgn65262(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939en_SetupPgn65265(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 

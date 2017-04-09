@@ -319,6 +319,8 @@ extern	"C" {
         OBJ_IDENT_J1939MSG_CLASS,
         OBJ_IDENT_J1939RQ,
         OBJ_IDENT_J1939RQ_CLASS,
+        OBJ_IDENT_J1939SS,              // J1939 Shift Selector CA
+        OBJ_IDENT_J1939SS_CLASS,
         OBJ_IDENT_J1939SYS,             // SYS Test Module
         OBJ_IDENT_J1939SYS_CLASS,
         OBJ_IDENT_J1939TBL,             // J1939 SPN & PGN Tables

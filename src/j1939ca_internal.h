@@ -178,9 +178,10 @@ extern "C" {
     
     bool            j1939ca_SetupPgn60928(
         J1939CA_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pEid,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
     
     

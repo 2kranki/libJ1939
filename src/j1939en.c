@@ -476,7 +476,7 @@ extern	"C" {
         }
 
         // Return to caller.
-        return false;
+        return true;
     }
 
 
@@ -860,13 +860,21 @@ extern	"C" {
     // Unused bits are set to 1.
     bool            j1939en_SetupPgn61443(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
+        
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = 0xC0;
             *pData |= cbp->spn558 & 0x3;
             *pData |= (cbp->spn559 & 0x3) << 2;
@@ -885,6 +893,9 @@ extern	"C" {
             *pData  = 0xFF;
             ++pData;    // 7
             *pData  = 0xFF;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
@@ -934,33 +945,43 @@ extern	"C" {
     // Electronic Engine Controller 1 - EEC1 -
     // Unused bits are set to 1.
     bool            j1939en_SetupPgn61444(
-        J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
         // Fake the engine stuff.
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = 0xF0;
-            *pData |= cbp->spn899 & 0xF;
+            *pData |= this->spn899 & 0xF;
             ++pData;    // 1
-            *pData  = cbp->spn512;
+            *pData  = this->spn512;
             ++pData;    // 2
-            *pData  = cbp->spn513;
+            *pData  = this->spn513;
             ++pData;    // 3
-            *pData  = cbp->spn190 & 0xFF;
+            *pData  = this->spn190 & 0xFF;
             ++pData;    // 4
-            *pData  = (cbp->spn190 >> 8) & 0xFF;
+            *pData  = (this->spn190 >> 8) & 0xFF;
             ++pData;    // 5
-            *pData  = cbp->spn1483;
+            *pData  = this->spn1483;
             ++pData;    // 6
             *pData  = 0xF0;
-            *pData |= cbp->spn1675 & 0xF;
+            *pData |= this->spn1675 & 0xF;
             ++pData;    // 7
-            *pData  = cbp->spn2432;
+            *pData  = this->spn2432;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
@@ -1012,13 +1033,20 @@ extern	"C" {
      */
     bool            j1939en_SetupPgn65129(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = cbp->spn1636 & 0xFF;
             ++pData;    // 1
             *pData  = (cbp->spn1636 >> 8) & 0xFF;
@@ -1034,6 +1062,9 @@ extern	"C" {
             *pData  = 0xFF;
             ++pData;    // 7
             *pData  = 0xFF;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
@@ -1083,13 +1114,20 @@ extern	"C" {
      */
     bool            j1939en_SetupPgn65247(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             // Range seems to be 15% (0x8C) to 18% (0x8F) for spn514
             *pData = 0x8D;
             //*pData  = cbp->spn514 & 0xFF;
@@ -1107,6 +1145,9 @@ extern	"C" {
             *pData  = 0xFF;
             ++pData;    // 7
             *pData  = 0xFF;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
@@ -1157,13 +1198,20 @@ extern	"C" {
      */
     bool            j1939en_SetupPgn65262(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = cbp->spn110 & 0xFF;
             ++pData;    // 1
             *pData  = cbp->spn174 & 0xFF;
@@ -1179,6 +1227,9 @@ extern	"C" {
             *pData  = cbp->spn52 & 0xFF;
             ++pData;    // 7
             *pData  = cbp->spn1134 & 0xFF;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.
@@ -1228,13 +1279,20 @@ extern	"C" {
      */
     bool            j1939en_SetupPgn65265(
         J1939EN_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     )
     {
 
+        if (pLen) {
+            *pLen = 8;
+        }
         if (pData) {
+            if (cData < 8) {
+                return false;
+            }
             *pData  = 0xC0;
             *pData |= (cbp->spn69 & 0x3);
             *pData |= (cbp->spn70 & 0x3) << 2;
@@ -1267,6 +1325,9 @@ extern	"C" {
             *pData |= (cbp->spn967 & 0x3) << 2;
             *pData |= (cbp->spn966 & 0x3) << 4;
             *pData |= (cbp->spn1237 & 0x3) << 6;
+        }
+        else {
+            return false;
         }
 
         // Return to caller.

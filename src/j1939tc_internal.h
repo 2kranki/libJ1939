@@ -208,6 +208,13 @@ extern "C" {
     );
 
 
+    bool            j1939tc_HandlePgn61441(
+        J1939TC_DATA	*cbp,
+        uint32_t        eid,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    );
+    
+    
     bool            j1939tc_HandlePgn61442(
         J1939TC_DATA	*cbp,
         uint32_t        eid,
@@ -252,52 +259,47 @@ extern "C" {
 
     bool            j1939tc_Pgn0Setup(
         J1939TC_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939tc_Pgn61442Setup(
         J1939TC_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939tc_Pgn61445Setup(
         J1939TC_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939tc_Pgn65098Setup(
         J1939TC_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
 
 
     bool            j1939tc_Pgn65226Setup(
         J1939TC_DATA	*cbp,
-        uint32_t        *pEid,
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData
+        uint8_t         *pData,
+        uint16_t        *pLen
     );
-
-
-
-#ifdef NDEBUG
-#else
-    static
-    bool            j1939tc_Validate(
-        J1939TC_DATA      *cbp
-    );
-#endif
 
 
 
