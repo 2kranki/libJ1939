@@ -153,6 +153,709 @@ extern	"C" {
     //                      *** Properties ***
     //===============================================================
 
+    // Wheel-Based Vehicle Speed
+    uint16_t			j1939er_getSpn84(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn84;
+    }
+
+
+    bool			j1939er_setSpn84(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn84 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Oil Temperature 1
+    uint16_t			j1939er_getSpn175(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn175;
+    }
+
+
+    bool			j1939er_setSpn175(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn175 = value;
+
+        return true;
+    }
+
+
+
+    // Turbo Oil Temperature
+    uint16_t			j1939er_getSpn176(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn176;
+    }
+
+
+    bool			j1939er_setSpn176(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn176 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Speed
+    uint16_t			j1939er_getSpn190(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn190;
+    }
+
+
+    bool			j1939er_setSpn190(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn190 = value;
+
+        return true;
+    }
+
+
+
+    // Engine's Desired Operating Speed
+    uint16_t			j1939er_getSpn515(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn515;
+    }
+
+
+    bool			j1939er_setSpn515(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn515 = value;
+
+        return true;
+    }
+
+
+
+    // Actual Retarder - Percent Torque
+    uint8_t			j1939er_getSpn520(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn520;
+    }
+
+
+    bool			j1939er_setSpn520(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn520 = value;
+
+        return true;
+    }
+
+
+
+    // Retarder Enable - Brake Assist Switch
+    uint8_t			j1939er_getSpn571(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn571;
+    }
+
+
+    bool			j1939er_setSpn571(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn571 = value;
+
+        return true;
+    }
+
+
+
+    // Retarder Enable - Brake Assist Switch
+    uint8_t			j1939er_getSpn572(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn572;
+    }
+
+
+    bool			j1939er_setSpn572(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn572 = value;
+
+        return true;
+    }
+
+
+
+    // Retarder Torque Mode
+    uint8_t			j1939er_getSpn900(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn900;
+    }
+
+
+    bool			j1939er_setSpn900(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn900 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Coolant Load Increase
+    uint8_t			j1939er_getSpn1082(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1082;
+    }
+
+
+    bool			j1939er_setSpn1082(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1082 = value;
+
+        return true;
+    }
+
+
+
+    // Intended Retarder Percent Torque
+    uint8_t			j1939er_getSpn1085(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1085;
+    }
+
+
+    bool			j1939er_setSpn1085(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1085 = value;
+
+        return true;
+    }
+
+
+
+    // CA of Controlling Retarder Device
+    uint8_t			j1939er_getSpn1480(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1480;
+    }
+
+
+    bool			j1939er_setSpn1480(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1480 = value;
+
+        return true;
+    }
+
+
+
+    // Intake Manifold 1 Air Temperature
+    uint16_t			j1939er_getSpn1636(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1636;
+    }
+
+
+    bool			j1939er_setSpn1636(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1636 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Coolant Temperature
+    uint16_t			j1939er_getSpn1637(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1637;
+    }
+
+
+    bool			j1939er_setSpn1637(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1637 = value;
+
+        return true;
+    }
+
+
+
+    // Retarder requesting Brake Light
+    uint8_t			j1939er_getSpn1667(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1667;
+    }
+
+
+    bool			j1939er_setSpn1667(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1667 = value;
+
+        return true;
+    }
+
+
+
+    // Drivers Demand Retarder - Percent Torque
+    uint8_t			j1939er_getSpn1715(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1715;
+    }
+
+
+    bool			j1939er_setSpn1715(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1715 = value;
+
+        return true;
+    }
+
+
+
+    // Retarder Selection - non-engine
+    uint8_t			j1939er_getSpn1716(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1716;
+    }
+
+
+    bool			j1939er_setSpn1716(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1716 = value;
+
+        return true;
+    }
+
+
+
+    // Actual Maximum Available Retarder
+    uint8_t			j1939er_getSpn1717(
+        J1939ER_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1717;
+    }
+
+
+    bool			j1939er_setSpn1717(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939er_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1717 = value;
+
+        return true;
+    }
+
+
+
+
 
 
 

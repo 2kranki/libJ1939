@@ -261,6 +261,1957 @@ extern	"C" {
 
 
 
+    // Engine Intercooler Temperature
+    uint8_t			j1939en_getSpn52(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn52;
+    }
+
+
+    bool			j1939en_setSpn52(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn52 = value;
+
+        return true;
+    }
+
+
+
+    // Two Speed Axle Switch
+    uint8_t			j1939en_getSpn69(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn69;
+    }
+
+
+    bool			j1939en_setSpn69(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn69 = value;
+
+        return true;
+    }
+
+
+
+    // Parking Brake Switch
+    uint8_t			j1939en_getSpn70(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn70;
+    }
+
+
+    bool			j1939en_setSpn70(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn70 = value;
+
+        return true;
+    }
+
+
+
+    // Wheel-Based Vehicle Speed
+    uint16_t			j1939en_getSpn84(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn84;
+    }
+
+
+    bool			j1939en_setSpn84(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn84 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Set Speed
+    uint8_t			j1939en_getSpn86(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn86;
+    }
+
+
+    bool			j1939en_setSpn86(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn86 = value;
+
+        return true;
+    }
+
+
+
+    // Accelerator Pedal Position 1
+    uint8_t			j1939en_getSpn91(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn91;
+    }
+
+
+    bool			j1939en_setSpn91(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn91 = value;
+
+        return true;
+    }
+
+
+
+    // Percent Load At Current Speed
+    uint8_t			j1939en_getSpn92(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn92;
+    }
+
+
+    bool			j1939en_setSpn92(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn92 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Coolant Temperature
+    uint8_t			j1939en_getSpn110(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn110;
+    }
+
+
+    bool			j1939en_setSpn110(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn110 = value;
+
+        return true;
+    }
+
+
+
+    // 03 - Transmission Input Shaft Speed
+    uint16_t			j1939en_getSpn161(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn161;
+    }
+
+
+    bool			j1939en_setSpn161(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn161 = value;
+
+        return true;
+    }
+
+
+
+    // Fuel Temperature
+    uint8_t			j1939en_getSpn174(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn174;
+    }
+
+
+    bool			j1939en_setSpn174(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn174 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Oil Temperature 1
+    uint16_t			j1939en_getSpn175(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn175;
+    }
+
+
+    bool			j1939en_setSpn175(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn175 = value;
+
+        return true;
+    }
+
+
+
+    // Turbo Oil Temperature
+    uint16_t			j1939en_getSpn176(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn176;
+    }
+
+
+    bool			j1939en_setSpn176(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn176 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Speed
+    uint16_t			j1939en_getSpn190(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn190;
+    }
+
+
+    bool			j1939en_setSpn190(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn190 = value;
+
+        return true;
+    }
+
+
+
+    // 03 - Transmission Output Shaft Speed
+    uint16_t			j1939en_getSpn191(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn191;
+    }
+
+
+    bool			j1939en_setSpn191(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn191 = value;
+
+        return true;
+    }
+
+
+
+    // Driver's Demand Engine - Percent Torque
+    uint8_t			j1939en_getSpn512(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn512;
+    }
+
+
+    bool			j1939en_setSpn512(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn512 = value;
+
+        return true;
+    }
+
+
+
+    // Actual Engine - Percent Torque
+    uint8_t			j1939en_getSpn513(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn513;
+    }
+
+
+    bool			j1939en_setSpn513(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn513 = value;
+
+        return true;
+    }
+
+
+
+    // Nominal Friction - Percent Torque
+    uint8_t			j1939en_getSpn514(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn514;
+    }
+
+
+    bool			j1939en_setSpn514(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn514 = value;
+
+        return true;
+    }
+
+
+
+    // Engine's Desired Operating Speed
+    uint16_t			j1939en_getSpn515(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn515;
+    }
+
+
+    bool			j1939en_setSpn515(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn515 = value;
+
+        return true;
+    }
+
+
+
+    // Engine's Desired Operating Speed Asymmetry Adjustment
+    uint8_t			j1939en_getSpn519(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn519;
+    }
+
+
+    bool			j1939en_setSpn519(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn519 = value;
+
+        return true;
+    }
+
+
+
+    // 03 - Transmission Current Gear
+    uint8_t			j1939en_getSpn523(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn523;
+    }
+
+
+    bool			j1939en_setSpn523(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn523 = value;
+
+        return true;
+    }
+
+
+
+    // 03 - Transmission Selected Gear
+    uint8_t			j1939en_getSpn524(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn524;
+    }
+
+
+    bool			j1939en_setSpn524(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn524 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control States
+    uint8_t			j1939en_getSpn527(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn527;
+    }
+
+
+    bool			j1939en_setSpn527(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn527 = value;
+
+        return true;
+    }
+
+
+
+    // Accelerator Pedal 1 Low Idle Switch
+    uint8_t			j1939en_getSpn558(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn558;
+    }
+
+
+    bool			j1939en_setSpn558(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn558 = value;
+
+        return true;
+    }
+
+
+
+    // Accelerator Pedal Kickdown Switch
+    uint8_t			j1939en_getSpn559(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn559;
+    }
+
+
+    bool			j1939en_setSpn559(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn559 = value;
+
+        return true;
+    }
+
+
+
+    // Transmission Shift In Process
+    uint8_t			j1939en_getSpn574(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn574;
+    }
+
+
+    bool			j1939en_setSpn574(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn574 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Active
+    uint8_t			j1939en_getSpn595(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn595;
+    }
+
+
+    bool			j1939en_setSpn595(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn595 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Enable Switch
+    uint8_t			j1939en_getSpn596(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn596;
+    }
+
+
+    bool			j1939en_setSpn596(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn596 = value;
+
+        return true;
+    }
+
+
+
+    // Brake Switch
+    uint8_t			j1939en_getSpn597(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn597;
+    }
+
+
+    bool			j1939en_setSpn597(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn597 = value;
+
+        return true;
+    }
+
+
+
+    // Clutch Switch
+    uint8_t			j1939en_getSpn598(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn598;
+    }
+
+
+    bool			j1939en_setSpn598(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn598 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Set Switch
+    uint8_t			j1939en_getSpn599(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn599;
+    }
+
+
+    bool			j1939en_setSpn599(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn599 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Coast (Decelerate) Switch
+    uint8_t			j1939en_getSpn600(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn600;
+    }
+
+
+    bool			j1939en_setSpn600(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn600 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Resume Switch
+    uint8_t			j1939en_getSpn601(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn601;
+    }
+
+
+    bool			j1939en_setSpn601(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn601 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Accelerate Switch
+    uint8_t			j1939en_getSpn602(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn602;
+    }
+
+
+    bool			j1939en_setSpn602(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn602 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Torque Mode
+    uint8_t			j1939en_getSpn899(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn899;
+    }
+
+
+    bool			j1939en_setSpn899(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn899 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Test Mode Switch
+    uint8_t			j1939en_getSpn966(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn966;
+    }
+
+
+    bool			j1939en_setSpn966(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn966 = value;
+
+        return true;
+    }
+
+
+
+    // Idle Decrement Switch
+    uint8_t			j1939en_getSpn967(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn967;
+    }
+
+
+    bool			j1939en_setSpn967(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn967 = value;
+
+        return true;
+    }
+
+
+
+    // Idle Increment Switch
+    uint8_t			j1939en_getSpn968(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn968;
+    }
+
+
+    bool			j1939en_setSpn968(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn968 = value;
+
+        return true;
+    }
+
+
+
+    // Remote Accelerator Pedal Position
+    uint8_t			j1939en_getSpn974(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn974;
+    }
+
+
+    bool			j1939en_setSpn974(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn974 = value;
+
+        return true;
+    }
+
+
+
+    // PTO State
+    uint8_t			j1939en_getSpn976(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn976;
+    }
+
+
+    bool			j1939en_setSpn976(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn976 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Intercooler Thermostat Opening
+    uint8_t			j1939en_getSpn1134(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1134;
+    }
+
+
+    bool			j1939en_setSpn1134(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1134 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Shutdown Override Switch
+    uint8_t			j1939en_getSpn1237(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1237;
+    }
+
+
+    bool			j1939en_setSpn1237(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1237 = value;
+
+        return true;
+    }
+
+
+
+    // Road Speed Limit Status
+    uint8_t			j1939en_getSpn1437(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1437;
+    }
+
+
+    bool			j1939en_setSpn1437(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1437 = value;
+
+        return true;
+    }
+
+
+
+    // CA of Controlling Retarder Device
+    uint8_t			j1939en_getSpn1480(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1480;
+    }
+
+
+    bool			j1939en_setSpn1480(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1480 = value;
+
+        return true;
+    }
+
+
+
+    // Source Address of Controlling Device
+    uint8_t			j1939en_getSpn1483(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1483;
+    }
+
+
+    bool			j1939en_setSpn1483(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1483 = value;
+
+        return true;
+    }
+
+
+
+    // Cruise Control Pause Switch
+    uint8_t			j1939en_getSpn1633(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1633;
+    }
+
+
+    bool			j1939en_setSpn1633(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1633 = value;
+
+        return true;
+    }
+
+
+
+    // Intake Manifold 1 Air Temperature
+    uint16_t			j1939en_getSpn1636(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1636;
+    }
+
+
+    bool			j1939en_setSpn1636(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1636 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Coolant Temperature
+    uint16_t			j1939en_getSpn1637(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1637;
+    }
+
+
+    bool			j1939en_setSpn1637(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1637 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Starter Mode
+    uint8_t			j1939en_getSpn1675(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn1675;
+    }
+
+
+    bool			j1939en_setSpn1675(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn1675 = value;
+
+        return true;
+    }
+
+
+
+    // Engine Demand - Percent Torque
+    uint8_t			j1939en_getSpn2432(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn2432;
+    }
+
+
+    bool			j1939en_setSpn2432(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn2432 = value;
+
+        return true;
+    }
+
+
+
+    // Estimated Engine Parasitic Losses
+    uint8_t			j1939en_getSpn2978(
+        J1939EN_DATA	*this
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+        return 0;
+    }
+    #endif
+
+        return this->spn2978;
+    }
+
+
+    bool			j1939en_setSpn2978(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+
+    #ifdef NDEBUG
+    #else
+        if (j1939en_Validate(this)) {
+        DEBUG_BREAK();
+            return 0;
+        }
+    #endif
+
+        this->spn2978 = value;
+
+        return true;
+    }
+
+
+
+
 
 
     //===============================================================

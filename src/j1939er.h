@@ -138,6 +138,204 @@ extern	"C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
+    // Wheel-Based Vehicle Speed
+    uint16_t				j1939er_getSpn84(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn84(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Oil Temperature 1
+    uint16_t				j1939er_getSpn175(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn175(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Turbo Oil Temperature
+    uint16_t				j1939er_getSpn176(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn176(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Speed
+    uint16_t				j1939er_getSpn190(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn190(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine's Desired Operating Speed
+    uint16_t				j1939er_getSpn515(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn515(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Actual Retarder - Percent Torque
+    uint8_t				j1939er_getSpn520(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn520(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Retarder Enable - Brake Assist Switch
+    uint8_t				j1939er_getSpn571(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn571(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Retarder Enable - Brake Assist Switch
+    uint8_t				j1939er_getSpn572(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn572(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Retarder Torque Mode
+    uint8_t				j1939er_getSpn900(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn900(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Coolant Load Increase
+    uint8_t				j1939er_getSpn1082(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1082(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Intended Retarder Percent Torque
+    uint8_t				j1939er_getSpn1085(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1085(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // CA of Controlling Retarder Device
+    uint8_t				j1939er_getSpn1480(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1480(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Intake Manifold 1 Air Temperature
+    uint16_t				j1939er_getSpn1636(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1636(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Coolant Temperature
+    uint16_t				j1939er_getSpn1637(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1637(
+        J1939ER_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Retarder requesting Brake Light
+    uint8_t				j1939er_getSpn1667(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1667(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Drivers Demand Retarder - Percent Torque
+    uint8_t				j1939er_getSpn1715(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1715(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Retarder Selection - non-engine
+    uint8_t				j1939er_getSpn1716(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1716(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Actual Maximum Available Retarder
+    uint8_t				j1939er_getSpn1717(
+        J1939ER_DATA	*this
+    );
+
+    bool				j1939er_setSpn1717(
+        J1939ER_DATA	*this,
+        uint8_t			value
+    );
+
+
 
     
     //---------------------------------------------------------------

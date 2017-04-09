@@ -118,6 +118,556 @@ extern	"C" {
     );
     
     
+    // Engine Intercooler Temperature
+    uint8_t				j1939en_getSpn52(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn52(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Two Speed Axle Switch
+    uint8_t				j1939en_getSpn69(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn69(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Parking Brake Switch
+    uint8_t				j1939en_getSpn70(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn70(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Wheel-Based Vehicle Speed
+    uint16_t				j1939en_getSpn84(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn84(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Cruise Control Set Speed
+    uint8_t				j1939en_getSpn86(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn86(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Accelerator Pedal Position 1
+    uint8_t				j1939en_getSpn91(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn91(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Percent Load At Current Speed
+    uint8_t				j1939en_getSpn92(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn92(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Coolant Temperature
+    uint8_t				j1939en_getSpn110(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn110(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // 03 - Transmission Input Shaft Speed
+    uint16_t				j1939en_getSpn161(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn161(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Fuel Temperature
+    uint8_t				j1939en_getSpn174(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn174(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Oil Temperature 1
+    uint16_t				j1939en_getSpn175(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn175(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Turbo Oil Temperature
+    uint16_t				j1939en_getSpn176(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn176(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Speed
+    uint16_t				j1939en_getSpn190(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn190(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // 03 - Transmission Output Shaft Speed
+    uint16_t				j1939en_getSpn191(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn191(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Driver's Demand Engine - Percent Torque
+    uint8_t				j1939en_getSpn512(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn512(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Actual Engine - Percent Torque
+    uint8_t				j1939en_getSpn513(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn513(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Nominal Friction - Percent Torque
+    uint8_t				j1939en_getSpn514(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn514(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine's Desired Operating Speed
+    uint16_t				j1939en_getSpn515(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn515(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine's Desired Operating Speed Asymmetry Adjustment
+    uint8_t				j1939en_getSpn519(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn519(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // 03 - Transmission Current Gear
+    uint8_t				j1939en_getSpn523(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn523(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // 03 - Transmission Selected Gear
+    uint8_t				j1939en_getSpn524(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn524(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control States
+    uint8_t				j1939en_getSpn527(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn527(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Accelerator Pedal 1 Low Idle Switch
+    uint8_t				j1939en_getSpn558(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn558(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Accelerator Pedal Kickdown Switch
+    uint8_t				j1939en_getSpn559(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn559(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Transmission Shift In Process
+    uint8_t				j1939en_getSpn574(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn574(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Active
+    uint8_t				j1939en_getSpn595(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn595(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Enable Switch
+    uint8_t				j1939en_getSpn596(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn596(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Brake Switch
+    uint8_t				j1939en_getSpn597(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn597(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Clutch Switch
+    uint8_t				j1939en_getSpn598(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn598(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Set Switch
+    uint8_t				j1939en_getSpn599(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn599(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Coast (Decelerate) Switch
+    uint8_t				j1939en_getSpn600(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn600(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Resume Switch
+    uint8_t				j1939en_getSpn601(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn601(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Accelerate Switch
+    uint8_t				j1939en_getSpn602(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn602(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Torque Mode
+    uint8_t				j1939en_getSpn899(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn899(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Test Mode Switch
+    uint8_t				j1939en_getSpn966(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn966(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Idle Decrement Switch
+    uint8_t				j1939en_getSpn967(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn967(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Idle Increment Switch
+    uint8_t				j1939en_getSpn968(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn968(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Remote Accelerator Pedal Position
+    uint8_t				j1939en_getSpn974(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn974(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // PTO State
+    uint8_t				j1939en_getSpn976(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn976(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Intercooler Thermostat Opening
+    uint8_t				j1939en_getSpn1134(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1134(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Shutdown Override Switch
+    uint8_t				j1939en_getSpn1237(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1237(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Road Speed Limit Status
+    uint8_t				j1939en_getSpn1437(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1437(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // CA of Controlling Retarder Device
+    uint8_t				j1939en_getSpn1480(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1480(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Source Address of Controlling Device
+    uint8_t				j1939en_getSpn1483(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1483(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Cruise Control Pause Switch
+    uint8_t				j1939en_getSpn1633(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1633(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Intake Manifold 1 Air Temperature
+    uint16_t				j1939en_getSpn1636(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1636(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Coolant Temperature
+    uint16_t				j1939en_getSpn1637(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1637(
+        J1939EN_DATA	*this,
+        uint16_t			value
+    );
+
+
+    // Engine Starter Mode
+    uint8_t				j1939en_getSpn1675(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn1675(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Engine Demand - Percent Torque
+    uint8_t				j1939en_getSpn2432(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn2432(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
+    // Estimated Engine Parasitic Losses
+    uint8_t				j1939en_getSpn2978(
+        J1939EN_DATA	*this
+    );
+
+    bool				j1939en_setSpn2978(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+
+
 
     
     //---------------------------------------------------------------
