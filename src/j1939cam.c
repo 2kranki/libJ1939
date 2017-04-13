@@ -186,14 +186,13 @@ extern	"C" {
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
-        uint32_t        spn2846         // J1939 Industry Group (3 bits)
+        uint32_t        spn2846,        // J1939 Industry Group (3 bits)
+        bool            fIncludeER      // True == include a related Engine Retarder
     )
     {
         J1939CAM_DATA   *pCAM;
         J1939EN_DATA    *pEN;
-#ifdef XYZZY
         J1939ER_DATA    *pER;
-#endif
         
 #ifdef NDEBUG
 #else
@@ -230,19 +229,19 @@ extern	"C" {
         obj_Release(pEN);
         pEN = OBJ_NIL;
 
-#ifdef XYZZY
         // Create the Engine #1 Retarder.
-        pER = j1939er_Alloc();
-        pER = j1939er_Init( pER, pCAM, j1939cam_TransmitDelayedMsg, pCAM );
-        if( OBJ_NIL == pER ) {
-            DEBUG_BREAK();
-            obj_Release(pCAM);
-            return OBJ_NIL;
+        if (fIncludeER) {
+            pER = j1939er_Alloc();
+            pER = j1939er_Init(pER, pCAN, pSYS, spn2837, spn2838, spn2846);
+            if( OBJ_NIL == pER ) {
+                DEBUG_BREAK();
+                obj_Release(pCAM);
+                return OBJ_NIL;
+            }
+            j1939cam_AddCA(pCAM, pER);
+            obj_Release(pER);
+            pER = OBJ_NIL;
         }
-        j1939cam_AddCA(pCAM, pER);
-        obj_Release(pER);
-        pER = OBJ_NIL;
-#endif
         
         return pCAM;
     }
@@ -680,6 +679,39 @@ extern	"C" {
         return( fRc );
     }
     
+    
+    
+    
+    //---------------------------------------------------------------
+    //                          F i n d  C A
+    //---------------------------------------------------------------
+    
+    J1939CA_DATA *  j1939cam_FindCA(
+        J1939CAM_DATA	*this,
+        uint8_t         ca
+    )
+    {
+        int             i;
+        J1939CA_DATA    *pCA = OBJ_NIL;
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cam_Validate(this) ) {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+#endif
+        
+        for (i=0; i<this->cCAs; ++i) {
+            if (ca == j1939ca_getClaimedAddress(this->pCAs[i])) {
+                pCA = this->pCAs[i];
+            }
+        }
+        
+        // Return to caller.
+        return pCA;
+    }
     
     
     

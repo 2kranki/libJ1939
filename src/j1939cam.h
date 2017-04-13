@@ -115,7 +115,8 @@ extern	"C" {
         OBJ_ID          pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
         uint32_t        spn2838,        // J1939 Manufacturer Code (11 bits)
-        uint32_t        spn2846         // J1939 Industry Group (3 bits)
+        uint32_t        spn2846,        // J1939 Industry Group (3 bits)
+        bool            fIncludeER      // True == include a related Engine Retarder
     );
     
     
@@ -136,6 +137,12 @@ extern	"C" {
     J1939CA_DATA *  j1939cam_getCA(
         J1939CAM_DATA	*this,
         uint8_t         index           // Relative to zero
+    );
+    
+    
+    J1939CA_DATA *  j1939cam_findCA(
+        J1939CAM_DATA	*this,
+        uint8_t         ca              // Claimed Address
     );
     
     
@@ -186,6 +193,12 @@ extern	"C" {
     bool            j1939cam_AddCA(
         J1939CAM_DATA	*this,
         OBJ_ID          pCA
+    );
+    
+    
+    J1939CA_DATA *  j1939cam_FindCA(
+        J1939CAM_DATA	*this,
+        uint8_t         ca              // Claimed Address
     );
     
     

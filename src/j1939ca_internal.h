@@ -102,7 +102,9 @@ extern "C" {
         P_HANDLE_TIMED_TRANSMITS
                             pTimedTransmit;
         uint8_t             fTimedTransmit;
-        uint8_t             rsvd8[3];
+
+        uint8_t             fUseTask;
+        uint8_t             rsvd8[2];
         
         P_SRVCMSG_RTN       pHandler;
         
@@ -137,12 +139,10 @@ extern "C" {
         uint8_t             curSa;
         uint16_t            reserved16a;
 
-#if j1989_CA_TIMED_XMT_QUEUE_SIZE
         TABLE_DATA          *pDelayTable;   // If a message is delayed, it is in this chain.
         //                                  // This chain is sorted by expiration time
         //                                  // (Youngest to Oldest).
     };
-#endif
 #pragma pack(pop)
     
     extern
@@ -214,16 +214,14 @@ extern "C" {
     );
     
     
-    bool            j1939ca_TransmitPgn59392_NAK(
-        J1939CA_DATA	*this,
-        J1939_PGN       pgn                 // PGN being requested
-    );
-    
-    
     bool            j1939ca_TransmitPgn60928(
         J1939CA_DATA	*this
     );
     
+    
+    void            j1939ca_XmtDelayedMsgs(
+        J1939CA_DATA	*this
+    );
     
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,

@@ -318,6 +318,7 @@ bool            xmtPGN60928(
 }
 
 
+
 - (void)testCheck_ClaimAddress_contested1
 {
     J1939CA_DATA    *pJ1939ca = NULL;
@@ -424,6 +425,59 @@ bool            xmtPGN60928(
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_COMMANDED_ADDRESS == pJ1939ca->cs) );
         obj_Release(pJ1939ca);
         pJ1939ca = OBJ_NIL;
+    }
+    
+}
+
+
+
+// Test to insure Transmit Delayed Messages works.
+- (void)testCheck_DelayedMessages
+{
+    J1939CA_DATA    *pCA = NULL;
+    J1939_PDU       pdu = {0};
+    //J1939_PGN       pgn = {0};
+    bool            fRc;
+    //uint32_t        msWait = 0;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    pCA = j1939ca_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    pCA =  j1939ca_Init(
+                        pCA,
+                        (OBJ_ID)pCAN,
+                        (OBJ_ID)pSYS,
+                        1,              // J1939 Identity Number (21 bits)
+                        512,            // J1939 Manufacturer Code (11 bits)
+                        4               // J1939 Industry Group (3 bits) (Marine)
+                        );
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    if (pCA) {
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
+        
+        // The CA is in the Starting State. So, calling pgn 60928 will initiate
+        // an Address Claim.
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
+        
+        // Send "Time Out" which should allow us to accept our claimed address
+        // and go into normal operation.
+        j1939Sys_BumpMS(pSYS, 250);
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
+        
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
+        
+        obj_Release(pCA);
+        pCA = OBJ_NIL;
     }
     
 }

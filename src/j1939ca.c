@@ -191,38 +191,16 @@ extern	"C" {
     //                  T a s k  B o d y
     //---------------------------------------------------------------
     
-    static
+    // Delayed messages could be handled by a separate task. This
+    // function is designed to work in a psxThread to handle the
+    // delayed messages.
     void            j1939ca_TaskBody(
         void            *pData
     )
     {
         J1939CA_DATA    *this = pData;
-        J1939CA_MSG     *pCurrent;
-        J1939CA_MSG     *pNext;
-        uint32_t        curTime = j1939ca_MsTimeGet(this);
-        bool            fRc = false;
         
-        table_Lock(this->pDelayTable);
-        pCurrent = table_Head(this->pDelayTable);
-        while (pCurrent) {
-            pNext = table_Next(this->pDelayTable, pCurrent);
-            if (pCurrent->msTime <= curTime) {
-                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                                    this->pCAN,
-                                                                    0,
-                                                                    &pCurrent->msg
-                                                );
-                }
-                table_Delete(this->pDelayTable, pCurrent);
-            }
-            if (pCurrent->msTime > curTime) {
-                break;
-            }
-            pCurrent = pNext;
-        }
-        table_Unlock(this->pDelayTable);
-        
+        j1939ca_XmtDelayedMsgs(this);
         if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS) {
             ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS(this->pSYS, 10);
         }
@@ -567,12 +545,10 @@ extern	"C" {
             return;
         }
         
-#if j1989_CA_TIMED_XMT_QUEUE_SIZE
         if (this->pDelayTable) {
             obj_Release(this->pDelayTable);
             this->pDelayTable = OBJ_NIL;
         }
-#endif
         
         if (this->pCAN) {
             obj_Release(this->pCAN);
@@ -629,7 +605,7 @@ extern	"C" {
             }
         }
 
-        // Search the static pgn list.
+        // Search our static pgn list.
         pCurIndex = (const J1939CA_PGN_ENTRY *(*))rcvPgnTbl.pPGNs;
         while ( (pCurEntry = *pCurIndex++) ) {
             if (pgn.w == pCurEntry->pDef->pgn ) {
@@ -662,6 +638,7 @@ extern	"C" {
         }
 #endif
         
+        // Search the dynamic pgn list.
         if( this->pXmtPgnTbl ) {
             pCurIndex = (const J1939CA_PGN_ENTRY *(*))this->pXmtPgnTbl->pPGNs;
             while ( (pCurEntry = *pCurIndex++) ) {
@@ -672,6 +649,7 @@ extern	"C" {
             }
         }
         
+        // Search our static pgn list.
         pCurIndex = (const J1939CA_PGN_ENTRY *(*))xmtPgnTbl.pPGNs;
         while ( (pCurEntry = *pCurIndex++) ) {
             if (pgn.w == pCurEntry->pDef->pgn ) {
@@ -750,6 +728,9 @@ extern	"C" {
             fRc = j1939ca_HandlePgn60928( this, pdu.eid, pMsg );
         }
         
+        if (!this->fUseTask) {
+            j1939ca_XmtDelayedMsgs(this);
+        }
         
         // Return to caller.
         return fRc;
@@ -770,6 +751,8 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         groupFunc;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -780,8 +763,42 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
+     
+        groupFunc = pMsg->DATA.bytes[1];
+        pgn.pgn0 = pMsg->DATA.bytes[5];
+        pgn.pgn1 = pMsg->DATA.bytes[6] << 8;
+        pgn.pgn2 = pMsg->DATA.bytes[7] << 16;
+        pgn.pgn3 = 0;
         
-        //TODO: Do something, not sure what yet.
+        switch (pMsg->DATA.bytes[0]) {
+            case 0:                 // ACK
+                if (((J1939CA_VTBL *)obj_getVtbl(this))->pHandleACK) {
+                    ((J1939CA_VTBL *)obj_getVtbl(this))->pHandleACK(this,groupFunc,pgn);
+                }
+                break;
+                
+            case 1:                 // NAK
+                if (((J1939CA_VTBL *)obj_getVtbl(this))->pHandleNAK) {
+                    ((J1939CA_VTBL *)obj_getVtbl(this))->pHandleNAK(this,groupFunc,pgn);
+                }
+                break;
+                
+            case 2:                 // Access Denied (PGN supported but security
+                //                  //                  denied access)
+                if (((J1939CA_VTBL *)obj_getVtbl(this))->pHandleDenied) {
+                    ((J1939CA_VTBL *)obj_getVtbl(this))->pHandleDenied(this,groupFunc,pgn);
+                }
+                break;
+                
+            case 3:                 // Can not Respond (PGN supported but ECU is
+                //                  //               busy and cannot respond now.
+                //                  //              Re-request the data at a later time.)
+                if (((J1939CA_VTBL *)obj_getVtbl(this))->pHandleBusy) {
+                    ((J1939CA_VTBL *)obj_getVtbl(this))->pHandleBusy(this,groupFunc,pgn);
+                }
+                break;
+                
+        }
         
         // Return to caller.
         return false;
@@ -833,7 +850,7 @@ extern	"C" {
         }
         else {
             if ((requestedPgn.PF < 240) && !(255 == this->curDa)) {
-                fRc = j1939ca_TransmitPgn59392_NAK( this, requestedPgn );
+                fRc = j1939ca_TransmitPgn59392(this, 1, 0xFF, requestedPgn);
             }
         }
         
@@ -1023,8 +1040,7 @@ extern	"C" {
         this->name.IG  = spn2846;
         this->name.AAC = 0;
         
-#if j1989_CA_TIMED_XMT_QUEUE_SIZE
-        uint32_t            blkNum;
+        uint32_t            blkNum = 64;
         blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
         this->pDelayTable = table_Alloc( );
         this->pDelayTable = table_Init(
@@ -1038,7 +1054,6 @@ extern	"C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-#endif
         
 #ifdef NDEBUG
 #else
@@ -1190,25 +1205,75 @@ extern	"C" {
     
     // ACK/NAK PGN
     
-    bool            j1939ca_TransmitPgn59392_NAK(
+    bool            j1939en_SetupPgn59392(
         J1939CA_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData,
+        uint16_t        *pLen
+    )
+    {
+        
+        if (pLen) {
+            *pLen = 8;
+        }
+        if (pData) {
+            if (cData < 8) {
+                return false;
+            }
+            *pData  = 1;
+            ++pData;    // 1
+            *pData  = 0xFF;
+            ++pData;    // 2
+            *pData  = 0xFF;
+            ++pData;    // 3
+            *pData  = 0xFF;
+            ++pData;    // 4
+            *pData  = this->ca & 0xFF;
+            ++pData;    // 5
+            *pData  = pPDU->PF & 0xFF;  //FIXME:
+            ++pData;    // 6
+            *pData  = pPDU->PF & 0xFF;  //FIXME:
+            ++pData;    // 7
+            *pData  = pPDU->PF & 0xFF;  //FIXME:
+        }
+        else {
+            return false;
+        }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    bool            j1939ca_TransmitPgn59392(
+        J1939CA_DATA	*this,
+        uint8_t         type,               // (0-ACK, 1-NAK, 2-Access Denied, 3-Busy)
+        uint8_t         grpFunc,            // Group Function (Use 0xFF if not needed)
         J1939_PGN       pgn                 // PGN being requested
     )
     {
         uint16_t        dlc = 8;
         uint8_t         data[8];
         J1939_PDU       pdu = {0};
-        uint32_t        i;
+        uint8_t         *pData = data;
         bool            fRc = false;
         
-        data[0] = 1;                        // NAK
-        for (i=1; i<8; ++i) {
-            data[i] = 0xFF;
-        }
-        data[4] = this->ca;
-        data[5] = pgn.pgn0;
-        data[6] = pgn.pgn1;
-        data[7] = pgn.pgn2;
+        *pData  = type;
+        ++pData;    // 1
+        *pData  = grpFunc;
+        ++pData;    // 2
+        *pData  = 0xFF;
+        ++pData;    // 3
+        *pData  = 0xFF;
+        ++pData;    // 4
+        *pData  = this->ca & 0xFF;
+        ++pData;    // 5
+        *pData  = pgn.pgn0;
+        ++pData;    // 6
+        *pData  = pgn.pgn1;
+        ++pData;    // 7
+        *pData  = pgn.pgn2;
         
         pdu.PF = 232;
         if (255 == this->curDa) {
@@ -1344,6 +1409,40 @@ extern	"C" {
     //                T r a n s m i t  M e s s a g e
     //---------------------------------------------------------------
     
+    void            j1939ca_XmtDelayedMsgs(
+        J1939CA_DATA	*this
+    )
+    {
+        J1939CA_MSG     *pCurrent;
+        J1939CA_MSG     *pNext;
+        uint32_t        curTime = j1939ca_MsTimeGet(this);
+        bool            fRc = false;
+        
+        table_Lock(this->pDelayTable);
+        pCurrent = table_Head(this->pDelayTable);
+        while (pCurrent) {
+            pNext = table_Next(this->pDelayTable, pCurrent);
+            if (pCurrent->msTime <= curTime) {
+                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                                         this->pCAN,
+                                                                         0,
+                                                                         &pCurrent->msg
+                                                                         );
+                }
+                table_Delete(this->pDelayTable, pCurrent);
+            }
+            if (pCurrent->msTime > curTime) {
+                break;
+            }
+            pCurrent = pNext;
+        }
+        table_Unlock(this->pDelayTable);
+        
+    }
+    
+    
+    
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,
         uint32_t        msDelay,
@@ -1386,7 +1485,6 @@ extern	"C" {
         if (cData < 9) {
             fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, cData, pData);
             if (msDelay) {
-#if j1989_CA_TIMED_XMT_QUEUE_SIZE
                 table_Lock(this->pDelayTable);
                 
                 pCurrent = table_Add(this->pDelayTable);
@@ -1410,7 +1508,6 @@ extern	"C" {
                 }
                 
                 table_Unlock(this->pDelayTable);
-#endif
             }
             else {
                 if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {

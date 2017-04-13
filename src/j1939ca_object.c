@@ -182,7 +182,10 @@ J1939CA_VTBL     j1939ca_Vtbl = {
     // Put other object method names below this.
     // Properties:
     // Methods:
-    //j1939ca_IsEnabled,
+    NULL,               // Handle ACK
+    NULL,               // Handle NAK
+    NULL,               // Handle Access Denied
+    NULL                // Handle Busy
  
 };
 
