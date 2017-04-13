@@ -2339,7 +2339,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //                  H a n d l e  P G N 6 1 4 4 2  0xF002
+    //              H a n d l e  P G N 6 1 4 4 2   F002         ETC1
     //---------------------------------------------------------------
 
     /* This is "Electronic Transmission Controller 1". It is a status
@@ -2433,7 +2433,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //                  H a n d l e  P G N 6 1 4 4 3
+    //             H a n d l e  P G N 6 1 4 4 3     F003         EEC2
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn61443(
@@ -2444,6 +2444,16 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn29;
+        uint8_t         spn91;
+        uint8_t         spn92;
+        uint8_t         spn558;
+        uint8_t         spn559;
+        uint8_t         spn974;
+        uint8_t         spn1437;
+        uint8_t         spn2970;
+        uint8_t         spn2979;
+        uint8_t         spn3357;
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2455,6 +2465,27 @@ extern	"C" {
 #endif
         pdu.eid = eid;
         pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+
+        // SPN 558  1.1     2bits       Accelerator Pedal 1 Low Idle Switch
+        spn558 = pMsg->DATA.bytes[0] & 0x3;
+        // SPN 559  1.3     2bits       Accelerator Pedal Kickdown Switch
+        spn559 = (pMsg->DATA.bytes[0] >> 2) & 0x3;
+        // SPN 1437 1.5     2bits       Road Speed Limit Status
+        spn1437 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
+        // SPN 2970 1.7     2bits       Accelerator Pedal 2 Low Idle Switch
+        spn2970 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
+        // SPN 91   2       8bits       Accelerator Pedal Position 1
+        spn91 = pMsg->DATA.bytes[1];
+        // SPN 92   3       8bits       Engine Percent Load At Current Speed
+        spn92 = pMsg->DATA.bytes[2];
+        // SPN 974  4       8bits       Remote Accelerator Pedal Position
+        spn974 = pMsg->DATA.bytes[3];
+        // SPN 29   5       8bits       Accelerator Pedal Position 2
+        spn29 = pMsg->DATA.bytes[4];
+        // SPN 2979 6.1     2bits       Vehicle Acceleration Rate Limit Status
+        spn2979 = pMsg->DATA.bytes[5] & 0x3;
+        // SPN 3357 7       8bits       Actual Maximum Available Engine - Percent Torque
+        spn3357 = pMsg->DATA.bytes[6];
 
         // Return to caller.
         return false;

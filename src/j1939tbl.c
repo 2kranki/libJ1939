@@ -57,6 +57,8 @@ extern "C" {
 #endif
         
         
+#ifdef XYZZY
+        
         const
         J1939_SPN_TYPE      SAEbs01 = {  // Bits/States
             86,             // SAE Type
@@ -210,12 +212,10 @@ extern "C" {
         };
         
         
-#ifdef XYZZY
-        
         static
         const
         J1939_SPN_TYPE      bits64 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             64,     1,     1,      0,     0,     0,     0,      0,     0
         };
         
@@ -223,14 +223,14 @@ extern "C" {
         static
         const
         J1939_SPN_TYPE      percent01 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             8,     4,    10,      0,     2,     0,   100,      0,   250
         };
         
         static
         const
         J1939_SPN_TYPE      percent03 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             8,     1,     1,      0,     0,     0,   125,      0,   250
         };
         
@@ -238,7 +238,7 @@ extern "C" {
         static
         const
         J1939_SPN_TYPE      pressure01 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             8,     5,    10,      0,     2,     0,   125,      0,   250
         };
         
@@ -247,7 +247,7 @@ extern "C" {
         static
         const
         J1939_SPN_TYPE      sourceAddress = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             8,     1,     1,      0,     0,     0,   253,      0,   255
         };
         
@@ -255,14 +255,14 @@ extern "C" {
         static
         const
         J1939_SPN_TYPE      temp01 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             8,     1,     1,    -40,     2,   -40,   210,      0,   250
         };
         
         static
         const
         J1939_SPN_TYPE      temp02 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             16,  3125, 10000,   -273,  5000,  -273,  1735,      0, 55520
         };
         
@@ -270,9 +270,10 @@ extern "C" {
         static
         const
         J1939_SPN_TYPE      velocityRotational01 = {
-            //  Len   Mult    Div  offset  round    min    max     min    max
+        //  Len   Mult    Div  offset  round    min    max     min    max
             16,   125,  1000,      0,   500,     0,  8031,      0, 64255
         };
+#endif
         
         
         // SPN 51 - Throttle Position - The position of the valve used to regulate
@@ -280,14 +281,24 @@ extern "C" {
         // 0% represents no supply and 100% is full supply.
         static
         const
-        J1939_SPN           spn51 = { 51,  &percent01 };
+        J1939_SPN           spn51 = {
+            51,
+            0,
+            NULL    /*&percent01*/,
+            "Throttle Position"
+        };
         
         
         // SPN 52 - Engine Intercooler Temperature - Temperature of liquid found in the
         // intercooler located after the turbocharger.
         static
         const
-        J1939_SPN           spn52 = { 52, &temp01 };
+        J1939_SPN           spn52 = {
+            52,
+            0,
+            NULL    /*&temp01*/,
+            "Engine Intercooler Temperature"
+        };
         
         
         // SPN 91 - Accelerator Pedal Position 1 - The ratio of actual position of the
@@ -303,7 +314,12 @@ extern "C" {
         // 1, use Accelerator Pedal Low Idle Switch 1, SPN 558.
         static
         const
-        J1939_SPN           spn91 = { 91,  &percent01 };
+        J1939_SPN           spn91 = {
+            91,
+            0,
+            NULL    /*&percent01*/,
+            "Accelerator Pedal Position 1"
+        };
         
         
         // SPN 92 - Percent Load At Current Speed - The ratio of actual engine percent
@@ -311,14 +327,24 @@ extern "C" {
         // gine speed, clipped to zero torque during engine braking.
         static
         const
-        J1939_SPN           spn92 = { 92, &percent03 };
+        J1939_SPN           spn92 = {
+            92,
+            0,
+            NULL    /*&percent03*/,
+            "Percent Load At Current Speed"
+        };
         
         
         // SPN 98 - Engine Oil Level - Ratio of current volume of engine sump oil
         // to maximum required volume.
         static
         const
-        J1939_SPN           spn98 = { 98, &percent01 };
+        J1939_SPN           spn98 = {
+            98,
+            0,
+            NULL    /*&percent01*/,
+            "Engine Oil Level"
+        };
         
         
         // SPN 99 - Engine Oil Filter Differential Pressure - Change in engine oil
@@ -326,7 +352,12 @@ extern "C" {
         // of solid or semisolid material on or in the filter.
         static
         const
-        J1939_SPN           spn99 = { 99, &pressure01 };
+        J1939_SPN           spn99 = {
+            99,
+            0,
+            NULL    /*&pressure01*/,
+            "Engine Oil Filter Differential Pressure"
+        };
         
         
         // SPN 102 - Boost Pressure - Gage pressure of air measured downstream on the
@@ -335,39 +366,69 @@ extern "C" {
         // and this range and resolution is adequate, this parameter should be used.
         static
         const
-        J1939_SPN           spn102 = { 102, &pressure02 };
+        J1939_SPN           spn102 = {
+            102,
+            0,
+            NULL    /*&pressure02*/,
+            "Boost Pressure"
+        };
         
         
         // SPN 110 - Engine Coolant Temperature - Temperature of liquid found in engine
         // cooling system.
         static
         const
-        J1939_SPN           spn110 = { 110, &temp01 };
+        J1939_SPN           spn110 = {
+            110,
+            0,
+            NULL    /*&temp01*/,
+            "Engine Coolant Temperature"
+        };
         
         
         // SPN 174 - Fuel Temperature - Temperature of fuel entering injectors.
         static
         const
-        J1939_SPN           spn174 = { 174, &temp01 };
+        J1939_SPN           spn174 = {
+            174,
+            0,
+            NULL    /*&temp01*/,
+            "Fuel Temperature"
+        };
         
         
         // SPN 175 - Engine Oil Temperature 1 - Temperature of the engine lubricant.
         static
         const
-        J1939_SPN           spn175 = { 175, &temp02 };
+        J1939_SPN           spn175 = {
+            175,
+            0,
+            NULL    /*&temp02*/,
+            "Engine Oil Temperature 1"
+        };
         
         
         // SPN 176 - Turbo Oil Temperature - Temperature of the turbocharger lubricant.
         static
         const
-        J1939_SPN           spn176 = { 176, &temp02 };
+        J1939_SPN           spn176 = {
+            176,
+            0,
+            NULL    /*&temp02*/,
+            "Turbo Oil Temperature"
+        };
         
         
         // SPN 190 - Engine Speed - Actual engine speed which is calculated over a
         // minimum crankshaft angle of 720 degrees divided by the number of cylinders.
         static
         const
-        J1939_SPN           spn190 = { 190, &velocityRotational01 };
+        J1939_SPN           spn190 = {
+            190,
+            0,
+            NULL    /*&velocityRotational01*/,
+            "Engine Speed"
+        };
         
         
         // SPN 512 - Driver's Demand Engine - Percent Torque - The requested torque
@@ -382,10 +443,15 @@ extern "C" {
         // honored. This parameter may be used for shift scheduling.
         static
         const
-        J1939_SPN           spn512 = { 512, &percent02 };
+        J1939_SPN           spn512 = {
+            512,
+            0,
+            NULL    /*&percent02*/,
+            "Driver's Demand Engine - Percent Torque"
+        };
         
         
-        // SPN 513 - spn513 - Actual Engine - Percent Torque - The calculated output
+        // SPN 513 - Actual Engine - Percent Torque - The calculated output
         // torque of the engine. The data is transmitted in indicated torque as a
         // percent of reference engine torque (see the engine configuration message,
         // PGN 65251). The engine percent torque value will not be less than zero and
@@ -393,10 +459,15 @@ extern "C" {
         // friction.
         static
         const
-        J1939_SPN           spn513 = { 513, &percent02 };
+        J1939_SPN           spn513 = {
+            513,
+            0,
+            NULL    /*&percent02*/,
+            "Actual Engine - Percent Torque"
+        };
         
         
-        // SPN 558 - spn558 - Accelerator Pedal 1 Low Idle Switch - Switch signal
+        // SPN 558 - Accelerator Pedal 1 Low Idle Switch - Switch signal
         // which indicates the state of the accelerator pedal 1 low idle switch.
         // The low idle switch is defined in SAE J1843.
         // 00 Accelerator pedal 1 not in low idle condition
@@ -405,7 +476,12 @@ extern "C" {
         // 11 Not available
         static
         const
-        J1939_SPN           spn558 = { 558, &bits02 };
+        J1939_SPN           spn558 = {
+            558,
+            0,
+            NULL    /*&bits02*/,
+            "Accelerator Pedal 1 Low Idle Switch"
+        };
         
         
         // SPN 559 - Accelerator Pedal Kickdown Switch - Switch signal which
@@ -415,7 +491,135 @@ extern "C" {
         // 01 Kickdown active
         static
         const
-        J1939_SPN           spn559 = { 559, &bits01 };
+        J1939_SPN           spn559 = {
+            559,
+            0,
+            NULL    /*&bits01*/,
+            "Accelerator Pedal Kickdown Switch"
+        };
+        
+        
+        // SPN 590 - Engine Idle Shutdown Timer State
+        // 00 Inactive
+        // 01 Active
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn590 = {
+            590,
+            0,
+            NULL    /*&????*/,
+            "Engine Idle Shutdown Timer State"
+        };
+        
+        
+        // SPN 591 - Engine Idle Shutdown Timer Function
+        // 00  Disabled in calibration
+        // 01  Enabled in calibration
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn591 = {
+            591,
+            0,
+            NULL    /*&????*/,
+            "Engine Idle Shutdown Timer Function"
+        };
+        
+        
+        // SPN 592 - Engine Idle Shutdown Timer Override
+        // 00 Inactive
+        // 01 Active
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn592 = {
+            592,
+            0,
+            NULL    /*&????*/,
+            "Engine Idle Shutdown Timer Override"
+        };
+        
+        
+        // SPN 593 - Engine Idle Shutdown has Shutdown Engine
+        // 00 No
+        // 01 Yes
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn593 = {
+            593,
+            0,
+            NULL    /*&????*/,
+            "Engine Idle Shutdown has Shutdown Engine"
+        };
+        
+        
+        // SPN 594 - Engine Idle Shutdown Driver Alert Mode
+        // Status signal which indicates the status of the driver alert mode
+        // of the idle shutdown timer system. While the driver alert mode is
+        // active, the idle shutdown timer may be overridden.
+        // 00 Inactive
+        // 01 Active
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn594 = {
+            594,
+            0,
+            NULL    /*&????*/,
+            "Engine Idle Shutdown Driver Alert Mode"
+        };
+        
+        
+        // SPN 595 - Engine Idle Shutdown has Shutdown Engine
+        // 00 Cruise control switched off
+        // 01 Cruise control switched on
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn595 = {
+            595,
+            0,
+            NULL    /*&????*/,
+            "Cruise Control Active"
+        };
+        
+        
+        // SPN 605 - Refrigerant High Pressure Switch
+        // 00 Pressure normal
+        // 01 Pressure too high, compressor clutch may be disengaged
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn605 = {
+            605,
+            0,
+            NULL    /*&????*/,
+            "Refrigerant High Pressure Switch"
+        };
+        
+        
+        // SPN 875 - Refrigerant Low Pressure Switch
+        // 00 Pressure normal
+        // 01 Pressure too low, compressor clutch may be disengaged
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn875 = {
+            875,
+            0,
+            NULL    /*&????*/,
+            "Refrigerant Low Pressure Switch"
+        };
         
         
         // SPN 899 - Engine Torque Mode - State signal which indicates which
@@ -434,7 +638,12 @@ extern "C" {
         //              no braking) to the upper limit.
         static
         const
-        J1939_SPN           spn899 = { 899, &bits03 };
+        J1939_SPN           spn899 = {
+            899,
+            0,
+            NULL    /*&bits03*/,
+            "Engine Torque Mode"
+        };
         
         
         // SPN 974 - Remote Accelerator Pedal Position - The ratio of actual position
@@ -449,7 +658,120 @@ extern "C" {
         // shall be used.
         static
         const
-        J1939_SPN           spn974 = { 974, &percent01 };
+        J1939_SPN           spn974 = {
+            974,
+            0,
+            NULL    /*&percent01*/,
+            "Remote Accelerator Pedal Position"
+        };
+        
+        
+        // SPN 985 - A/C High Pressure Fan Switch
+        // 00 Pressure normal
+        // 01 Pressure too high, fan may be engaged
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn985 = {
+            985,
+            0,
+            NULL    /*&????*/,
+            "A/C High Pressure Fan Switch"
+        };
+        
+        
+        // SPN 1081 - Engine Wait to Start Lamp
+        // Lamp signal which indicates that the engine is too cold to start
+        // and the operator should wait until the signal becomes inactive
+        // (turns off).
+        // 00 Off
+        // 01 On
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1081 = {
+            1081,
+            0,
+            NULL    /*&????*/,
+            "Engine Wait to Start Lamp"
+        };
+        
+        
+        // SPN 1107 - Engine Protection System Timer State
+        // 00 Inactive
+        // 01 Active
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1107 = {
+            1107,
+            0,
+            NULL    /*&????*/,
+            "Engine Protection System Timer State"
+        };
+        
+        
+        // SPN 1108 - Engine Protection System Timer Override
+        // 00 Inactive
+        // 01 Active
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1108 = {
+            1107,
+            0,
+            NULL    /*&????*/,
+            "Engine Protection System Timer Override"
+        };
+        
+        
+        // SPN 1109 - Engine Protection System Approaching Shutdown
+        // 00 Not Approaching
+        // 01 Approaching
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1109 = {
+            1109,
+            0,
+            NULL    /*&????*/,
+            "Engine Protection System Approaching Shutdown"
+        };
+        
+        
+        // SPN 1110 - Engine Protection System has Shutdown Engine
+        // 00 No
+        // 01 Yes
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1110 = {
+            1110,
+            0,
+            NULL    /*&????*/,
+            "Engine Protection System Timer State"
+        };
+        
+        
+        // SPN 1111 - Engine Protection System Configuration
+        // 00 Disabled in calibration
+        // 01 Enabled in calibration
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn1111 = {
+            1111,
+            0,
+            NULL    /*&????*/,
+            "Engine Protection System Configuration"
+        };
         
         
         // SPN 1134 - Engine Intercooler Thermostat Opening - The current position
@@ -458,7 +780,12 @@ extern "C" {
         // represents the thermostat being completely open.
         static
         const
-        J1939_SPN           spn1134 = { 1134, &percent01 };
+        J1939_SPN           spn1134 = {
+            1134,
+            0,
+            NULL    /*&percent01*/,
+            "Engine Intercooler Thermostat Opening"
+        };
         
         
         // SPN 1437 - Road Speed Limit Status - Status (active or not active) of the
@@ -470,7 +797,12 @@ extern "C" {
         // are NOT typographical errors, and should be implemented as stated.
         static
         const
-        J1939_SPN           spn1437 = { 1437, &bits01 };
+        J1939_SPN           spn1437 = {
+            1437,
+            0,
+            NULL    /*&bits01*/,
+            "Road Speed Limit Status"
+        };
         
         
         // SPN 1483 - Source Address of Controlling Device for Engine Control - The
@@ -486,7 +818,12 @@ extern "C" {
         // J1922 or a proprietary link.
         static
         const
-        J1939_SPN           spn1483 = { 1483, &sourceAddress };
+        J1939_SPN           spn1483 = {
+            1483,
+            0,
+            NULL    /*&sourceAddress*/,
+            "Source Address of Controlling Device for Engine Control"
+        };
         
         
         // SPN 1636 - Intake Manifold 1 Air Temperature (High Resolution) - Temperature
@@ -494,7 +831,12 @@ extern "C" {
         // The higher resolution is required for control purposes.
         static
         const
-        J1939_SPN           spn1636 = { 1636, &temp02 };
+        J1939_SPN           spn1636 = {
+            1636,
+            0,
+            NULL    /*&temp02*/,
+            "Intake Manifold 1 Air Temperature (High Resolution)"
+        };
         
         
         // SPN 1637 - Engine Coolant Temperature (High Resolution) - Temperature of
@@ -502,10 +844,15 @@ extern "C" {
         // for control purposes.
         static
         const
-        J1939_SPN           spn1637 = { 1637, &temp02 };
+        J1939_SPN           spn1637 = {
+            1637,
+            0,
+            NULL    /*&temp02*/,
+            "Engine Coolant Temperature (High Resolution)"
+        };
         
         
-        // SPN 1675 - spn1675 - Engine Starter Mode - There are several phases in a
+        // SPN 1675 - Engine Starter Mode - There are several phases in a
         // starting action and different reasons why a start cannot take place.
         // 0000 start not requested
         // 0001 starter active, gear not engaged
@@ -524,7 +871,12 @@ extern "C" {
         // 1111 not available
         static
         const
-        J1939_SPN           spn1675 = { 1675, &bits03 };
+        J1939_SPN           spn1675 = {
+            1675,
+            0,
+            NULL    /*&bits03*/,
+            "Engine Starter Mode"
+        };
         
         
         // SPN 2432 - Engine Demand - Percent Torque - The requested torque output of
@@ -532,94 +884,189 @@ extern "C" {
         // control and low and high speed governing.
         static
         const
-        J1939_SPN           spn2432 = { 2432, &percent02 };
+        J1939_SPN           spn2432 = {
+            2432,
+            0,
+            NULL    /*&percent02*/,
+            "Engine Demand - Percent Torque"
+        };
+        
+        
+        // SPN 2812 - Engine Overspeed Test
+        // 00 Engine Overspeed Test Not Active
+        // 01 Engine Overspeed Test Active
+        // 10 Reserved
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn2812 = {
+            2812,
+            0,
+            NULL    /*&????*/,
+            "Engine Overspeed Test"
+        };
+        
+        
+        // SPN 2813 - Engine Air Shutoff Command Status
+        // 00 No
+        // 01 Yes
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn2813 = {
+            2813,
+            0,
+            NULL    /*&????*/,
+            "Engine Air Shutoff Command Status"
+        };
+        
+        
+        // SPN 2814 - Engine Overspeed Test
+        // 00 Disabled
+        // 01 Enabled
+        // 10 Reserved
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn2814 = {
+            2814,
+            0,
+            NULL    /*&????*/,
+            "Engine Overspeed Test"
+        };
+        
+        
+        // SPN 2815 - Engine Alarm Output Command Status
+        // 00 Engine Alarm Output Command Not Active
+        // 01 Engine Alarm Output Command Active
+        // 10 Reserved
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn2815 = {
+            2815,
+            0,
+            NULL    /*&????*/,
+            "Engine Alarm Output Command Status"
+        };
         
         
         // SPN 2848 - Engine Demand - Percent Torque - The requested torque output of
         static
         const
-        J1939_SPN           spn2848 = { 2848, &bits64 };
+        J1939_SPN           spn2848 = {
+            2848,
+            0,
+            NULL    /*&bits64*/,
+            ""
+        };
         
         
         static
         const
         J1939_PGNSPN        pgn37632spns[1] = {
-            { 37632, 2848, 0, 0, &spn2848 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 37632, 2848,   0,    0,      0,    0, &spn2848 }
         };
         
         static
         const
         J1939_PGNSPN        pgn60928spns[1] = {
-            { 60928, 2848, 0, 0, &spn2848 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 60928, 2848,   0,    0,     0,     0, &spn2848 }
         };
         
         static
         const
         J1939_PGNSPN        pgn61443spns[6] = {
-            { 61443,  558, 0, 0, &spn558 },
-            { 61443,  559, 0, 0, &spn559 },
-            { 61443, 1437, 0, 0, &spn1437 },
-            { 61443,   91, 1, 0, &spn91 },
-            { 61443,   92, 2, 0, &spn92 },
-            { 61443,  974, 3, 0, &spn974 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 61443,  558,   0,    0,     0,     0, &spn558 },
+            { 61443,  559,   0,    0,     0,     0, &spn559 },
+            { 61443, 1437,   0,    0,     0,     0, &spn1437 },
+            { 61443,   91,   1,    0,     0,     0, &spn91 },
+            { 61443,   92,   2,    0,     0,     0, &spn92 },
+            { 61443,  974,   3,    0,     0,     0, &spn974 }
         };
         
         static
         const
         J1939_PGNSPN        pgn61444spns[7] = {
-            { 61444,  899, 0, 0, &spn899 },
-            { 61444,  512, 1, 0, &spn512 },
-            { 61444,  513, 2, 0, &spn513 },
-            { 61444,  190, 3, 0, &spn190 },
-            { 61444, 1483, 5, 0, &spn1483 },
-            { 61444, 1675, 6, 0, &spn1675 },
-            { 61444, 2432, 7, 0, &spn2432 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 61444,  899,   0,    0,     0,    0,  &spn899 },
+            { 61444,  512,   1,    0,     0,    0,  &spn512 },
+            { 61444,  513,   2,    0,     0,    0,  &spn513 },
+            { 61444,  190,   3,    0,     0,    0,  &spn190 },
+            { 61444, 1483,   5,    0,     0,    0,  &spn1483 },
+            { 61444, 1675,   6,    0,     0,    0,  &spn1675 },
+            { 61444, 2432,   7,    0,     0,    0,  &spn2432 }
         };
         
         static
         const
         J1939_PGNSPN        pgn65129spns[2] = {
-            { 65129, 1636, 0, 0, &spn1636 },
-            { 65129, 1637, 2, 0, &spn1637 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 65129, 1636,   0,    0,     0,    0,  &spn1636 },
+            { 65129, 1637,   2,    0,     0,    0,  &spn1637 }
         };
+        
+        static
+        const
+        J1939_PGNSPN        pgn65252spns[18] = {
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 65252,  593,   2,    0,     0,    0,  &spn593 },
+            { 65252,  594,   2,    2,     0,    0,  &spn594 },
+            { 65252,  592,   2,    4,     0,    0,  &spn592 },
+            { 65252,  590,   2,    6,     0,    0,  &spn590 },
+            { 65252,  591,   2,    6,     1,    0,  &spn591 },
+            { 65252,  985,   2,    0,     2,    0,  &spn985 },
+            { 65252,  875,   2,    2,     2,    0,  &spn875 },
+            { 65252,  605,   2,    4,     2,    0,  &spn605 },
+            { 65252, 1081,   2,    0,     3,    0,  &spn1081 },
+            { 65252, 1110,   2,    0,     4,    0,  &spn1110 },
+            { 65252, 1109,   2,    2,     4,    0,  &spn1109 },
+            { 65252, 1108,   2,    4,     4,    0,  &spn1108 },
+            { 65252, 1107,   2,    6,     4,    0,  &spn1107 },
+            { 65252, 1111,   2,    6,     5,    0,  &spn1111 },
+            { 65252, 2815,   2,    0,     6,    0,  &spn2815 },
+            { 65252, 2814,   2,    2,     6,    0,  &spn2814 },
+            { 65252, 2813,   2,    4,     6,    0,  &spn2813 },
+            { 65252, 2812,   2,    6,     6,    0,  &spn2812 }
+        };
+        
         
         static
         const
         J1939_PGNSPN        pgn65262spns[6] = {
-            { 65262,  110, 0, 0, &spn110 },
-            { 65262,  174, 1, 0, &spn174 },
-            { 65262,  175, 2, 0, &spn175 },
-            { 65262,  176, 3, 0, &spn176 },
-            { 65262,   52, 6, 0, &spn52 },
-            { 65262, 1134, 7, 0, &spn1134 }
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 65262,  110,   0,    0,     0,    0,  &spn110 },
+            { 65262,  174,   1,    0,     0,    0,  &spn174 },
+            { 65262,  175,   2,    0,     0,    0,  &spn175 },
+            { 65262,  176,   3,    0,     0,    0,  &spn176 },
+            { 65262,   52,   6,    0,     0,    0,  &spn52 },
+            { 65262, 1134,   7,    0,     0,    0,  &spn1134 }
         };
         
-        
+
+#ifdef XYZZY
+        //FIXME:
         static
         const
-        J1939_PGNTBL        pgn37632 = { 37632,    0, 6, 1, pgn37632spns };
-        
-        static
-        const
-        J1939_PGNTBL        pgn60928 = { 60928,    0, 6, 1, pgn60928spns };
-        
-        static
-        const
-        J1939_PGNTBL        pgn61443 = { 61443,   50, 3, 6, pgn61443spns };
-        
-        static
-        const
-        J1939_PGNTBL        pgn61444 = { 61444,   50, 3, 7, pgn61444spns };
-        
-        static
-        const
-        J1939_PGNTBL        pgn65129 = { 65129, 1000, 6, 2, pgn65129spns };
-        
-        static
-        const
-        J1939_PGNTBL        pgn65262 = { 65262, 1000, 6, 6, pgn65262spns };
-        
+        J1939_PGN_ENTRY     pgn37632 = {
+        //   PGN    msFreq dlc priority cSpns rsvd pSpns
+            37632,    0,    8,    6,     1,     0, pgn37632spns,
+            "???"
+        };
 #endif
+        
+        
         
         
         
@@ -695,9 +1142,10 @@ extern "C" {
             0,                  // msFreq
             8,                  // dlc
             6,                  // priority
-            0,                  // cSPNs
+            1,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn60928spns,       // SPN Table Pointer
+            "Claim Address/Cannot Claim Address"
         };
         
         
@@ -747,9 +1195,10 @@ extern "C" {
             50,                 // msFreq
             8,                  // dlc
             3,                  // priority
-            0,                  // cSPNs
+            6,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn61443spns,       // SPN Table Pointer
+            "Electronic Engine Controller 2 - EEC2"
         };
         
         
@@ -760,9 +1209,10 @@ extern "C" {
             100,                // msFreq
             8,                  // dlc
             3,                  // priority
-            0,                  // cSPNs
+            7,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn61444spns,       // SPN Table Pointer
+            "Electronic Engine Controller 1 - EEC1"
         };
         
         
@@ -799,9 +1249,10 @@ extern "C" {
             1000,               // msFreq
             8,                  // dlc
             6,                  // priority
-            0,                  // cSPNs
+            2,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn65129spns,       // SPN Table Pointer
+            "Engine Temperature 3 - ET3"
         };
         
         
@@ -845,15 +1296,42 @@ extern "C" {
         
         
         const
+        J1939_PGN_ENTRY     pgn65251_entry = {
+            // PGN 65251  0x00FEE3 - Engine Configuration 1 - EC1 -
+            0x00FEE1,
+            5000,               // msFreq
+            39,                 // dlc
+            6,                  // priority
+            14,                 // cSPNs
+            0,                  // --reserved--
+            NULL                // SPN Table Pointer
+        };
+        
+        
+        const
+        J1939_PGN_ENTRY     pgn65252_entry = {
+            // PGN 65251  0x00FEE4 - Shutdown           - SHUTDOW -
+            0x00FEE4,
+            1000,               // msFreq
+            8,                  // dlc
+            6,                  // priority
+            18,                 // cSPNs
+            0,                  // --reserved--
+            NULL                // SPN Table Pointer
+        };
+        
+        
+        const
         J1939_PGN_ENTRY     pgn65262_entry = {
             // PGN 65262  0x00FEEE - Engine Temperature 1 - ET1
             0x0000FEEE,
             1000,               // msFreq
             8,                  // dlc
             6,                  // priority
-            0,                  // cSPNs
+            6,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn65262spns,       // SPN Table Pointer
+            "Engine Temperature 1 - ET1"
         };
         
         

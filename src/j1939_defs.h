@@ -311,6 +311,8 @@ extern	"C" {
         OBJ_IDENT_J1939DG_CLASS,
         OBJ_IDENT_J1939DL,              // J1939 Data Link Layer
         OBJ_IDENT_J1939DL_CLASS,
+        OBJ_IDENT_J1939ECU,             // J1939 ECU
+        OBJ_IDENT_J1939ECU_CLASS,
         OBJ_IDENT_J1939EN,              // J1939 Engine #1 CA
         OBJ_IDENT_J1939EN_CLASS,
         OBJ_IDENT_J1939ER,              // J1939 Engine Retarder CA
@@ -365,10 +367,14 @@ extern	"C" {
         J1939_BRAKE_SYSTEM_CONTROLLER=11,
         J1939_ENGINE_RETARDER_COMPRESSION_1=41,
         J1939_CRUISE_CONTROL=17,
+        J1939_INSTRUMENT_CLUSTER_1=23,
         J1939_BODY_CONTROLLER=33,
+        J1939_MANAGEMENT_COMPUTER=39,
         J1939_ENGINE_RETARDER_EXHAUST_1=41,
         J1939_CAB_CONTROLLER_PRIMARY=49,
    } J1939_NAMES;
+    
+
     // SPN Table
 #pragma pack(push, 1)
     // actual_value(int32_t) = (((spn_value * mult) + round) / div) + offset;
@@ -385,6 +391,8 @@ extern	"C" {
         int32_t         maxOp;          // Maximum Operating Range
         int32_t         minData;        // Minimum Data Range
         int32_t         maxData;        // Maximum Data Range
+        const
+        char            *pDesc;
     } J1939_SPN_TYPE;
 #pragma pack(pop)
     
@@ -395,6 +403,8 @@ extern	"C" {
         uint16_t        reservered16;
         const
         J1939_SPN_TYPE  *pType;
+        const
+        char            *pDesc;
     } J1939_SPN;
 #pragma pack(pop)
     
@@ -404,12 +414,10 @@ extern	"C" {
     typedef struct j1939_pgnspn_s {
         uint16_t        pgn;            // PGN Identifier
         uint16_t        spn;            // SPN Identifier
-        uint8_t         bitMask;        // For Bits, mask and shift offset
+        uint8_t         cBits;          // SPN Size in Bits
         uint8_t         bitOffset;
         int8_t          dataOffset;     // Offset in Data
         uint8_t         reserved8;
-        uint16_t        objOffset;      // Offset in Object
-        uint16_t        reservered16;
         const
         J1939_SPN       *pSpn;
     } J1939_PGNSPN;
@@ -427,6 +435,8 @@ extern	"C" {
         uint16_t        reserved16;
         const
         J1939_PGNSPN    *pSpns;
+        const
+        char            *pDesc;
     } J1939_PGN_ENTRY;
 #pragma pack(pop)
     

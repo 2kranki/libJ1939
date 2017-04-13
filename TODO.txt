@@ -9,6 +9,9 @@ will depend upon time and resources.
         initialized before starting the system.
     --  Merge in CAM ????
 
+--  J1939ecu - ECU
+    --  What should go in this?????
+
 --  J1939ca - CA
     --  Make sure time handling is consistant with CA, DG, ER and TC
     --  Look at time rollover in message handlers and timed msgs
