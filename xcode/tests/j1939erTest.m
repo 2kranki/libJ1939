@@ -29,9 +29,9 @@
 
 #import     <XCTest/XCTest.h>
 #import     <cmn_defs.h>
-#include    "j1939er_internal.h"
+#include    <j1939er_internal.h>
 #include    "common.h"              // Tests Common Routines
-#include    "j1939Can.h"
+#include    <j1939can.h>
 #include    "j1939Sys.h"
 
 

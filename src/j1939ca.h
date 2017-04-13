@@ -69,6 +69,8 @@
  */
 
 
+#define j1989_CA_TIMED_XMT_QUEUE_SIZE 4   // Zero if you do not want
+
 
 #include        <j1939_defs.h>
 #include        <j1939tbl.h>

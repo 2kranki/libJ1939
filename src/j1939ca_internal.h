@@ -44,8 +44,10 @@
 
 
 
-#include        "j1939ca.h"
-#include        "j1939tbl.h"
+#include        <j1939ca.h>
+#include        <table.h>
+//#include        <psxThread.h>
+//#include        "j1939tbl.h"
 
 
 #ifndef J1939CA_INTERNAL_H
@@ -65,6 +67,19 @@ extern "C" {
         J1939CA_STATE_NORMAL_OPERATION,
         J1939CA_STATE_WAIT_FOR_COMMANDED_ADDRESS,
     } J1939CA_STATE;
+    
+
+#pragma pack(push, 1)
+    typedef struct j1939ca_msg_s {
+        uint32_t        msDelay;            // Delay in ms
+        uint32_t        msTime;             // Time when delay expires
+        J1939_MSG       msg;
+    } J1939CA_MSG;
+#pragma pack(pop)
+    
+    
+    
+
     
     
     
@@ -121,10 +136,24 @@ extern "C" {
         uint8_t             curDa;
         uint8_t             curSa;
         uint16_t            reserved16a;
-        
+
+#if j1989_CA_TIMED_XMT_QUEUE_SIZE
+        TABLE_DATA          *pDelayTable;   // If a message is delayed, it is in this chain.
+        //                                  // This chain is sorted by expiration time
+        //                                  // (Youngest to Oldest).
     };
+#endif
 #pragma pack(pop)
     
+    extern
+    const
+    J1939CA_PGN_ENTRY   ca_pgn59392_entry;
+    extern
+    const
+    J1939CA_PGN_ENTRY   ca_pgn59904_entry;
+    extern
+    const
+    J1939CA_PGN_ENTRY   ca_pgn60928_entry;
     
     extern
     const
@@ -139,13 +168,13 @@ extern "C" {
      ****************************************************************/
     
     bool            j1939ca_setCAM(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         J1939CAM_DATA   *pValue
     );
     
     
     bool			j1939ca_setClaimedAddress(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint8_t         value
     );
   
@@ -156,28 +185,28 @@ extern "C" {
 
     
     bool            j1939ca_HandlePgn59392(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn59904(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn60928(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_SetupPgn60928(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         J1939_PDU       *pEid,
         uint16_t        cData,
         uint8_t         *pData,
@@ -186,32 +215,23 @@ extern "C" {
     
     
     bool            j1939ca_TransmitPgn59392_NAK(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         J1939_PGN       pgn                 // PGN being requested
     );
     
     
     bool            j1939ca_TransmitPgn60928(
-        J1939CA_DATA	*cbp
+        J1939CA_DATA	*this
     );
     
     
     bool            j1939ca_XmtMsgDL(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        msDelay,
         J1939_PDU       pdu,
         uint16_t        cData,
         void            *pData
     );
-    
-    
-#ifdef NDEBUG
-#else
-    static
-    bool            j1939ca_Validate(
-        J1939CA_DATA      *cbp
-    );
-#endif
     
     
 

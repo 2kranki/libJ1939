@@ -60,7 +60,7 @@
 
 
 #include        <j1939_defs.h>
-//#include        "j1939tbl.h"
+//#include        <j1939tbl.h>
 
 
 #ifndef J1939DL_H

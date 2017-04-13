@@ -48,7 +48,7 @@
 #define	J1939CAM_INTERNAL_H
 
 
-#include        "j1939cam.h"
+#include        <j1939cam.h>
 #include        "j1939ca_internal.h"
 
 

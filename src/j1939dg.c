@@ -360,7 +360,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939dg_HandlePgn61440(
-        J1939DG_DATA	*cbp,
+        J1939DG_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -371,7 +371,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939dg_Validate( cbp ) ) {
+        if( !j1939dg_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -586,11 +586,11 @@ extern	"C" {
     #else
     static
     bool            j1939dg_Validate(
-        J1939DG_DATA	*cbp
+        J1939DG_DATA	*this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf( cbp, OBJ_IDENT_J1939DG ) )
+        if(this) {
+            if ( obj_IsKindOf(this, OBJ_IDENT_J1939DG ) )
                 ;
             else
                 return false;

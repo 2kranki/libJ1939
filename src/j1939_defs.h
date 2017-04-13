@@ -358,6 +358,17 @@ extern	"C" {
         
     
 
+    typedef enum j1939_names_e {
+        J1939_ENGINE_1=0,
+        J1939_TRANSMISSION_1=3,
+        J1939_SHIFT_CONSOLE_PRIMARY=5,
+        J1939_BRAKE_SYSTEM_CONTROLLER=11,
+        J1939_ENGINE_RETARDER_COMPRESSION_1=41,
+        J1939_CRUISE_CONTROL=17,
+        J1939_BODY_CONTROLLER=33,
+        J1939_ENGINE_RETARDER_EXHAUST_1=41,
+        J1939_CAB_CONTROLLER_PRIMARY=49,
+   } J1939_NAMES;
     // SPN Table
 #pragma pack(push, 1)
     // actual_value(int32_t) = (((spn_value * mult) + round) / div) + offset;

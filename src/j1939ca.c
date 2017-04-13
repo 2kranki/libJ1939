@@ -61,7 +61,6 @@ extern	"C" {
 #endif
 
 
-    static
     const
     J1939CA_PGN_ENTRY   ca_pgn59392_entry = {
         // PGN 59392  0x00E800 - ACK/NAK
@@ -72,7 +71,6 @@ extern	"C" {
     };
     
     
-    static
     const
     J1939CA_PGN_ENTRY   ca_pgn59904_entry = {
         // PGN 59904  0x00EA00 (PDU1) - Request for PGN
@@ -83,7 +81,6 @@ extern	"C" {
     };
     
     
-    static
     const
     J1939CA_PGN_ENTRY   ca_pgn60928_entry = {
         // PGN 60928  0x00EE00 - Claim Address/Cannot Claim Address
@@ -140,6 +137,15 @@ extern	"C" {
     * * * * * * * * * * *  Internal Subroutines * * * * * * * * * * *
     ****************************************************************/
 
+#ifdef NDEBUG
+#else
+    static
+    bool            j1939ca_Validate(
+        J1939CA_DATA      *this
+    );
+#endif
+    
+    
     // Knuth's bit reversal algorithm
     // from http://www.hackersdelight.org/revisions.pdf
     uint32_t        bitReversal32_knuth(
@@ -179,6 +185,49 @@ extern	"C" {
         return x;
     }
 
+    
+    
+    //---------------------------------------------------------------
+    //                  T a s k  B o d y
+    //---------------------------------------------------------------
+    
+    static
+    void            j1939ca_TaskBody(
+        void            *pData
+    )
+    {
+        J1939CA_DATA    *this = pData;
+        J1939CA_MSG     *pCurrent;
+        J1939CA_MSG     *pNext;
+        uint32_t        curTime = j1939ca_MsTimeGet(this);
+        bool            fRc = false;
+        
+        table_Lock(this->pDelayTable);
+        pCurrent = table_Head(this->pDelayTable);
+        while (pCurrent) {
+            pNext = table_Next(this->pDelayTable, pCurrent);
+            if (pCurrent->msTime <= curTime) {
+                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                                    this->pCAN,
+                                                                    0,
+                                                                    &pCurrent->msg
+                                                );
+                }
+                table_Delete(this->pDelayTable, pCurrent);
+            }
+            if (pCurrent->msTime > curTime) {
+                break;
+            }
+            pCurrent = pNext;
+        }
+        table_Unlock(this->pDelayTable);
+        
+        if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS) {
+            ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS(this->pSYS, 10);
+        }
+    }
+    
     
     
     
@@ -293,25 +342,25 @@ extern	"C" {
     //---------------------------------------------------------------
     
     uint8_t         j1939ca_getClaimedAddress(
-        J1939CA_DATA	*cbp
+        J1939CA_DATA	*this
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
       
-        return cbp->ca;
+        return this->ca;
     }
 
     
     bool			j1939ca_setClaimedAddress(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint8_t         value
     )
     {
@@ -319,13 +368,13 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
         
-        cbp->ca = value;
+        this->ca = value;
         
         return true;
     }
@@ -337,20 +386,20 @@ extern	"C" {
     //---------------------------------------------------------------
     
     P_SRVCMSG_RTN   j1939ca_getHandler(
-        J1939CA_DATA	*cbp
+        J1939CA_DATA	*this
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
         
-        return cbp->pHandler;
+        return this->pHandler;
     }
     
     
@@ -429,24 +478,25 @@ extern	"C" {
     
     
     bool            j1939ca_getTimedTransmits(
-        J1939CA_DATA	*cbp
+        J1939CA_DATA	*this
     )
     {
     
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
     
-        return cbp->fTimedTransmit ? true : false;
+        return this->fTimedTransmit ? true : false;
     }
+
     
     bool            j1939ca_setTimedTransmits(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         bool            value
     )
     {
@@ -454,17 +504,17 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
         
         if (value) {
-            cbp->fTimedTransmit = true;
+            this->fTimedTransmit = true;
         }
         else {
-            cbp->fTimedTransmit = false;
+            this->fTimedTransmit = false;
         }
         
         return true;
@@ -472,7 +522,7 @@ extern	"C" {
     
     
     bool			j1939ca_setXmtMsgDL(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         P_J1939_XMTRTN  pXmtMsg,
         void            *pData
     )
@@ -481,14 +531,14 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
         
-        cbp->pXmtMsgDL  = pXmtMsg;
-        cbp->pXmtDataDL = pData;
+        this->pXmtMsgDL  = pXmtMsg;
+        this->pXmtDataDL = pData;
         
         return true;
     }
@@ -516,6 +566,13 @@ extern	"C" {
         if( NULL == this ) {
             return;
         }
+        
+#if j1989_CA_TIMED_XMT_QUEUE_SIZE
+        if (this->pDelayTable) {
+            obj_Release(this->pDelayTable);
+            this->pDelayTable = OBJ_NIL;
+        }
+#endif
         
         if (this->pCAN) {
             obj_Release(this->pCAN);
@@ -587,7 +644,7 @@ extern	"C" {
     
     
     bool            j1939ca_FindXmtPgnEntry(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         J1939_PGN       pgn
     )
     {
@@ -599,17 +656,17 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
         
-        if( cbp->pXmtPgnTbl ) {
-            pCurIndex = (const J1939CA_PGN_ENTRY *(*))cbp->pXmtPgnTbl->pPGNs;
+        if( this->pXmtPgnTbl ) {
+            pCurIndex = (const J1939CA_PGN_ENTRY *(*))this->pXmtPgnTbl->pPGNs;
             while ( (pCurEntry = *pCurIndex++) ) {
                 if (pgn.w == pCurEntry->pDef->pgn ) {
-                    cbp->pCurEntry = pCurEntry;
+                    this->pCurEntry = pCurEntry;
                     return true;
                 }
             }
@@ -618,7 +675,7 @@ extern	"C" {
         pCurIndex = (const J1939CA_PGN_ENTRY *(*))xmtPgnTbl.pPGNs;
         while ( (pCurEntry = *pCurIndex++) ) {
             if (pgn.w == pCurEntry->pDef->pgn ) {
-                cbp->pCurEntry = pCurEntry;
+                this->pCurEntry = pCurEntry;
                 return true;
             }
         }
@@ -707,7 +764,7 @@ extern	"C" {
     // ACK/NAK Message
     
     bool            j1939ca_HandlePgn59392(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     )
@@ -717,7 +774,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -740,7 +797,7 @@ extern	"C" {
     // First 3 bytes of data are the PGN being requested.
     
     bool            j1939ca_HandlePgn59904(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
     )
@@ -752,7 +809,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( cbp ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -770,13 +827,13 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_FindXmtPgnEntry(cbp, requestedPgn);
+        fRc = j1939ca_FindXmtPgnEntry(this, requestedPgn);
         if (fRc) {
-            fRc = j1939ca_TransmitPgn(cbp, cbp->pCurEntry);
+            fRc = j1939ca_TransmitPgn(this, this->pCurEntry);
         }
         else {
-            if ((requestedPgn.PF < 240) && !(255 == cbp->curDa)) {
-                fRc = j1939ca_TransmitPgn59392_NAK( cbp, requestedPgn );
+            if ((requestedPgn.PF < 240) && !(255 == this->curDa)) {
+                fRc = j1939ca_TransmitPgn59392_NAK( this, requestedPgn );
             }
         }
         
@@ -966,6 +1023,23 @@ extern	"C" {
         this->name.IG  = spn2846;
         this->name.AAC = 0;
         
+#if j1989_CA_TIMED_XMT_QUEUE_SIZE
+        uint32_t            blkNum;
+        blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
+        this->pDelayTable = table_Alloc( );
+        this->pDelayTable = table_Init(
+                                this->pDelayTable,
+                                blkNum,
+                                sizeof(struct j1939_msg_s),
+                                true
+                            );
+        if (OBJ_NIL == this->pDelayTable) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+#endif
+        
 #ifdef NDEBUG
 #else
         if( !j1939ca_Validate( this ) ) {
@@ -1117,7 +1191,7 @@ extern	"C" {
     // ACK/NAK PGN
     
     bool            j1939ca_TransmitPgn59392_NAK(
-        J1939CA_DATA	*cbp,
+        J1939CA_DATA	*this,
         J1939_PGN       pgn                 // PGN being requested
     )
     {
@@ -1131,23 +1205,23 @@ extern	"C" {
         for (i=1; i<8; ++i) {
             data[i] = 0xFF;
         }
-        data[4] = cbp->ca;
+        data[4] = this->ca;
         data[5] = pgn.pgn0;
         data[6] = pgn.pgn1;
         data[7] = pgn.pgn2;
         
         pdu.PF = 232;
-        if (255 == cbp->curDa) {
+        if (255 == this->curDa) {
             pdu.PS = 255;
         }
         else {
-            pdu.PS = cbp->curSa;
+            pdu.PS = this->curSa;
         }
-        pdu.SA = cbp->ca;
+        pdu.SA = this->ca;
         pdu.P  = 6;         // Priority
         
-        if (cbp->pXmtMsgDL) {
-            fRc = (*cbp->pXmtMsgDL)(cbp->pXmtDataDL, 0, pdu, dlc, &data);
+        if (this->pXmtMsgDL) {
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &data);
         }
         
         // Return to caller.
@@ -1280,6 +1354,8 @@ extern	"C" {
     {
         J1939_MSG       msg;
         bool            fRc = false;
+        J1939CA_MSG     *pCurrent;
+        J1939CA_MSG     *pInsert;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1309,12 +1385,41 @@ extern	"C" {
         
         if (cData < 9) {
             fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, cData, pData);
-            if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-                fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                            this->pCAN,
-                                                            msDelay,
-                                                            &msg
-                                            );
+            if (msDelay) {
+#if j1989_CA_TIMED_XMT_QUEUE_SIZE
+                table_Lock(this->pDelayTable);
+                
+                pCurrent = table_Add(this->pDelayTable);
+                if (NULL == pCurrent) {
+                    table_Unlock(this->pDelayTable);
+                    return false;
+                }
+                memmove(&pCurrent->msg, pData, sizeof(J1939_MSG));
+                pCurrent->msDelay = msDelay;
+                pCurrent->msTime  = j1939ca_MsTimeGet(this);
+                pCurrent->msTime += msDelay;
+                
+                // Move the msg to the appropriate place in the queue.
+                pInsert = table_Head(this->pDelayTable);
+                while (!(NULL == pInsert)) {
+                    if (pInsert->msTime > pCurrent->msTime) {
+                        fRc = table_MoveBefore(this->pDelayTable, pInsert, pCurrent);
+                        break;
+                    }
+                    pInsert = table_Next(this->pDelayTable, pInsert);
+                }
+                
+                table_Unlock(this->pDelayTable);
+#endif
+            }
+            else {
+                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                                this->pCAN,
+                                                                msDelay,
+                                                                &msg
+                                                );
+                }
             }
             //if (this->pXmtMsg) {
                 //fRc = (*this->pXmtMsg)(this->pXmtData, msDelay, &msg);

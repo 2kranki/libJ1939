@@ -91,8 +91,13 @@ extern "C" {
         uint32_t            startTime61445;     // Repeat every 100ms
         uint32_t            startTime65098;     // Repeat every 100ms
         uint32_t            startTime65226;     // Repeat every 1000ms
+        uint32_t            startTime65272;     // Repeat every 1000ms
 
         // The first spn is used in Init() to establish size of area to initialize.
+        uint8_t             spn123;             // Clutch Pressure
+        uint8_t             spn124;             // Transmission Oil Level
+        uint8_t             spn126;             // Transmission Filter Differential Pressure
+        uint8_t             spn127;             // Transmission Oil Pressure
         uint8_t             spn518;             // Engine Requested Torque/Torque Limit
         uint8_t             spn522;             // Percent Clutch Slip
         uint8_t             spn523;             // Transmission Current Gear
@@ -150,11 +155,11 @@ extern "C" {
         uint8_t             spn1850;            // Transmission Requested Range Display
                                                 // Blank State
         uint8_t             spn1851;            // Transmission Shift Inhibit Indicator
+        uint8_t             spn2536;            // Transmission Mode 1 Indicator
+        uint8_t             spn2537;            // Transmission Mode 2 Indicator
+        uint8_t             spn2538;            // Transmission Mode 3 Indicator
+        uint8_t             spn2539;            // Transmission Mode 4 Indicator
         uint8_t             spn2900;            // Transmission Engine Crank Enable
-        uint8_t             spn2936;            // Transmission Mode 1 Indicator
-        uint8_t             spn2937;            // Transmission Mode 2 Indicator
-        uint8_t             spn2938;            // Transmission Mode 3 Indicator
-        uint8_t             spn2939;            // Transmission Mode 4 Indicator
         uint8_t             spn2945;            // Active Shift Console Indicator
         uint8_t             spn3086;            // Transmission Ready for Brake Release
         uint8_t             spn3289;            // Transmission Requested Gear Feedback
@@ -166,10 +171,11 @@ extern "C" {
         uint16_t            spn161;             // Transmission Input Shaft Speed
         uint16_t            spn162;             // Transmission Requested Range
         uint16_t            spn163;             // Transmission Current Range
+        uint16_t            spn177;             // Transmission Oil Termperature
         uint16_t            spn191;             // Transmission Output Shaft Speed
         uint16_t            spn526;             // Transmission Actual Gear Ratio
         uint16_t            spn898;             // Engine Requested Speed/Speed Limit
-        //uint16_t            reserved16;
+        uint16_t            reserved16;
         // The last spn is used in Init() to establish size of area to initialize.
 
         uint32_t            timeOut;
@@ -257,7 +263,7 @@ extern "C" {
     );
 
 
-    bool            j1939tc_Pgn0Setup(
+    bool            j1939tc_SetupPgn0(
         J1939TC_DATA	*cbp,
         J1939_PDU       *pPDU,
         uint16_t        cData,
@@ -266,7 +272,7 @@ extern "C" {
     );
 
 
-    bool            j1939tc_Pgn61442Setup(
+    bool            j1939tc_SetupPgn61442(
         J1939TC_DATA	*cbp,
         J1939_PDU       *pPDU,
         uint16_t        cData,
@@ -275,7 +281,7 @@ extern "C" {
     );
 
 
-    bool            j1939tc_Pgn61445Setup(
+    bool            j1939tc_SetupPgn61445(
         J1939TC_DATA	*cbp,
         J1939_PDU       *pPDU,
         uint16_t        cData,
@@ -284,7 +290,7 @@ extern "C" {
     );
 
 
-    bool            j1939tc_Pgn65098Setup(
+    bool            j1939tc_SetupPgn65098(
         J1939TC_DATA	*cbp,
         J1939_PDU       *pPDU,
         uint16_t        cData,
@@ -293,7 +299,7 @@ extern "C" {
     );
 
 
-    bool            j1939tc_Pgn65226Setup(
+    bool            j1939tc_SetupPgn65226(
         J1939TC_DATA	*cbp,
         J1939_PDU       *pPDU,
         uint16_t        cData,

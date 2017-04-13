@@ -2017,7 +2017,7 @@ extern	"C" {
 
 
     // Intake Manifold 1 Air Temperature
-    uint16_t			j1939en_getSpn1636(
+    uint16_t		j1939en_getSpn1636(
         J1939EN_DATA	*this
     )
     {
@@ -2036,7 +2036,7 @@ extern	"C" {
 
     bool			j1939en_setSpn1636(
         J1939EN_DATA	*this,
-        uint16_t			value
+        uint16_t		value
     )
     {
 
@@ -2075,7 +2075,7 @@ extern	"C" {
 
     bool			j1939en_setSpn1637(
         J1939EN_DATA	*this,
-        uint16_t			value
+        uint16_t		value
     )
     {
 
@@ -2227,15 +2227,15 @@ extern	"C" {
         OBJ_ID          objId
     )
     {
-        J1939EN_DATA	*cbp = objId;
+        J1939EN_DATA	*this = objId;
 
         // Do initialization.
-        if( NULL == cbp ) {
+        if( NULL == this ) {
             return;
         }
 
-        j1939ca_Dealloc( cbp );
-        cbp = NULL;
+        j1939ca_Dealloc(this);
+        this = NULL;
 
         // Return to caller.
     }
@@ -2349,7 +2349,7 @@ extern	"C" {
      */
 
     bool            j1939en_HandlePgn61442(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2369,7 +2369,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2392,37 +2392,37 @@ extern	"C" {
         spn607 = (pMsg->DATA.bytes[4] >> 2) & 0x3;
         // SPN 161  6-7     16bits      Transmission Input Shaft Speed
         spn161 = (pMsg->DATA.bytes[6] << 8) | pMsg->DATA.bytes[5];
-        cbp->spn161 = spn161;
-        cbp->spn190 = spn161;           // Make it engine speed too.
+        this->spn161 = spn161;
+        this->spn190 = spn161;           // Make it engine speed too.
         // SPN 1482 8       8bits       Source Address of Controlling Device for
         //                              Transmission Control
         spn1482 = pMsg->DATA.bytes[7];
 
         switch (spn574 & 0x03) {
             case 0x00:                  // Shift is not in progress
-                cbp->spn574 = 0x00;
+                this->spn574 = 0x00;
                 break;
 
             case 0x01:                  // Shift is in progress
 #ifdef XYZZY
-                if (cbp->spn574 == 0x01)
+                if (this->spn574 == 0x01)
                     ;
                 else {
-                    cbp->fShifting = true;
-                    if (cbp->pShiftExit) {
-                        (*cbp->pShiftExit)(cbp->pShiftData,true);
+                    this->fShifting = true;
+                    if (this->pShiftExit) {
+                        (*this->pShiftExit)(this->pShiftData,true);
                     }
                 }
 #endif
-                cbp->spn574 = 0x01;
+                this->spn574 = 0x01;
                 break;
 
             case 0x02:                  // Error
-                cbp->spn574 = 0x02;
+                this->spn574 = 0x02;
                 break;
 
             case 0x03:                  // Data Not Available
-                cbp->spn574 = 0x03;
+                this->spn574 = 0x03;
                 break;
         }
 
@@ -2437,7 +2437,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn61443(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2448,7 +2448,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2467,7 +2467,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn61444(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2478,7 +2478,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2497,7 +2497,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn61445(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2508,7 +2508,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2517,34 +2517,34 @@ extern	"C" {
         pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
 
         // SPN 524  1       8bits       Transmission Selected Gear
-        cbp->spn524 = pMsg->DATA.bytes[0];
+        this->spn524 = pMsg->DATA.bytes[0];
         // SPN 526  2-3     16bits      Transmission Actual Gear Ratio
         // SPN 523  4       8bits       Transmission Current Gear
-        cbp->spn523 = pMsg->DATA.bytes[3];
+        this->spn523 = pMsg->DATA.bytes[3];
         // SPN 162  5-6     16bits      Transmission Requested Range
         // SPN 163  7-8     16bits      Transmission Current Range
 
-        if (cbp->fShifting) {
-            if (cbp->spn523 == cbp->spn524) {
-                cbp->fShifting = false;
-                if (cbp->pShiftExit) {
-                    (*cbp->pShiftExit)(cbp->pShiftData,false);
+        if (this->fShifting) {
+            if (this->spn523 == this->spn524) {
+                this->fShifting = false;
+                if (this->pShiftExit) {
+                    (*this->pShiftExit)(this->pShiftData,false);
                 }
             }
         }
         else {
             // Check for Up Shift within Shift sequence
-            if (cbp->spn523 < cbp->spn524) {
-                cbp->fShifting = true;
-                if (cbp->pShiftExit) {
-                    (*cbp->pShiftExit)(cbp->pShiftData,true);
+            if (this->spn523 < this->spn524) {
+                this->fShifting = true;
+                if (this->pShiftExit) {
+                    (*this->pShiftExit)(this->pShiftData,true);
                 }
             }
         }
 
 
         // Return to caller.
-        return false;
+        return true;
     }
 
 
@@ -2554,7 +2554,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn65129(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2565,7 +2565,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2584,7 +2584,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn65247(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2595,7 +2595,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2614,7 +2614,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn65262(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2625,7 +2625,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2644,7 +2644,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939en_HandlePgn65265(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -2655,7 +2655,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939en_Validate( cbp ) ) {
+        if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -2669,6 +2669,48 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //               H a n d l e  P G N 6 5 2 7 2   EBC1        TRF1
+    //---------------------------------------------------------------
+    
+    bool            j1939en_HandlePgn65272(
+        J1939EN_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn123;
+        uint8_t         spn124;
+        uint8_t         spn126;
+        uint8_t         spn127;
+        uint16_t        spn177;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        if (pMsg) {
+            spn123 = pMsg->DATA.bytes[0];
+            spn124 = pMsg->DATA.bytes[1];
+            spn126 = pMsg->DATA.bytes[2];
+            spn127 = pMsg->DATA.bytes[3];
+            spn177 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+        }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //           H a n d l e  T i m e d  T r a n s m i t s
     //---------------------------------------------------------------
@@ -2810,7 +2852,7 @@ extern	"C" {
     // Electronic Engine Controller 2 - EEC2 -
     // Unused bits are set to 1.
     bool            j1939en_SetupPgn61443(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -2827,15 +2869,15 @@ extern	"C" {
                 return false;
             }
             *pData  = 0xC0;
-            *pData |= cbp->spn558 & 0x3;
-            *pData |= (cbp->spn559 & 0x3) << 2;
-            *pData |= (cbp->spn1437 & 0x3) << 4;
+            *pData |= this->spn558 & 0x3;
+            *pData |= (this->spn559 & 0x3) << 2;
+            *pData |= (this->spn1437 & 0x3) << 4;
             ++pData;    // 1
-            *pData  = cbp->spn91;                   // Accelerator Pedal Position 1
+            *pData  = this->spn91;                   // Accelerator Pedal Position 1
             ++pData;    // 2
-            *pData  = cbp->spn92;
+            *pData  = this->spn92;
             ++pData;    // 3
-            *pData  = cbp->spn974;
+            *pData  = this->spn974;
             ++pData;    // 4
             *pData  = 0xFF;
             ++pData;    // 5
@@ -2983,7 +3025,7 @@ extern	"C" {
      * Priority: 6
      */
     bool            j1939en_SetupPgn65129(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -2998,13 +3040,13 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn1636 & 0xFF;
+            *pData  = this->spn1636 & 0xFF;
             ++pData;    // 1
-            *pData  = (cbp->spn1636 >> 8) & 0xFF;
+            *pData  = (this->spn1636 >> 8) & 0xFF;
             ++pData;    // 2
-            *pData  = cbp->spn1637 & 0xFF;
+            *pData  = this->spn1637 & 0xFF;
             ++pData;    // 3
-            *pData  = (cbp->spn1637 >> 8) & 0xFF;
+            *pData  = (this->spn1637 >> 8) & 0xFF;
             ++pData;    // 4
             *pData  = 0xFF;
             ++pData;    // 5
@@ -3064,7 +3106,7 @@ extern	"C" {
      * Priority: 6
      */
     bool            j1939en_SetupPgn65247(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -3081,15 +3123,15 @@ extern	"C" {
             }
             // Range seems to be 15% (0x8C) to 18% (0x8F) for spn514
             *pData = 0x8D;
-            //*pData  = cbp->spn514 & 0xFF;
+            //*pData  = this->spn514 & 0xFF;
             ++pData;    // 1
-            *pData  = cbp->spn515 & 0xFF;
+            *pData  = this->spn515 & 0xFF;
             ++pData;    // 2
-            *pData  = (cbp->spn515 >> 8) & 0xFF;
+            *pData  = (this->spn515 >> 8) & 0xFF;
             ++pData;    // 3
-            *pData  = cbp->spn519 & 0xFF;
+            *pData  = this->spn519 & 0xFF;
             ++pData;    // 4
-            *pData  = cbp->spn2978;
+            *pData  = this->spn2978;
             ++pData;    // 5
             *pData  = 0xFF;
             ++pData;    // 6
@@ -3148,7 +3190,7 @@ extern	"C" {
      * Priority: 6
      */
     bool            j1939en_SetupPgn65262(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -3163,21 +3205,21 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn110 & 0xFF;
+            *pData  = this->spn110 & 0xFF;
             ++pData;    // 1
-            *pData  = cbp->spn174 & 0xFF;
+            *pData  = this->spn174 & 0xFF;
             ++pData;    // 2
-            *pData  = cbp->spn175 & 0xFF;
+            *pData  = this->spn175 & 0xFF;
             ++pData;    // 3
-            *pData  = (cbp->spn175 >> 8) & 0xFF;
+            *pData  = (this->spn175 >> 8) & 0xFF;
             ++pData;    // 4
-            *pData  = cbp->spn176 & 0xFF;
+            *pData  = this->spn176 & 0xFF;
             ++pData;    // 5
-            *pData  = (cbp->spn176 >> 8) & 0xFF;
+            *pData  = (this->spn176 >> 8) & 0xFF;
             ++pData;    // 6
-            *pData  = cbp->spn52 & 0xFF;
+            *pData  = this->spn52 & 0xFF;
             ++pData;    // 7
-            *pData  = cbp->spn1134 & 0xFF;
+            *pData  = this->spn1134 & 0xFF;
         }
         else {
             return false;
@@ -3229,7 +3271,7 @@ extern	"C" {
      * Priority: 6
      */
     bool            j1939en_SetupPgn65265(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -3245,37 +3287,37 @@ extern	"C" {
                 return false;
             }
             *pData  = 0xC0;
-            *pData |= (cbp->spn69 & 0x3);
-            *pData |= (cbp->spn70 & 0x3) << 2;
-            *pData |= (cbp->spn1633 & 0x3) << 4;
+            *pData |= (this->spn69 & 0x3);
+            *pData |= (this->spn70 & 0x3) << 2;
+            *pData |= (this->spn1633 & 0x3) << 4;
             ++pData;    // 1
-            *pData  = cbp->spn84 & 0xFF;
+            *pData  = this->spn84 & 0xFF;
             ++pData;    // 2
-            *pData  = (cbp->spn84 >> 8) & 0xFF;
+            *pData  = (this->spn84 >> 8) & 0xFF;
             ++pData;    // 3
             *pData  = 0;
-            *pData |= (cbp->spn595 & 0x3);
-            *pData |= (cbp->spn596 & 0x3) << 2;
-            *pData |= (cbp->spn597 & 0x3) << 4;
-            *pData |= (cbp->spn598 & 0x3) << 6;
+            *pData |= (this->spn595 & 0x3);
+            *pData |= (this->spn596 & 0x3) << 2;
+            *pData |= (this->spn597 & 0x3) << 4;
+            *pData |= (this->spn598 & 0x3) << 6;
             ++pData;    // 4
             *pData  = 0;
-            *pData |= (cbp->spn599 & 0x3);
-            *pData |= (cbp->spn600 & 0x3) << 2;
-            *pData |= (cbp->spn601 & 0x3) << 4;
-            *pData |= (cbp->spn602 & 0x3) << 6;
+            *pData |= (this->spn599 & 0x3);
+            *pData |= (this->spn600 & 0x3) << 2;
+            *pData |= (this->spn601 & 0x3) << 4;
+            *pData |= (this->spn602 & 0x3) << 6;
             ++pData;    // 5
-            *pData  = (cbp->spn86 & 0xFF);
+            *pData  = (this->spn86 & 0xFF);
             ++pData;    // 6
             *pData  = 0;
-            *pData |= (cbp->spn976 & 0x1F);
-            *pData |= (cbp->spn527 & 0x7) << 5;
+            *pData |= (this->spn976 & 0x1F);
+            *pData |= (this->spn527 & 0x7) << 5;
             ++pData;    // 7
             *pData  = 0;
-            *pData |= (cbp->spn968 & 0x3);
-            *pData |= (cbp->spn967 & 0x3) << 2;
-            *pData |= (cbp->spn966 & 0x3) << 4;
-            *pData |= (cbp->spn1237 & 0x3) << 6;
+            *pData |= (this->spn968 & 0x3);
+            *pData |= (this->spn967 & 0x3) << 2;
+            *pData |= (this->spn966 & 0x3) << 4;
+            *pData |= (this->spn1237 & 0x3) << 6;
         }
         else {
             return false;
@@ -3343,11 +3385,11 @@ extern	"C" {
     #else
     static
     bool            j1939en_Validate(
-        J1939EN_DATA	*cbp
+        J1939EN_DATA	*this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf( cbp, OBJ_IDENT_J1939EN ) )
+        if(this) {
+            if ( obj_IsKindOf( this, OBJ_IDENT_J1939EN ) )
                 ;
             else
                 return false;

@@ -51,10 +51,10 @@
 //                                  failure_description, ...)
 
 
-#include    "j1939cam_internal.h"
-#include    "j1939en_internal.h"
-#include    "j1939er_internal.h"
-#include    "j1939Can.h"
+#include    <j1939cam_internal.h>
+#include    <j1939en_internal.h>
+#include    <j1939er_internal.h>
+#include    <j1939can.h>
 #include    "j1939Sys.h"
 
 

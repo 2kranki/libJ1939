@@ -129,7 +129,6 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
-#ifdef XYZZY
 - (void)testCheck_RequestNameDirect
 {
     J1939TC_DATA    *pTC = NULL;
@@ -147,7 +146,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
 
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -155,12 +154,12 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (0 == cCurMsg) );
 
-        // Setup up msg from #3 Transmission to ER requesting NAME;
+        // Setup up msg from ER #1 (41) to TC #1 (3) requesting NAME;
         pdu.eid = 0;
-        pdu.SA = 3;
-        pdu.P = 3;
-        pdu.PF = 0xEA;
-        pdu.PS = 41;
+        pdu.SA = 41;                // Source Address
+        pdu.P = 3;                  // Priority
+        pdu.PF = 0xEA;              // PDU Format - PGN
+        pdu.PS = 3;                 // Destination Address
         for (int i=0; i<8; ++i) {
             data[i] = 0xFF;
         }
@@ -171,13 +170,13 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
-        XCTAssertTrue( (3 == cCurMsg) );
+        XCTAssertTrue( (2 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
+        XCTAssertTrue( (0x0CEA0329 == pdu.eid) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0x18EEFF03 == pdu.eid) );
 
         obj_Release(pTC);
         pTC = OBJ_NIL;
@@ -204,7 +203,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -212,27 +211,29 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (0 == cCurMsg) );
         
-        // Setup up msg from #3 Transmission to ER requesting NAME;
+        // Setup up msg from ER #1 (41) to TC #1 (3) requesting NAME;
         pdu.eid = 0;
-        pdu.SA = 3;
-        pdu.P = 3;
-        pdu.PF = 0xEA;
-        pdu.PS = 41;
+        pdu.SA = 41;                // Source Address
+        pdu.P = 3;                  // Priority
+        pdu.PF = 0xEA;              // PDU Format - PGN
+        pdu.PS = 3;                 // Destination Address
         for (int i=0; i<8; ++i) {
             data[i] = 0xFF;
         }
         data[0] = 0x00;
-        data[1] = 0x23;         // Not Sure what this is! lol
+        data[1] = 0x23;         // Not Sure what this is if anything! lol
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
-        XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
+        XCTAssertTrue( (2 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
-        XCTAssertTrue( (0x18E80329 == pdu.eid), @"Result was false!" );
+        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x0CEA0329 == pdu.eid) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
+        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x18E82903 == pdu.eid) );       // Respond with NAK
         
         obj_Release(pTC);
         pTC = OBJ_NIL;
@@ -259,7 +260,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -313,7 +314,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -366,7 +367,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -408,7 +409,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -491,7 +492,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pTC) {
         
         j1939Sys_TimeReset(pSYS, 0);
-        j1939Can_setXmtMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pTC, 0, NULL);
@@ -556,7 +557,6 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     }
     
 }
-#endif
 
 
 

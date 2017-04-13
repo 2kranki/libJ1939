@@ -48,8 +48,8 @@
 #define	J1939EN_INTERNAL_H
 
 
-#include        "j1939en.h"
-#include        "j1939ca_internal.h"
+#include        <j1939en.h>
+#include        <j1939ca_internal.h>
 //#include        "canrsp.h"
 
 

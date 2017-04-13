@@ -66,7 +66,7 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn0Setup
+        (P_MSGDATA_RTN)j1939tc_SetupPgn0
     };
 
     static
@@ -75,7 +75,7 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn0Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn0,
         offsetof(J1939TC_DATA, startTime0_10),
         0                   // Engine #1
     };
@@ -86,7 +86,7 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn0Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn0,
         offsetof(J1939TC_DATA, startTime0_50),
         41                  // Engine #1 Retarder
     };
@@ -117,7 +117,7 @@ extern	"C" {
         // PGN 61442  0x00F002 - Electronic Transmission Controller 1 - ETC1
         &pgn61442_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn61442Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn61442,
         offsetof(J1939TC_DATA, startTime61442)
     };
 
@@ -127,7 +127,7 @@ extern	"C" {
         // PGN 61445  0x00F005 - Electronic Transmission Controller 1 - ETC1
         &pgn61445_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn61445Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn61445,
         offsetof(J1939TC_DATA, startTime61445)
     };
 
@@ -137,7 +137,7 @@ extern	"C" {
         // PGN 65098  0x00FE4A - Electronic Transmission Controller 7 - ETC7
         &pgn65098_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn65098Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn65098,
         offsetof(J1939TC_DATA, startTime65098)
     };
 
@@ -147,7 +147,7 @@ extern	"C" {
         // PGN 65226  0x00FECA - Active Diagnostic Trouble Codes - DM1
         &pgn65226_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_Pgn65226Setup,
+        (P_MSGDATA_RTN)j1939tc_SetupPgn65226,
         offsetof(J1939TC_DATA, startTime65226)
     };
 
@@ -199,7 +199,7 @@ extern	"C" {
 #else
     static
     bool            j1939tc_Validate(
-        J1939TC_DATA      *cbp
+        J1939TC_DATA      *this
     );
 #endif
     
@@ -292,15 +292,15 @@ extern	"C" {
         OBJ_ID          objId
     )
     {
-        J1939TC_DATA	*cbp = objId;
+        J1939TC_DATA	*this = objId;
 
         // Do initialization.
-        if( NULL == cbp ) {
+        if( NULL == this ) {
             return;
         }
 
-        j1939ca_Dealloc( cbp );
-        cbp = NULL;
+        j1939ca_Dealloc(this);
+        this = NULL;
 
         // Return to caller.
     }
@@ -322,7 +322,7 @@ extern	"C" {
      */
 
     bool            j1939tc_HandlePgn256(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
@@ -360,7 +360,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939tc_Validate( cbp ) ) {
+        if( !j1939tc_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -389,22 +389,22 @@ extern	"C" {
             spn2985 = (pMsg->DATA.bytes[6] >> 6) & 0x3;
 
 #ifdef XYZZY
-            if (cbp->fActive && (0 == spn695)) {      // *** Stop Retarding ***
-                cbp->fActive = false;
-                cbp->timeOut = 0;
-                cbp->spn1480 = 0xFF;
+            if (this->fActive && (0 == spn695)) {      // *** Stop Retarding ***
+                this->fActive = false;
+                this->timeOut = 0;
+                this->spn1480 = 0xFF;
                 // Turn off retarder.
                 fRc = true;
                 goto exit00;
             }
             if ((2 == spn695) || (3 == spn695)) {
-                cbp->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
-                if (cbp->fActive) {
+                this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
+                if (this->fActive) {
                     // Just update time
                 }
                 else {
-                    cbp->fActive = true;
-                    cbp->spn1480 = sa;
+                    this->fActive = true;
+                    this->spn1480 = sa;
                     // Turn on retarder.
                     fRc = true;
                     goto exit00;
@@ -412,10 +412,10 @@ extern	"C" {
             }
         }
         else {
-            if ( cbp->fActive && (cbp->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
-                cbp->fActive = false;
-                cbp->timeOut = 0;
-                cbp->spn1480 = 255;
+            if ( this->fActive && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
+                this->fActive = false;
+                this->timeOut = 0;
+                this->spn1480 = 255;
                 // Turn off retarder.
                 fRc = true;
                 goto exit00;
@@ -511,7 +511,7 @@ extern	"C" {
     //---------------------------------------------------------------
 
     bool            j1939tc_HandlePgn61440(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -522,7 +522,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939tc_Validate( cbp ) ) {
+        if( !j1939tc_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -541,7 +541,7 @@ extern	"C" {
     //---------------------------------------------------------------
     
     bool            j1939tc_HandlePgn61441(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
@@ -552,7 +552,7 @@ extern	"C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939tc_Validate( cbp ) ) {
+        if( !j1939tc_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -562,6 +562,43 @@ extern	"C" {
         
         // Return to caller.
         return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //               H a n d l e  P G N 6 5 2 7 2   EBC1        TRF1
+    //---------------------------------------------------------------
+    
+    bool            j1939tc_HandlePgn65272(
+        J1939TC_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        if (pMsg) {
+            this->spn123 = pMsg->DATA.bytes[0];
+            this->spn124 = pMsg->DATA.bytes[1];
+            this->spn126 = pMsg->DATA.bytes[2];
+            this->spn127 = pMsg->DATA.bytes[3];
+            this->spn177 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+        }
+       
+        // Return to caller.
+        return true;
     }
     
     
@@ -665,9 +702,13 @@ extern	"C" {
 
         // Default all SPNs to unsupported values.
         memset(
-               &this->spn522,
-               0xFF,
-               (offsetof(J1939TC_DATA,spn526) - offsetof(J1939TC_DATA,spn522) + 2)
+                &this->spn123,
+                0xFF,
+                (
+                    offsetof(J1939TC_DATA,spn898)
+                    - offsetof(J1939TC_DATA,spn123)
+                    + sizeof(this->spn898)
+                )
         );
 
 #ifdef NDEBUG
@@ -677,6 +718,7 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
+        BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn123));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn161));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,timeOut));
 #endif
@@ -754,7 +796,7 @@ extern	"C" {
     // The Transmission and the Cruise Controller are normally interested
     // in this message and try to control the Engine Retarder via the
     // TSC1 message.
-    bool            j1939tc_Pgn61442Setup(
+    bool            j1939tc_SetupPgn61442(
         J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
@@ -802,13 +844,45 @@ extern	"C" {
     }
 
 
+    bool            j1939tc_TransmitPgn61442(
+        J1939TC_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return NULL;
+        }
+#endif
+        
+        fRc = j1939tc_SetupPgn61442(this, &pdu, dlc, data, &len);
+        if (!fRc) {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime61442 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
 
     //---------------------------------------------------------------
     //           T r a n s m i t  P G N 6 1 4 4 5   0xF005   ETC2
     //---------------------------------------------------------------
 
-    bool            j1939tc_Pgn61445Setup(
-        J1939TC_DATA	*cbp,
+    bool            j1939tc_SetupPgn61445(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -824,21 +898,21 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn524;
+            *pData  = this->spn524;
             ++pData;    // 1
-            *pData  = cbp->spn526 & 0xFF;
+            *pData  = this->spn526 & 0xFF;
             ++pData;    // 2
-            *pData  = (cbp->spn526 >> 8) & 0xFF;
+            *pData  = (this->spn526 >> 8) & 0xFF;
             ++pData;    // 3
-            *pData  = cbp->spn523;
+            *pData  = this->spn523;
             ++pData;    // 4
-            *pData  = cbp->spn162 & 0xFF;
+            *pData  = this->spn162 & 0xFF;
             ++pData;    // 5
-            *pData  = (cbp->spn162 >> 8) & 0xFF;
+            *pData  = (this->spn162 >> 8) & 0xFF;
             ++pData;    // 6
-            *pData  = cbp->spn163 & 0xFF;
+            *pData  = this->spn163 & 0xFF;
             ++pData;    // 7
-            *pData  = (cbp->spn163 >> 8) & 0xFF;
+            *pData  = (this->spn163 >> 8) & 0xFF;
         }
         else {
             return false;
@@ -846,6 +920,38 @@ extern	"C" {
 
         // Return to caller.
         return fRc;
+    }
+    
+    
+    bool            j1939tc_TransmitPgn61445(
+        J1939TC_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return NULL;
+        }
+#endif
+        
+        fRc = j1939tc_SetupPgn61445(this, &pdu, dlc, data, &len);
+        if (!fRc) {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime61445 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
     }
 
 
@@ -854,8 +960,8 @@ extern	"C" {
     //           T r a n s m i t  P G N 6 5 0 9 8   0xFE4A  ETC7
     //---------------------------------------------------------------
 
-    bool            j1939tc_Pgn65098Setup(
-        J1939TC_DATA	*cbp,
+    bool            j1939tc_SetupPgn65098(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -871,21 +977,29 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn524;
+            *pData  = 0x0F;
+            *pData  |= (this->spn1850 & 0x03) << 4;
+            *pData  |= (this->spn1849 & 0x03) << 6;
             ++pData;    // 1
-            *pData  = cbp->spn526 & 0xFF;
+            *pData  = this->spn3086 & 0x03;
+            *pData  |= (this->spn2945 & 0x03) << 2;
+            *pData  |= (this->spn2900 & 0x03) << 4;
+            *pData  |= (this->spn1851 & 0x03) << 6;
             ++pData;    // 2
-            *pData  = (cbp->spn526 >> 8) & 0xFF;
+            *pData  = this->spn2539 & 0x03;
+            *pData  |= (this->spn2538 & 0x03) << 2;
+            *pData  |= (this->spn2537 & 0x03) << 4;
+            *pData  |= (this->spn2536 & 0x03) << 6;
             ++pData;    // 3
-            *pData  = cbp->spn523;
+            *pData  = this->spn3289;
             ++pData;    // 4
-            *pData  = cbp->spn162 & 0xFF;
+            *pData  = 0xFF;
             ++pData;    // 5
-            *pData  = (cbp->spn162 >> 8) & 0xFF;
+            *pData  = 0xFF;
             ++pData;    // 6
-            *pData  = cbp->spn163 & 0xFF;
+            *pData  = 0xFF;
             ++pData;    // 7
-            *pData  = (cbp->spn163 >> 8) & 0xFF;
+            *pData  = 0xFF;
         }
         else {
             return false;
@@ -893,6 +1007,38 @@ extern	"C" {
 
         // Return to caller.
         return fRc;
+    }
+    
+    
+    bool            j1939tc_TransmitPgn65098(
+        J1939TC_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return NULL;
+        }
+#endif
+        
+        fRc = j1939tc_SetupPgn65098(this, &pdu, dlc, data, &len);
+        if (!fRc) {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65098 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
     }
 
 
@@ -901,8 +1047,8 @@ extern	"C" {
     //           T r a n s m i t  P G N 6 5 2 2 6   0xFECA  DM1
     //---------------------------------------------------------------
 
-    bool            j1939tc_Pgn65226Setup(
-        J1939TC_DATA	*cbp,
+    bool            j1939tc_SetupPgn65226(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -918,21 +1064,21 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn524;
+            *pData  = this->spn524;
             ++pData;    // 1
-            *pData  = cbp->spn526 & 0xFF;
+            *pData  = this->spn526 & 0xFF;
             ++pData;    // 2
-            *pData  = (cbp->spn526 >> 8) & 0xFF;
+            *pData  = (this->spn526 >> 8) & 0xFF;
             ++pData;    // 3
-            *pData  = cbp->spn523;
+            *pData  = this->spn523;
             ++pData;    // 4
-            *pData  = cbp->spn162 & 0xFF;
+            *pData  = this->spn162 & 0xFF;
             ++pData;    // 5
-            *pData  = (cbp->spn162 >> 8) & 0xFF;
+            *pData  = (this->spn162 >> 8) & 0xFF;
             ++pData;    // 6
-            *pData  = cbp->spn163 & 0xFF;
+            *pData  = this->spn163 & 0xFF;
             ++pData;    // 7
-            *pData  = (cbp->spn163 >> 8) & 0xFF;
+            *pData  = (this->spn163 >> 8) & 0xFF;
         }
         else {
             return false;
@@ -941,15 +1087,47 @@ extern	"C" {
         // Return to caller.
         return fRc;
     }
+    
+    
+    bool            j1939tc_TransmitPgn65226(
+        J1939TC_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return NULL;
+        }
+#endif
+        
+        fRc = j1939tc_SetupPgn65226(this, &pdu, dlc, data, &len);
+        if (!fRc) {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65226 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
+    }
 
 
 
     //---------------------------------------------------------------
-    //           T r a n s m i t  P G N 6 5 2 4 5   0xF005
+    //           T r a n s m i t  P G N 6 5 2 7 2   FEF8        TRF1
     //---------------------------------------------------------------
 
-    bool            j1939tc_Pgn65245Setup(
-        J1939TC_DATA	*cbp,
+    bool            j1939tc_SetupPgn65272(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData,
@@ -965,21 +1143,21 @@ extern	"C" {
             if (cData < 8) {
                 return false;
             }
-            *pData  = cbp->spn524;
+            *pData  = this->spn123;
             ++pData;    // 1
-            *pData  = cbp->spn526 & 0xFF;
+            *pData  = this->spn124;
             ++pData;    // 2
-            *pData  = (cbp->spn526 >> 8) & 0xFF;
+            *pData  = this->spn126;
             ++pData;    // 3
-            *pData  = cbp->spn523;
+            *pData  = this->spn127;
             ++pData;    // 4
-            *pData  = cbp->spn162 & 0xFF;
+            *pData  = this->spn177 & 0xFF;
             ++pData;    // 5
-            *pData  = (cbp->spn162 >> 8) & 0xFF;
+            *pData  = (this->spn177 >> 8) & 0xFF;
             ++pData;    // 6
-            *pData  = cbp->spn163 & 0xFF;
+            *pData  = 0xFF;
             ++pData;    // 7
-            *pData  = (cbp->spn163 >> 8) & 0xFF;
+            *pData  = 0xFF;
         }
         else {
             return false;
@@ -987,6 +1165,38 @@ extern	"C" {
 
         // Return to caller.
         return fRc;
+    }
+    
+    
+    bool            j1939tc_TransmitPgn65272(
+        J1939TC_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return NULL;
+        }
+#endif
+        
+        fRc = j1939tc_SetupPgn65272(this, &pdu, dlc, data, &len);
+        if (!fRc) {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65272 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
     }
 
 
@@ -999,11 +1209,11 @@ extern	"C" {
     #else
     static
     bool            j1939tc_Validate(
-        J1939TC_DATA	*cbp
+        J1939TC_DATA	*this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf( cbp, OBJ_IDENT_J1939TC ) )
+        if(this) {
+            if ( obj_IsKindOf(this, OBJ_IDENT_J1939TC) )
                 ;
             else
                 return false;
