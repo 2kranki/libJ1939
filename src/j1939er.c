@@ -121,6 +121,15 @@ extern	"C" {
     * * * * * * * * * * *  Internal Subroutines * * * * * * * * * * *
     ****************************************************************/
 
+#ifdef NDEBUG
+#else
+    static
+    bool            j1939er_Validate(
+        J1939ER_DATA    *this
+    );
+#endif
+    
+    
 
 
 
@@ -1329,11 +1338,11 @@ extern	"C" {
     #else
     static
     bool            j1939er_Validate(
-        J1939ER_DATA	*cbp
+        J1939ER_DATA	*this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf( cbp, OBJ_IDENT_J1939ER ) )
+        if(this) {
+            if ( obj_IsKindOf(this, OBJ_IDENT_J1939ER) )
                 ;
             else
                 return false;

@@ -140,6 +140,17 @@ extern	"C" {
 
     static
     const
+    J1939CA_PGN_ENTRY     ca_pgn65252_entry = {
+        // PGN 65252  0x00FEE4 - Shutdown - SHUTDOW
+        &pgn65252_entry,
+        (P_SRVCMSG_RTN)j1939en_HandlePgn65262,
+        (P_MSGDATA_RTN)j1939en_SetupPgn65252,
+        offsetof(J1939EN_DATA, startTime65252)
+    };
+    
+    
+    static
+    const
     J1939CA_PGN_ENTRY     ca_pgn65262_entry = {
         // PGN 65262  0x00FEEE - Engine Temperature 1 - ET1
         &pgn65262_entry,
@@ -166,6 +177,7 @@ extern	"C" {
         &ca_pgn0_entry,
         &ca_pgn61442_entry,
         &ca_pgn61445_entry,
+        &ca_pgn65252_entry,
         NULL
     };
 
@@ -185,6 +197,7 @@ extern	"C" {
         &ca_pgn61444_entry,
         &ca_pgn65129_entry,
         &ca_pgn65247_entry,
+        &ca_pgn65252_entry,
         &ca_pgn65262_entry,
         &ca_pgn65265_entry,
         NULL
@@ -1782,6 +1795,84 @@ extern	"C" {
 
 
 
+    // Engine Protection System Approaching Shutdown
+    uint8_t			j1939en_getSpn1109(
+        J1939EN_DATA	*this
+    )
+    {
+        
+#ifdef NDEBUG
+#else
+        if (j1939en_Validate(this)) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        return this->spn1109;
+    }
+
+    
+    bool			j1939en_setSpn1109(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+        
+#ifdef NDEBUG
+#else
+        if (j1939en_Validate(this)) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        this->spn1109 = value;
+        
+        return true;
+    }
+    
+
+    
+    // Engine Protection System has Shutdown Engine
+    uint8_t			j1939en_getSpn1110(
+        J1939EN_DATA	*this
+    )
+    {
+        
+#ifdef NDEBUG
+#else
+        if (j1939en_Validate(this)) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        return this->spn1110;
+    }
+
+    
+    bool			j1939en_setSpn1110(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    )
+    {
+        
+#ifdef NDEBUG
+#else
+        if (j1939en_Validate(this)) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        this->spn1110 = value;
+        
+        return true;
+    }
+    
+
+    
     // Engine Intercooler Thermostat Opening
     uint8_t			j1939en_getSpn1134(
         J1939EN_DATA	*this
@@ -2641,6 +2732,36 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 5 2
+    //---------------------------------------------------------------
+    
+    bool            j1939en_HandlePgn65252(
+        J1939EN_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                  H a n d l e  P G N 6 5 2 6 2
     //---------------------------------------------------------------
 
@@ -2780,6 +2901,10 @@ extern	"C" {
             if ((curTime - this->startTime65247) >= 250) {
                 pEntry = &pgn65247_entry;
                 j1939en_TransmitPgn65247(this);
+            }
+            if (this->fShutdown && ((curTime - this->startTime65252) >= 1000)) {
+                pEntry = &pgn65252_entry;
+                j1939en_TransmitPgn65252(this);
             }
             if ((curTime - this->startTime65262) >= 1000) {
                 pEntry = &pgn65262_entry;
@@ -3212,6 +3337,84 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //           T r a n s m i t  P G N 6 5 2 5 2   0x00FEE4  SHUTDOW
+    //---------------------------------------------------------------
+    
+    /* Shutdown - SHUTDOW -
+     * Freq: 1000 ms
+     * Priority: 6
+     */
+    bool            j1939en_SetupPgn65252(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData,
+        uint16_t        *pLen
+    )
+    {
+        
+        if (pLen) {
+            *pLen = 8;
+        }
+        if (pData) {
+            if (cData < 8) {
+                return false;
+            }
+            *pData = 0xFF;
+            ++pData;    // 1
+            *pData  = 0xFF;
+            ++pData;    // 2
+            *pData  = 0xFF;
+            ++pData;    // 3
+            *pData  = 0xFF;
+            ++pData;    // 4
+            *pData  = 0xF0;
+            *pData  |= (this->spn1110 & 0b11);
+            *pData  |= (this->spn1109 & 0b11) << 2;
+            ++pData;    // 5
+            *pData  = 0xFF;
+            ++pData;    // 6
+            *pData  = 0xFF;
+            ++pData;    // 7
+            *pData  = 0xFF;
+        }
+        else {
+            return false;
+        }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    bool            j1939en_TransmitPgn65252(
+        J1939EN_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu;
+        bool            fRc = false;
+        uint16_t        len = 0;
+        
+        pdu.eid = 0;
+        pdu.PF = 254;
+        pdu.PS = 228;
+        pdu.SA = this->super.ca;
+        pdu.P  = 6;         // Priority
+        
+        fRc = j1939en_SetupPgn65252(this, &pdu, 8, data, &len);
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //           T r a n s m i t  P G N 6 5 2 6 2   0x00FEEE
     //---------------------------------------------------------------

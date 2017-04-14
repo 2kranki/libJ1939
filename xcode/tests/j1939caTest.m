@@ -220,10 +220,6 @@ bool            xmtPGN60928(
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each
-    // test method in the class.
-    [super tearDown];
-    
     obj_Release(pCAN);
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
@@ -231,6 +227,11 @@ bool            xmtPGN60928(
     //j1939_SharedReset( );
 
     mem_Dump( );
+
+    // Put teardown code here. This method is called after the invocation of each
+    // test method in the class.
+    [super tearDown];
+    
 }
 
 

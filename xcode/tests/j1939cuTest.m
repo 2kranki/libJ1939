@@ -1,5 +1,5 @@
 /*
- *	Generated 04/13/2017 15:27:23
+ *	Generated 04/13/2017 20:44:32
  */
 
 
@@ -26,7 +26,7 @@
 //      XCTAssertNoThrowSpecificNamed(expression, exception_class, exception_name, failure_description, ...)
 
 
-#include    "j1939ecu_internal.h"
+#include    <j1939cu_internal.h>
 #include    <j1939can.h>
 #include    "j1939Sys.h"
 
@@ -39,12 +39,11 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
-
-@interface j1939ecuTests : XCTestCase
+@interface j1939cuTests : XCTestCase
 
 @end
 
-@implementation j1939ecuTests
+@implementation j1939cuTests
 
 
 - (void)setUp
@@ -82,20 +81,20 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 - (void)testOpenClose
 {
-    J1939ECU_DATA	*pObj = OBJ_NIL;
+    J1939CU_DATA	*pObj = OBJ_NIL;
    
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
-    
-    pObj = j1939ecu_Alloc(0);
+
+    pObj = j1939cu_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
-    pObj = j1939ecu_Init(
-                         pObj,
-                         (OBJ_ID)pCAN,
-                         (OBJ_ID)pSYS,
-                         1,              // J1939 Identity Number (21 bits)
-                         0x3FF,          // J1939 Manufacturer Code (11 bits)
-                         4               // J1939 Industry Group (3 bits) (Marine)
+    pObj =  j1939cu_Init(
+                        pObj,
+                        (OBJ_ID)pCAN,
+                        (OBJ_ID)pSYS,
+                        1,              // J1939 Identity Number (21 bits)
+                        0x3FF,          // J1939 Manufacturer Code (11 bits)
+                        4               // J1939 Industry Group (3 bits) (Marine)
             );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {

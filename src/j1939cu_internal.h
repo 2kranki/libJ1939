@@ -1,7 +1,7 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /* 
- * File:   j1939ecu_internal.h
- *	Generated 04/13/2017 15:27:23
+ * File:   j1939cu_internal.h
+ *	Generated 04/13/2017 20:44:32
  *
  * Notes:
  *  --	N/A
@@ -39,13 +39,12 @@
 
 
 
-#include    <j1939ecu.h>
-#include    <j1939cu_internal.h>
+#include    <j1939cu.h>
+#include    <j1939cam.h>
 
 
-
-#ifndef J1939ECU_INTERNAL_H
-#define	J1939ECU_INTERNAL_H
+#ifndef J1939CU_INTERNAL_H
+#define	J1939CU_INTERNAL_H
 
 
 
@@ -57,42 +56,42 @@ extern "C" {
 
 
 #pragma pack(push, 1)
-struct j1939ecu_data_s	{
+struct j1939cu_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
-    J1939CU_DATA    super;
+    OBJ_DATA        super;
     OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
 
     // Common Data
     ERESULT         eRc;
-    uint16_t        size;		/* maximum number of elements           */
-    uint16_t        reserved;
-    ASTR_DATA       *pStr;
-
-    volatile
-    int32_t         numRead;
-    // WARNING - 'elems' must be last element of this structure!
-    uint32_t        elems[0];
+    J1939CAM_DATA   *pCam;
+    OBJ_DATA        *pSYS;
+    OBJ_DATA        *pCAN;
+    
+    uint32_t        spn2837;        // J1939 Identity Number (21 bits)
+    uint16_t        spn2838;        // J1939 Manufacturer Code (11 bits)
+    uint8_t         spn2846;        // J1939 Industry Group (3 bits)
+    uint8_t         rsvd8[1];
 
 };
 #pragma pack(pop)
 
     extern
     const
-    struct j1939ecu_class_data_s  j1939ecu_ClassObj;
+    struct j1939cu_class_data_s  j1939cu_ClassObj;
 
     extern
     const
-    J1939ECU_VTBL         j1939ecu_Vtbl;
+    J1939CU_VTBL         j1939cu_Vtbl;
 
 
     // Internal Functions
-    void            j1939ecu_Dealloc(
+    void            j1939cu_Dealloc(
         OBJ_ID          objId
     );
 
-    bool            j1939ecu_setLastError(
-        J1939ECU_DATA     *this,
+    bool            j1939cu_setLastError(
+        J1939CU_DATA     *this,
         ERESULT         value
     );
 
@@ -104,5 +103,5 @@ struct j1939ecu_data_s	{
 }
 #endif
 
-#endif	/* J1939ECU_INTERNAL_H */
+#endif	/* J1939CU_INTERNAL_H */
 

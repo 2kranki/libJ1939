@@ -547,6 +547,28 @@ extern	"C" {
     );
 
 
+    // Engine Protection System Approaching Shutdown
+    uint8_t				j1939en_getSpn1109(
+        J1939EN_DATA	*this
+    );
+    
+    bool				j1939en_setSpn1109(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+    
+    
+    // Engine Protection System has Shutdown Engine
+    uint8_t				j1939en_getSpn1110(
+        J1939EN_DATA	*this
+    );
+    
+    bool				j1939en_setSpn1110(
+        J1939EN_DATA	*this,
+        uint8_t			value
+    );
+    
+    
     // Engine Intercooler Thermostat Opening
     uint8_t				j1939en_getSpn1134(
         J1939EN_DATA	*this
@@ -716,6 +738,11 @@ extern	"C" {
     
     
     bool            j1939en_TransmitPgn65247(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_TransmitPgn65252(
         J1939EN_DATA	*this
     );
     

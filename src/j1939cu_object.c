@@ -1,7 +1,7 @@
 // vi: nu:noai:ts=4:sw=4
 
-//	Class Object Metods and Tables for 'j1939ecu'
-//	Generated 04/13/2017 15:27:23
+//	Class Object Metods and Tables for 'j1939cu'
+//	Generated 04/13/2017 20:44:32
 
 
 /*
@@ -33,8 +33,8 @@
 
 
 
-#define			J1939ECU_OBJECT_C	    1
-#include        <j1939ecu_internal.h>
+#define			J1939CU_OBJECT_C	    1
+#include        <j1939cu_internal.h>
 
 
 
@@ -42,14 +42,14 @@
 //                  Class Object Definition
 //-----------------------------------------------------------
 
-struct j1939ecu_class_data_s	{
+struct j1939cu_class_data_s	{
     // Warning - OBJ_DATA must be first in this object!
     OBJ_DATA        super;
     
     // Common Data
     //uint32_t        misc;
 };
-typedef struct j1939ecu_class_data_s J1939ECU_CLASS_DATA;
+typedef struct j1939cu_class_data_s J1939CU_CLASS_DATA;
 
 
 
@@ -62,26 +62,23 @@ typedef struct j1939ecu_class_data_s J1939ECU_CLASS_DATA;
 
 static
 const
-OBJ_INFO        j1939ecu_Info;            // Forward Reference
+OBJ_INFO        j1939cu_Info;            // Forward Reference
 
 
 
-OBJ_ID          j1939ecu_Class(
+OBJ_ID          j1939cu_Class(
     OBJ_ID          objId
 );
 
 
 
 static
-bool            j1939ecu_ClassIsKindOf(
+bool            j1939cu_ClassIsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939ECU_CLASS == classID) {
-       return true;
-    }
     if (OBJ_IDENT_J1939CU_CLASS == classID) {
-        return true;
+       return true;
     }
     if (OBJ_IDENT_OBJ_CLASS == classID) {
        return true;
@@ -95,15 +92,15 @@ uint16_t		obj_ClassWhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939ECU_CLASS;
+    return OBJ_IDENT_J1939CU_CLASS;
 }
 
 
 static
 const
 OBJ_IUNKNOWN    obj_Vtbl = {
-	&j1939ecu_Info,
-    j1939ecu_ClassIsKindOf,
+	&j1939cu_Info,
+    j1939cu_ClassIsKindOf,
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
@@ -118,23 +115,20 @@ OBJ_IUNKNOWN    obj_Vtbl = {
 //-----------------------------------------------------------
 
 const
-J1939ECU_CLASS_DATA  j1939ecu_ClassObj = {
-    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939ECU_CLASS, 0, 1},
+J1939CU_CLASS_DATA  j1939cu_ClassObj = {
+    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939CU_CLASS, 0, 1},
 	//0
 };
 
 
 
 static
-bool            j1939ecu_IsKindOf(
+bool            j1939cu_IsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939ECU == classID) {
-       return true;
-    }
     if (OBJ_IDENT_J1939CU == classID) {
-        return true;
+       return true;
     }
     if (OBJ_IDENT_OBJ == classID) {
        return true;
@@ -145,50 +139,50 @@ bool            j1939ecu_IsKindOf(
 
 // Dealloc() should be put into the Internal Header as well
 // for classes that get inherited from.
-void            j1939ecu_Dealloc(
+void            j1939cu_Dealloc(
     OBJ_ID          objId
 );
 
 
-OBJ_ID          j1939ecu_Class(
+OBJ_ID          j1939cu_Class(
     OBJ_ID          objId
 )
 {
-    return (OBJ_ID)&j1939ecu_ClassObj;
+    return (OBJ_ID)&j1939cu_ClassObj;
 }
 
 
 static
-uint16_t		j1939ecu_WhoAmI(
+uint16_t		j1939cu_WhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939ECU;
+    return OBJ_IDENT_J1939CU;
 }
 
 
 const
-J1939ECU_VTBL     j1939ecu_Vtbl = {
+J1939CU_VTBL     j1939cu_Vtbl = {
     {
-        &j1939ecu_Info,
-        j1939ecu_IsKindOf,
+        &j1939cu_Info,
+        j1939cu_IsKindOf,
         obj_RetainStandard,
         obj_ReleaseStandard,
-        j1939ecu_Dealloc,
-        j1939ecu_Class,
-        j1939ecu_WhoAmI,
-        NULL,			// j1939ecu_Enable,
-        NULL,			// j1939ecu_Disable,
-        (P_OBJ_TOSTRING)j1939ecu_ToDebugString,
-        NULL,			// (P_OBJ_ASSIGN)j1939ecu_Assign,
-        NULL,			// (P_OBJ_COMPARE)j1939ecu_Compare,
-        NULL, 			// (P_OBJ_PTR)j1939ecu_Copy,
-        NULL 			// (P_OBJ_HASH)j1939ecu_Hash,
+        j1939cu_Dealloc,
+        j1939cu_Class,
+        j1939cu_WhoAmI,
+        NULL,			// j1939cu_Enable,
+        NULL,			// j1939cu_Disable,
+        (P_OBJ_TOSTRING)j1939cu_ToDebugString,
+        NULL,			// (P_OBJ_ASSIGN)j1939cu_Assign,
+        NULL,			// (P_OBJ_COMPARE)j1939cu_Compare,
+        NULL, 			// (P_OBJ_PTR)j1939cu_Copy,
+        NULL 			// (P_OBJ_HASH)j1939cu_Hash,
     },
     // Put other object method names below this.
     // Properties:
     // Methods:
-    //j1939ecu_IsEnabled,
+    //j1939cu_IsEnabled,
  
 };
 
@@ -196,12 +190,12 @@ J1939ECU_VTBL     j1939ecu_Vtbl = {
 
 static
 const
-OBJ_INFO        j1939ecu_Info = {
-    "j1939ecu",
-    "J1939 Engine Control Unit",
-    (OBJ_DATA *)&j1939ecu_ClassObj,
+OBJ_INFO        j1939cu_Info = {
+    "j1939cu",
+    "J1939 Control Unit",
     (OBJ_DATA *)&j1939cu_ClassObj,
-    (OBJ_IUNKNOWN *)&j1939ecu_Vtbl
+    (OBJ_DATA *)&obj_ClassObj,
+    (OBJ_IUNKNOWN *)&j1939cu_Vtbl
 };
 
 

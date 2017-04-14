@@ -1,5 +1,5 @@
 /*
- *	Generated 04/13/2017 15:27:23
+ *	Generated 04/13/2017 19:42:48
  */
 
 
@@ -26,7 +26,7 @@
 //      XCTAssertNoThrowSpecificNamed(expression, exception_class, exception_name, failure_description, ...)
 
 
-#include    "j1939ecu_internal.h"
+#include    "j1939tcu_internal.h"
 #include    <j1939can.h>
 #include    "j1939Sys.h"
 
@@ -40,11 +40,11 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
-@interface j1939ecuTests : XCTestCase
+@interface j1939tcuTests : XCTestCase
 
 @end
 
-@implementation j1939ecuTests
+@implementation j1939tcuTests
 
 
 - (void)setUp
@@ -82,14 +82,14 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 - (void)testOpenClose
 {
-    J1939ECU_DATA	*pObj = OBJ_NIL;
+    J1939TCU_DATA	*pObj = OBJ_NIL;
    
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     
-    pObj = j1939ecu_Alloc(0);
+    pObj = j1939tcu_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
-    pObj = j1939ecu_Init(
+    pObj = j1939tcu_Init(
                          pObj,
                          (OBJ_ID)pCAN,
                          (OBJ_ID)pSYS,

@@ -21,6 +21,11 @@ will depend upon time and resources.
     --  Look at time rollover in message handlers and timed msgs
 
 --  J1939en - Engine CA
+    --  Found references to the Engine Protection System. hmmm
+        -- ok, send 65252 saying approaching shutdown
+        -- wait 250ms
+        -- send 65252 saying is shutdown
+        -- need a system for this. (Maybe send a timed msg to ourselves.)
     --  Make sure time handling is consistant with CA, DG, ER and TC
     --  Look at time rollover in message handlers and timed msgs
     --  Find out why test testCheck_MSG02_Clean and testCheck_MSG03_Clean

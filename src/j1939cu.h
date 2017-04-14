@@ -1,14 +1,53 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 ECU (j1939ecu) Header
+//              J1939 Control Unit (j1939cu) Header
 //****************************************************************
 /*
  * Program
- *			J1939 ECU (j1939ecu)
+ *			J1939 Control Unit (j1939cu)
  * Purpose
- *			This object provides an ECU which is made up of a CAM
- *          and multiple CAs.
+ *			This object provides J1939 Control Unit base object to
+ *          be built upon.
+ *
+ *          Notes to self. The Control Units need to be able to
+ *          change spn's within its CAs and force msgs to sent
+ *          at specific times.  For instance, the Engine Shutdown
+ *          procedure is two phases apparently given the msg,
+ *          SHUTDOW. The first phase is shutdown is approaching.
+ *          So, clean up all the CAs and get them ready to stop. 
+ *          After an appropriate pause, the second phase is to
+ *          tell everyone that they need to actually shutdown.
+ *          Currently, this would be at least the following:
+ *                 Set spn1109 value to approaching shutdown.
+ *                 Set spn1110 value to approaching shutdown.
+ *                 Issue "SHUTDOW"
+ *                 wait for appropriate period.
+ *                 Set spn1109 value to final shutdown.
+ *                 Set spn1110 value to final shutdown.
+ *                 Issue "SHUTDOW"
+ *
+            Maybe we run the CAM and all CAs for the CU under
+            one task and run the CU under another posting control/
+            response type messages (not J1939) between the two.
+            Another approach would be to spawn a separate task
+            for each special task and have it handle the request
+            and post back when it is done.
+ 
+            Currently, the CA can not handle multi-segment
+            messages for input or output. Output is fairly
+            simple using the timed message mechanism for
+            output. We would need a task(??) to handle all
+            multi-segment input messages since we need to
+            be able to receive other messages as well and
+            receive other multi-segment messages using a
+            different eid that is directed to us. Of course,
+            there must be limits to how much of this that
+            we can do, because we need to be aware of memory
+            usage for embedded processes. Maybe we have 2 or
+            3 tasks with a fixed amount of memory to be 
+            used for multiple purposes.
+ *
  *
  * Remarks
  *	1.      None
@@ -53,8 +92,8 @@
 #include        <AStr.h>
 
 
-#ifndef         J1939ECU_H
-#define         J1939ECU_H
+#ifndef         J1939CU_H
+#define         J1939CU_H
 
 
 
@@ -68,16 +107,16 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939ecu_data_s	J1939ECU_DATA;    // Inherits from OBJ.
+    typedef struct j1939cu_data_s	J1939CU_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939ecu_vtbl_s	{
+    typedef struct j1939cu_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
-        // method names to the vtbl definition in j1939ecu_object.c.
+        // method names to the vtbl definition in j1939cu_object.c.
         // Properties:
         // Methods:
-        //bool        (*pIsEnabled)(J1939ECU_DATA *);
-    } J1939ECU_VTBL;
+        //bool        (*pIsEnabled)(J1939CU_DATA *);
+    } J1939CU_VTBL;
 
 
 
@@ -90,17 +129,11 @@ extern "C" {
     //                      *** Class Methods ***
     //---------------------------------------------------------------
 
-    /*!
-     Allocate a new Object and partially initialize. Also, this sets an
-     indicator that the object was alloc'd which is tested when the object is
-     released.
-     @return:   pointer to j1939ecu object if successful, otherwise OBJ_NIL.
-     */
-    J1939ECU_DATA *     j1939ecu_Alloc(
+    J1939CU_DATA *     j1939cu_Alloc(
     );
     
     
-    J1939ECU_DATA *     j1939ecu_New(
+    J1939CU_DATA *     j1939cu_New(
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -114,29 +147,69 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939ecu_getLastError(
-        J1939ECU_DATA		*this
+    J1939CAM_DATA * j1939cu_getCam(
+        J1939CU_DATA    *this
+    );
+    
+    bool            j1939cu_setCam(
+        J1939CU_DATA    *this,
+        J1939CAM_DATA   *pValue
+    );
+    
+    
+    ERESULT     j1939cu_getLastError(
+        J1939CU_DATA		*this
     );
 
 
+    uint32_t		j1939cu_getSpn2837(
+        J1939CU_DATA	*this
+    );
+    
+    bool			j1939cu_setSpn2837(
+        J1939CU_DATA	*this,
+        uint32_t		value
+    );
+    
+    
+    uint16_t		j1939cu_getSpn2838(
+        J1939CU_DATA	*this
+    );
+    
+    bool			j1939cu_setSpn2838(
+        J1939CU_DATA	*this,
+        uint16_t		value
+    );
+    
+    
+    uint8_t			j1939cu_getSpn2846(
+        J1939CU_DATA	*this
+    );
+    
+    bool			j1939cu_setSpn2846(
+        J1939CU_DATA	*this,
+        uint8_t			value
+    );
+    
+    
 
     
     //---------------------------------------------------------------
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    ERESULT         j1939ecu_Disable(
-        J1939ECU_DATA	*this
+    ERESULT     j1939cu_Disable(
+        J1939CU_DATA		*this
     );
 
 
-    ERESULT         j1939ecu_Enable(
-        J1939ECU_DATA	*this
+    ERESULT     j1939cu_Enable(
+        J1939CU_DATA		*this
     );
 
    
-    J1939ECU_DATA * j1939ecu_Init(
-        J1939ECU_DATA   *this,
+    J1939CU_DATA *   j1939cu_Init(
+        J1939CU_DATA     *this,
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -145,8 +218,8 @@ extern "C" {
     );
 
 
-    ERESULT         j1939ecu_IsEnabled(
-        J1939ECU_DATA	*this
+    ERESULT     j1939cu_IsEnabled(
+        J1939CU_DATA		*this
     );
     
  
@@ -154,16 +227,16 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939ecu_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939cu_ToDebugString(this,4);
      @endcode:
-     @param:    this    J1939ECU object pointer
+     @param:    this    J1939CU object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
      @return:   If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *    j1939ecu_ToDebugString(
-        J1939ECU_DATA     *this,
+    ASTR_DATA *    j1939cu_ToDebugString(
+        J1939CU_DATA     *this,
         int             indent
     );
     
@@ -174,5 +247,5 @@ extern "C" {
 }
 #endif
 
-#endif	/* J1939ECU_H */
+#endif	/* J1939CU_H */
 

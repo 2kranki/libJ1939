@@ -76,6 +76,7 @@ extern "C" {
                                                 // (100ms for now)
         uint32_t            startTime65129;     // Repeat every 1000ms
         uint32_t            startTime65247;     // Repeat every 250ms
+        uint32_t            startTime65252;     // Repeat every 1000ms
         uint32_t            startTime65262;     // Repeat every 1000ms
         uint32_t            startTime65265;     // Repeat every 100ms
 
@@ -121,6 +122,8 @@ extern "C" {
         uint8_t             spn974;             // Remote Accelerator Pedal Position
         uint8_t             spn976;             // PTO State
 
+        uint8_t             spn1109;            // Engine Protection System Approaching Shutdown
+        uint8_t             spn1110;            // Engine Protection System has Shutdown Engine
         uint8_t             spn1134;            // Engine Intercooler Thermostat Opening
         uint8_t             spn1237;            // Engine Shutdown Override Switch
         uint8_t             spn1437;            // Road Speed Limit Status
@@ -134,7 +137,7 @@ extern "C" {
 
         uint8_t             spn2978;            // Estimated Engine Parasitic Losses -
                                                 // Percent Torque
-        uint8_t             reserved8b[3];
+        uint8_t             reserved8b[1];
 
         // Engine Fields - 2 bytes
         uint16_t            spn84;              // Wheel-Based Vehicle Speed
@@ -152,7 +155,8 @@ extern "C" {
         uint32_t            timeOut;
         uint8_t             fActive;            // Retarding is Active
         uint8_t             fShifting;          // Shift in progress
-        uint8_t             reserved8c[2];
+        uint8_t             fShutdown;          // Shutdown is Active
+        uint8_t             reserved8c[1];
         P_VOIDEXIT12        pShiftExit;
         void                *pShiftData;
 
@@ -231,6 +235,13 @@ extern "C" {
     );
 
 
+    bool            j1939en_HandlePgn65252(
+        J1939EN_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    );
+    
+    
     bool            j1939en_HandlePgn65262(
         J1939EN_DATA	*cbp,
         uint32_t        eid,
@@ -281,6 +292,15 @@ extern "C" {
     );
 
 
+    bool            j1939en_SetupPgn65252(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData,
+        uint16_t        *pLen
+    );
+    
+    
     bool            j1939en_SetupPgn65262(
         J1939EN_DATA	*cbp,
         J1939_PDU       *pPDU,

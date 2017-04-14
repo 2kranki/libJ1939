@@ -1,7 +1,7 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /* 
- * File:   j1939ecu_internal.h
- *	Generated 04/13/2017 15:27:23
+ * File:   j1939tcu_internal.h
+ *	Generated 04/13/2017 19:42:48
  *
  * Notes:
  *  --	N/A
@@ -39,13 +39,13 @@
 
 
 
-#include    <j1939ecu.h>
+#include    <j1939tcu.h>
 #include    <j1939cu_internal.h>
 
 
 
-#ifndef J1939ECU_INTERNAL_H
-#define	J1939ECU_INTERNAL_H
+#ifndef J1939TCU_INTERNAL_H
+#define	J1939TCU_INTERNAL_H
 
 
 
@@ -57,7 +57,7 @@ extern "C" {
 
 
 #pragma pack(push, 1)
-struct j1939ecu_data_s	{
+struct j1939tcu_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     J1939CU_DATA    super;
@@ -79,20 +79,20 @@ struct j1939ecu_data_s	{
 
     extern
     const
-    struct j1939ecu_class_data_s  j1939ecu_ClassObj;
+    struct j1939tcu_class_data_s  j1939tcu_ClassObj;
 
     extern
     const
-    J1939ECU_VTBL         j1939ecu_Vtbl;
+    J1939TCU_VTBL         j1939tcu_Vtbl;
 
 
     // Internal Functions
-    void            j1939ecu_Dealloc(
+    void            j1939tcu_Dealloc(
         OBJ_ID          objId
     );
 
-    bool            j1939ecu_setLastError(
-        J1939ECU_DATA     *this,
+    bool            j1939tcu_setLastError(
+        J1939TCU_DATA     *this,
         ERESULT         value
     );
 
@@ -104,5 +104,5 @@ struct j1939ecu_data_s	{
 }
 #endif
 
-#endif	/* J1939ECU_INTERNAL_H */
+#endif	/* J1939TCU_INTERNAL_H */
 

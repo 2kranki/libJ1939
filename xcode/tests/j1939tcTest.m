@@ -89,10 +89,6 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each
-    // test method in the class.
-    [super tearDown];
-    
     obj_Release(pCAN);
     pCAN = OBJ_NIL;
     obj_Release(pSYS);
@@ -100,6 +96,11 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     //j1939_SharedReset( );
     
     mem_Dump( );
+
+    // Put teardown code here. This method is called after the invocation of each
+    // test method in the class.
+    [super tearDown];
+    
 }
 
 

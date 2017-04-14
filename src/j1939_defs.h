@@ -299,19 +299,19 @@ extern	"C" {
     
     typedef enum obj_j1939_idents_e {
         OBJ_IDENT_J1939_BASE=OBJ_IDENT_J1939_ENTRIES,
-        OBJ_IDENT_J1939,
-        OBJ_IDENT_J1939_CLASS,
-        OBJ_IDENT_J1939CA,
+        OBJ_IDENT_J1939CA,              // J1939 Control Application Base CA
         OBJ_IDENT_J1939CA_CLASS,
         OBJ_IDENT_J1939CAM,
         OBJ_IDENT_J1939CAM_CLASS,
         OBJ_IDENT_J1939CAN,             // CAN Test Module
         OBJ_IDENT_J1939CAN_CLASS,
+        OBJ_IDENT_J1939CU,              // J1939 Control Unit Base CU
+        OBJ_IDENT_J1939CU_CLASS,
         OBJ_IDENT_J1939DG,              // J1939 Diagnostic/Test CA
         OBJ_IDENT_J1939DG_CLASS,
         OBJ_IDENT_J1939DL,              // J1939 Data Link Layer
         OBJ_IDENT_J1939DL_CLASS,
-        OBJ_IDENT_J1939ECU,             // J1939 ECU
+        OBJ_IDENT_J1939ECU,             // J1939 Engine Control Unit ECU
         OBJ_IDENT_J1939ECU_CLASS,
         OBJ_IDENT_J1939EN,              // J1939 Engine #1 CA
         OBJ_IDENT_J1939EN_CLASS,
@@ -329,6 +329,8 @@ extern	"C" {
         OBJ_IDENT_J1939TBL_CLASS,
         OBJ_IDENT_J1939TC,              // J1939 Transmission #1 CA
         OBJ_IDENT_J1939TC_CLASS,
+        OBJ_IDENT_J1939TCU,             // J1939 Transmission Control Unit TCU
+        OBJ_IDENT_J1939TCU_CLASS,
     } OBJ_J1939_IDENTS;
 
     
@@ -364,10 +366,12 @@ extern	"C" {
         J1939_ENGINE_1=0,
         J1939_TRANSMISSION_1=3,
         J1939_SHIFT_CONSOLE_PRIMARY=5,
+        J1939_POWER_TAKEOFF_1=6,
         J1939_BRAKE_SYSTEM_CONTROLLER=11,
         J1939_ENGINE_RETARDER_COMPRESSION_1=41,
         J1939_CRUISE_CONTROL=17,
         J1939_INSTRUMENT_CLUSTER_1=23,
+        J1939_POWER_TAKEOFF_2=27,
         J1939_BODY_CONTROLLER=33,
         J1939_MANAGEMENT_COMPUTER=39,
         J1939_ENGINE_RETARDER_EXHAUST_1=41,

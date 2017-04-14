@@ -965,14 +965,6 @@ extern "C" {
         
         static
         const
-        J1939_PGNSPN        pgn37632spns[1] = {
-            //                    Bit    Byte
-            // PGN    SPN  cBits Offset Offset rsvd spnDef
-            { 37632, 2848,   0,    0,      0,    0, &spn2848 }
-        };
-        
-        static
-        const
         J1939_PGNSPN        pgn60928spns[1] = {
             //                    Bit    Byte
             // PGN    SPN  cBits Offset Offset rsvd spnDef
@@ -1310,14 +1302,15 @@ extern "C" {
         
         const
         J1939_PGN_ENTRY     pgn65252_entry = {
-            // PGN 65251  0x00FEE4 - Shutdown           - SHUTDOW -
+            // PGN 65252  0x00FEE4 - Shutdown           - SHUTDOW -
             0x00FEE4,
             1000,               // msFreq
             8,                  // dlc
             6,                  // priority
             18,                 // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn65252spns,       // SPN Table Pointer
+            "Shutdown - SHUTDOW"
         };
         
         

@@ -205,15 +205,6 @@ extern "C" {
 
 
 
-#ifdef NDEBUG
-#else
-    static
-    bool            j1939er_Validate(
-        J1939ER_DATA      *cbp
-    );
-#endif
-
-
 
 
 #ifdef	__cplusplus

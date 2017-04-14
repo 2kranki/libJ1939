@@ -1,17 +1,22 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 ECU (j1939ecu) Header
+//          J1939TCU Console Transmit Task (j1939tcu) Header
 //****************************************************************
 /*
  * Program
- *			J1939 ECU (j1939ecu)
+ *			Separate j1939tcu (j1939tcu)
  * Purpose
- *			This object provides an ECU which is made up of a CAM
- *          and multiple CAs.
+ *			This object provides a standardized way of handling
+ *          a separate j1939tcu to run things without complications
+ *          of interfering with the main j1939tcu. A j1939tcu may be 
+ *          called a j1939tcu on other O/S's.
  *
  * Remarks
- *	1.      None
+ *	1.      Using this object allows for testable code, because a
+ *          function, TaskBody() must be supplied which is repeatedly
+ *          called on the internal j1939tcu. A testing unit simply calls
+ *          the TaskBody() function as many times as needed to test.
  *
  * History
  *	04/13/2017 Generated
@@ -53,8 +58,8 @@
 #include        <AStr.h>
 
 
-#ifndef         J1939ECU_H
-#define         J1939ECU_H
+#ifndef         J1939TCU_H
+#define         J1939TCU_H
 
 
 
@@ -68,16 +73,16 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939ecu_data_s	J1939ECU_DATA;    // Inherits from OBJ.
+    typedef struct j1939tcu_data_s	J1939TCU_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939ecu_vtbl_s	{
+    typedef struct j1939tcu_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
-        // method names to the vtbl definition in j1939ecu_object.c.
+        // method names to the vtbl definition in j1939tcu_object.c.
         // Properties:
         // Methods:
-        //bool        (*pIsEnabled)(J1939ECU_DATA *);
-    } J1939ECU_VTBL;
+        //bool        (*pIsEnabled)(J1939TCU_DATA *);
+    } J1939TCU_VTBL;
 
 
 
@@ -94,13 +99,13 @@ extern "C" {
      Allocate a new Object and partially initialize. Also, this sets an
      indicator that the object was alloc'd which is tested when the object is
      released.
-     @return:   pointer to j1939ecu object if successful, otherwise OBJ_NIL.
+     @return:   pointer to j1939tcu object if successful, otherwise OBJ_NIL.
      */
-    J1939ECU_DATA *     j1939ecu_Alloc(
+    J1939TCU_DATA * j1939tcu_Alloc(
     );
     
     
-    J1939ECU_DATA *     j1939ecu_New(
+    J1939TCU_DATA * j1939tcu_New(
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -114,8 +119,8 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939ecu_getLastError(
-        J1939ECU_DATA		*this
+    ERESULT     j1939tcu_getLastError(
+        J1939TCU_DATA		*this
     );
 
 
@@ -125,18 +130,18 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    ERESULT         j1939ecu_Disable(
-        J1939ECU_DATA	*this
+    ERESULT         j1939tcu_Disable(
+        J1939TCU_DATA	*this
     );
 
 
-    ERESULT         j1939ecu_Enable(
-        J1939ECU_DATA	*this
+    ERESULT         j1939tcu_Enable(
+        J1939TCU_DATA	*this
     );
 
    
-    J1939ECU_DATA * j1939ecu_Init(
-        J1939ECU_DATA   *this,
+    J1939TCU_DATA * j1939tcu_Init(
+        J1939TCU_DATA   *this,
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -145,8 +150,8 @@ extern "C" {
     );
 
 
-    ERESULT         j1939ecu_IsEnabled(
-        J1939ECU_DATA	*this
+    ERESULT         j1939tcu_IsEnabled(
+        J1939TCU_DATA	*this
     );
     
  
@@ -154,16 +159,16 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939ecu_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939tcu_ToDebugString(this,4);
      @endcode:
-     @param:    this    J1939ECU object pointer
+     @param:    this    J1939TCU object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
      @return:   If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *    j1939ecu_ToDebugString(
-        J1939ECU_DATA     *this,
+    ASTR_DATA *    j1939tcu_ToDebugString(
+        J1939TCU_DATA     *this,
         int             indent
     );
     
@@ -174,5 +179,5 @@ extern "C" {
 }
 #endif
 
-#endif	/* J1939ECU_H */
+#endif	/* J1939TCU_H */
 
