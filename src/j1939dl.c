@@ -1,23 +1,11 @@
-/****************************************************************
- *              J1939 Data Link (j1939dl) Support
- ****************************************************************/
+// vi:nu:et:sts=4 ts=4 sw=4
 /*
- * Program
- *              J1939 Data Link (j1939dl) Support
- * Purpose
- *              See j1939dl.h for a description of these routines.
- * Todo List
- *              None
- * Remarks
- *  1.          The data array is referenced relative to one, but
- *              each reference is adjusted to be relative to zero.
- * History
- *              See j1939dl.h for the history.
- * References
- *              See j1939dl.h for the references.
+ * File:   j1939dl.c
+ *	Generated 04/14/2017 16:11:00
+ *
  */
 
-
+ 
 /*
  This is free and unencumbered software released into the public domain.
  
@@ -48,9 +36,10 @@
 
 
 
-/****************************************************************
-* * * * * * * * * * * *  data definitions   * * * * * * * * * * *
-****************************************************************/
+
+//*****************************************************************
+//* * * * * * * * * * * *  Data Definitions   * * * * * * * * * * *
+//*****************************************************************
 
 /* Header File Inclusion */
 #include "j1939dl_internal.h"
@@ -58,21 +47,31 @@
 
 
 #ifdef	__cplusplus
-extern	"C" {
+extern "C" {
 #endif
     
 
     
-    
-    
 
-    /****************************************************************
-    * * * * * * * * * * *  Internal Subroutines * * * * * * * * * * *
-    ****************************************************************/
 
  
+    /****************************************************************
+    * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
+    ****************************************************************/
 
-    
+#ifdef XYZZY
+    static
+    void            j1939dl_task_body(
+        void            *pData
+    )
+    {
+        //J1939DL_DATA  *this = pData;
+        
+    }
+#endif
+
+
+
     /****************************************************************
     * * * * * * * * * * *  External Subroutines   * * * * * * * * * *
     ****************************************************************/
@@ -81,161 +80,67 @@ extern	"C" {
     //===============================================================
     //                      *** Class Methods ***
     //===============================================================
-    
-    J1939DL_DATA * j1939dl_Alloc(
+
+    J1939DL_DATA *  j1939dl_Alloc(
     )
     {
-        J1939DL_DATA   *cbp;
+        J1939DL_DATA    *this;
+        uint32_t        cbSize = sizeof(J1939DL_DATA);
         
         // Do initialization.
         
-        cbp = obj_Alloc( sizeof(J1939DL_DATA) );
+        this = obj_Alloc( cbSize );
         
         // Return to caller.
-        return( cbp );
+        return this;
     }
-    
-    
+
+
+
+    J1939DL_DATA *     j1939dl_New(
+    )
+    {
+        J1939DL_DATA       *this;
         
+        this = j1939dl_Alloc( );
+        if (this) {
+            this = j1939dl_Init(this);
+        } 
+        return this;
+    }
+
+
+
     
+
     //===============================================================
-    //                      *** Properties ***
+    //                      P r o p e r t i e s
     //===============================================================
 
-    uint32_t        j1939dl_getEid(
-        J1939DL_DATA	*cbp
+    ERESULT         j1939dl_getLastError(
+        J1939DL_DATA     *this
     )
     {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-      
-        return 0;
-    }
 
-    
-    bool			j1939dl_putEid(
-        J1939DL_DATA	*cbp,
-        uint32_t        value
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-        
-        //FIXME: cbp->eid = value;
-        
-        return true;
-    }
-    
-    
-    
-    uint32_t        j1939dl_getMask(
-        J1939DL_DATA	*cbp
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-        
-        return 0;
-    }
-
-    
-    bool			j1939dl_putMask(
-        J1939DL_DATA	*cbp,
-        uint32_t        value
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-        
-        //FIXME: cbp->mask = value;
-        
-        return true;
-    }
-    
-    
-    
-    bool			j1939dl_setReceivePacket(
-        J1939DL_DATA	*cbp,
-        void            (*receivePacket)(void *, void *),
-        void            *pData
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-        
-        //FIXME: cbp->pRcvPacket = receivePacket;
-        //FIXME: cbp->pRcvData  = pData;
-        
-        return true;
-    }
-
-    
-    
-    //---------------------------------------------------------------
-    //                          S Y S
-    //---------------------------------------------------------------
-    
-    J1939_SYS_VTBL * j1939dl_getSYS(
-        J1939DL_DATA	*this
-    )
-    {
-        
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
         if( !j1939dl_Validate(this) ) {
             DEBUG_BREAK();
-            return 0;
+            return this->eRc;
         }
 #endif
-        
-        // Return to caller.
-        return  this->pSYS;
+
+        //this->eRc = ERESULT_SUCCESS;
+        return this->eRc;
     }
-    
-    
-    bool            j1939dl_setSYS(
-        J1939DL_DATA	*this,
-        J1939_SYS_VTBL  *pValue
+
+
+    bool            j1939dl_setLastError(
+        J1939DL_DATA     *this,
+        ERESULT         value
     )
     {
-        
-        // Validate the input parameters.
 #ifdef NDEBUG
 #else
         if( !j1939dl_Validate(this) ) {
@@ -244,26 +149,99 @@ extern	"C" {
         }
 #endif
         
-        obj_Retain(pValue);         // This is our object.
-        if (this->pSYS) {
-            obj_Release(this->pSYS);
-        }
-        this->pSYS = pValue;
+        this->eRc = value;
         
-        // Return to caller.
         return true;
     }
     
     
+
+    uint16_t        j1939dl_getPriority(
+        J1939DL_DATA     *this
+    )
+    {
+
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        //return this->priority;
+        return 0;
+    }
+
+    bool            j1939dl_setPriority(
+        J1939DL_DATA     *this,
+        uint16_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+
+        //this->priority = value;
+
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+
+
+
+    uint32_t        j1939dl_getSize(
+        J1939DL_DATA       *this
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return 0;
+    }
+
+
+
+
     
+
+    //===============================================================
+    //                          M e t h o d s
+    //===============================================================
+
+
     //---------------------------------------------------------------
-    //                          X m t  M s g
+    //                       A s s i g n
     //---------------------------------------------------------------
     
-    bool			j1939dl_setXmtMsg(
-        J1939DL_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pData
+    /*!
+     Assign the contents of this object to the other object (ie
+     this -> other).  Any objects in other will be released before 
+     a copy of the object is performed.
+     Example:
+     @code:
+        ERESULT eRc = j1939dl__Assign(this,pOther);
+     @endcode:
+     @param:    this    J1939DL object pointer
+     @param:    pOther  a pointer to another J1939DL object
+     @return:   If successful, ERESULT_SUCCESS otherwise an 
+                ERESULT_* error 
+     */
+    ERESULT         j1939dl_Assign(
+        J1939DL_DATA		*this,
+        J1939DL_DATA      *pOther
     )
     {
         
@@ -272,396 +250,408 @@ extern	"C" {
 #else
         if( !j1939dl_Validate(this) ) {
             DEBUG_BREAK();
-            return false;
+            return j1939dl_getLastError(this);
+        }
+        if( !j1939dl_Validate(pOther) ) {
+            DEBUG_BREAK();
+            return j1939dl_getLastError(pOther);
         }
 #endif
+
+        // Release objects and areas in other object.
+#ifdef  XYZZY
+        if (pOther->pArray) {
+            obj_Release(pOther->pArray);
+            pOther->pArray = OBJ_NIL;
+        }
+#endif
+
+        // Create a copy of objects and areas in this object placing
+        // them in other.
+#ifdef  XYZZY
+        if (this->pArray) {
+            if (obj_getVtbl(this->pArray)->pCopy) {
+                pOther->pArray = obj_getVtbl(this->pArray)->pCopy(this->pArray);
+            }
+            else {
+                obj_Retain(this->pArray);
+                pOther->pArray = this->pArray;
+            }
+        }
+#endif
+
+        // Copy other data from this object to other.
         
-        this->pXmtMsg   = pXmtMsg;
-        this->pXmtData  = pData;
-        
-        return true;
+        //goto eom;
+
+        // Return to caller.
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+    eom:
+        //FIXME: Implement the assignment.        
+        j1939dl_setLastError(this, ERESULT_NOT_IMPLEMENTED);
+        return j1939dl_getLastError(this);
     }
     
     
-
-
-
-
-    //===============================================================
-    //                      *** Methods ***
-    //===============================================================
-
-
+    
     //---------------------------------------------------------------
-    //                      D e a l l o c
+    //                          C o p y
+    //---------------------------------------------------------------
+    
+    /*!
+     Copy the current object creating a new object.
+     Example:
+     @code:
+        j1939dl      *pCopy = j1939dl_Copy(this);
+     @endcode:
+     @param:    this    J1939DL object pointer
+     @return:   If successful, a J1939DL object which must be released,
+                otherwise OBJ_NIL.
+     @warning: Remember to release the returned the J1939DL object.
+     */
+    J1939DL_DATA *     j1939dl_Copy(
+        J1939DL_DATA       *this
+    )
+    {
+        J1939DL_DATA       *pOther = OBJ_NIL;
+        ERESULT         eRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+#endif
+        
+        pOther = j1939dl_New( );
+        if (pOther) {
+            eRc = j1939dl_Assign(this, pOther);
+            if (ERESULT_HAS_FAILED(eRc)) {
+                obj_Release(pOther);
+                pOther = OBJ_NIL;
+            }
+        }
+        
+        // Return to caller.
+        //obj_Release(pOther);
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return pOther;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                        D e a l l o c
     //---------------------------------------------------------------
 
     void            j1939dl_Dealloc(
         OBJ_ID          objId
     )
     {
-        J1939DL_DATA	*cbp = objId;
-        
+        J1939DL_DATA   *this = objId;
+
         // Do initialization.
-        if( NULL == cbp ) {
+        if (NULL == this) {
+            return;
+        }        
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
             return;
         }
-        
-        obj_Dealloc( cbp );
-        cbp = NULL;
-        
-        // Return to caller.
-    }
+#endif
 
-
-
-    //---------------------------------------------------------------
-    //                 H a n d l e  P a c k e t
-    //---------------------------------------------------------------
-    
-    bool            j1939dl_HandlePacket(
-        J1939DL_DATA	*cbp,
-        uint32_t        pgn,
-        void            *pPacket
-    )
-    {
-        //bool            fRc;
-        //uint32_t        i;
-        //RECEIVE_HANDLER *pHandler;
-        //uint32_t        cmp;
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return false;
+#ifdef XYZZY
+        if (obj_IsEnabled(this)) {
+            ((J1939DL_VTBL *)obj_getVtbl(this))->devVtbl.pStop((OBJ_DATA *)this,NULL);
         }
 #endif
 
+        //j1939dl_setStr(this, OBJ_NIL);
+
+        obj_setVtbl(this, this->pSuperVtbl);
+        //other_Dealloc(this);          // Needed for inheritance
+        obj_Dealloc(this);
+        this = OBJ_NIL;
+
         // Return to caller.
-        return false;
     }
-    
-    
-    
+
+
+
     //---------------------------------------------------------------
-    //          H a n d l e  P G N 6 0 9 2 8  R e q u e s t
-    //---------------------------------------------------------------
-    
-    bool            j1939dl_HandlePGN60928Request(
-        J1939DL_DATA	*cbp,
-        void            *pPacket
-    )
-    {
-        J1939_MSG       *pMsg = pPacket;
-        J1939_PDU       pdu;
-        J1939_PGN       pgn;
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        pgn = j1939msg_getJ1939_PGN(pMsg);
-        pdu = j1939msg_getJ1939_PDU(pMsg);
-        
-        // Return to caller.
-        return false;
-    }
-    
-    
-    
-    //---------------------------------------------------------------
-    //          H a n d l e  R e q u e s t  P G N 5 9 9 0 4
-    //---------------------------------------------------------------
-    
-    // Used to request a Parameter Group from a network device or devices.
-    // First 3 bytes of data are the PGN being requested.
-    
-    bool            j1939dl_HandleRequest_PGN59904(
-        J1939DL_DATA	*cbp,
-        void            *pPacket
-    )
-    {
-        //bool            fRc;
-        //uint32_t        i;
-        //RECEIVE_HANDLER *pHandler;
-        //uint32_t        cmp;
-        J1939_MSG       *pMsg = pPacket;
-        J1939_PDU       pdu;
-        J1939_PGN       pgn;
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        // Get the PGN requested.
-        pMsg->DATA.bytes[3] = 0;
-        pgn = j1939msg_getJ1939_PGN(pMsg);
-        pdu = j1939msg_getJ1939_PDU(pMsg);
-        
-        // Handle the PGNs that we can.
-        switch (pgn.w) {
-            case 60928:
-                j1939dl_TransmitPGN60928( cbp, pdu.PF );
-                return true;
-                break;
-                
-            default:
-                break;
-        }
-        
-        // Return to caller.
-        return false;
-    }
-    
-    
-    
-    //---------------------------------------------------------------
-    //                        I n i t
+    //                      D i s a b l e
     //---------------------------------------------------------------
 
-    J1939DL_DATA *	j1939dl_Init(
-        J1939DL_DATA   *cbp,
-        P_XMTMSG_RTN    pXmtMsg,
-        OBJ_PTR         pData
+    ERESULT         j1939dl_Disable(
+        J1939DL_DATA		*this
     )
     {
-        uint16_t		cbSize = sizeof(J1939DL_DATA);
 
         // Do initialization.
-        if (NULL == cbp) {
-            return NULL;
+        if (NULL == this) {
+            j1939dl_setLastError(this, ERESULT_INVALID_OBJECT);
+            return j1939dl_getLastError(this);
         }
-        
-        cbp = obj_Init( cbp, cbSize, OBJ_IDENT_J1939DL );
-        if (NULL == cbp) {
-            return NULL;
-        }
-        obj_setVtbl(cbp, (OBJ_IUNKNOWN *)&j1939dl_Vtbl);
-        
-        cbp->ca  = 0;
-        cbp->fu  = 0;
-        cbp->ecu = 0;
-        cbp->ig  = 1;
-        cbp->vs  = 1;
-        cbp->vsi = 0;
-        cbp->mc  = 0b00000001010;   // Cummins (lol)
-        cbp->idn = 0b011110001110001110000;
-
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
+    #ifdef NDEBUG
+    #else
+        if( !j1939dl_Validate(this) ) {
             DEBUG_BREAK();
-            obj_Release(cbp);
-            return NULL;
+            return j1939dl_getLastError(this);
         }
-#endif
+    #endif
+
+        // Put code here...
+
+        obj_Disable(this);
         
         // Return to caller.
-        return cbp;
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return j1939dl_getLastError(this);
     }
 
 
 
     //---------------------------------------------------------------
-    //                T r a n s m i t  P G N 6 0 9 2 8
+    //                          E n a b l e
     //---------------------------------------------------------------
-    
-    /* The Address Claimed PGN may be used in two ways:, to claim an address, and to
-     * announce that a CA was unable to claim an address. The former case is referred
-     * to as the Address Claimed message, and the latter as the Cannot Claim Address 
-     * message. The Address Claimed message is used by any CA to either respond to a
-     * received request message for the Address Claimed message or to simply claim a 
-     * single address on the network. CAs shall issue it during initialization of a 
-     * network or when attaching to a running network. If a CA receives an Address 
-     * Claimed message claiming its own source address, it shall compare the NAME that 
-     * was received in the Address Claimed message with its own NAME and determine which 
-     * CA has a higher priority NAME.
-     *
-     * If the CA receiving the Address Claim determines that it has the higher priority 
-     * NAME it may then transmit an Address Claimed message containing its NAME and 
-     * address. However if it has the lower priority NAME it shall either attempt to 
-     * claim a different address or send a Cannot Claim Address message. A CA that 
-     * loses address arbitration in this manner and is in the process of sending a 
-     * transport protocol message shall immediately cease sending the transport 
-     * protocol message and shall not send a Transport Protocol Abort. Receivers of the
-     * transport protocol message shall detect the interruption through the normal 
-     * transport protocol timeout process as specified in J1939-21 Queued transport 
-     * protocol frames shall cease within the timeout and constraints given in J1939-21, 
-     * (50 ms).
-     *
-     * A CA may send the Cannot Claim Address message or a Request for Address Claim 
-     * using the NULL address as a source address provided it has attempted the address
-     * claim and without having successfully claimed an address. A network inter-
-     * connection CA shall not use its own address in communications on the network 
-     * until it has successfully claimed that address. Handling messages of other CAs 
-     * is a special case for network interconnection devices. Network interconnection 
-     * devices acting entirely as repeaters may pass messages bearing the originator’s 
-     * Source Address before claiming their own addresses.
-     */
-    bool            j1939dl_TransmitPGN60928(
-        J1939DL_DATA	*cbp,
-        uint8_t         da                      // Destination Address
+
+    ERESULT         j1939dl_Enable(
+        J1939DL_DATA		*this
     )
     {
-        J1939_MSG       msg;
-        uint32_t        dlc = 8;
-        J1939_NAME      name = {0};
-        J1939_PDU       pdu = {0};
-        bool            fRc = false;
+
+        // Do initialization.
+    #ifdef NDEBUG
+    #else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939dl_getLastError(this);
+        }
+    #endif
         
-        // Example for ON-ROAD Vehicle - Cummins - 10 (mc), Identity - 1 (in)
-        /*      vvvv
-         *  iii ssss vvvv vvv            ffff feee mmmm mmmm mmmi iiii iiii iiii iiii iiii
-         * aggg iiii ssss sssr ffff ffff iiii iiii cccc cccc cccn nnnn nnnn nnnn nnnn nnnn
-         * 0001 0000 0000 0010 0000 0000 0000 0000 0000 0001 0100 0000 0000 0000 0000 0001
-         *
-         * Remember to reverse order:
-         *                                                                       vvvv
-         * iiii iiii iiii iiii iiii immm mmmm mmmm eeef ffff            vvv vvvv ssss iii
-         * nnnn nnnn nnnn nnnn nnnn nccc cccc cccc iiii iiii ffff ffff rsss ssss iiii ggga
-         * 1000 0000 0000 0000 0000 0010 1000 0000 0000 0000 0000 0000 0100 0000 0000 1000
+        obj_Enable(this);
+
+        // Put code here...
+        
+        // Return to caller.
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return j1939dl_getLastError(this);
+    }
+
+
+
+    //---------------------------------------------------------------
+    //                          I n i t
+    //---------------------------------------------------------------
+
+    J1939DL_DATA *   j1939dl_Init(
+        J1939DL_DATA       *this
+    )
+    {
+        uint32_t        cbSize = sizeof(J1939DL_DATA);
+        
+        if (OBJ_NIL == this) {
+            return OBJ_NIL;
+        }
+        
+        /* cbSize can be zero if Alloc() was not called and we are
+         * are passed the address of a zero'd area.
          */
-        name.IDN = cbp->idn;
-        name.MFG = cbp->mc;
-        name.ECU = cbp->ecu;
-        name.FUI = cbp->fi;
-        name.FU  = cbp->fu;
-        name.VS  = cbp->vs;
-        name.VSI = cbp->vsi;
-        name.IG  = cbp->ig;
-        name.AAC = 1;
-        
-        pdu.PF = 238;
-        pdu.PS = da;
-        pdu.SA = cbp->ca;
-        pdu.P  = 7;         // Priority
-        
-        fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, dlc, (uint8_t *)&name );
-
-        //FIXME: canbase_TransmitPacket( cbp, &msg );
-        
-        // Return to caller.
-        return true;
-    }
-    
-    
-    
-    //---------------------------------------------------------------
-    //              T r a n s m i t  M e s s a g e
-    //---------------------------------------------------------------
-    
-    void            j1939dl_XmtMsg(
-        J1939DL_DATA	*cbp,
-        uint32_t        msDelay,
-        J1939_MSG       *pMsg
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939dl_Validate( cbp ) ) {
+        //cbSize = obj_getSize(this);       // cbSize must be set in Alloc().
+        if (cbSize == 0) {
             DEBUG_BREAK();
-            return;
+            obj_Release(this);
+            return OBJ_NIL;
         }
-#endif
-        if (cbp->pXmtMsg) {
-            (*cbp->pXmtMsg)(cbp->pXmtData,msDelay,pMsg);
+
+        //this = (OBJ_ID)other_Init((OTHER_DATA *)this);    // Needed for Inheritance
+        this = (OBJ_ID)obj_Init(this, cbSize, OBJ_IDENT_J1939DL);
+        if (OBJ_NIL == this) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
         }
+        //obj_setSize(this, cbSize);                        // Needed for Inheritance
+        //obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939DL);         // Needed for Inheritance
+        this->pSuperVtbl = obj_getVtbl(this);
+        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939dl_Vtbl);
         
-        // Return to caller.
+        j1939dl_setLastError(this, ERESULT_GENERAL_FAILURE);
+        //this->stackSize = obj_getMisc1(this);
+        //this->pArray = objArray_New( );
+
+    #ifdef NDEBUG
+    #else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        //BREAK_NOT_BOUNDARY4(&this->thread);
+    #endif
+
+        return this;
     }
+
+     
+
+    //---------------------------------------------------------------
+    //                       I s E n a b l e d
+    //---------------------------------------------------------------
     
-    
-    
-    bool            j1939dl_XmtMsgDL(
-        J1939DL_DATA	*this,
-        uint32_t        msDelay,
-        J1939_PDU       pdu,
-        uint16_t        cData,
-        void            *pData
+    ERESULT         j1939dl_IsEnabled(
+        J1939DL_DATA		*this
     )
     {
-        J1939_MSG       msg;
-        bool            fRc = false;
         
         // Do initialization.
 #ifdef NDEBUG
 #else
         if( !j1939dl_Validate(this) ) {
             DEBUG_BREAK();
-            return false;
-        }
-        if( 0 == cData ) {
-            DEBUG_BREAK();
-            return false;
-        }
-        if( cData > 1785 ) {
-            DEBUG_BREAK();
-            return false;
-        }
-        if( NULL == pData ) {
-            DEBUG_BREAK();
-            return false;
+            return j1939dl_getLastError(this);
         }
 #endif
         
-        if (cData < 9) {
-            fRc = j1939msg_ConstructMsg_E( &msg, pdu.eid, cData, pData );
-            if (this->pXmtMsg) {
-                fRc = (*this->pXmtMsg)(this->pXmtData,msDelay,&msg);
-            }
+        if (obj_IsEnabled(this)) {
+            j1939dl_setLastError(this, ERESULT_SUCCESS_TRUE);
+            return j1939dl_getLastError(this);
         }
-        else {
-            //TODO: Complete Transport Protocol Transmit side
-        }
-                
+        
         // Return to caller.
-        return fRc;
+        j1939dl_setLastError(this, ERESULT_SUCCESS_FALSE);
+        return j1939dl_getLastError(this);
     }
     
     
     
-    //**********************************************************
-    //                      Validate
-    //**********************************************************
+    //---------------------------------------------------------------
+    //                       T o  S t r i n g
+    //---------------------------------------------------------------
+    
+    /*!
+     Create a string that describes this object and the objects within it.
+     Example:
+     @code:
+        ASTR_DATA      *pDesc = j1939dl_ToDebugString(this,4);
+     @endcode:
+     @param:    this    J1939DL object pointer
+     @param:    indent  number of characters to indent every line of output, can be 0
+     @return:   If successful, an AStr object which must be released containing the
+                description, otherwise OBJ_NIL.
+     @warning: Remember to release the returned AStr object.
+     */
+    ASTR_DATA *     j1939dl_ToDebugString(
+        J1939DL_DATA      *this,
+        int             indent
+    )
+    {
+        char            str[256];
+        int             j;
+        ASTR_DATA       *pStr;
+#ifdef  XYZZY        
+        ASTR_DATA       *pWrkStr;
+#endif
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939dl_Validate(this) ) {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+#endif
+              
+        pStr = AStr_New();
+        if (indent) {
+            AStr_AppendCharRepeatW(pStr, indent, ' ');
+        }
+        str[0] = '\0';
+        j = snprintf(
+                     str,
+                     sizeof(str),
+                     "{%p(j1939dl) size=%d\n",
+                     this,
+                     j1939dl_getSize(this)
+            );
+        AStr_AppendA(pStr, str);
+
+#ifdef  XYZZY        
+        if (this->pData) {
+            if (((OBJ_DATA *)(this->pData))->pVtbl->pToDebugString) {
+                pWrkStr =   ((OBJ_DATA *)(this->pData))->pVtbl->pToDebugString(
+                                                    this->pData,
+                                                    indent+3
+                            );
+                AStr_Append(pStr, pWrkStr);
+                obj_Release(pWrkStr);
+            }
+        }
+#endif
+        
+        if (indent) {
+            AStr_AppendCharRepeatW(pStr, indent, ' ');
+        }
+        j = snprintf(str, sizeof(str), " %p(j1939dl)}\n", this);
+        AStr_AppendA(pStr, str);
+        
+        j1939dl_setLastError(this, ERESULT_SUCCESS);
+        return pStr;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                      V a l i d a t e
+    //---------------------------------------------------------------
 
     #ifdef NDEBUG
     #else
-    static
     bool            j1939dl_Validate(
-        J1939DL_DATA	*cbp
+        J1939DL_DATA      *this
     )
     {
-        if( cbp ) {
-            if ( obj_IsKindOf( cbp, OBJ_IDENT_J1939DL ) )
+ 
+        // WARNING: We have established that we have a valid pointer
+        //          in 'this' yet.
+       if( this ) {
+            if ( obj_IsKindOf(this,OBJ_IDENT_J1939DL) )
                 ;
-            else
+            else {
+                // 'this' is not our kind of data. We really don't
+                // know what that it is at this point. 
                 return false;
+            }
         }
-        else
-            return(false);
-        return( true );
+        else {
+            // 'this' is NULL.
+            return false;
+        }
+        // Now, we have validated that we have a valid pointer in
+        // 'this'.
+
+
+        if( !(obj_getSize(this) >= sizeof(J1939DL_DATA)) ) {
+            this->eRc = ERESULT_INVALID_OBJECT;
+            return false;
+        }
+
+        // Return to caller.
+        this->eRc = ERESULT_SUCCESS;
+        return true;
     }
     #endif
 
 
-
+    
+    
+    
 #ifdef	__cplusplus
-};
+}
 #endif
-
-
 
 

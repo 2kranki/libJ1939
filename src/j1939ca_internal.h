@@ -79,6 +79,17 @@ extern "C" {
     
     
     
+#pragma pack(push, 1)
+    typedef struct j1939ca_bm_s {
+        J1939_PDU       pdu;
+        uint16_t        size;
+        uint16_t        used;
+        uint32_t        data[1792];
+    } J1939CA_BM;
+#pragma pack(pop)
+    
+    
+    
 
     
     
@@ -96,6 +107,9 @@ extern "C" {
         OBJ_DATA            super;
         OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
+        // Common Data
+        ERESULT             eRc;
+        
         OBJ_DATA            *pSYS;
         OBJ_DATA            *pCAN;
         
@@ -179,6 +193,12 @@ extern "C" {
     );
   
     
+    bool            j1939ca_setLastError(
+        J1939CA_DATA    *this,
+        ERESULT         value
+    );
+    
+    
     void            j1939ca_Dealloc(
         OBJ_ID          objId
     );
@@ -205,12 +225,11 @@ extern "C" {
     );
     
     
-    bool            j1939ca_SetupPgn60928(
+    int             j1939ca_SetupPgn60928(
         J1939CA_DATA	*this,
         J1939_PDU       *pEid,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
     
     

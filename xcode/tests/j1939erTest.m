@@ -117,7 +117,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                        (OBJ_ID)pCAN,
                        (OBJ_ID)pSYS,
                        1,               // J1939 Identity Number (21 bits)
-                       512,             // J1939 Manufacturer Code (11 bits)
+                       8192,            // J1939 Manufacturer Code (11 bits)
                        4                // J1939 Industry Group (3 bits) (Marine)
             );
     XCTAssertFalse( (NULL == pER) );
@@ -134,6 +134,58 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
+        
+        obj_Release(pER);
+        pER = NULL;
+    }
+    
+}
+
+
+
+- (void)testTransmits
+{
+    J1939ER_DATA    *pER = NULL;
+    J1939_PDU       pdu;
+    bool            fRc;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    pER = j1939er_Alloc();
+    XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
+    pER = j1939er_Init(
+                       pER,
+                       (OBJ_ID)pCAN,
+                       (OBJ_ID)pSYS,
+                       1,               // J1939 Identity Number (21 bits)
+                       8192,            // J1939 Manufacturer Code (11 bits)
+                       4                // J1939 Industry Group (3 bits) (Marine)
+                       );
+    XCTAssertFalse( (NULL == pER) );
+    cCurMsg = 0;
+    if (pER) {
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
+        
+        fRc = j1939er_TransmitPgn61440(pER);
+        // Initiate Address Claim.
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
+        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        
+        //FIXME: msg size is 19, so we need large msg xmt!
+#ifdef XYZZY
+        fRc = j1939er_TransmitPgn65249(pER);
+        // Initiate Address Claim.
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (2 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
+        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+#endif
         
         obj_Release(pER);
         pER = NULL;
@@ -160,7 +212,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                         (OBJ_ID)pCAN,
                         (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
-                        512,            // J1939 Manufacturer Code (11 bits)
+                        8192,            // J1939 Manufacturer Code (11 bits)
                         4               // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -230,7 +282,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -304,7 +356,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -376,7 +428,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -448,7 +500,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -512,7 +564,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );
@@ -633,7 +685,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                              );
     XCTAssertFalse( (OBJ_NIL == pER) );

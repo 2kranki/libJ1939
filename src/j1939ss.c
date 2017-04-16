@@ -57,8 +57,11 @@ extern "C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939ss_TransmitPgn0,
-        offsetof(J1939SS_DATA, startTime0)
+        (P_MSGDATA_RTN)j1939ss_SetupPgn0,
+        offsetof(J1939SS_DATA, startTime0),
+        0,
+        0,
+        0
     };
     
     
@@ -69,6 +72,8 @@ extern "C" {
         &pgn0_entry,
         (P_SRVCMSG_RTN)j1939ss_HandlePgn65098,
         NULL,                // Message Data Constructor
+        0,
+        0,
         0
     };
     
@@ -1579,14 +1584,23 @@ bool			j1939ss_setSpn3350(
     // The Transmission and the Cruise Controller are normally interested
     // in this message and try to control the Engine Retarder via the
     // TSC1 message.
-    bool            j1939ss_Pgn0Setup(
+    int             j1939ss_SetupPgn0(
         J1939SS_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
         uint8_t         *pData
     )
     {
-        bool            fRc = true;
+        
+        if (pPDU) {
+            pPDU->PF = (pgn0_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn0_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn0_entry.priority;
+        }
+        else {
+            return 0;
+        }
         
         if (pData) {
             *pData  = 0xC0;
@@ -1615,9 +1629,12 @@ bool			j1939ss_setSpn3350(
             ++pData;    // 7
             *pData  = 0xFF;
         }
+        else {
+            return 0;
+        }
         
         // Return to caller.
-        return fRc;
+        return 8;
     }
     
     
@@ -1629,9 +1646,12 @@ bool			j1939ss_setSpn3350(
         uint8_t         data[8] = {0};
         J1939_PDU       pdu = {0};
         bool            fRc = false;
+        int             len;
         
-        fRc = j1939ss_Pgn0Setup(this, &pdu, dlc, data);
-        if (!fRc) {
+        len = j1939ss_SetupPgn0(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
             return false;
         }
         
@@ -1639,7 +1659,7 @@ bool			j1939ss_setSpn3350(
         this->startTime0 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
-        return true;
+        return fRc;
     }
     
     

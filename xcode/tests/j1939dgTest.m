@@ -118,7 +118,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                        pCAN,
                        pSYS,
                        0,
-                       512,
+                       8192,
                        0
             );
     XCTAssertFalse( (NULL == pDG), @"Could not init pDG" );

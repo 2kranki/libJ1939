@@ -36,6 +36,8 @@
 #include    "j1939Sys.h"
 
 
+
+
 // All code under test must be linked into the Unit Test bundle
 // Test Macros:
 //      XCTAssert(expression, failure_description, ...)
@@ -249,7 +251,7 @@ bool            xmtPGN60928(
                         (OBJ_ID)pCAN,
                         (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
-                        0x3FF,          // J1939 Manufacturer Code (11 bits)
+                        8192,           // J1939 Manufacturer Code (11 bits)
                         4               // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
@@ -285,7 +287,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
-                             512,            // J1939 Manufacturer Code (11 bits)
+                             8192,           // J1939 Manufacturer Code (11 bits)
                              4               // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pCA) );
@@ -337,7 +339,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
@@ -387,7 +389,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,          // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
@@ -450,7 +452,7 @@ bool            xmtPGN60928(
                         (OBJ_ID)pCAN,
                         (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
-                        512,            // J1939 Manufacturer Code (11 bits)
+                        8192,           // J1939 Manufacturer Code (11 bits)
                         4               // J1939 Industry Group (3 bits) (Marine)
                         );
     XCTAssertFalse( (OBJ_NIL == pCA) );
@@ -502,7 +504,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pCAN,
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
-                             512,           // J1939 Manufacturer Code (11 bits)
+                             8192,           // J1939 Manufacturer Code (11 bits)
                              4              // J1939 Industry Group (3 bits) (Marine)
                 );
     XCTAssertFalse( (OBJ_NIL == pCA) );

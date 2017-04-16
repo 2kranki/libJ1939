@@ -115,7 +115,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
 
@@ -142,7 +142,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
 
@@ -199,7 +199,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -256,7 +256,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -311,7 +311,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -365,7 +365,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -408,7 +408,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -492,7 +492,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 512, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         

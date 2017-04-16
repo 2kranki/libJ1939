@@ -153,7 +153,10 @@ extern	"C" {
         uint32_t        xmtTimeoutOff;  // Offset of Timeout repeat xmt
         const
         uint8_t         da;             // Destination Address if applicable
-        uint8_t         rsvd[3];
+        const
+        uint8_t         rsvd8;
+        const
+        uint16_t        msXmtRepeat;
     } J1939CA_PGN_ENTRY;
 #pragma pack(pop)
     
@@ -221,6 +224,11 @@ extern	"C" {
         J1939CA_DATA	*this
     );
 
+    
+    ERESULT         j1939ca_getLastError(
+        J1939CA_DATA    *this
+    );
+    
     
     J1939_NAME *    j1939ca_getName(
         J1939CA_DATA	*this

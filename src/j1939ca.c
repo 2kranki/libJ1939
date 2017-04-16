@@ -382,6 +382,45 @@ extern	"C" {
     
     
     
+    ERESULT         j1939ca_getLastError(
+        J1939CA_DATA    *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return this->eRc;
+        }
+#endif
+        
+        //this->eRc = ERESULT_SUCCESS;
+        return this->eRc;
+    }
+    
+    
+    bool            j1939ca_setLastError(
+        J1939CA_DATA    *this,
+        ERESULT         value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->eRc = value;
+        
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                            N a m e
     //---------------------------------------------------------------
@@ -1134,7 +1173,7 @@ extern	"C" {
     )
     {
         uint16_t        dlc = pPgnEntry->pDef->dlc;
-        uint16_t        lenUsed = 0;
+        int             lenUsed = 0;
         uint8_t         data[8];
         uint8_t         *pData = data;
         J1939_PGN       pgn;
@@ -1169,7 +1208,7 @@ extern	"C" {
         }
         
         if (pPgnEntry->pDataSetup) {
-            fRc = (*pPgnEntry->pDataSetup)(this,(uint32_t *)&pdu,dlc,pData,&lenUsed);
+            lenUsed = (*pPgnEntry->pDataSetup)(this,(uint32_t *)&pdu,dlc,pData);
         }
         
         if (this->pXmtMsgDL) {
@@ -1343,37 +1382,43 @@ extern	"C" {
     
     
     //---------------------------------------------------------------
-    //                T r a n s m i t  P G N 6 0 9 2 8  0x00EE00
+    //           T r a n s m i t  P G N 6 0 9 2 8  0x00EE00
     //---------------------------------------------------------------
     
     // Claim Address/Cannot Claim Address
 
-    bool            j1939ca_SetupPgn60928(
+    int             j1939ca_SetupPgn60928(
         J1939CA_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     )
     {
         J1939_NAME      *pName = (J1939_NAME *)pData;
         
-        if (pLen) {
-            *pLen = 8;
+        if (pPDU) {
+            pPDU->PF = 238;
+            pPDU->PS = 255;
+            pPDU->SA = this->ca;
+            pPDU->P  = 7;             // Priority
         }
+        else {
+            return 0;
+        }
+        
         if (pData) {
             if (cData < 8) {
-                return false;
+                return 0;
             }
             pName->w0 = this->name.w0;
             pName->w1 = this->name.w1;
         }
         else {
-            return false;
+            return 0;
         }
         
         // Return to caller.
-        return true;
+        return 8;
     }
     
     
@@ -1384,16 +1429,16 @@ extern	"C" {
     {
         uint16_t        dlc = 8;
         J1939_PDU       pdu = {0};
+        uint8_t         data[8];
         bool            fRc = false;
+        int             len;
         
-        pdu.PF = 238;       // Address Claimed
-        pdu.PS = 255;       // We must always make this global.
-        pdu.SA = this->ca;
-        pdu.P  = 7;         // Priority
-        
-        //fRc = j1939ca_SetupPgn60928(cbp, &pdu, dlc, &cbp->name);
-        // Not needed since we just get the name from the same place
-        // in this object.
+        len = j1939ca_SetupPgn60928(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
         
         if (this->pXmtMsgDL) {
             fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);

@@ -1,7 +1,7 @@
 // vi: nu:noai:ts=4:sw=4
 
-//	Class Object Metods and Tables for 'j1939dl'
-//	Generated 04/14/2017 16:11:00
+//	Class Object Metods and Tables for 'j1939cc'
+//	Generated 04/15/2017 08:51:40
 
 
 /*
@@ -33,8 +33,8 @@
 
 
 
-#define			J1939DL_OBJECT_C	    1
-#include        "j1939dl_internal.h"
+#define			J1939CC_OBJECT_C	    1
+#include        <j1939cc_internal.h>
 
 
 
@@ -42,14 +42,14 @@
 //                  Class Object Definition
 //-----------------------------------------------------------
 
-struct j1939dl_class_data_s	{
+struct j1939cc_class_data_s	{
     // Warning - OBJ_DATA must be first in this object!
     OBJ_DATA        super;
     
     // Common Data
     //uint32_t        misc;
 };
-typedef struct j1939dl_class_data_s J1939DL_CLASS_DATA;
+typedef struct j1939cc_class_data_s J1939CC_CLASS_DATA;
 
 
 
@@ -62,23 +62,26 @@ typedef struct j1939dl_class_data_s J1939DL_CLASS_DATA;
 
 static
 const
-OBJ_INFO        j1939dl_Info;            // Forward Reference
+OBJ_INFO        j1939cc_Info;            // Forward Reference
 
 
 
-OBJ_ID          j1939dl_Class(
+OBJ_ID          j1939cc_Class(
     OBJ_ID          objId
 );
 
 
 
 static
-bool            j1939dl_ClassIsKindOf(
+bool            j1939cc_ClassIsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939DL_CLASS == classID) {
+    if (OBJ_IDENT_J1939CC_CLASS == classID) {
        return true;
+    }
+    if (OBJ_IDENT_J1939CA_CLASS == classID) {
+        return true;
     }
     if (OBJ_IDENT_OBJ_CLASS == classID) {
        return true;
@@ -92,15 +95,15 @@ uint16_t		obj_ClassWhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939DL_CLASS;
+    return OBJ_IDENT_J1939CC_CLASS;
 }
 
 
 static
 const
 OBJ_IUNKNOWN    obj_Vtbl = {
-	&j1939dl_Info,
-    j1939dl_ClassIsKindOf,
+	&j1939cc_Info,
+    j1939cc_ClassIsKindOf,
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
@@ -115,20 +118,23 @@ OBJ_IUNKNOWN    obj_Vtbl = {
 //-----------------------------------------------------------
 
 const
-J1939DL_CLASS_DATA  j1939dl_ClassObj = {
-    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939DL_CLASS, 0, 1},
+J1939CC_CLASS_DATA  j1939cc_ClassObj = {
+    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939CC_CLASS, 0, 1},
 	//0
 };
 
 
 
 static
-bool            j1939dl_IsKindOf(
+bool            j1939cc_IsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939DL == classID) {
+    if (OBJ_IDENT_J1939CC == classID) {
        return true;
+    }
+    if (OBJ_IDENT_J1939CA == classID) {
+        return true;
     }
     if (OBJ_IDENT_OBJ == classID) {
        return true;
@@ -139,50 +145,50 @@ bool            j1939dl_IsKindOf(
 
 // Dealloc() should be put into the Internal Header as well
 // for classes that get inherited from.
-void            j1939dl_Dealloc(
+void            j1939cc_Dealloc(
     OBJ_ID          objId
 );
 
 
-OBJ_ID          j1939dl_Class(
+OBJ_ID          j1939cc_Class(
     OBJ_ID          objId
 )
 {
-    return (OBJ_ID)&j1939dl_ClassObj;
+    return (OBJ_ID)&j1939cc_ClassObj;
 }
 
 
 static
-uint16_t		j1939dl_WhoAmI(
+uint16_t		j1939cc_WhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939DL;
+    return OBJ_IDENT_J1939CC;
 }
 
 
 const
-J1939DL_VTBL     j1939dl_Vtbl = {
+J1939CC_VTBL     j1939cc_Vtbl = {
     {
-        &j1939dl_Info,
-        j1939dl_IsKindOf,
+        &j1939cc_Info,
+        j1939cc_IsKindOf,
         obj_RetainStandard,
         obj_ReleaseStandard,
-        j1939dl_Dealloc,
-        j1939dl_Class,
-        j1939dl_WhoAmI,
-        NULL,			// j1939dl_Enable,
-        NULL,			// j1939dl_Disable,
-        (P_OBJ_TOSTRING)j1939dl_ToDebugString,
-        NULL,			// (P_OBJ_ASSIGN)j1939dl_Assign,
-        NULL,			// (P_OBJ_COMPARE)j1939dl_Compare,
-        NULL, 			// (P_OBJ_PTR)j1939dl_Copy,
-        NULL 			// (P_OBJ_HASH)j1939dl_Hash,
+        j1939cc_Dealloc,
+        j1939cc_Class,
+        j1939cc_WhoAmI,
+        NULL,			// j1939cc_Enable,
+        NULL,			// j1939cc_Disable,
+        (P_OBJ_TOSTRING)j1939cc_ToDebugString,
+        NULL,			// (P_OBJ_ASSIGN)j1939cc_Assign,
+        NULL,			// (P_OBJ_COMPARE)j1939cc_Compare,
+        NULL, 			// (P_OBJ_PTR)j1939cc_Copy,
+        NULL 			// (P_OBJ_HASH)j1939cc_Hash,
     },
     // Put other object method names below this.
     // Properties:
     // Methods:
-    //j1939dl_IsEnabled,
+    //j1939cc_IsEnabled,
  
 };
 
@@ -190,12 +196,12 @@ J1939DL_VTBL     j1939dl_Vtbl = {
 
 static
 const
-OBJ_INFO        j1939dl_Info = {
-    "j1939dl",
-    "J1939 Data Link",
-    (OBJ_DATA *)&j1939dl_ClassObj,
-    (OBJ_DATA *)&obj_ClassObj,
-    (OBJ_IUNKNOWN *)&j1939dl_Vtbl
+OBJ_INFO        j1939cc_Info = {
+    "j1939cc",
+    "J1939 Cab Controller",
+    (OBJ_DATA *)&j1939cc_ClassObj,
+    (OBJ_DATA *)&j1939ca_ClassObj,
+    (OBJ_IUNKNOWN *)&j1939cc_Vtbl
 };
 
 

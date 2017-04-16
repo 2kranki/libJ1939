@@ -70,6 +70,9 @@ extern "C" {
         J1939CA_DATA        super;
         J1939CA_VTBL        *pCaVtbl;
 
+        // Common Data
+        ERESULT             eRc;
+        
         uint32_t            startTime61440;     // Repeat every 100ms
         uint32_t            startTime65249;     // Repeat every 5s
 
@@ -195,12 +198,11 @@ extern "C" {
     );
 
 
-    bool            j1939er_Pgn61440Setup(
-        J1939ER_DATA	*cbp,
+    int             j1939er_SetupPgn61440(
+        J1939ER_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 

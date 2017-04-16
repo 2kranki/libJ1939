@@ -139,7 +139,7 @@ struct j1939ss_data_s	{
         J1939SS_DATA	*this
     );
     
-    bool            j1939ss_Pgn0Setup(
+    int             j1939ss_SetupPgn0(
         J1939SS_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,

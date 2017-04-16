@@ -456,7 +456,7 @@ extern	"C" {
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939dg_Vtbl );
 
-        this->super.ca = 15;
+        this->super.ca = 15;        // ???
         //this->super.name.ECU = 0;
         this->super.name.FU = 12;
         //this->super.name.FUI = 0;

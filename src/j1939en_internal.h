@@ -71,6 +71,9 @@ extern "C" {
         J1939CA_DATA        super;
         J1939CA_VTBL        *pCaVtbl;
 
+        // Common Data
+        ERESULT             eRc;
+        
         uint32_t            startTime61443;     // Repeat every 50ms
         uint32_t            startTime61444;     // Repeat engine speed dependent
                                                 // (100ms for now)
@@ -126,15 +129,15 @@ extern "C" {
         uint8_t             spn1110;            // Engine Protection System has Shutdown Engine
         uint8_t             spn1134;            // Engine Intercooler Thermostat Opening
         uint8_t             spn1237;            // Engine Shutdown Override Switch
+
         uint8_t             spn1437;            // Road Speed Limit Status
         uint8_t             spn1480;            // CA of Controlling Retarder Device
-
         uint8_t             spn1483;            // Source Address of Controlling Device
                                                 // for Engine Control
         uint8_t             spn1633;            // Cruise Control Pause Switch
+
         uint8_t             spn1675;            // Engine Starter Mode
         uint8_t             spn2432;            // Engine Demand - Percent Torque
-
         uint8_t             spn2978;            // Estimated Engine Parasitic Losses -
                                                 // Percent Torque
         uint8_t             reserved8b[1];
@@ -180,56 +183,56 @@ extern "C" {
 
 
     bool            j1939en_HandlePgn0(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61184(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61442(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61443(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61444(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61445(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65129(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65247(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
@@ -243,90 +246,74 @@ extern "C" {
     
     
     bool            j1939en_HandlePgn65262(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65265(
-        J1939EN_DATA	*cbp,
+        J1939EN_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
-    bool            j1939en_SetupPgn61443(
-        J1939EN_DATA	*cbp,
-        J1939_PDU       *pPDU,
-        uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
-    );
-
-
-    bool            j1939en_SetupPgn61444(
-        J1939EN_DATA	*cbp,
-        J1939_PDU       *pPDU,
-        uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
-    );
-
-
-    bool            j1939en_SetupPgn65129(
-        J1939EN_DATA	*cbp,
-        J1939_PDU       *pPDU,
-        uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
-    );
-
-
-    bool            j1939en_SetupPgn65247(
-        J1939EN_DATA	*cbp,
-        J1939_PDU       *pPDU,
-        uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
-    );
-
-
-    bool            j1939en_SetupPgn65252(
+    int             j1939en_SetupPgn61443(
         J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
+    );
+
+
+    int             j1939en_SetupPgn61444(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+
+
+    int             j1939en_SetupPgn65129(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+
+
+    int             j1939en_SetupPgn65247(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+
+
+    int             j1939en_SetupPgn65252(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
     );
     
     
-    bool            j1939en_SetupPgn65262(
-        J1939EN_DATA	*cbp,
+    int             j1939en_SetupPgn65262(
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 
-    bool            j1939en_SetupPgn65265(
-        J1939EN_DATA	*cbp,
+    int             j1939en_SetupPgn65265(
+        J1939EN_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
-
-
-#ifdef NDEBUG
-#else
-    static
-    bool            j1939en_Validate(
-        J1939EN_DATA      *cbp
-    );
-#endif
 
 
 

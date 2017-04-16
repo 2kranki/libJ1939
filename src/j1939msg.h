@@ -106,14 +106,14 @@ typedef bool (*P_XMTMSG_RTN) (
             J1939_MSG   *
         );
 
-/*! Set up PDU and Msg using object data.
+/*! Set up PDU and Msg using object data returning
+ * amount of data used. 0 means an error.
  */
-typedef bool (*P_MSGDATA_RTN) (
-            OBJ_ID      ,                       // Object Ptr
-            uint32_t    *,                      // EID or PDU (j1939) Ptr
-            uint16_t    ,                       // data area size
-            void        *,                      // Message Data Area
-            uint16_t    *                       // data used size
+typedef int     (*P_MSGDATA_RTN) (
+    OBJ_ID      ,                       // Object Ptr
+    uint32_t    *,                      // EID or PDU (j1939) Ptr
+    uint16_t    ,                       // data area size
+    void        *                       // Message Data Area
 );
 
 

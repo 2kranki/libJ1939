@@ -1,38 +1,34 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939DL Console Transmit Task (j1939dl) Header
+//          J1939 Cab Controller CA (j1939cc) Header
 //****************************************************************
 /*
  * Program
- *			Separate j1939dl (j1939dl)
+ *			J1939 Cab Controller CA (j1939cc)
  * Purpose
  *			This object provides a standardized way of handling
- *          a separate j1939dl to run things without complications
- *          of interfering with the main j1939dl. A j1939dl may be 
- *          called a j1939dl on other O/S's.
+ *          a separate j1939cc to run things without complications
+ *          of interfering with the main j1939cc. A j1939cc may be 
+ *          called a j1939cc on other O/S's.
+ *          Transmitted Messages:
+ *              AMB  FEF5 65269
+ *              CCVS FEF1 65265
+ *              CM1  E000 57344
+ *              DM01 FECA 65226
+ *              EEC2 F003 61443
+ *              VDHR FEC1 65217
+ *              VEP1 FEF7 65271
  *
- *          The PGNs associated with the Data Link Layer are:
- *              59904 (Request PG) Used to request a PGN from network device(s)
- *              59392 (Acknowledgement) is used to provide a handshake mechanism
- *                      between transmitting and receiving devices
- *              51456 (Request2) Used to request a PGN from network device or
- *                      devices and to specify whether the response should use
- *                      the Transfer PGN () or not.
- *              51712 (Transfer) Used for transfer of data in response to a
- *                      Request2 (51456) PGN when the "Use Transfer PGN for
- *                      response" is set to "Yes"
- *              60416 (Transport Protocol - Connection Management)
- *              60160 (Transport Protocol - Data Transfer)
  *
  * Remarks
  *	1.      Using this object allows for testable code, because a
  *          function, TaskBody() must be supplied which is repeatedly
- *          called on the internal j1939dl. A testing unit simply calls
+ *          called on the internal j1939cc. A testing unit simply calls
  *          the TaskBody() function as many times as needed to test.
  *
  * History
- *	04/14/2017 Generated
+ *	04/15/2017 Generated
  */
 
 
@@ -67,12 +63,12 @@
 
 
 
-#include        <j1939_defs.h>
+#include        <cmn_defs.h>
 #include        <AStr.h>
 
 
-#ifndef         J1939DL_H
-#define         J1939DL_H
+#ifndef         J1939CC_H
+#define         J1939CC_H
 
 
 
@@ -86,16 +82,16 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939dl_data_s	J1939DL_DATA;    // Inherits from OBJ.
+    typedef struct j1939cc_data_s	J1939CC_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939dl_vtbl_s	{
+    typedef struct j1939cc_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
-        // method names to the vtbl definition in j1939dl_object.c.
+        // method names to the vtbl definition in j1939cc_object.c.
         // Properties:
         // Methods:
-        //bool        (*pIsEnabled)(J1939DL_DATA *);
-    } J1939DL_VTBL;
+        //bool        (*pIsEnabled)(J1939CC_DATA *);
+    } J1939CC_VTBL;
 
 
 
@@ -112,13 +108,18 @@ extern "C" {
      Allocate a new Object and partially initialize. Also, this sets an
      indicator that the object was alloc'd which is tested when the object is
      released.
-     @return:   pointer to j1939dl object if successful, otherwise OBJ_NIL.
+     @return:   pointer to j1939cc object if successful, otherwise OBJ_NIL.
      */
-    J1939DL_DATA *     j1939dl_Alloc(
+    J1939CC_DATA *     j1939cc_Alloc(
     );
     
     
-    J1939DL_DATA *     j1939dl_New(
+    J1939CC_DATA *     j1939cc_New(
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint8_t         spn2846         // J1939 Industry Group (3 bits)
     );
     
     
@@ -127,8 +128,8 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939dl_getLastError(
-        J1939DL_DATA		*this
+    ERESULT     j1939cc_getLastError(
+        J1939CC_DATA		*this
     );
 
 
@@ -138,23 +139,28 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    ERESULT         j1939dl_Disable(
-        J1939DL_DATA	*this
+    ERESULT     j1939cc_Disable(
+        J1939CC_DATA		*this
     );
 
 
-    ERESULT         j1939dl_Enable(
-        J1939DL_DATA    *this
+    ERESULT     j1939cc_Enable(
+        J1939CC_DATA		*this
     );
 
    
-    J1939DL_DATA *   j1939dl_Init(
-        J1939DL_DATA    *this
+    J1939CC_DATA *   j1939cc_Init(
+        J1939CC_DATA     *this,
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS,
+        uint32_t        spn2837,        // J1939 Identity Number (21 bits)
+        uint16_t        spn2838,        // J1939 Manufacturer Code (11 bits)
+        uint8_t         spn2846         // J1939 Industry Group (3 bits)
     );
 
 
-    ERESULT         j1939dl_IsEnabled(
-        J1939DL_DATA	*this
+    ERESULT     j1939cc_IsEnabled(
+        J1939CC_DATA		*this
     );
     
  
@@ -162,25 +168,55 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939dl_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939cc_ToDebugString(this,4);
      @endcode:
-     @param:    this    J1939DL object pointer
+     @param:    this    J1939CC object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
      @return:   If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *     j1939dl_ToDebugString(
-        J1939DL_DATA    *this,
+    ASTR_DATA *    j1939cc_ToDebugString(
+        J1939CC_DATA     *this,
         int             indent
     );
     
     
+    bool            j1939cc_TransmitPgn61443(
+        J1939CC_DATA	*this
+    );
+    
+    
+    bool            j1939cc_TransmitPgn65217(
+        J1939CC_DATA	*this
+    );
+    
+    
+    bool            j1939cc_TransmitPgn65261(
+        J1939CC_DATA	*this
+    );
+    
+    
+    bool            j1939cc_TransmitPgn65265(
+        J1939CC_DATA	*this
+    );
+    
+    
+    bool            j1939cc_TransmitPgn65269(
+        J1939CC_DATA	*this
+    );
 
     
+    bool            j1939cc_TransmitPgn65271(
+        J1939CC_DATA	*this
+    );
+    
+    
+
+
 #ifdef	__cplusplus
 }
 #endif
 
-#endif	/* J1939DL_H */
+#endif	/* J1939CC_H */
 

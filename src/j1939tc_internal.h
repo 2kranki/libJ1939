@@ -85,6 +85,9 @@ extern "C" {
         J1939CA_DATA        super;
         J1939CA_VTBL        *pCaVtbl;
 
+        // Common Data
+        ERESULT             eRc;
+        
         uint32_t            startTime0_10;      // Repeat every 10ms
         uint32_t            startTime0_50;      // Repeat every 50ms
         uint32_t            startTime61442;     // Repeat every 10ms
@@ -201,28 +204,28 @@ extern "C" {
 
 
     bool            j1939tc_HandlePgn256(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn61184(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn61441(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939tc_HandlePgn61442(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
@@ -236,75 +239,70 @@ extern "C" {
 
 
     bool            j1939tc_HandlePgn65098(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65129(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65226(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65265(
-        J1939TC_DATA	*cbp,
+        J1939TC_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
-    bool            j1939tc_SetupPgn0(
-        J1939TC_DATA	*cbp,
+    int             j1939tc_SetupPgn0(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 
-    bool            j1939tc_SetupPgn61442(
-        J1939TC_DATA	*cbp,
+    int             j1939tc_SetupPgn61442(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 
-    bool            j1939tc_SetupPgn61445(
-        J1939TC_DATA	*cbp,
+    int             j1939tc_SetupPgn61445(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 
-    bool            j1939tc_SetupPgn65098(
-        J1939TC_DATA	*cbp,
+    int             j1939tc_SetupPgn65098(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 
-    bool            j1939tc_SetupPgn65226(
-        J1939TC_DATA	*cbp,
+    int             j1939tc_SetupPgn65226(
+        J1939TC_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     );
 
 

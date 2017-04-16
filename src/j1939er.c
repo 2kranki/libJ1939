@@ -68,7 +68,9 @@ extern	"C" {
         &pgn0_entry,
         (P_SRVCMSG_RTN)j1939er_HandlePgn0,
         NULL,                // Message Data Constructor
-        0
+        0,
+        0,
+        10
     };
 
     static
@@ -77,8 +79,11 @@ extern	"C" {
         // PGN 61440  0x00F000 - Electronic Retarder Controller 1 - ERC1
         &pgn61440_entry,
         (P_SRVCMSG_RTN)j1939er_HandlePgn61440,
-        (P_MSGDATA_RTN)j1939er_Pgn61440Setup,
-        offsetof(J1939ER_DATA, startTime61440)
+        (P_MSGDATA_RTN)j1939er_SetupPgn61440,
+        offsetof(J1939ER_DATA, startTime61440),
+        0,
+        0,
+        100
     };
 
     static
@@ -162,6 +167,45 @@ extern	"C" {
     //                      *** Properties ***
     //===============================================================
 
+    ERESULT         j1939er_getLastError(
+        J1939ER_DATA    *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939er_Validate(this) ) {
+            DEBUG_BREAK();
+            return this->eRc;
+        }
+#endif
+        
+        //this->eRc = ERESULT_SUCCESS;
+        return this->eRc;
+    }
+    
+    
+    bool            j1939er_setLastError(
+        J1939ER_DATA    *this,
+        ERESULT         value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939er_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->eRc = value;
+        
+        return true;
+    }
+    
+    
+    
     // Wheel-Based Vehicle Speed
     uint16_t			j1939er_getSpn84(
         J1939ER_DATA	*this
@@ -1154,7 +1198,7 @@ extern	"C" {
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939er_Vtbl );
 
-        this->super.ca = 41;                // Engine #1 Exhaust Retarder
+        this->super.ca = J1939_ENGINE_RETARDER_EXHAUST_1;
         //this->super.name.ECU = 0;
         this->super.name.FU = 12;
         this->super.name.FUI = 1;
@@ -1194,7 +1238,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //           T r a n s m i t  P G N 6 1 4 4 0   0xF000
+    //           T r a n s m i t  P G N 6 1 4 4 0   0xF000       ERC1
     //---------------------------------------------------------------
 
     // Electronic Retarder Controller 1 - ERC1 -
@@ -1202,21 +1246,27 @@ extern	"C" {
     // The Transmission and the Cruise Controller are normally interested
     // in this message and try to control the Engine Retarder via the
     // TSC1 message.
-    bool            j1939er_Pgn61440Setup(
+    int             j1939er_SetupPgn61440(
         J1939ER_DATA	*this,
         J1939_PDU       *pPDU,
         uint16_t        cData,
-        uint8_t         *pData,
-        uint16_t        *pLen
+        uint8_t         *pData
     )
     {
 
-        if (pLen) {
-            *pLen = 8;
+        if (pPDU) {
+            pPDU->PF = (pgn61440_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn61440_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn61440_entry.priority;
         }
+        else {
+            return 0;
+        }
+        
         if (pData) {
             if (cData < 8) {
-                return false;
+                return 0;
             }
             *pData  = 0x00;
             *pData |= this->spn900 & 0xF;
@@ -1240,11 +1290,11 @@ extern	"C" {
             *pData  = this->spn1717;
         }
         else {
-            return false;
+            return 0;
         }
 
         // Return to caller.
-        return true;
+        return 8;
     }
 
 
@@ -1252,29 +1302,18 @@ extern	"C" {
         J1939ER_DATA	*this
     )
     {
-        uint32_t        dlc = 8;
+        uint16_t        dlc = 8;
         uint8_t         data[8] = {0};
         J1939_PDU       pdu = {0};
         bool            fRc = false;
+        int             len;
 
-        data[0]  = 0x00;
-        data[0] |= this->spn900 & 0xF;
-        data[0] |= (this->spn571 & 0x3) << 4;
-        data[0] |= (this->spn572 & 0x3) << 6;
-        data[1]  = this->spn520;
-        data[2]  = this->spn1085;
-        data[3]  = 0xF0;
-        data[3] |= (this->spn1082 & 0x3);
-        data[3] |= (this->spn1667 & 0x3) << 2;
-        data[4]  = this->spn1480;
-        data[5]  = this->spn1715;
-        data[6]  = this->spn1716;
-        data[7]  = this->spn1717;
-
-        pdu.PF = 240;           // ERC1 PF
-        pdu.PS = 0;
-        pdu.SA = this->super.ca;
-        pdu.P  = 6;             // Priority
+        len = j1939er_SetupPgn61440(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
         this->startTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
