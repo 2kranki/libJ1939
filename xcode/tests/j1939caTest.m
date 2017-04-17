@@ -555,6 +555,81 @@ bool            xmtPGN60928(
 
 
 
+- (void)testCheck_TransmitTP01
+{
+    J1939CA_DATA    *pCA = NULL;
+    bool            fRc;
+    //J1939_MSG       msg;
+    J1939_PDU       pdu;
+    //uint8_t         data[9];
+    int             i;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    pCA = j1939ca_Alloc();
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    pCA =  j1939ca_Init(
+                        pCA,
+                        (OBJ_ID)pCAN,
+                        (OBJ_ID)pSYS,
+                        1,             // J1939 Identity Number (21 bits)
+                        8192,           // J1939 Manufacturer Code (11 bits)
+                        4              // J1939 Industry Group (3 bits) (Marine)
+                        );
+    XCTAssertFalse( (OBJ_NIL == pCA) );
+    cCurMsg = 0;
+    if (pCA) {
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
+        
+        // Initiate Address Claim.
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
+        XCTAssertTrue( (1 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
+        
+        // Send "Timed Out".
+        j1939Sys_BumpMS(pSYS, 250);
+        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
+        
+        // Setup up msg from #3 Transmission to Broadcast;
+        pdu.eid = 0;
+        pdu.SA = 3;
+        pdu.P = 3;
+        pdu.PF = 0xEA;          // Request PGN PF
+        pdu.PS = J1939_GENERAL_BROADCAST;
+        fRc = j1939ca_XmtMsgDL( pCA, 0, pdu, 10, "1234567890" );
+        XCTAssertTrue( (fRc) );
+        
+        for (i=0; i<200; i+=20) {
+            j1939Sys_BumpMS(pSYS,40);
+            fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        }
+        
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (3 == cCurMsg) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x18EBFF00 == pdu.eid) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 1) );
+        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x18EBFF00 == pdu.eid) );
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 2) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
+        
+        obj_Release(pCA);
+        pCA = OBJ_NIL;
+    }
+    
+}
+
+
+
 @end
 
 

@@ -1680,7 +1680,44 @@ extern "C" {
         };
         
         
-        // SPN 2596 - Selected Maximum Vehicle Speed Limit
+        // SPN 2540 - Parameter Group Number (RQST)
+        static
+        const
+        J1939_SPN           spn2540 = {
+            2540,
+            0,
+            NULL    /*&????*/,
+            "Parameter Group Number (RQST)"
+        };
+        
+        
+        // SPN 2574 - Parameter Group Number (RQST2)
+        static
+        const
+        J1939_SPN           spn2574 = {
+            2574,
+            0,
+            NULL    /*&????*/,
+            "Parameter Group Number (RQST2)"
+        };
+        
+        
+        // SPN 2575 - Use Transfer Mode
+        // 00 No
+        // 01 Yes
+        // 10 Error
+        // 11 Not available
+        static
+        const
+        J1939_SPN           spn2575 = {
+            2575,
+            0,
+            NULL    /*&????*/,
+            "Use Transfer Mode"
+        };
+        
+        
+       // SPN 2596 - Selected Maximum Vehicle Speed Limit
         static
         const
         J1939_SPN           spn2596 = {
@@ -1796,6 +1833,16 @@ extern "C" {
         
         
 
+        
+        static
+        const
+        J1939_PGNSPN        pgn51456spns[2] = {
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 51456, 2574,  24,    0,     0,    0,  &spn2574 },
+            { 51456, 2575,   2,    0,     3,    0,  &spn2575 }
+        };
+        
         
         static
         const
@@ -2020,6 +2067,20 @@ extern "C" {
             17,                 // cSPNs
             0,                  // --reserved--
             NULL                // SPN Table Pointer
+        };
+        
+        
+        const
+        J1939_PGN_ENTRY     pgn51456_entry = {
+            // PGN 51456  0x00C900 - Request2
+            0x0000C900,
+            0,                  // msFreq
+            8,                  // dlc
+            6,                  // priority
+            2,                  // cSPNs
+            0,                  // --reserved--
+            pgn51456spns,       // SPN Table Pointer
+            "Request2"
         };
         
         
@@ -2360,6 +2421,7 @@ extern "C" {
         J1939_PGN_ENTRY     *pgn_index[] = {
             &pgn0_entry,
             &pgn256_entry,
+            &pgn51456_entry,
             &pgn57344_entry,
             &pgn59392_entry,
             &pgn59904_entry,

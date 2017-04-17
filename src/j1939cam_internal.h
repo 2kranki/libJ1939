@@ -105,13 +105,8 @@ extern "C" {
         void                *pSetTimeData;
         uint32_t            normalWaitTime;
 
-        P_XMTMSG_RTN        pReflectMsg;
-        OBJ_PTR             pReflectData;
-        
         J1939CA_DATA        *pCAs[4];
-        uint8_t             cCAs;
-        uint8_t             fReflectMsg;
-        uint8_t             reservered8[3];
+        uint32_t            cCAs;
         
     };
 #pragma pack(pop)

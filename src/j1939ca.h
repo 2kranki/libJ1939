@@ -31,6 +31,8 @@
  *              is put into a running state:
  *                  MsClock - to get the current clock in milli-seconds
  *                            (tn_sys_time_get if TNEO) or sleep N milli-seconds
+ *  **          The spn's for the Data Link Layer message can be found in
+ *              Appendix D of J1939-21.
  * References
  *		"Data Structures and Algorithms", Alfred V. Aho et al,
  *			Addison-Wesley, 1985
@@ -70,6 +72,8 @@
  */
 
 
+#define j1989_CA_TP_SIZE 1
+// Max Transport Protocol's (TP) at once (both rcv and xmt)
 #define j1989_CA_TIMED_XMT_QUEUE_SIZE 4   // Zero if you do not want
 
 
@@ -99,21 +103,25 @@ extern	"C" {
         void            (*pHandleACK)(
                                       OBJ_ID,
                                       uint8_t,      // Group Function
+                                      uint8_t,      // Address
                                       J1939_PGN     // PGN being Responded to
                         );
         void            (*pHandleNAK)(
                                       OBJ_ID,
                                       uint8_t,      // Group Function
+                                      uint8_t,      // Address
                                       J1939_PGN     // PGN being Responded to
                         );
         void            (*pHandleDenied)(
-                                      OBJ_ID,
-                                      uint8_t,      // Group Function
-                                      J1939_PGN     // PGN being Responded to
+                                         OBJ_ID,
+                                         uint8_t,      // Group Function
+                                         uint8_t,      // Address
+                                         J1939_PGN     // PGN being Responded to
                         );
         void            (*pHandleBusy)(
                                        OBJ_ID,
                                        uint8_t,     // Group Function
+                                       uint8_t,      // Address
                                        J1939_PGN    // PGN being Responded to
                         );
     } J1939CA_VTBL;
@@ -299,6 +307,55 @@ extern	"C" {
     );
     
     
+    bool            j1939ca_SendAccessDenied(
+        J1939CA_DATA	*this,
+        uint8_t         spn2546,    // Group Function Value (NACK_AD - 8 bits)
+        uint8_t         spn3292,    // Address Negative Acknowlegement (ADD_AD - 8 bits)
+        J1939_PGN       spn2547     // PGN (NACK_AD - 24 bits)
+    );
+    
+    
+    bool            j1939ca_SendACK(
+        J1939CA_DATA	*this,
+        uint8_t         spn2542,    // Group Function Value (ACK - 8 bits)
+        uint8_t         spn3290,    // Address Acknowledged (ADD_ACK - 8 bits)
+        J1939_PGN       spn2543     // PGN (ACK - 24 bits)
+    );
+    
+    
+    bool            j1939ca_SendBusy(
+        J1939CA_DATA	*this,
+        uint8_t         spn2548,    // Group Function Value (NACK_BUSY - 8 bits)
+        uint8_t         spn3293,    // Address Negative Acknowlegement (ADD_BUSY - 8 bits)
+        J1939_PGN       spn2549     // PGN (NACK_BUSY - 24 bits)
+    );
+    
+    
+    bool            j1939ca_SendNACK(
+        J1939CA_DATA	*this,
+        uint8_t         spn2561,    // Number of Packets that can be sent (TP.CM_CTS)
+        uint8_t         spn2562,    // Next Packet Number to be sent (TP.CM_RTS)
+        J1939_PGN       spn2563     // Parameter Group Number of packeted message (TP.CM_CTS)
+    );
+    
+    
+    bool            j1939ca_SendTP_CTS(
+        J1939CA_DATA	*this,
+        uint8_t         spn2558,    // Total Number of Packets (TP.CM_RTS)
+        uint8_t         spn2559,    // Maximum Number of Packets (TP.CM_RTS)
+        J1939_PGN       spn2560     // Parameter Group Number of packeted message (TP.CM_RTS)
+    );
+    
+    
+    bool            j1939ca_SendTP_RTS(
+        J1939CA_DATA	*this,
+        uint16_t        spn2557,    // Total Message Size (TP.CM_RTS)
+        uint8_t         spn2558,    // Total Number of Packets (TP.CM_RTS)
+        uint8_t         spn2559,    // Maximum Number of Packets (TP.CM_RTS)
+        J1939_PGN       spn2560     // Parameter Group Number of packeted message (TP.CM_RTS)
+    );
+    
+    
     // Delayed messages could be handled by a separate task. This
     // function is designed to work in a psxThread to handle the
     // delayed messages.
@@ -329,6 +386,7 @@ extern	"C" {
          J1939CA_DATA	*this,
          uint8_t         type,               // (0-ACK, 1-NAK, 2-Access Denied, 3-Busy)
          uint8_t         grpFunc,            // Group Function (Use 0xFF if not needed)
+         uint8_t         addr,
          J1939_PGN       pgn                 // PGN being requested
     );
     

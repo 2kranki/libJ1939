@@ -161,19 +161,6 @@ extern	"C" {
     );
     
     
-    bool			j1939cam_setReflectMsg(
-        J1939CAM_DATA	*this,
-        P_XMTMSG_RTN    pXmtMsg,
-        void            *pData
-    );
-    
-    
-    bool			j1939cam_setReflectMsgFlag(
-        J1939CAM_DATA	*this,
-        bool            value
-    );
-    
-    
     OBJ_ID          j1939cam_getSYS(
         J1939CAM_DATA	*this
     );

@@ -183,8 +183,10 @@ extern "C" {
     static
     const
     J1939CA_PGN_ENTRY   *xmtPgnIndex[] = {
+        &ca_pgn57344_entry,
         &ca_pgn61443_entry,
         &ca_pgn65217_entry,
+        &ca_pgn65226_entry,
         &ca_pgn65265_entry,
         &ca_pgn65261_entry,
         &ca_pgn65269_entry,

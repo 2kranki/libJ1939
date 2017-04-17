@@ -542,7 +542,7 @@ extern "C" {
         }
 #endif
         
-        // Simulate by just bumping time.
+        // Simulate by just setting time.
         this->time = ms;
         
         // Return to caller.

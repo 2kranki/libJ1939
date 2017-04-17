@@ -448,52 +448,6 @@ extern	"C" {
     
 
     
-    bool			j1939cam_setReflectMsg(
-        J1939CAM_DATA	*this,
-        P_XMTMSG_RTN    pRoutine,
-        void            *pData
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939cam_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        this->pReflectMsg  = pRoutine;
-        this->pReflectData = pData;
-        
-        return true;
-    }
-    
-    
-    
-    bool			j1939cam_setReflectMsgFlag(
-        J1939CAM_DATA	*this,
-        bool            value
-    )
-    {
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939cam_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-        
-        this->fReflectMsg  = value;
-        
-        return true;
-    }
-    
-    
-    
     //---------------------------------------------------------------
     //                          S Y S
     //---------------------------------------------------------------
@@ -821,7 +775,6 @@ extern	"C" {
         j1939cam_setSYS(this, pSYS);
         
         //this->pJ1939   = pJ1939;
-        this->fReflectMsg = true;
 
 #ifdef NDEBUG
 #else
@@ -851,10 +804,6 @@ extern	"C" {
         J1939CAM_DATA   *this = pData;
         bool            fRc = false;
         
-        if( this->pReflectMsg && this->fReflectMsg) {
-            fRc = (*this->pReflectMsg)(this->pReflectData,msDelay,pMsg);
-            fRc = true;
-        }
         if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
             fRc =   (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
                                                         this->pCAN,

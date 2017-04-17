@@ -78,14 +78,87 @@ extern "C" {
 #pragma pack(pop)
     
     
+    // Packets consists of a 1 byte sequence number (1-255) and 7 bytes of data which
+    // accounts for a total of 1875 bytes of message data.
+#pragma pack(push, 1)
+    typedef struct j1939ca_tp_s {
+        uint8_t         activity;               // 0 == inactive
+        //                                      // 1 == receive TP
+        //                                      // 2 == transmit TP
+        uint8_t         flags;
+        uint8_t         state;
+        uint8_t         adr;                    // For rcv,
+        J1939_PDU       pdu;
+        uint32_t        msTime;                 // Time of Last Receipt/Transmit
+        uint8_t         packets;                // Number of Packets
+        uint8_t         seq;                    // Current Sequence Number (transmit)
+        uint16_t        size;                   // amount of data (<= 1875)
+        uint8_t         bitmap[32];             // Msg Received Bit Map
+        uint8_t         data[1876];             // Max Msg Size Buffer
+        //                                      // (Rounded up to 4-byte boundary)
+    } J1939CA_TP;
+#pragma pack(pop)
+    
+    enum J1939CA_TP_VALUES {
+        J1939CA_TP_INACTIVE=0,
+        J1939CA_TP_ACTIVE_RCV=1,
+        J1939CA_TP_ACTIVE_XMT=2
+    };
+    enum J1939CA_TP_STATE {
+        J1939CA_TP_STATE_UNKNOWN=0,
+        J1939CA_TP_STATE_WAIT_FOR_DATA,
+        J1939CA_TP_STATE_WAIT_FOR_XMT
+    };
+    
     
 #pragma pack(push, 1)
-    typedef struct j1939ca_bm_s {
-        J1939_PDU       pdu;
-        uint16_t        size;
-        uint16_t        used;
-        uint32_t        data[1792];
-    } J1939CA_BM;
+    typedef struct j1939ca_msg_60416_s {
+        uint8_t         spn2556;        // Control Byte (TP.CM)
+        union {
+            uint8_t         bytes[7];
+            struct {    // TP.CM_RTS (16)
+                struct {
+                    uint8_t        spn2557L;   // Total Message Size (TP.CM_RTS)
+                    uint8_t        spn2557H;   // Total Message Size (TP.CM_RTS)
+                };
+                uint8_t         spn2558;    // Total Number of Packets (TP.CM_RTS)
+                uint8_t         spn2559;    // Maximum Number of Packets (TP.CM_RTS)
+                J1939_PGN       spn2560;    // Parameter Group Number of packeted message (TP.CM_RTS)
+            };
+            struct {    // TP.CM_CTS (17)
+                uint8_t         spn2561;    // Number of Packets that can be sent (TP.CM_CTS)
+                uint8_t         spn2562;    // Next Packet Number to be sent (TP.CM_RTS)
+                uint8_t         rsvd8a;
+                uint8_t         rsvd8b;
+                J1939_PGN       spn2563;    // Parameter Group Number of packeted message (TP.CM_CTS)
+            };
+            struct {    // End of Message TP.CM_ACK (19)
+                struct {
+                    uint8_t         spn2564L;   // Total Message Size (TP.CM_ACK)
+                    uint8_t         spn2564H;   // Total Message Size (TP.CM_ACK)
+                };
+                uint8_t         spn2565;    // Total Number of Packets (TP.CM_ACK)
+                uint8_t         rsvd8c;
+                J1939_PGN       spn2566;    // Parameter Group Number of packeted message (TP.CM_ACK)
+            };
+            struct {    // TP.Conn_Abort (255)
+                uint8_t         spn2570;    // Connection Abort Reason (TP.Conn_Abort)
+                uint8_t         rsvd8d;
+                uint8_t         rsvd8e;
+                uint8_t         rsvd8f;
+                J1939_PGN       spn2571;    // Parameter Group Number of packeted message (TP.Conn_Abort)
+            };
+            struct {    // TP.CM_BAM (32)
+                struct {
+                    uint8_t         spn2567L;   // Total Message Size (TP.CM_BAM)
+                    uint8_t         spn2567H;   // Total Message Size (TP.CM_BAM)
+                };
+                uint8_t         spn2568;    // Total Number of Packets (TP.CM_BAM)
+                uint8_t         rsvd8g;
+                J1939_PGN       spn2569;    // Parameter Group Number of packeted message (TP.CM_BAM)
+            };
+        };
+    } J1939CA_MSG_60416;
 #pragma pack(pop)
     
     
@@ -152,10 +225,14 @@ extern "C" {
         uint8_t             curDa;
         uint8_t             curSa;
         uint16_t            reserved16a;
+        J1939CA_TP          TPs[j1989_CA_TP_SIZE];
 
         TABLE_DATA          *pDelayTable;   // If a message is delayed, it is in this chain.
         //                                  // This chain is sorted by expiration time
         //                                  // (Youngest to Oldest).
+        
+        J1939_PGN           spn2540;        // Parameter Group Number (RQST)
+        J1939CA_MSG_60416   msg60416;
     };
 #pragma pack(pop)
     
@@ -204,6 +281,13 @@ extern "C" {
     );
 
     
+    bool            j1939ca_HandlePgn51456(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    );
+    
+    
     bool            j1939ca_HandlePgn59392(
         J1939CA_DATA	*this,
         uint32_t        eid,
@@ -212,6 +296,13 @@ extern "C" {
     
     
     bool            j1939ca_HandlePgn59904(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    );
+    
+    
+    bool            j1939ca_HandlePgn60416(
         J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
@@ -230,6 +321,20 @@ extern "C" {
         J1939_PDU       *pEid,
         uint16_t        cData,
         uint8_t         *pData
+    );
+    
+    
+    int             j1939ca_SetupPgn60416(
+        J1939CA_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+    
+    
+    bool            j1939ca_TransmitPgn60160(
+        J1939CA_DATA	*this,
+        J1939CA_TP      *pTP
     );
     
     
