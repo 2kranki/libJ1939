@@ -1691,6 +1691,18 @@ extern "C" {
         };
         
         
+        // SPN 2550 - Manufacturer Specific Information (PropA_PDU1)
+        //  Variable length data specified by manufacturer (0 to 1785 bytes)
+        static
+        const
+        J1939_SPN           spn2550 = {
+            2540,
+            0,
+            NULL    /*&????*/,
+            "Manufacturer Specific Information (PropA_PDU1)"
+        };
+        
+        
         // SPN 2574 - Parameter Group Number (RQST2)
         static
         const
@@ -1876,6 +1888,14 @@ extern "C" {
         };
         
         static
+        const
+        J1939_PGNSPN        pgn61184spns[1] = {
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 61184, 2550,   0,    0,     0,     0, &spn2550 }
+        };
+        
+       static
         const
         J1939_PGNSPN        pgn61443spns[6] = {
             //                    Bit    Byte

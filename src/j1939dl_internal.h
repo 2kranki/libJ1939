@@ -66,7 +66,7 @@ struct j1939dl_data_s	{
     J1939_PDU       pdu;
     uint16_t        size;
     uint16_t        used;
-    uint32_t        data[1792];
+    uint32_t        data[1876];
 
 };
 #pragma pack(pop)

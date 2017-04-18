@@ -398,6 +398,15 @@ extern	"C" {
         uint8_t         da                  // Destination Address
     );
     
+
+    // PGN 61184 0xEF00 Proprietary A
+    bool            j1939ca_TransmitPgn61184(
+        J1939CA_DATA	*this,
+        uint8_t         da,                 // Destination Address
+        uint16_t        cData,
+        void            *pData
+    );
+    
     
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,

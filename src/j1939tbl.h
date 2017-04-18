@@ -261,6 +261,9 @@ extern "C" {
     J1939_PGN_ENTRY     pgn65129_entry;
     extern
     const
+    J1939_PGN_ENTRY     pgn65184_entry;
+    extern
+    const
     J1939_PGN_ENTRY     pgn65217_entry;
     extern
     const

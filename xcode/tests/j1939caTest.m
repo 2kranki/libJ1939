@@ -555,7 +555,8 @@ bool            xmtPGN60928(
 
 
 
-- (void)testCheck_TransmitTP01
+#ifdef XYZZY
+- (void)testCheck_TransmitTPMultiPart01
 {
     J1939CA_DATA    *pCA = NULL;
     bool            fRc;
@@ -595,13 +596,8 @@ bool            xmtPGN60928(
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
-        // Setup up msg from #3 Transmission to Broadcast;
-        pdu.eid = 0;
-        pdu.SA = 3;
-        pdu.P = 3;
-        pdu.PF = 0xEA;          // Request PGN PF
-        pdu.PS = J1939_GENERAL_BROADCAST;
-        fRc = j1939ca_XmtMsgDL( pCA, 0, pdu, 10, "1234567890" );
+        // Have CA send Proprietary A Message.
+        fRc = j1939ca_TransmitPgn61184(pCA, 0xFF, 10, "1234567890");
         XCTAssertTrue( (fRc) );
         
         for (i=0; i<200; i+=20) {
@@ -627,6 +623,7 @@ bool            xmtPGN60928(
     }
     
 }
+#endif
 
 
 

@@ -272,7 +272,7 @@ extern	"C" {
                 case J1939CA_TP_STATE_WAIT_FOR_DATA:
                     break;
                     
-                case J1939CA_TP_STATE_WAIT_FOR_XMT:
+                case J1939CA_TP_STATE_XMT_FULL:
                     // Time Delay for XMT allowed is 50ms to 200ms for Broadcast
                     // Messages and up to 200ms for specific destinations.
                     if ((j1939ca_MsTimeGet(this) - pTP->msTime) > 100u) {
@@ -286,6 +286,27 @@ extern	"C" {
                         }
                     }
                     break;
+                    
+                case J1939CA_TP_STATE_XMT_PARTIAL:
+                    // Time Delay for XMT allowed is 50ms to 200ms for Broadcast
+                    // Messages and up to 200ms for specific destinations.
+                    if ((j1939ca_MsTimeGet(this) - pTP->msTime) > this->tpMsgDelay) {
+                        j1939ca_TransmitPgn60160(this, pTP);
+                        ++pTP->seq;
+                        if (pTP->seq < pTP->packets) {
+                            pTP->msTime = j1939ca_MsTimeGet(this);
+                        }
+                        else {
+                            tp_Release(this, pTP);
+                        }
+                    }
+                    break;
+                    
+                case J1939CA_TP_STATE_WAIT_FOR_CTS:
+                    if ((j1939ca_MsTimeGet(this) - pTP->msTime) > 100u) {
+                    }
+                    break;
+                    
             }
         }
         
@@ -325,21 +346,15 @@ extern	"C" {
         
         pTP->activity = J1939CA_TP_ACTIVE_XMT;
         pTP->pdu = pdu;
-        pTP->adr = pdu.PS;
-        pTP->state = J1939CA_TP_STATE_WAIT_FOR_XMT;
+        pTP->adr = j1939msg_getJ1939_DA_From_PDU(pdu);
+        pTP->state = J1939CA_TP_STATE_XMT_FULL;
         
         memmove(pTP->data, pData, cData);
         pTP->size = cData;
         pTP->packets = (cData + 7 - 1) / 7;
-        
-        j1939ca_TransmitPgn60160(this, pTP);
-        ++pTP->seq;
-        if (pTP->seq < pTP->packets) {
-            pTP->msTime = j1939ca_MsTimeGet(this);
-        }
-        else {
-            tp_Release(this, pTP);
-        }
+        pTP->msTime = j1939ca_MsTimeGet(this);
+
+        // First Sequence will be sent on first timeout.
     }
     
     
@@ -1490,6 +1505,14 @@ extern	"C" {
         this->name.IG  = spn2846;
         this->name.AAC = 0;
         
+        this->tpMsgDelay = 100;
+        this->tpTh = 500;
+        this->tpTr = 200;
+        this->tpT1 = 750;
+        this->tpT2 = 1250;
+        this->tpT3 = 1250;
+        this->tpT4 = 1050;    
+        
         uint32_t            blkNum = 64;
         blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
         this->pDelayTable = table_Alloc( );
@@ -1882,6 +1905,7 @@ extern	"C" {
     {
         
         if (pPDU) {
+            pPDU->eid = 0;
             pPDU->PF = 234;
             pPDU->PS = this->curDa;
             pPDU->SA = this->ca;
@@ -2074,6 +2098,7 @@ extern	"C" {
     {
         
         if (pPDU) {
+            pPDU->eid = 0;
             pPDU->PF = 236;
             pPDU->PS = this->curDa;
             pPDU->SA = this->ca;
@@ -2242,6 +2267,7 @@ extern	"C" {
         J1939_NAME      *pName = (J1939_NAME *)pData;
         
         if (pPDU) {
+            pPDU->eid = 0;
             pPDU->PF = 238;
             pPDU->PS = 255;
             pPDU->SA = this->ca;
@@ -2288,6 +2314,38 @@ extern	"C" {
         if (this->pXmtMsgDL) {
             fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
         }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //            T r a n s m i t  P G N 6 1 1 6 4  0x00EF00
+    //---------------------------------------------------------------
+    
+    //  Proprietary A
+    //  Data is manufacturer specified and is variable length
+    //  (0 - 1785 bytes)
+    
+    bool            j1939ca_TransmitPgn61164(
+        J1939CA_DATA	*this,
+        uint8_t         da,                 // Destination Address
+        uint16_t        cData,
+        void            *pData
+    )
+    {
+        uint16_t        dlc = 8;
+        J1939_PDU       pdu = {0};
+        bool            fRc;
+        
+        pdu.PF = 239;
+        pdu.PS = da;
+        pdu.SA = this->ca;
+        pdu.P  = 6;             // Priority
+        
+        fRc = j1939ca_XmtMsgDL(this, 0, pdu, dlc, pData);
         
         // Return to caller.
         return true;
@@ -2346,6 +2404,7 @@ extern	"C" {
         J1939CA_MSG     *pCurrent;
         J1939CA_MSG     *pInsert;
         J1939CA_TP      *pTP;
+        uint8_t         da;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -2414,6 +2473,7 @@ extern	"C" {
             //}
         }
         else {
+            da = j1939msg_getJ1939_DA_From_PDU(pdu);
             pTP = tp_Find(this, J1939CA_TP_INACTIVE, 0);
             if (pTP) {
                 tp_Transmit(this, pTP, pdu, cData, pData);

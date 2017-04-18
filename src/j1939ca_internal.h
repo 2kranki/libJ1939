@@ -46,6 +46,7 @@
 
 #include        <j1939ca.h>
 #include        <table.h>
+#include        <j1939tp_internal.h>
 //#include        <psxThread.h>
 //#include        "j1939tbl.h"
 
@@ -88,10 +89,11 @@ extern "C" {
         uint8_t         flags;
         uint8_t         state;
         uint8_t         adr;                    // For rcv,
-        J1939_PDU       pdu;
+        J1939_PDU       pdu;                    // PDU of Original Message
         uint32_t        msTime;                 // Time of Last Receipt/Transmit
         uint8_t         packets;                // Number of Packets
-        uint8_t         seq;                    // Current Sequence Number (transmit)
+        uint8_t         seq;                    // Current Sequence Number (spn2562)
+        uint8_t         limit;                  // CTS limit (spn2561)
         uint16_t        size;                   // amount of data (<= 1875)
         uint8_t         bitmap[32];             // Msg Received Bit Map
         uint8_t         data[1876];             // Max Msg Size Buffer
@@ -107,7 +109,9 @@ extern "C" {
     enum J1939CA_TP_STATE {
         J1939CA_TP_STATE_UNKNOWN=0,
         J1939CA_TP_STATE_WAIT_FOR_DATA,
-        J1939CA_TP_STATE_WAIT_FOR_XMT
+        J1939CA_TP_STATE_XMT_FULL,              // With inter-message delay
+        J1939CA_TP_STATE_XMT_PARTIAL,           // With inter-message delay
+        J1939CA_TP_STATE_WAIT_FOR_CTS,          // Wait for next TP.CM_CTS
     };
     
     
@@ -143,6 +147,18 @@ extern "C" {
             };
             struct {    // TP.Conn_Abort (255)
                 uint8_t         spn2570;    // Connection Abort Reason (TP.Conn_Abort)
+                //                          // 1 == Already in one or more connection
+                //                          //      managed sessions and cannot support
+                //                          //      another.
+                //                          // 2 == System resources were needed for
+                //                          //      another task so this connection
+                //                          //      managed session was terminated.
+                //                          // 3 == A timeout occurred and this is the
+                //                          //      connection abort to close the session.
+                //                          // 4 == CTS messages received when data trans-
+                //                          //      fer is in progress.
+                //                          // 5 == Maximum retransmit request limit
+                //                          //      reached
                 uint8_t         rsvd8d;
                 uint8_t         rsvd8e;
                 uint8_t         rsvd8f;
@@ -226,11 +242,32 @@ extern "C" {
         uint8_t             curSa;
         uint16_t            reserved16a;
         J1939CA_TP          TPs[j1989_CA_TP_SIZE];
+        uint32_t            tpMsgDelay;
+        uint32_t            tpTr;           // Timeout ??  (Default: 200ms)
+        uint32_t            tpTh;           // Timeout ??  (Default: 500ms)
+        uint32_t            tpT1;           // TP Timeout  (Default: 750ms)
+        //                                  // Time out after receipt of last packet
+        //                                  // when more are expected
+        //                                  // Action: Close connection.
+        uint32_t            tpT2;           // TP Timeout  (Default: 1250ms)
+        //                                  // Time out after issuance of CTS without
+        //                                  // a response.
+        //                                  // Action: Close connection.
+        uint32_t            tpT3;           // TP Timeout  (Default: 1250ms)
+        //                                  // Time out for lack of CTS or ACK after last
+        //                                  // packet was sent
+        //                                  // Action: Close connection.
+        uint32_t            tpT4;           // TP Timeout  (Default: 1050ms)
+        //                                  // Time out for lack of CTS (0) message to
+        //                                  // hold open the connection.
+        //                                  // Action: Close connection.
 
         TABLE_DATA          *pDelayTable;   // If a message is delayed, it is in this chain.
         //                                  // This chain is sorted by expiration time
         //                                  // (Youngest to Oldest).
-        
+
+        uint8_t             spn2553;
+        uint8_t             spn2555;
         J1939_PGN           spn2540;        // Parameter Group Number (RQST)
         J1939CA_MSG_60416   msg60416;
     };

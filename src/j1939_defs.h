@@ -333,6 +333,8 @@ extern	"C" {
         OBJ_IDENT_J1939TC_CLASS,
         OBJ_IDENT_J1939TCU,             // J1939 Transmission Control Unit TCU
         OBJ_IDENT_J1939TCU_CLASS,
+        OBJ_IDENT_J1939TP,              // J1939 Transport Protocol
+        OBJ_IDENT_J1939TP_CLASS,
     } OBJ_J1939_IDENTS;
 
     
