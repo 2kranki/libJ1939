@@ -130,7 +130,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x0CF00325 == pdu.eid) );
         
@@ -138,7 +138,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (2 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEC125 == pdu.eid) );
         
@@ -146,7 +146,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEED25 == pdu.eid) );
         
@@ -154,7 +154,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (4 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEF125 == pdu.eid) );
         
@@ -162,7 +162,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (5 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEF525 == pdu.eid) );
         
@@ -170,7 +170,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (6 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEF725 == pdu.eid) );
         

@@ -61,7 +61,7 @@ bool            printCanMsg(
     fprintf(    stderr,
                 "time: %5d  pgn: %08X  msg: %s",
                 pMessage->CMSGSID.CMSGTS,
-                j1939msg_getJ1939_PGN(pMessage).w,
+                j1939msg_getPGN(pMessage).w,
                 data
     );
     return true;

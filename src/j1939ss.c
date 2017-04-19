@@ -1249,7 +1249,7 @@ bool			j1939ss_setSpn3350(
         
         if (pMsg) {
             pdu.eid = eid;
-            pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+            pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn695 = pMsg->DATA.bytes[0] & 0x3;
             spn696 = (pMsg->DATA.bytes[0] >> 2) & 0x3;
@@ -1340,7 +1340,7 @@ bool			j1939ss_setSpn3350(
 
         if (pMsg) {
             pdu.eid = eid;
-            pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+            pgn = j1939pdu_getPGN(pdu);
             spn1850 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
             spn1849 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
             spn3086 = pMsg->DATA.bytes[1] & 0x3;

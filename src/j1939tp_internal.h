@@ -60,22 +60,22 @@ extern "C" {
     };
     enum J1939TP_STATE {
         J1939TP_STATE_UNKNOWN=0,
-        J1939TP_STATE_CANCEL,
-        J1939TP_STATE_WAIT_FOR_DATA,
         J1939TP_STATE_XMT_BAM,              // With inter-message delay
+        J1939TP_STATE_XMT_CANCEL,
         J1939TP_STATE_XMT_PARTIAL,          // With inter-message delay
-        J1939TP_STATE_PAUSE
+        J1939TP_STATE_XMT_PAUSE,
+        J1939TP_STATE_WAIT_FOR_CTS,
+        J1939TP_STATE_WAIT_FOR_DATA
     };
     enum J1939TP_STATE_PROTOCOL {
         J1939TP_STATE_PROTO_UNKNOWN=0,
         J1939TP_STATE_PROTO_WAITING_FOR_WORK,
-        J1939TP_STATE_PROTO_XMT_BAM,              // With inter-message delay
-        J1939TP_STATE_PROTO_XMT_PARTIAL,          // With inter-message delay
-        J1939TP_STATE_PROTO_WAIT_FOR_CTS,         // Wait for initial TP.CM_CTS
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T1,      // Wait for next TP.CM_CTS
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T2,      // Wait for next TP.CM_CTS
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3,      // Wait for next TP.CM_CTS
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4,      // Wait for next TP.CM_CTS
+        J1939TP_STATE_PROTO_XMT_BAM,              // With inter-message delay
+        J1939TP_STATE_PROTO_XMT_PARTIAL,          // With inter-message delay
     };
     
     
@@ -107,6 +107,7 @@ struct j1939tp_data_s	{
     uint32_t            msTime;         // Time of Last Packet Receipt/Transmit
     
     uint32_t            tpMsgDelay;     // Intermessage Delay (Default: 100ms)
+    //                                  // (Must be less than tpT3 or tpT4)
     uint32_t            tpTr;           // Timeout ??  (Default: 200ms)
     uint32_t            tpTh;           // Timeout ??  (Default: 500ms)
     uint32_t            tpT1;           // TP Timeout  (Default: 750ms)
@@ -179,13 +180,20 @@ struct j1939tp_data_s	{
     );
     
     
-    ERESULT         j1939tp_ProtocolCancel(
-        J1939TP_DATA	*this
+    ERESULT         j1939tp_ProtocolCancelXMT(
+        J1939TP_DATA	*this,
+        uint8_t         reason
     );
     
     
     ERESULT         j1939tp_ProtocolEndOfMessage(
         J1939TP_DATA	*this
+    );
+    
+    
+    ERESULT         j1939tp_TransmitAbort(
+        J1939TP_DATA	*this,
+        uint8_t         reason
     );
     
     

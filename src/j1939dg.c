@@ -261,7 +261,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         if (NULL == pMsg) {
             return false;
@@ -336,7 +336,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
         sa = pdu.SA;
         spn695 = pMsg->DATA.bytes[0] & 0x3;
         spn696 = (pMsg->DATA.bytes[0] >> 2) & 0x3;
@@ -377,7 +377,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;

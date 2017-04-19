@@ -164,7 +164,7 @@ extern "C" {
     //                      J1939_PDU
     //----------------------------------------------------------
     
-    J1939_PDU       j1939msg_getJ1939_PDU(
+    J1939_PDU       j1939msg_getPDU(
         J1939_MSG       *pMsg
     )
     {
@@ -177,7 +177,7 @@ extern "C" {
         return pdu;
     }
     
-    bool            j1939msg_setJ1939_PDU(
+    bool            j1939msg_setPDU(
         J1939_MSG       *pMsg,
         uint32_t        value
     )
@@ -190,7 +190,7 @@ extern "C" {
     }
     
         
-    uint8_t         j1939msg_getJ1939_DA_From_PDU(
+    uint8_t         j1939pdu_getDA(
         J1939_PDU       pdu
     )
     {
@@ -207,13 +207,7 @@ extern "C" {
     }
     
     
-    
-    
-    //----------------------------------------------------------
-    //                      J1939_PGN
-    //----------------------------------------------------------
-    
-    J1939_PGN       j1939msg_getJ1939_PGN_From_PDU(
+    J1939_PGN       j1939pdu_getPGN(
         J1939_PDU       pdu
     )
     {
@@ -236,15 +230,33 @@ extern "C" {
     }
     
     
+    uint8_t         j1939pdu_getSA(
+        J1939_PDU       pdu
+    )
+    {
+        uint8_t         sa;
+        
+        sa = pdu.SA;
+        
+        return sa;
+    }
     
-    J1939_PGN       j1939msg_getJ1939_PGN(
+    
+    
+    
+    
+    //----------------------------------------------------------
+    //                      J1939_PGN
+    //----------------------------------------------------------
+    
+    J1939_PGN       j1939msg_getPGN(
         J1939_MSG       *pMsg
     )
     {
         J1939_PDU       pdu;
         
         pdu.eid = j1939msg_getEid(pMsg);
-        return j1939msg_getJ1939_PGN_From_PDU(pdu);
+        return j1939pdu_getPGN(pdu);
     }
     
     
@@ -548,6 +560,33 @@ extern "C" {
         pName->IG  = spn2846;
         //pName->AAC = 0;
 
+        return true;
+    }
+    
+    
+    bool            j1939pdu_Construct(
+        J1939_PDU       *pPDU,
+        uint8_t         format,             // PDU Format
+        uint8_t         specific,           // PDU Specific or Destination address
+        uint8_t         priority,
+        uint8_t         source              // Source Address
+    )
+    {
+        
+#ifdef NDEBUG
+#else
+        if (NULL == pPDU) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pPDU->eid = 0;
+        pPDU->PF  = format;
+        pPDU->PS  = specific;
+        pPDU->P   = priority;
+        pPDU->SA  = source;
+        
         return true;
     }
     

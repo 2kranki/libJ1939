@@ -704,7 +704,7 @@ extern	"C" {
         
         // Get the PGN requested.
         if (pMsg) {
-            pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+            pgn = j1939pdu_getPGN(pdu);
             if (pdu.PF < 240) {
                 da = pdu.PS;
             }

@@ -172,10 +172,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
         XCTAssertTrue( (2 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0CEA0329 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18EEFF03 == pdu.eid) );
 
@@ -229,10 +229,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
         XCTAssertTrue( (2 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0CEA0329 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18E82903 == pdu.eid) );       // Respond with NAK
         
@@ -288,7 +288,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         // It will not nak since we asked globablly.
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (3 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         //XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pTC);
@@ -342,9 +342,9 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pTC, pdu.eid, &msg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         //XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         //XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pTC);
@@ -385,7 +385,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (3 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         //XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pTC);
@@ -467,9 +467,9 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (5 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         //FIXME: XCTAssertTrue( (0x18F00029 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         //FIXME: XCTAssertTrue( (0x0C002903 == pdu.eid) );
         
         obj_Release(pTC);
@@ -553,9 +553,9 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (5 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         //FIXME: XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         //FIXME: XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
         obj_Release(pTC);

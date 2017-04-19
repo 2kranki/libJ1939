@@ -2457,7 +2457,7 @@ extern	"C" {
 
         if (pMsg) {
             pdu.eid = eid;
-            pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+            pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn695 = pMsg->DATA.bytes[0] & 0x3;
             spn696 = (pMsg->DATA.bytes[0] >> 2) & 0x3;
@@ -2542,7 +2542,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
         // SPN 560  1.1     2bits       Transmission Driveline Engaged
         spn560 = pMsg->DATA.bytes[0] & 0x3;
         // SPN 573  1.3     2bits       Transmission Torque Converter Lockup Engaged
@@ -2631,7 +2631,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // SPN 558  1.1     2bits       Accelerator Pedal 1 Low Idle Switch
         spn558 = pMsg->DATA.bytes[0] & 0x3;
@@ -2682,7 +2682,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;
@@ -2712,7 +2712,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // SPN 524  1       8bits       Transmission Selected Gear
         this->spn524 = pMsg->DATA.bytes[0];
@@ -2769,7 +2769,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;
@@ -2799,7 +2799,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;
@@ -2829,7 +2829,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
         
         // Return to caller.
         return false;
@@ -2859,7 +2859,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;
@@ -2889,7 +2889,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
         return false;
@@ -2924,7 +2924,7 @@ extern	"C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
         if (pMsg) {
             spn123 = pMsg->DATA.bytes[0];
             spn124 = pMsg->DATA.bytes[1];

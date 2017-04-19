@@ -376,27 +376,18 @@ extern "C" {
     );
 
 
-    uint8_t         j1939msg_getJ1939_DA_From_PDU(
-        J1939_PDU       pdu
-    );
-    
-    
-    J1939_PDU       j1939msg_getJ1939_PDU(
+    J1939_PDU       j1939msg_getPDU(
         J1939_MSG       *pMsg
     );
     
-    bool            j1939msg_setJ1939_PDU(
+    bool            j1939msg_setPDU(
         J1939_MSG       *pMsg,
         uint32_t        value
     );
         
     
-    J1939_PGN       j1939msg_getJ1939_PGN(
+    J1939_PGN       j1939msg_getPGN(
         J1939_MSG       *pMsg
-    );
-    
-    J1939_PGN       j1939msg_getJ1939_PGN_From_PDU(
-        J1939_PDU       pdu
     );
     
     
@@ -407,6 +398,19 @@ extern "C" {
     bool            j1939msg_setSid(
         J1939_MSG       *pMsg,
         uint32_t        value
+    );
+    
+    
+    uint8_t         j1939pdu_getDA(
+        J1939_PDU       pdu
+    );
+    
+    J1939_PGN       j1939pdu_getPGN(
+        J1939_PDU       pdu
+    );
+    
+    uint8_t         j1939pdu_getSA(
+        J1939_PDU       pdu
     );
     
     
@@ -475,6 +479,15 @@ extern "C" {
         uint8_t         spn2846,        // J1939 NAME Industry Group (3 bits)
         uint8_t         spn2841,        // J1939 NAME Function (8 bits)
         uint8_t         spn2839         // J1939 NAME Function Instance (5 bits)
+    );
+    
+    
+    bool            j1939pdu_Construct(
+       J1939_PDU        *pPDU,
+       uint8_t          format,         // PDU Format
+       uint8_t          specific,       // PDU Specific or Destination address
+       uint8_t          priority,
+       uint8_t          source          // Source Address
     );
     
     

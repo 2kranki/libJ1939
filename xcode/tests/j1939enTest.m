@@ -198,7 +198,7 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME:  Message Count is too hard to track for the moment.
         //XCTAssertTrue( (57 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         //XCTAssertTrue( (0x0CF00300 == pdu.eid) );
         
@@ -283,10 +283,10 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (24 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         //XCTAssertTrue( (0x0CF00300 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         //XCTAssertTrue( (0x0C000003 == pdu.eid) );
         
@@ -372,10 +372,10 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (11 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         //FIXME: XCTAssertTrue( (0x18FEDF00 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0CF00300 == pdu.eid) );
         

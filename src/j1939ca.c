@@ -346,7 +346,7 @@ extern	"C" {
         
         pTP->activity = J1939CA_TP_ACTIVE_XMT;
         pTP->pdu = pdu;
-        pTP->adr = j1939msg_getJ1939_DA_From_PDU(pdu);
+        pTP->adr = j1939pdu_getDA(pdu);
         pTP->state = J1939CA_TP_STATE_XMT_FULL;
         
         memmove(pTP->data, pData, cData);
@@ -886,8 +886,8 @@ extern	"C" {
         // Get the PGN requested.
         if (pMsg) {
             pdu.eid = eid;
-            this->curPgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
-            this->curDa = j1939msg_getJ1939_DA_From_PDU(pdu);
+            this->curPgn = j1939pdu_getPGN(pdu);
+            this->curDa = j1939pdu_getDA(pdu);
             this->curSa = pdu.SA;
         }
         else {
@@ -1349,8 +1349,8 @@ extern	"C" {
         }
 #endif
         if (pMsg) {
-            pgn = j1939msg_getJ1939_PGN(pMsg);
-            pdu = j1939msg_getJ1939_PDU(pMsg);
+            pgn = j1939msg_getPGN(pMsg);
+            pdu = j1939msg_getPDU(pMsg);
         }
         
         switch (this->cs) {
@@ -2473,7 +2473,7 @@ extern	"C" {
             //}
         }
         else {
-            da = j1939msg_getJ1939_DA_From_PDU(pdu);
+            da = j1939pdu_getDA(pdu);
             pTP = tp_Find(this, J1939CA_TP_INACTIVE, 0);
             if (pTP) {
                 tp_Transmit(this, pTP, pdu, cData, pData);

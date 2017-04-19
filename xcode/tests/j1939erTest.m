@@ -132,7 +132,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
         
         obj_Release(pER);
@@ -172,7 +172,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         // Initiate Address Claim.
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -182,7 +182,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         // Initiate Address Claim.
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (2 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
 #endif
@@ -227,7 +227,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
 
         // Send "Timed Out".
@@ -252,9 +252,9 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18EEFF29 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
 
         obj_Release(pER);
@@ -297,7 +297,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
 
         // Send "Timed Out".
@@ -324,10 +324,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18E80329 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
@@ -371,7 +371,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
 
         // Send "Timed Out".
@@ -399,7 +399,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
         // It will not nak since we asked globablly.
         XCTAssertTrue( (3 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
@@ -443,7 +443,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
 
         // Send "Timed Out".
@@ -470,10 +470,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
         XCTAssertTrue( (4 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
         
@@ -515,7 +515,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);
@@ -535,7 +535,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (11 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -579,7 +579,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);
@@ -609,10 +609,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0X0C002903 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
 
@@ -625,7 +625,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (13 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -653,10 +653,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (14 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0C002903 == pdu.eid) );
         
@@ -700,7 +700,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);
@@ -730,10 +730,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%08X\n", pdu.eid);
         XCTAssertTrue( (0X0C002903 == pdu.eid) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%08X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -744,7 +744,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (13 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -771,10 +771,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
         //XCTAssertTrue( (14 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0C002903 == pdu.eid), @"Result was false!" );
         

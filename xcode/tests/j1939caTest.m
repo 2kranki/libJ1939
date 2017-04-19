@@ -102,8 +102,8 @@ bool        xmtLoopback(
     bool            fRc = false;
     
     if (pMsg) {
-        pgn = j1939msg_getJ1939_PGN(pMsg);
-        pdu = j1939msg_getJ1939_PDU(pMsg);
+        pgn = j1939msg_getPGN(pMsg);
+        pdu = j1939msg_getPDU(pMsg);
     }
     
     switch (state) {
@@ -152,8 +152,8 @@ bool            xmtPGN60928(
           ] raise];
     }
     
-    pgn = j1939msg_getJ1939_PGN(pMsg);
-    pdu = j1939msg_getJ1939_PDU(pMsg);
+    pgn = j1939msg_getPGN(pMsg);
+    pdu = j1939msg_getPDU(pMsg);
     j1939msg_Copy(pMsg, &lastMsg);
     pName = (J1939_NAME *)&lastMsg.DATA.dw;
     ++pName->IDN;
@@ -302,7 +302,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
         
         // Send "Time Out" which should allow us to accept our claimed address
@@ -353,7 +353,7 @@ bool            xmtPGN60928(
         j1939msg_Copy( &lastMsg, &testMsg );
 
         // This will have a larger NAME so it should insist on the claimed address.
-        pdu = j1939msg_getJ1939_PDU(&testMsg);
+        pdu = j1939msg_getPDU(&testMsg);
 
         // Send conflict.
         fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
@@ -403,27 +403,27 @@ bool            xmtPGN60928(
         j1939msg_Copy( &lastMsg, &testMsg );
         // This will have the same NAME so ca should try a new address.
         --pName->IDN;
-        pdu = j1939msg_getJ1939_PDU(&testMsg);
+        pdu = j1939msg_getPDU(&testMsg);
         // Send conflict.
         caNeeded = 1;
         fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         // Send conflict.
         pdu.SA = caNeeded;
-        j1939msg_setJ1939_PDU(&testMsg,pdu.eid);
+        j1939msg_setPDU(&testMsg,pdu.eid);
         caNeeded = 128;
         fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         // Send lots of conflicts.
         for ( ; caNeeded<248; ++caNeeded) {
             pdu.SA = caNeeded - 1;
-            j1939msg_setJ1939_PDU(&testMsg,pdu.eid);
+            j1939msg_setPDU(&testMsg,pdu.eid);
             fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
             XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         }
         // Send one more for we done!.
         pdu.SA = caNeeded - 1;
-        j1939msg_setJ1939_PDU(&testMsg,pdu.eid);
+        j1939msg_setPDU(&testMsg,pdu.eid);
         fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_COMMANDED_ADDRESS == pJ1939ca->cs) );
         obj_Release(pJ1939ca);
@@ -467,7 +467,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
         
         // Send "Time Out" which should allow us to accept our claimed address
@@ -518,7 +518,7 @@ bool            xmtPGN60928(
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
 
         // Send "Timed Out".
@@ -544,7 +544,7 @@ bool            xmtPGN60928(
         fRc = j1939ca_HandleMessages( pCA, pdu.eid, &msg );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x18EEFF00 == pdu.eid) );
         
         obj_Release(pCA);
@@ -607,12 +607,12 @@ bool            xmtPGN60928(
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-2]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18EBFF00 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
         XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 1) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18EBFF00 == pdu.eid) );
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 2) );

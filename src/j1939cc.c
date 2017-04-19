@@ -621,7 +621,7 @@ extern "C" {
         }
 #endif
         pdu.eid = eid;
-        pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
+        pgn = j1939pdu_getPGN(pdu);
 
         
         

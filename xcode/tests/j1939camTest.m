@@ -169,7 +169,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME:  Message Count is too hard to track for the moment.
         // XCTAssertTrue( (239 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         //XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
@@ -249,7 +249,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME:  Message Count is too hard to track for the moment.
         //XCTAssertTrue( (46 == cCurMsg) );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x0C000003 == pdu.eid) );
         
@@ -320,7 +320,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME:  Message Count is too hard to track for the moment.
         //XCTAssertTrue( (21 == cCurMsg), @"Result was false!" );
-        pdu = j1939msg_getJ1939_PDU(&curMsg[cCurMsg-1]);
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         XCTAssertTrue( (0x0C000003 == pdu.eid), @"Result was false!" );
         
         obj_Release(pCAM);

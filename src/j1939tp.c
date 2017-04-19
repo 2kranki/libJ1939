@@ -570,8 +570,8 @@ extern "C" {
         // Get the PGN requested.
         if (pMsg) {
             pdu.eid = eid;
-            pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
-            da = j1939msg_getJ1939_DA_From_PDU(pdu);
+            pgn = j1939pdu_getPGN(pdu);
+            da = j1939pdu_getDA(pdu);
             sa = pdu.SA;
         }
         else {
@@ -581,10 +581,8 @@ extern "C" {
             sa = pdu.SA;
         }
 
-        if ((pgn.w == this->pgn.w) && (da == this->adr)) {
-            if (pgn.w == 60416) {
-                fRc = j1939tp_HandlePgn60416(this, eid, pMsg);
-            }
+        if (pgn.w == 60416) {
+            fRc = j1939tp_HandlePgn60416(this, eid, pMsg);
         }
         
         eRc = j1939tp_ProcessProtocol(this);
@@ -608,6 +606,8 @@ extern "C" {
     )
     {
         J1939_PDU       pdu;
+        uint8_t         da;
+        uint8_t         sa;
         uint8_t         spn2556;    // Control Byte (TP.CM)
         
         // RTS (16)
@@ -645,6 +645,8 @@ extern "C" {
         }
 #endif
         pdu.eid = eid;
+        da = j1939pdu_getDA(pdu);
+        sa = j1939pdu_getSA(pdu);
         spn2556 = pMsg->DATA.bytes[0];
         
         // Handle the message.
@@ -667,7 +669,24 @@ extern "C" {
                 spn2563.pgn0 = pMsg->DATA.bytes[5];
                 spn2563.pgn1 = pMsg->DATA.bytes[6];
                 spn2563.pgn2 = pMsg->DATA.bytes[7];
-                
+                if (this->activity == J1939TP_ACTIVE_XMT) {
+                    if (this->state == J1939TP_STATE_WAIT_FOR_CTS) {
+                        if ((spn2563.w == this->pgn.w) && (sa == this->adr)) {
+                            if (spn2561) {
+                                this->seq   = spn2562 - 1;
+                                this->limit = spn2561;
+                                this->state = J1939TP_STATE_XMT_PARTIAL;
+                                this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
+                                this->msTime = j1939tp_MsTimeGet(this);
+                                this->msTimeProto = j1939tp_MsTimeGet(this);
+                            }
+                            else {   // Responder is requesting a pause.
+                                this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4;
+                                this->msTimeProto = j1939tp_MsTimeGet(this);
+                            }
+                        }
+                    }
+                }
                 break;
                 
             case 19:                    // TP.CM_EndOfMsgACK
@@ -768,7 +787,9 @@ extern "C" {
         this->pMutex = psxMutex_New();
         this->ca = ca;
         
+        this->activity = J1939TP_INACTIVE;
         this->stateProto = J1939TP_STATE_PROTO_WAITING_FOR_WORK;
+        this->state = J1939TP_STATE_UNKNOWN;
         
         this->tpMsgDelay = 100;
         this->tpTh = 500;
@@ -881,9 +902,11 @@ extern "C" {
             return ERESULT_BUSY;
         }
         
+        this->activity = J1939TP_ACTIVE_XMT;
+        
         this->pdu = pdu;
-        this->pgn = j1939msg_getJ1939_PGN_From_PDU(pdu);
-        this->adr = j1939msg_getJ1939_DA_From_PDU(pdu);
+        this->pgn = j1939pdu_getPGN(pdu);
+        this->adr = j1939pdu_getDA(pdu);
         this->size = cData;
         memmove(this->data, pData, cData);
         this->packets = (cData + 7 - 1) / 7;
@@ -906,7 +929,7 @@ extern "C" {
             }
             this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
             this->msTimeProto = j1939tp_MsTimeGet(this);
-            this->state = J1939TP_STATE_PAUSE;
+            this->state = J1939TP_STATE_WAIT_FOR_CTS;
         }
         
         // Return to caller.
@@ -938,18 +961,18 @@ extern "C" {
             case J1939TP_STATE_UNKNOWN:
                 break;
                 
-            case J1939TP_STATE_CANCEL:
+            case J1939TP_STATE_XMT_CANCEL:
                 this->seq = 255;
                 break;
                 
-            case J1939TP_STATE_WAIT_FOR_DATA:
+            case J1939TP_STATE_WAIT_FOR_CTS:
                 break;
                 
             case J1939TP_STATE_XMT_BAM:
                 // Time Delay for XMT allowed is 50ms to 200ms for Broadcast
                 // Messages and up to 200ms for specific destinations.
                 if ((this->seq >= this->packets) || (this->limit == 0)) {
-                    this->state = J1939TP_STATE_PAUSE;
+                    this->state = J1939TP_STATE_XMT_PAUSE;
                     break;
                 }
                 if ((j1939tp_MsTimeGet(this) - this->msTime) > this->tpMsgDelay) {
@@ -966,9 +989,24 @@ extern "C" {
                 break;
                 
             case J1939TP_STATE_XMT_PARTIAL:
+                // Time Delay for XMT allowed is 50ms to 200ms for Broadcast
+                // Messages and up to 200ms for specific destinations.
+                if ((j1939tp_MsTimeGet(this) - this->msTime) > this->tpMsgDelay) {
+                    if (this->limit && (this->seq < this->packets)) {
+                        j1939tp_TransmitPacket(this, this->seq++);
+                        this->msTime = j1939tp_MsTimeGet(this);
+                        this->msTimeProto = j1939tp_MsTimeGet(this);
+                        --this->limit;
+                        if (this->limit) {
+                        }
+                        else {
+                            this->state = J1939TP_STATE_WAIT_FOR_CTS;
+                        }
+                    }
+                }
                 break;
                 
-            case J1939TP_STATE_PAUSE:
+            case J1939TP_STATE_XMT_PAUSE:
                 break;
                 
         }
@@ -1017,9 +1055,15 @@ extern "C" {
                 // Waiting for a CTS or End of Msg ACK
                 if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT3) {
                     // OOPS, we timed out.
-                    eRc = j1939tp_ProtocolCancel(this);
-                    this->stateProto = J1939TP_STATE_PROTO_WAITING_FOR_WORK;
-                    this->state = J1939TP_STATE_CANCEL;
+                    eRc = j1939tp_ProtocolCancelXMT(this, 3);
+                }
+                break;
+                
+            case J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4:
+                // CTS Pause in effect
+                if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT4) {
+                    // OOPS, we timed out.
+                    eRc = j1939tp_ProtocolCancelXMT(this, 3);
                 }
                 break;
                 
@@ -1036,10 +1080,12 @@ extern "C" {
     //                 P r o t o c o l  C a n c e l
     //---------------------------------------------------------------
     
-    ERESULT         j1939tp_ProtocolCancel(
-        J1939TP_DATA	*this
+    ERESULT         j1939tp_ProtocolCancelXMT(
+        J1939TP_DATA	*this,
+        uint8_t         abortReason
     )
     {
+        ERESULT         eRc;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1049,6 +1095,14 @@ extern "C" {
             return j1939tp_getLastError(this);
         }
 #endif
+        
+        // Send Connection Abort message.
+        eRc = j1939tp_TransmitAbort(this, abortReason);
+        
+        // Reset the Connection states.
+        this->activity = J1939TP_INACTIVE;
+        this->stateProto = J1939TP_STATE_PROTO_WAITING_FOR_WORK;
+        this->state = J1939TP_STATE_UNKNOWN;
         
         // Return to caller.
         j1939tp_setLastError(this, ERESULT_SUCCESS);
@@ -1108,6 +1162,69 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                T r a n s m i t  A b o r t
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939tp_TransmitAbort(
+        J1939TP_DATA	*this,
+        uint8_t         reason
+    )
+    {
+        J1939_PDU       pdu;
+        uint8_t         *pData;
+        uint8_t         data[8];
+        J1939_MSG       msg;
+        bool            fRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        
+        pData = data;
+        *pData  = 255;
+        ++pData;    // 1
+        *pData  = reason;
+        ++pData;    // 2
+        *pData  = 0xFF;
+        ++pData;    // 3
+        *pData  = 0xFF;
+        ++pData;    // 4
+        *pData  = 0xFF;
+        ++pData;    // 5
+        *pData  = this->pgn.pgn0;
+        ++pData;    // 6
+        *pData  = this->pgn.pgn1;
+        ++pData;    // 7
+        *pData  = this->pgn.pgn2;
+        
+        fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, 8, data);
+        if (fRc) {
+            fRc = j1939tp_XmtMsg(this, &msg, &this->msTimeProto);
+            if (!fRc) {
+                j1939tp_setLastError(this, ERESULT_IO_ERROR);
+                return ERESULT_IO_ERROR;
+            }
+        }
+        else {
+            j1939tp_setLastError(this, ERESULT_DATA_ERROR);
+            return ERESULT_DATA_ERROR;
+        }
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                T r a n s m i t  B A M
     //---------------------------------------------------------------
     
@@ -1130,11 +1247,7 @@ extern "C" {
         }
 #endif
         
-        pdu.eid = 0;
-        pdu.PF = 236;
-        pdu.PS = this->adr;
-        pdu.SA = this->ca;
-        pdu.P  = 6;             // Priority
+        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
         
         pData = data;
         *pData  = 32;
@@ -1206,11 +1319,7 @@ extern "C" {
         }
 #endif
         
-        pdu.eid = 0;
-        pdu.PF = 235;
-        pdu.PS = this->adr;
-        pdu.SA = this->ca;
-        pdu.P  = 6;             // Priority
+        j1939pdu_Construct(&pdu, 235, this->adr, 7, this->ca);
         
         offset = n * 7;
         pDataSrc = this->data + offset;
@@ -1274,11 +1383,7 @@ extern "C" {
         }
 #endif
         
-        pdu.eid = 0;
-        pdu.PF = 236;
-        pdu.PS = this->adr;
-        pdu.SA = this->ca;
-        pdu.P  = 6;             // Priority
+        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
         
         pData = data;
         *pData  = 16;
