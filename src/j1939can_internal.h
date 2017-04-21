@@ -62,22 +62,17 @@ struct j1939can_data_s	{
 
     // Common Data
     ERESULT             eRc;
-    uint16_t            size;		/* maximum number of elements           */
-    uint16_t            reserved;
-    ASTR_DATA           *pStr;
+    bool                fLoopRcv;   // Loop Rcv back to Xmt
+    bool                fLoopXmt;   // Loop Xmt back to Rcv
 
-    /* ReflectMsg() is the routine called to transmit an 8-byte
-     * message. All messages must be sent via this routine.
-     */
-    bool                fReflect;
-    P_XMTMSG_RTN        pReflectMsg;
-    OBJ_PTR             pReflectData;
+    P_SRVCMSG_RTN       pRcvMsg;
+    OBJ_ID              pRcvObj;
     
     /* XmtMsg() is the routine called to transmit an 8-byte
      * message. All messages must be sent via this routine.
      */
     P_XMTMSG_RTN        pXmtMsg;
-    OBJ_PTR             pXmtData;
+    OBJ_ID              pXmtObj;
     
 };
 #pragma pack(pop)

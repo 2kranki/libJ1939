@@ -74,6 +74,27 @@ uint16_t    cCurMsg = 0;
 uint8_t     fSkipMsg = false;
 
 
+// This must conform to P_SRVCMSG_RTN!
+bool        rcvHandler(
+    OBJ_PTR     pObj,
+    uint32_t    eid,
+    J1939_MSG   *pMsg
+)
+{
+
+    if (pMsg) {
+        if (cCurMsg < 300) {
+            memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
+            ++cCurMsg;
+        }
+        printCanMsg(pMsg);
+    }
+
+    return true;
+}
+
+
+
 // This must conform to P_XMTMSG_RTN!
 bool        xmtHandler(
     OBJ_PTR     pObj,

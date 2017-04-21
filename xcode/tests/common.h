@@ -69,6 +69,14 @@ extern
 uint16_t    cCurMsg;
 
 
+// This must conform to P_SRVCMSG_RTN!
+bool        rcvHandler(
+    OBJ_PTR     pObj,
+    uint32_t    eid,
+    J1939_MSG   *pMsg
+);
+
+
 // This must conform to P_XMTMSG_RTN!
 bool        xmtHandler(
     OBJ_PTR     pObj,

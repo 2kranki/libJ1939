@@ -40,6 +40,7 @@
 
 
 #include    <j1939tp.h>
+#include    <j1939can.h>
 #include    <psxMutex.h>
 
 
@@ -60,6 +61,7 @@ extern "C" {
     };
     enum J1939TP_STATE {
         J1939TP_STATE_UNKNOWN=0,
+        J1939TP_STATE_RCV_BAM,
         J1939TP_STATE_XMT_BAM,              // With inter-message delay
         J1939TP_STATE_XMT_CANCEL,
         J1939TP_STATE_XMT_PARTIAL,          // With inter-message delay
@@ -69,6 +71,9 @@ extern "C" {
     };
     enum J1939TP_STATE_PROTOCOL {
         J1939TP_STATE_PROTO_UNKNOWN=0,
+        J1939TP_STATE_PROTO_RCV_BAM,
+        J1939TP_STATE_PROTO_RCV_CANCEL,
+        J1939TP_STATE_PROTO_RCV_COMPLETED,
         J1939TP_STATE_PROTO_WAITING_FOR_WORK,
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T1,      // Wait for next TP.CM_CTS
         J1939TP_STATE_PROTO_WAIT_FOR_CTS_T2,      // Wait for next TP.CM_CTS
@@ -94,6 +99,15 @@ struct j1939tp_data_s	{
     OBJ_DATA            *pSYS;
     OBJ_DATA            *pCAN;
     PSXMUTEX_DATA       *pMutex;
+    
+    // This exit is called whenever a TP.CM multi-part message has been received in full.
+    ERESULT             (*pMessageReceived)(
+                                            OBJ_ID,
+                                            uint32_t,       // eid
+                                            uint16_t,       // data length
+                                            uint8_t *       // message data
+                        );
+    OBJ_ID              pMsgRcvObj;
     
     J1939_PGN           pgn;
     J1939_PDU           pdu;            // PDU of Original Message
@@ -163,6 +177,13 @@ struct j1939tp_data_s	{
     );
 
 
+    bool            j1939tp_HandlePgn60160(
+        J1939TP_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    );
+    
+    
     bool            j1939tp_HandlePgn60416(
         J1939TP_DATA	*this,
         uint32_t        eid,
@@ -180,9 +201,14 @@ struct j1939tp_data_s	{
     );
     
     
-    ERESULT         j1939tp_ProtocolCancelXMT(
+    ERESULT         j1939tp_ProtocolCancel(
         J1939TP_DATA	*this,
         uint8_t         reason
+    );
+    
+    
+    ERESULT         j1939tp_ProtocolComplete(
+        J1939TP_DATA	*this
     );
     
     

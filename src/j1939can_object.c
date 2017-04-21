@@ -181,8 +181,8 @@ J1939CAN_VTBL     j1939can_Vtbl = {
     // Put other object method names below this.
     // Properties:
     // Methods:
-    j1939can_XmtMsg,
-    j1939can_ReflectMsg
+    j1939can_RcvMsg,
+    j1939can_XmtMsg
  
 };
 

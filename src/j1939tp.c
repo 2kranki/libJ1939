@@ -90,13 +90,13 @@ extern "C" {
     )
     {
         bool            fRc = false;
+        J1939CAN_VTBL   *pVtbl;
         
-        if (pMsg && this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-            fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                                 this->pCAN,
-                                                                 0,
-                                                                 pMsg
-                    );
+        if (pMsg && this->pCAN) {
+            pVtbl = (J1939CAN_VTBL *)obj_getVtbl(this->pCAN);
+            if (pVtbl) {
+                fRc = pVtbl->pXmt(this->pCAN, 0, pMsg);
+            }
         }
         if (pTime) {
             if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
@@ -250,6 +250,30 @@ extern "C" {
     
     
 
+    bool                j1939tp_setRcvdMsg(
+        J1939TP_DATA		*this,
+        P_SRVCMSG_RTN       pRoutine,
+        void                *pData
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pMessageReceived  = (void *)pRoutine;
+        this->pMsgRcvObj = pData;
+        
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                          S Y S
     //---------------------------------------------------------------
@@ -585,11 +609,71 @@ extern "C" {
             fRc = j1939tp_HandlePgn60416(this, eid, pMsg);
         }
         
+        if ((this->activity == J1939TP_ACTIVE_RCV) && (pgn.w == 60160)) {
+            fRc = j1939tp_HandlePgn60160(this, eid, pMsg);
+        }
+        
         eRc = j1939tp_ProcessProtocol(this);
         eRc = j1939tp_ProcessPackets(this);
         
         // Return to caller.
         return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //          H a n d l e  PGN 60160    0x00EB00              TP.DT
+    //---------------------------------------------------------------
+    
+    // Transport Protocal - Data Transfer - TP.DT
+    
+    bool            j1939tp_HandlePgn60160(
+        J1939TP_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         sa;
+        //bool            fRc;
+        uint8_t         spn2572;    // Sequence Number (TP.DT)
+        uint8_t         *pSpn2573;
+        uint16_t        offset;
+        uint16_t        len;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        sa = j1939pdu_getSA(pdu);
+        if (sa == this->adr) {
+            spn2572 = pMsg->DATA.bytes[0];
+            pSpn2573 = &pMsg->DATA.bytes[1];
+            if (spn2572 == this->seq) {
+                offset = (spn2572 - 1) * 7;
+                len = (this->size - offset) > 7 ? 7 : (this->size - offset);
+                memmove(this->data+offset, pSpn2573, len);
+                if (this->seq == this->packets) {
+                    j1939tp_ProtocolComplete(this);
+                }
+                ++this->seq;
+            }
+            else {
+                j1939tp_ProtocolCancel(this, 0);     // Cancel w/o error message
+            }
+            this->msTime = j1939tp_MsTimeGet(this);
+        }
+        
+        // Return to caller.
+        return true;
     }
     
     
@@ -605,6 +689,7 @@ extern "C" {
         J1939_MSG       *pMsg
     )
     {
+        ERESULT         eRc;
         J1939_PDU       pdu;
         uint8_t         da;
         uint8_t         sa;
@@ -700,13 +785,14 @@ extern "C" {
                 break;
                 
             case 32:                    // TP.CM_BAM
-                spn2567  = pMsg->DATA.bytes[1];
+                spn2567  = pMsg->DATA.bytes[1];         // Message Size
                 spn2567 |= pMsg->DATA.bytes[2] << 8;
-                spn2568  = pMsg->DATA.bytes[3];
-                spn2569.w = 0;
+                spn2568  = pMsg->DATA.bytes[3];         // Number of Packets
+                spn2569.w = 0;                          // PGN
                 spn2569.pgn0 = pMsg->DATA.bytes[5];
                 spn2569.pgn1 = pMsg->DATA.bytes[6];
                 spn2569.pgn2 = pMsg->DATA.bytes[7];
+                eRc = j1939tp_MessageReceiveBAM(this, sa, spn2569, spn2567, spn2568);
                 break;
                 
             case 255:                   // TP.Conn_Abort
@@ -873,6 +959,59 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                M e s s a g e  R e c e i v e
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939tp_MessageReceiveBAM(
+        J1939TP_DATA	*this,
+        uint8_t         sa,
+        J1939_PGN       pgn,
+        uint16_t        msgSize,
+        uint8_t         cPackets
+    )
+    {
+        //int             i;
+        //ERESULT         eRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        if (this->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) {
+        }
+        else {
+            j1939tp_setLastError(this, ERESULT_BUSY);
+            return ERESULT_BUSY;
+        }
+        
+        this->activity = J1939TP_ACTIVE_RCV;
+        
+        this->pgn = pgn;
+        this->adr = sa;
+        this->size = msgSize;
+        //memmove(this->data, pData, cData);
+        this->packets = cPackets;
+        this->limit = this->packets;
+        this->seq = 1;
+        
+        this->stateProto = J1939TP_STATE_PROTO_RCV_BAM;
+        //this->msTimeProto = j1939tp_MsTimeGet(this);
+        this->state = J1939TP_STATE_RCV_BAM;
+        this->msTime = j1939tp_MsTimeGet(this);
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                M e s s a g e  T r a n s m i t
     //---------------------------------------------------------------
     
@@ -961,6 +1100,17 @@ extern "C" {
             case J1939TP_STATE_UNKNOWN:
                 break;
                 
+            case J1939TP_STATE_RCV_BAM:
+                // Packets must be received in sequence order starting with 1
+                // within the T1 time out limits until the full message is
+                // received. If any error occurs, we simply give up and reset
+                // this object making it available for other work.
+                // Handle60160() handles each message as it is received.
+                if ((j1939tp_MsTimeGet(this) - this->msTime) > this->tpT1) {
+                    j1939tp_ProtocolCancel(this, 0);    // Cancel w/o error message.
+                }
+                break;
+                
             case J1939TP_STATE_XMT_CANCEL:
                 this->seq = 255;
                 break;
@@ -1041,6 +1191,19 @@ extern "C" {
             case J1939TP_STATE_PROTO_UNKNOWN:
                 break;
                 
+            case J1939TP_STATE_PROTO_RCV_BAM:
+                // Do nothing. All actions will be controlled by
+                // ProcessPackets.
+                // BAM receipt of messages is simple. You must receive all multi-part
+                // segments in order and in full for a complete message.
+                break;
+                
+            case J1939TP_STATE_PROTO_RCV_CANCEL:
+                break;
+                
+            case J1939TP_STATE_PROTO_RCV_COMPLETED:
+                break;
+                
             case J1939TP_STATE_PROTO_WAITING_FOR_WORK:
                 // Do nothing for now.
                 break;
@@ -1055,7 +1218,7 @@ extern "C" {
                 // Waiting for a CTS or End of Msg ACK
                 if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT3) {
                     // OOPS, we timed out.
-                    eRc = j1939tp_ProtocolCancelXMT(this, 3);
+                    eRc = j1939tp_ProtocolCancel(this, 3);
                 }
                 break;
                 
@@ -1063,7 +1226,7 @@ extern "C" {
                 // CTS Pause in effect
                 if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT4) {
                     // OOPS, we timed out.
-                    eRc = j1939tp_ProtocolCancelXMT(this, 3);
+                    eRc = j1939tp_ProtocolCancel(this, 3);
                 }
                 break;
                 
@@ -1080,7 +1243,7 @@ extern "C" {
     //                 P r o t o c o l  C a n c e l
     //---------------------------------------------------------------
     
-    ERESULT         j1939tp_ProtocolCancelXMT(
+    ERESULT         j1939tp_ProtocolCancel(
         J1939TP_DATA	*this,
         uint8_t         abortReason
     )
@@ -1097,7 +1260,45 @@ extern "C" {
 #endif
         
         // Send Connection Abort message.
-        eRc = j1939tp_TransmitAbort(this, abortReason);
+        if (abortReason) {
+            eRc = j1939tp_TransmitAbort(this, abortReason);
+        }
+        
+        // Reset the Connection states.
+        this->activity = J1939TP_INACTIVE;
+        this->stateProto = J1939TP_STATE_PROTO_WAITING_FOR_WORK;
+        this->state = J1939TP_STATE_UNKNOWN;
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                 P r o t o c o l  C o m p l e t e
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939tp_ProtocolComplete(
+        J1939TP_DATA	*this
+    )
+    {
+        ERESULT         eRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        // Handle the message.
+        if (this->pMessageReceived) {
+            eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
+        }
         
         // Reset the Connection states.
         this->activity = J1939TP_INACTIVE;

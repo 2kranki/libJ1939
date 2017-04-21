@@ -145,11 +145,11 @@ extern "C" {
     
     
 
-    uint16_t        j1939can_getPriority(
-        J1939CAN_DATA     *this
+    bool            j1939can_getLoopBackRcv(
+        J1939CAN_DATA   *this
     )
     {
-
+        
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
@@ -158,34 +158,13 @@ extern "C" {
             return 0;
         }
 #endif
-
+        
         j1939can_setLastError(this, ERESULT_SUCCESS);
-        //return this->priority;
-        return 0;
+        return this->fLoopRcv;
     }
-
-    bool            j1939can_setPriority(
-        J1939CAN_DATA     *this,
-        uint16_t        value
-    )
-    {
-#ifdef NDEBUG
-#else
-        if( !j1939can_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-
-        //this->priority = value;
-
-        j1939can_setLastError(this, ERESULT_SUCCESS);
-        return true;
-    }
-
-
-
-    bool            j1939can_setReflect(
+    
+    
+    bool            j1939can_setLoopBackRcv(
         J1939CAN_DATA   *this,
         bool            value
     )
@@ -198,16 +177,57 @@ extern "C" {
         }
 #endif
         
-        this->fReflect = value;
+        this->fLoopRcv = value;
         
+        j1939can_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
     
     
     
-    bool                j1939can_setReflectMsg(
+    bool            j1939can_getLoopBackXmt(
+        J1939CAN_DATA   *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939can_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        j1939can_setLastError(this, ERESULT_SUCCESS);
+        return this->fLoopXmt;
+    }
+    
+    
+    bool            j1939can_setLoopBackXmt(
+        J1939CAN_DATA   *this,
+        bool            value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939can_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->fLoopXmt = value;
+        
+        j1939can_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
+    bool                j1939can_setRcvMsg(
         J1939CAN_DATA		*this,
-        P_XMTMSG_RTN        pRoutine,
+        P_SRVCMSG_RTN       pRoutine,
         void                *pData
     )
     {
@@ -221,53 +241,9 @@ extern "C" {
         }
 #endif
         
-        this->pReflectMsg  = pRoutine;
-        this->pReflectData = pData;
+        this->pRcvMsg  = pRoutine;
+        this->pRcvObj = pData;
         
-        return true;
-    }
-    
-    
-    
-    ASTR_DATA * j1939can_getStr(
-        J1939CAN_DATA     *this
-    )
-    {
-        
-        // Validate the input parameters.
-#ifdef NDEBUG
-#else
-        if( !j1939can_Validate(this) ) {
-            DEBUG_BREAK();
-            return OBJ_NIL;
-        }
-#endif
-        
-        j1939can_setLastError(this, ERESULT_SUCCESS);
-        return this->pStr;
-    }
-    
-    
-    bool        j1939can_setStr(
-        J1939CAN_DATA     *this,
-        ASTR_DATA   *pValue
-    )
-    {
-#ifdef NDEBUG
-#else
-        if( !j1939can_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-
-        obj_Retain(pValue);
-        if (this->pStr) {
-            obj_Release(this->pStr);
-        }
-        this->pStr = pValue;
-        
-        j1939can_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
     
@@ -290,7 +266,7 @@ extern "C" {
 #endif
         
         this->pXmtMsg  = pRoutine;
-        this->pXmtData = pData;
+        this->pXmtObj = pData;
         
         return true;
     }
@@ -452,7 +428,7 @@ extern "C" {
         }
 #endif
 
-        j1939can_setStr(this, OBJ_NIL);
+        //j1939can_setStr(this, OBJ_NIL);
 
         obj_setVtbl(this, this->pSuperVtbl);
         //other_Dealloc(this);          // Needed for inheritance
@@ -612,12 +588,12 @@ extern "C" {
     
     
     //---------------------------------------------------------------
-    //              R e f l e c t  M e s s a g e
+    //              R e c e i v e  M e s s a g e
     //---------------------------------------------------------------
     
-    bool            j1939can_ReflectMsg(
+    bool            j1939can_RcvMsg(
         OBJ_ID          pObject,
-        uint32_t        msDelay,
+        uint32_t        eid,                // NOTE - Ignore this value
         J1939_MSG       *pMsg
     )
     {
@@ -630,12 +606,17 @@ extern "C" {
             DEBUG_BREAK();
             return false;
         }
-        if( msDelay ) {                 // *** Temporary ***
+#endif
+        
+        if (this->pRcvMsg) {
+            (*this->pRcvMsg)(this->pRcvObj, j1939msg_getEid(pMsg), pMsg);
+        }
+        else {
+            fprintf(stderr, "ERROR - j1939can_RcvMsg is missing pRcvMsg Handler!\n");
             DEBUG_BREAK();
         }
-#endif
-        if (this->pReflectMsg && this->fReflect) {
-            (*this->pReflectMsg)(this->pReflectData, msDelay, pMsg);
+        if (this->fLoopRcv) {
+            j1939can_XmtMsg(this, 0, pMsg);
         }
         
         // Return to caller.
@@ -785,12 +766,16 @@ extern "C" {
             DEBUG_BREAK();
         }
 #endif
+        
         if (this->pXmtMsg) {
-            (*this->pXmtMsg)(this->pXmtData, msDelay, pMsg);
+            (*this->pXmtMsg)(this->pXmtObj, msDelay, pMsg);
         }
         else {
             fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
             DEBUG_BREAK();
+        }
+        if (this->fLoopXmt) {
+            j1939can_RcvMsg(this, j1939msg_getEid(pMsg), pMsg);
         }
         
         // Return to caller.
