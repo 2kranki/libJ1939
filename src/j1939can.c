@@ -273,6 +273,30 @@ extern "C" {
     
     
 
+    bool                j1939can_setXmtReflectMsg(
+        J1939CAN_DATA		*this,
+        P_XMTMSG_RTN        pRoutine,
+        void                *pData
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939can_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pXmtReflectMsg  = pRoutine;
+        this->pXmtReflectObj = pData;
+        
+        return true;
+    }
+    
+    
+    
     
 
     //===============================================================
@@ -616,7 +640,13 @@ extern "C" {
             DEBUG_BREAK();
         }
         if (this->fLoopRcv) {
-            j1939can_XmtMsg(this, 0, pMsg);
+            if (this->pXmtMsg) {
+                (*this->pXmtMsg)(this->pXmtObj, 0, pMsg);
+            }
+            else {
+                fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
+                DEBUG_BREAK();
+            }
         }
         
         // Return to caller.
@@ -767,6 +797,13 @@ extern "C" {
         }
 #endif
         
+        if (this->pXmtReflectMsg) {
+            (*this->pXmtReflectMsg)(this->pXmtReflectObj, msDelay, pMsg);
+        }
+        else {
+            fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
+            DEBUG_BREAK();
+        }
         if (this->pXmtMsg) {
             (*this->pXmtMsg)(this->pXmtObj, msDelay, pMsg);
         }
@@ -775,7 +812,13 @@ extern "C" {
             DEBUG_BREAK();
         }
         if (this->fLoopXmt) {
-            j1939can_RcvMsg(this, j1939msg_getEid(pMsg), pMsg);
+            if (this->pRcvMsg) {
+                (*this->pRcvMsg)(this->pRcvObj, j1939msg_getEid(pMsg), pMsg);
+            }
+            else {
+                fprintf(stderr, "ERROR - j1939can_RcvMsg is missing pRcvMsg Handler!\n");
+                DEBUG_BREAK();
+            }
         }
         
         // Return to caller.

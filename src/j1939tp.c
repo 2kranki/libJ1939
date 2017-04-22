@@ -59,6 +59,157 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
+    bool            bitmapFindEmpty(
+        J1939TP_DATA	*this,
+        uint16_t        max,
+        uint16_t        *pIndex,
+        uint16_t        *pLength
+    )
+    {
+        uint32_t        i;
+        uint32_t        j;
+        uint32_t        k;
+        bool            fRc = false;
+        uint16_t        len = 1;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if (max == 0) {
+        }
+        else {
+            DEBUG_BREAK();
+            return fRc;
+        }
+#endif
+        
+        for (k=0; k<max; ++k) {
+            //i = index / 32;			        /* horizontal - word */
+            i = k >> 5;
+            //j = (32-1) - (index % 32);	    /* horizontal - bit */
+            j = (32-1) - (k & 0x1F);
+            
+            if ( this->bitmap[i] & (1 << j) ) {
+            }
+            else {
+                if (pIndex) {
+                    *pIndex = k;
+                }
+                break;
+            }
+        }
+        fRc = true;
+        
+        for ( ; k<max; ++k) {
+            //i = index / 32;			        /* horizontal - word */
+            i = k >> 5;
+            //j = (32-1) - (index % 32);	    /* horizontal - bit */
+            j = (32-1) - (k & 0x1F);
+            
+            if ( this->bitmap[i] & (1 << j) ) {
+                break;
+            }
+            else {
+                ++len;
+            }
+        }
+        if (pLength) {
+            *pLength = len;
+        }
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    bool            bitmapGet(
+        J1939TP_DATA	*this,
+        uint16_t        index
+    )
+    {
+        uint32_t        i;
+        uint32_t        j;
+        bool            fRc = false;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if (index < 255) {
+        }
+        else {
+            DEBUG_BREAK();
+            return fRc;
+        }
+#endif
+        
+        //i = index / 32;			        /* horizontal - word */
+        i = index >> 5;
+        //j = (32-1) - (index % 32);	    /* horizontal - bit */
+        j = (32-1) - (index & 0x1F);
+        
+        if ( this->bitmap[i] & (1 << j) ) {
+            fRc = true;
+        }
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    void            bitmapReset(
+        J1939TP_DATA	*this
+    )
+    {
+        int             i;
+        
+        for (i=0; i<8; ++i) {
+            this->bitmap[i] = 0;
+        }
+    }
+    
+    
+    
+    ERESULT         bitmapSet(
+        J1939TP_DATA	*this,
+        uint16_t        index,
+        bool            value
+    )
+    {
+        uint32_t        i;
+        uint32_t        j;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if (index < 255)
+            ;
+        else {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_PARAMETER;
+        }
+#endif
+        
+        //i = index / 32;			        /* horizontal - word */
+        i = index >> 5;
+        //j = (32-1) - (index % 32);	    /* horizontal - bit */
+        j = (32-1) - (index & 0x1F);
+        
+        if (value ) {
+            this->bitmap[i] |= (1 << j);
+        }
+        else {
+            this->bitmap[i] &= ~(1 << j);
+        }
+        
+        // Return to caller.
+        return ERESULT_SUCCESSFUL_COMPLETION;
+    }
+    
+    
+    
+    
     //---------------------------------------------------------------
     //                  M s  T i m e  G e t
     //---------------------------------------------------------------
@@ -66,7 +217,7 @@ extern "C" {
     static
     uint32_t        j1939tp_MsTimeGet(
         J1939TP_DATA	*this
-        )
+    )
     {
         uint32_t        msTime = 0;
         
@@ -590,10 +741,13 @@ extern "C" {
             return false;
         }
 #endif
+        if ((pMsg == NULL) && (this->activity == J1939TP_INACTIVE)) {
+            return true;
+        }
         
         // Get the PGN requested.
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             da = j1939pdu_getDA(pdu);
             sa = pdu.SA;
@@ -609,14 +763,23 @@ extern "C" {
             fRc = j1939tp_HandlePgn60416(this, eid, pMsg);
         }
         
-        if ((this->activity == J1939TP_ACTIVE_RCV) && (pgn.w == 60160)) {
+        if (pgn.w == 60160) {
             fRc = j1939tp_HandlePgn60160(this, eid, pMsg);
         }
         
-        eRc = j1939tp_ProcessProtocol(this);
-        eRc = j1939tp_ProcessPackets(this);
+        if (this->activity == J1939TP_INACTIVE) {
+        }
+        else {
+            eRc = j1939tp_ProcessProtocol(this);
+        }
+        if (this->activity == J1939TP_INACTIVE) {
+        }
+        else {
+            eRc = j1939tp_ProcessPackets(this);
+        }
         
         // Return to caller.
+        fRc = true;
         return fRc;
     }
     
@@ -651,25 +814,24 @@ extern "C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        this->rcvdSeq = 0;
+        if ((this->activity == J1939TP_INACTIVE)
+            || (this->activity == J1939TP_ACTIVE_XMT_BAM)
+            || (this->activity == J1939TP_ACTIVE_XMT_TP)
+            ) {
+            return false;
+        }
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         sa = j1939pdu_getSA(pdu);
         if (sa == this->adr) {
             spn2572 = pMsg->DATA.bytes[0];
             pSpn2573 = &pMsg->DATA.bytes[1];
-            if (spn2572 == this->seq) {
-                offset = (spn2572 - 1) * 7;
-                len = (this->size - offset) > 7 ? 7 : (this->size - offset);
-                memmove(this->data+offset, pSpn2573, len);
-                if (this->seq == this->packets) {
-                    j1939tp_ProtocolComplete(this);
-                }
-                ++this->seq;
-            }
-            else {
-                j1939tp_ProtocolCancel(this, 0);     // Cancel w/o error message
-            }
-            this->msTime = j1939tp_MsTimeGet(this);
+            this->rcvdSeq  = spn2572;
+            // The Protocol Message is actually handled in ProcessPacket().
+            offset = (spn2572 - 1) * 7;
+            len = (this->size - offset) > 7 ? 7 : (this->size - offset);
+            memmove(this->data+offset, pSpn2573, len);
         }
         
         // Return to caller.
@@ -729,7 +891,7 @@ extern "C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         da = j1939pdu_getDA(pdu);
         sa = j1939pdu_getSA(pdu);
         spn2556 = pMsg->DATA.bytes[0];
@@ -739,12 +901,38 @@ extern "C" {
             case 16:                    // TP.CM_RTS
                 spn2557  = pMsg->DATA.bytes[1];
                 spn2557 |= pMsg->DATA.bytes[2] << 8;
-                spn2558  = pMsg->DATA.bytes[3];
-                spn2559  = pMsg->DATA.bytes[4];
+                spn2558  = pMsg->DATA.bytes[3];         // Total Number of Packets
+                spn2559  = pMsg->DATA.bytes[4];         // Maximum Number of Packets
                 spn2560.w = 0;
                 spn2560.pgn0 = pMsg->DATA.bytes[5];
                 spn2560.pgn1 = pMsg->DATA.bytes[6];
                 spn2560.pgn2 = pMsg->DATA.bytes[7];
+                switch (this->activity) {
+                    case J1939TP_INACTIVE:
+                        eRc =   j1939tp_MessageReceiveRTS(
+                                                        this,
+                                                        sa,
+                                                        spn2560,
+                                                        spn2557,
+                                                        spn2558
+                                );
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_TP:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_TP:
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             case 17:                    // TP.CM_CTS
@@ -754,23 +942,41 @@ extern "C" {
                 spn2563.pgn0 = pMsg->DATA.bytes[5];
                 spn2563.pgn1 = pMsg->DATA.bytes[6];
                 spn2563.pgn2 = pMsg->DATA.bytes[7];
-                if (this->activity == J1939TP_ACTIVE_XMT) {
-                    if (this->state == J1939TP_STATE_WAIT_FOR_CTS) {
-                        if ((spn2563.w == this->pgn.w) && (sa == this->adr)) {
-                            if (spn2561) {
-                                this->seq   = spn2562 - 1;
-                                this->limit = spn2561;
-                                this->state = J1939TP_STATE_XMT_PARTIAL;
-                                this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
-                                this->msTime = j1939tp_MsTimeGet(this);
-                                this->msTimeProto = j1939tp_MsTimeGet(this);
-                            }
-                            else {   // Responder is requesting a pause.
-                                this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4;
-                                this->msTimeProto = j1939tp_MsTimeGet(this);
+                switch (this->activity) {
+                    case J1939TP_INACTIVE:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_TP:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_TP:
+                        if (this->state == J1939TP_STATE_WAIT_FOR_CTS) {
+                            if ((spn2563.w == this->pgn.w) && (sa == this->adr)) {
+                                if (spn2561) {
+                                    this->seq   = spn2562 - 1;
+                                    this->limit = spn2561;
+                                    this->state = J1939TP_STATE_XMT_PARTIAL;
+                                    this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
+                                    this->msTime = j1939tp_MsTimeGet(this);
+                                    this->msTimeProto = j1939tp_MsTimeGet(this);
+                                }
+                                else {   // Responder is requesting a pause.
+                                    this->state = J1939TP_STATE_XMT_PAUSE;
+                                    this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4;
+                                    this->msTimeProto = j1939tp_MsTimeGet(this);
+                                }
                             }
                         }
-                    }
+                        break;
+                        
+                    default:
+                        break;
                 }
                 break;
                 
@@ -782,6 +988,27 @@ extern "C" {
                 spn2566.pgn0 = pMsg->DATA.bytes[5];
                 spn2566.pgn1 = pMsg->DATA.bytes[6];
                 spn2566.pgn2 = pMsg->DATA.bytes[7];
+                switch (this->activity) {
+                    case J1939TP_INACTIVE:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_TP:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_TP:
+                        eRc = j1939tp_ProtocolComplete(this);
+                        return true;
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             case 32:                    // TP.CM_BAM
@@ -792,7 +1019,26 @@ extern "C" {
                 spn2569.pgn0 = pMsg->DATA.bytes[5];
                 spn2569.pgn1 = pMsg->DATA.bytes[6];
                 spn2569.pgn2 = pMsg->DATA.bytes[7];
-                eRc = j1939tp_MessageReceiveBAM(this, sa, spn2569, spn2567, spn2568);
+                switch (this->activity) {
+                    case J1939TP_INACTIVE:
+                        eRc = j1939tp_MessageReceiveBAM(this, sa, spn2569, spn2567, spn2568);
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_TP:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_TP:
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             case 255:                   // TP.Conn_Abort
@@ -801,23 +1047,30 @@ extern "C" {
                 spn2571.pgn0 = pMsg->DATA.bytes[5];
                 spn2571.pgn1 = pMsg->DATA.bytes[6];
                 spn2571.pgn2 = pMsg->DATA.bytes[7];
+                switch (this->activity) {
+                    case J1939TP_INACTIVE:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_RCV_TP:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_BAM:
+                        break;
+                        
+                    case J1939TP_ACTIVE_XMT_TP:
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             default:
                 break;
         }
-        
-        /***
-         fRc = j1939ca_FindXmtPgnEntry(this, spn2540);
-         if (fRc) {
-         fRc = j1939ca_TransmitPgn(this, this->pCurEntry);
-         }
-         else {
-         if ((spn2540.PF < 240) && !(255 == this->curDa)) {
-         fRc = j1939ca_TransmitPgn59392(this, 1, 0, 0xFF, spn2540);
-         }
-         }
-         ***/
         
         // Return to caller.
         return true;
@@ -989,7 +1242,7 @@ extern "C" {
             return ERESULT_BUSY;
         }
         
-        this->activity = J1939TP_ACTIVE_RCV;
+        this->activity = J1939TP_ACTIVE_RCV_BAM;
         
         this->pgn = pgn;
         this->adr = sa;
@@ -997,11 +1250,71 @@ extern "C" {
         //memmove(this->data, pData, cData);
         this->packets = cPackets;
         this->limit = this->packets;
+        this->cNeeded = this->packets;
         this->seq = 1;
+        bitmapReset(this);
         
         this->stateProto = J1939TP_STATE_PROTO_RCV_BAM;
         //this->msTimeProto = j1939tp_MsTimeGet(this);
         this->state = J1939TP_STATE_RCV_BAM;
+        this->msTime = j1939tp_MsTimeGet(this);
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    ERESULT         j1939tp_MessageReceiveRTS(
+        J1939TP_DATA	*this,
+        uint8_t         sa,
+        J1939_PGN       pgn,
+        uint16_t        msgSize,
+        uint8_t         cPackets
+    )
+    {
+        ERESULT         eRc;
+        //int             i;
+        uint8_t         numPackets;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        if (this->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) {
+        }
+        else {
+            j1939tp_setLastError(this, ERESULT_BUSY);
+            return ERESULT_BUSY;
+        }
+        
+        this->activity = J1939TP_ACTIVE_RCV_TP;
+        
+        this->pgn = pgn;
+        this->adr = sa;
+        this->size = msgSize;
+        //memmove(this->data, pData, cData);
+        this->packets = cPackets;
+        this->cNeeded = this->packets;
+        this->limit = (cPackets < 5) ? cPackets : 4;
+        this->seq = 1;
+        bitmapReset(this);
+        
+        eRc = j1939tp_TransmitCTS(this, this->limit, this->seq);
+        if (ERESULT_FAILED(eRc)) {
+            return eRc;
+        }
+
+        this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_T2;
+        this->msTimeProto = j1939tp_MsTimeGet(this);
+
+        this->state = J1939TP_STATE_RCV_TP;
         this->msTime = j1939tp_MsTimeGet(this);
         
         // Return to caller.
@@ -1041,7 +1354,6 @@ extern "C" {
             return ERESULT_BUSY;
         }
         
-        this->activity = J1939TP_ACTIVE_XMT;
         
         this->pdu = pdu;
         this->pgn = j1939pdu_getPGN(pdu);
@@ -1053,22 +1365,24 @@ extern "C" {
         this->seq = 0;
         
         if (255 == this->adr) {
+            this->activity = J1939TP_ACTIVE_XMT_BAM;
+            this->stateProto = J1939TP_STATE_PROTO_XMT_BAM;
+            this->msTimeProto = j1939tp_MsTimeGet(this);
+            this->state = J1939TP_STATE_XMT_BAM;
             eRc = j1939tp_TransmitBAM(this);
             if (ERESULT_FAILED(eRc)) {
                 return eRc;
             }
-            this->stateProto = J1939TP_STATE_PROTO_XMT_BAM;
-            this->msTimeProto = j1939tp_MsTimeGet(this);
-            this->state = J1939TP_STATE_XMT_BAM;
         }
         else {
+            this->activity = J1939TP_ACTIVE_XMT_TP;
+            this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
+            this->msTimeProto = j1939tp_MsTimeGet(this);
+            this->state = J1939TP_STATE_WAIT_FOR_CTS;
             eRc = j1939tp_TransmitRTS(this);
             if (ERESULT_FAILED(eRc)) {
                 return eRc;
             }
-            this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3;
-            this->msTimeProto = j1939tp_MsTimeGet(this);
-            this->state = J1939TP_STATE_WAIT_FOR_CTS;
         }
         
         // Return to caller.
@@ -1086,6 +1400,8 @@ extern "C" {
         J1939TP_DATA	*this
     )
     {
+        bool            fRc;
+        ERESULT         eRc;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1101,13 +1417,72 @@ extern "C" {
                 break;
                 
             case J1939TP_STATE_RCV_BAM:
-                // Packets must be received in sequence order starting with 1
-                // within the T1 time out limits until the full message is
-                // received. If any error occurs, we simply give up and reset
-                // this object making it available for other work.
+                // Packets must be received in sequence order starting within
+                // the T1 time out limits until the full message is received.
+                // If any error occurs, we simply give up and reset this object
+                // making it available for other work.
                 // Handle60160() handles each message as it is received.
-                if ((j1939tp_MsTimeGet(this) - this->msTime) > this->tpT1) {
-                    j1939tp_ProtocolCancel(this, 0);    // Cancel w/o error message.
+                if (this->rcvdSeq) {
+                    if (this->rcvdSeq == this->seq) {
+                        if (bitmapGet(this, this->rcvdSeq-1)) {
+                            // OOPS, received a msg twice.
+                            j1939tp_ProtocolCancel(this, 0);     // Cancel w/o error message
+                        }
+                        bitmapSet(this, this->rcvdSeq-1, true);
+                        if (this->seq == this->packets) {
+                            j1939tp_ProtocolComplete(this);
+                        }
+                        ++this->seq;
+                        --this->cNeeded;
+                        this->msTimeProto = j1939tp_MsTimeGet(this);
+                    }
+                    else {
+                        j1939tp_ProtocolCancel(this, 0);     // Cancel w/o error message
+                    }
+                }
+                break;
+                
+            case J1939TP_STATE_RCV_TP:
+                // NOTE -- Since we track specifically which sequence numbers
+                // have been received, we could just accept any sequence number
+                // as long as it isn't a duplicate and request the numbers that
+                // we do not have.
+                if (this->rcvdSeq) {
+                    if (bitmapGet(this, this->rcvdSeq-1)) {
+                        // OOPS, received a msg twice.
+                        j1939tp_ProtocolCancel(this, 254);
+                    }
+                    bitmapSet(this, this->rcvdSeq-1, true);
+                    this->rcvdSeq = 0;
+                    --this->cNeeded;
+                    --this->limit;
+                    if (this->limit == 0) {
+                        if (this->cNeeded == 0) {
+                            j1939tp_ProtocolComplete(this);
+                            j1939tp_setLastError(this, ERESULT_SUCCESS);
+                            return ERESULT_SUCCESS;
+                        }
+                        else {
+                            uint16_t        seq = 0;
+                            uint16_t        len = 0;
+                            fRc = bitmapFindEmpty(this, this->packets, &seq, &len);
+                            if (fRc) {
+                                len = (len < 5) ? len : 4;
+                                eRc = j1939tp_TransmitCTS(this, len, seq+1);
+                                this->limit = len;
+                                this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_T2;
+                            }
+                            else {
+                                j1939tp_ProtocolCancel(this, 255);
+                                j1939tp_setLastError(this, ERESULT_SUCCESS);
+                                return ERESULT_SUCCESS;
+                            }
+                        }
+                    }
+                    this->msTimeProto = j1939tp_MsTimeGet(this);
+                    
+                    this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_T1;
+                    this->msTimeProto = j1939tp_MsTimeGet(this);
                 }
                 break;
                 
@@ -1144,6 +1519,9 @@ extern "C" {
                 if ((j1939tp_MsTimeGet(this) - this->msTime) > this->tpMsgDelay) {
                     if (this->limit && (this->seq < this->packets)) {
                         j1939tp_TransmitPacket(this, this->seq++);
+                        if (this->activity == J1939TP_INACTIVE) {
+                            break;
+                        }
                         this->msTime = j1939tp_MsTimeGet(this);
                         this->msTimeProto = j1939tp_MsTimeGet(this);
                         --this->limit;
@@ -1192,10 +1570,30 @@ extern "C" {
                 break;
                 
             case J1939TP_STATE_PROTO_RCV_BAM:
-                // Do nothing. All actions will be controlled by
-                // ProcessPackets.
                 // BAM receipt of messages is simple. You must receive all multi-part
                 // segments in order and in full for a complete message.
+                if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT1) {
+                    j1939tp_ProtocolCancel(this, 0);    // Cancel w/o error message.
+                }
+                break;
+                
+            case J1939TP_STATE_PROTO_WAIT_FOR_T1:
+                // Waiting for a succeeding Packet
+                if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT1) {
+                    // OOPS, we timed out.
+                    eRc = j1939tp_ProtocolCancel(this, 3);
+                }
+                break;
+                
+            case J1939TP_STATE_PROTO_WAIT_FOR_T2:
+                // Waiting for a Packet after a CTS
+                if ((j1939tp_MsTimeGet(this) - this->msTimeProto) > this->tpT2) {
+                    // OOPS, we timed out.
+                    eRc = j1939tp_ProtocolCancel(this, 3);
+                }
+                break;
+                
+            case J1939TP_STATE_PROTO_RCV_TP:
                 break;
                 
             case J1939TP_STATE_PROTO_RCV_CANCEL:
@@ -1259,9 +1657,31 @@ extern "C" {
         }
 #endif
         
-        // Send Connection Abort message.
-        if (abortReason) {
-            eRc = j1939tp_TransmitAbort(this, abortReason);
+        // Send Connection Abort message if necessary.
+        switch (this->activity) {
+            case J1939TP_INACTIVE:
+                break;
+                
+            case J1939TP_ACTIVE_RCV_BAM:
+                break;
+                
+            case J1939TP_ACTIVE_RCV_TP:
+                if (abortReason) {
+                    eRc = j1939tp_TransmitAbort(this, abortReason);
+                }
+                break;
+                
+            case J1939TP_ACTIVE_XMT_BAM:
+                break;
+                
+            case J1939TP_ACTIVE_XMT_TP:
+                if (abortReason) {
+                    eRc = j1939tp_TransmitAbort(this, abortReason);
+                }
+                break;
+                
+            default:
+                break;
         }
         
         // Reset the Connection states.
@@ -1296,8 +1716,31 @@ extern "C" {
 #endif
         
         // Handle the message.
-        if (this->pMessageReceived) {
-            eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
+        switch (this->activity) {
+            case J1939TP_INACTIVE:
+                break;
+                
+            case J1939TP_ACTIVE_RCV_BAM:
+                if (this->pMessageReceived) {
+                    eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
+                }
+                break;
+                
+            case J1939TP_ACTIVE_RCV_TP:
+                if (this->pMessageReceived) {
+                    eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
+                }
+                eRc = j1939tp_TransmitEOM(this);
+                break;
+                
+            case J1939TP_ACTIVE_XMT_BAM:
+                break;
+                
+            case J1939TP_ACTIVE_XMT_TP:
+                break;
+                
+            default:
+                break;
         }
         
         // Reset the Connection states.
@@ -1452,6 +1895,132 @@ extern "C" {
         
         pData = data;
         *pData  = 32;
+        ++pData;    // 1
+        *pData  = this->size & 0xFF;
+        ++pData;    // 2
+        *pData  = (this->size >> 8) & 0xFF;
+        ++pData;    // 3
+        *pData  = this->packets;
+        ++pData;    // 4
+        *pData  = 0xFF;
+        ++pData;    // 5
+        *pData  = this->pgn.pgn0;
+        ++pData;    // 6
+        *pData  = this->pgn.pgn1;
+        ++pData;    // 7
+        *pData  = this->pgn.pgn2;
+        
+        fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, 8, data);
+        if (fRc) {
+            fRc = j1939tp_XmtMsg(this, &msg, &this->msTimeProto);
+            if (!fRc) {
+                j1939tp_setLastError(this, ERESULT_IO_ERROR);
+                return ERESULT_IO_ERROR;
+            }
+        }
+        else {
+            j1939tp_setLastError(this, ERESULT_DATA_ERROR);
+            return ERESULT_DATA_ERROR;
+        }
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                T r a n s m i t  C T S
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939tp_TransmitCTS(
+        J1939TP_DATA	*this,
+        uint8_t         numPackets,
+        uint8_t         startSeq
+    )
+    {
+        J1939_PDU       pdu;
+        uint8_t         *pData;
+        uint8_t         data[8];
+        J1939_MSG       msg;
+        bool            fRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        
+        pData = data;
+        *pData  = 17;
+        ++pData;    // 1
+        *pData  = numPackets;
+        ++pData;    // 2
+        *pData  = startSeq;
+        ++pData;    // 3
+        *pData  = 0xFF;
+        ++pData;    // 4
+        *pData  = 0xFF;
+        ++pData;    // 5
+        *pData  = this->pgn.pgn0;
+        ++pData;    // 6
+        *pData  = this->pgn.pgn1;
+        ++pData;    // 7
+        *pData  = this->pgn.pgn2;
+        
+        fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, 8, data);
+        if (fRc) {
+            fRc = j1939tp_XmtMsg(this, &msg, &this->msTimeProto);
+            if (!fRc) {
+                j1939tp_setLastError(this, ERESULT_IO_ERROR);
+                return ERESULT_IO_ERROR;
+            }
+        }
+        else {
+            j1939tp_setLastError(this, ERESULT_DATA_ERROR);
+            return ERESULT_DATA_ERROR;
+        }
+        
+        // Return to caller.
+        j1939tp_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                T r a n s m i t  E O M
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939tp_TransmitEOM(
+        J1939TP_DATA	*this
+    )
+    {
+        J1939_PDU       pdu;
+        uint8_t         *pData;
+        uint8_t         data[8];
+        J1939_MSG       msg;
+        bool            fRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939tp_getLastError(this);
+        }
+#endif
+        
+        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        
+        pData = data;
+        *pData  = 19;
         ++pData;    // 1
         *pData  = this->size & 0xFF;
         ++pData;    // 2

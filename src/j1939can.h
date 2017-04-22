@@ -154,6 +154,13 @@ extern "C" {
     );
     
     
+    bool            j1939can_setXmtReflectMsg(
+        J1939CAN_DATA	*this,
+        P_XMTMSG_RTN    pRoutine,
+        void            *pData
+    );
+    
+    
 
     
     //---------------------------------------------------------------

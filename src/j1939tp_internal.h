@@ -56,12 +56,15 @@ extern "C" {
 
     enum J1939TP_VALUES {
         J1939TP_INACTIVE=0,
-        J1939TP_ACTIVE_RCV=1,
-        J1939TP_ACTIVE_XMT=2
+        J1939TP_ACTIVE_RCV_BAM,             // Receive BAM message
+        J1939TP_ACTIVE_RCV_TP,              // Receive TP message (ie RTS/CTS)
+        J1939TP_ACTIVE_XMT_BAM,
+        J1939TP_ACTIVE_XMT_TP,
     };
     enum J1939TP_STATE {
         J1939TP_STATE_UNKNOWN=0,
         J1939TP_STATE_RCV_BAM,
+        J1939TP_STATE_RCV_TP,
         J1939TP_STATE_XMT_BAM,              // With inter-message delay
         J1939TP_STATE_XMT_CANCEL,
         J1939TP_STATE_XMT_PARTIAL,          // With inter-message delay
@@ -72,15 +75,16 @@ extern "C" {
     enum J1939TP_STATE_PROTOCOL {
         J1939TP_STATE_PROTO_UNKNOWN=0,
         J1939TP_STATE_PROTO_RCV_BAM,
+        J1939TP_STATE_PROTO_RCV_TP,
         J1939TP_STATE_PROTO_RCV_CANCEL,
         J1939TP_STATE_PROTO_RCV_COMPLETED,
         J1939TP_STATE_PROTO_WAITING_FOR_WORK,
-        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T1,      // Wait for next TP.CM_CTS
-        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T2,      // Wait for next TP.CM_CTS
-        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3,      // Wait for next TP.CM_CTS
-        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4,      // Wait for next TP.CM_CTS
-        J1939TP_STATE_PROTO_XMT_BAM,              // With inter-message delay
-        J1939TP_STATE_PROTO_XMT_PARTIAL,          // With inter-message delay
+        J1939TP_STATE_PROTO_WAIT_FOR_T1,            // Wait for next Packet
+        J1939TP_STATE_PROTO_WAIT_FOR_T2,            // Wait for next Packet after CTS
+        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T3,        // Wait for next TP.CM_CTS
+        J1939TP_STATE_PROTO_WAIT_FOR_CTS_T4,        // Wait for next TP.CM_CTS
+        J1939TP_STATE_PROTO_XMT_BAM,                // With inter-message delay
+        J1939TP_STATE_PROTO_XMT_PARTIAL,            // With inter-message delay
     };
     
     
@@ -141,15 +145,20 @@ struct j1939tp_data_s	{
     //                                  // hold open the connection.
     //                                  // Action: Close connection.
     
+    uint16_t            rsvd16a;
     uint8_t             activity;       // 0 == inactive
     //                                  // 1 == receive TP
     //                                  // 2 == transmit TP
-    uint8_t             flags;
+    uint8_t             rcvdSeq;        // Set by a Message Handler to communicate
+    uint8_t             *pRcvdMsg;      //  . . . to ProcessPacket Routine about
+                                        //  . . . . receiving a message
+
     uint8_t             packets;        // Number of Packets
     uint8_t             seq;            // Current Sequence Number (spn2562)
     uint8_t             limit;          // CTS limit (spn2561)
+    uint8_t             cNeeded;        // Number of packets needed for rcv
     uint16_t            size;           // amount of data (<= 1875)
-    uint8_t             bitmap[32];     // Msg Received Bit Map
+    uint32_t            bitmap[8];     // Msg Received Bit Map
     uint8_t             data[1876];     // Max Msg Size Buffer
     //                                  // (Rounded up to 4-byte boundary)
 
@@ -224,6 +233,18 @@ struct j1939tp_data_s	{
     
     
     ERESULT         j1939tp_TransmitBAM(
+        J1939TP_DATA	*this
+    );
+    
+    
+    ERESULT         j1939tp_TransmitCTS(
+        J1939TP_DATA	*this,
+        uint8_t         numPackets,
+        uint8_t         startSeq
+    );
+    
+    
+    ERESULT         j1939tp_TransmitEOM(
         J1939TP_DATA	*this
     );
     

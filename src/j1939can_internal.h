@@ -74,6 +74,12 @@ struct j1939can_data_s	{
     P_XMTMSG_RTN        pXmtMsg;
     OBJ_ID              pXmtObj;
     
+    /* XmtReflectMsg() is used to T the xmt side. This allows
+     * monitoring of the message flow.
+     */
+    P_XMTMSG_RTN        pXmtReflectMsg;
+    OBJ_ID              pXmtReflectObj;
+    
 };
 #pragma pack(pop)
 

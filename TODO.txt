@@ -4,6 +4,11 @@ The following are things that are being throught about. Whether they get done or
 will depend upon time and resources.
 
 
+--  ALL Objects
+    --  Check all objects for 32-bit word alignment of all data (MIPS requirement)
+
+
+
 --  J1939
     --  Move all System/CAN dependent routines here. So, that they can be
         initialized before starting the system.

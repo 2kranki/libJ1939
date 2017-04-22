@@ -199,6 +199,15 @@ extern "C" {
     );
     
     
+    ERESULT         j1939tp_MessageReceiveRTS(
+        J1939TP_DATA	*this,
+        uint8_t         sa,
+        J1939_PGN       pgn,
+        uint16_t        msgSize,
+        uint8_t         cPackets
+    );
+    
+    
     /*!
      If this object is waiting for work, set up the message to be
      transmitted in packets and start the protocol.

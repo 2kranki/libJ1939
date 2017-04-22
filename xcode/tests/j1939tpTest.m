@@ -235,6 +235,7 @@ void            composeTP_EOM(
 
 
 
+// Transmit BAM Message with everything working
 - (void)testMessageTransmitBAM01
 {
     J1939TP_DATA	*pObj = OBJ_NIL;
@@ -291,6 +292,7 @@ void            composeTP_EOM(
 
 
 
+// Transmit BAM Message with everything working
 - (void)testMessageTransmitBAM02
 {
     J1939TP_DATA	*pObj = OBJ_NIL;
@@ -347,6 +349,7 @@ void            composeTP_EOM(
 
 
 
+// Transmit BAM Message and receive it with everything working
 - (void)testMessageTransmitBAM03
 {
     J1939TP_DATA	*pRcv = OBJ_NIL;
@@ -406,7 +409,11 @@ void            composeTP_EOM(
         XCTAssertTrue( (0x1CEBFF06 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 2) );
+        
         XCTAssertTrue( (fReceived) );
+        XCTAssertTrue( (pRcv->activity == J1939TP_INACTIVE) );
+        XCTAssertTrue( (pRcv->state == J1939TP_STATE_UNKNOWN) );
+        XCTAssertTrue( (pRcv->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) );
         
         obj_Release(pRcv);
         pRcv = OBJ_NIL;
@@ -475,7 +482,12 @@ void            composeTP_EOM(
         XCTAssertTrue( (0x1CEBFF06 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 1) );
+        
         XCTAssertTrue( (!fReceived) );
+        XCTAssertTrue( (pRcv->activity == J1939TP_INACTIVE) );
+        XCTAssertTrue( (pRcv->state == J1939TP_STATE_UNKNOWN) );
+        XCTAssertTrue( (pRcv->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) );
+        
         
         obj_Release(pRcv);
         pRcv = OBJ_NIL;
@@ -487,6 +499,7 @@ void            composeTP_EOM(
 
 
 
+// Transport Protocol - Transmit with everything working
 - (void)testMessageTransmitRTS01
 {
     J1939TP_DATA	*pObj = OBJ_NIL;
@@ -778,6 +791,114 @@ void            composeTP_EOM(
         
         obj_Release(pObj);
         pObj = OBJ_NIL;
+    }
+    
+}
+
+
+
+// Transport Protocol - Transmit and Receive with everything working
+- (void)testMessageTransmitRTS04
+{
+    J1939TP_DATA	*pRcv = OBJ_NIL;
+    J1939TP_DATA	*pXmt = OBJ_NIL;
+    J1939CAN_DATA   *pCAN_XMT = OBJ_NIL;
+    ERESULT         eRc;
+    J1939_PDU       pdu;
+    J1939_PDU       pduMsg;
+    J1939_PGN       pgnMsg;
+    int             i;
+    //J1939_MSG       msg;
+    
+    pRcv = j1939tp_Alloc(0);
+    XCTAssertFalse( (OBJ_NIL == pRcv) );
+    pRcv = j1939tp_Init(pRcv, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
+    XCTAssertFalse( (OBJ_NIL == pRcv) );
+    obj_setMisc1(pCAN, J1939_CAB_CONTROLLER_PRIMARY);
+
+    pCAN_XMT = j1939can_New();
+    XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
+    pXmt = j1939tp_Alloc(0);
+    XCTAssertFalse( (OBJ_NIL == pXmt) );
+    pXmt = j1939tp_Init(pXmt, (OBJ_ID)pCAN_XMT, (OBJ_ID)pSYS, J1939_POWER_TAKEOFF_1);
+    XCTAssertFalse( (OBJ_NIL == pXmt) );
+    obj_setMisc1(pCAN_XMT, J1939_POWER_TAKEOFF_1);
+    if (pRcv && pXmt) {
+        
+        
+        j1939Sys_TimeReset(pSYS, 0);
+        // We need two J1939CAN objects, because we are doing bidirectional messaging
+        // now. We assign pCAN to the Receiver and pCAN_XMT to the Transmitter.
+        //j1939can_setRcvMsg(pCAN, (P_SRVCMSG_RTN)j1939tp_HandleMessages, pCAN);
+        j1939can_setXmtReflectMsg(pCAN, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN, (P_XMTMSG_RTN)j1939tp_HandleMessages, pXmt);
+        j1939tp_setRcvdMsg(pRcv, (void *)messageComplete, OBJ_NIL);
+
+        //j1939can_setRcvMsg(pCAN_XMT, (P_SRVCMSG_RTN)j1939tp_HandleMessages, pRcv);
+        j1939can_setXmtReflectMsg(pCAN_XMT, xmtHandler, NULL);
+        j1939can_setXmtMsg(pCAN_XMT, (P_XMTMSG_RTN)j1939tp_HandleMessages, pRcv);
+        
+        j1939pdu_Construct(&pduMsg, 239, J1939_CAB_CONTROLLER_PRIMARY, 6, J1939_POWER_TAKEOFF_1);
+        pgnMsg = j1939pdu_getPGN(pduMsg);
+        eRc = j1939tp_MessageTransmit(pXmt, pduMsg, 10, "1234567890");
+        XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
+        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x1CEC3106 == pdu.eid) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 16) );
+        fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[1]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[1] == 10) );
+        fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[2]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[2] == 0) );
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
+        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 17) );
+        fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[1]);
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 2) );
+        fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[2]);
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 1) );
+        
+        for (i=0; i<6; ++i) {
+            j1939Sys_BumpMS(pSYS,100);
+            eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
+            eRc = j1939tp_HandleMessages(pRcv, 0, NULL);
+            XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        }
+        
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (5 == cCurMsg) );
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-3]);
+        fprintf(stderr, "msg[-3] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (235 == pdu.PF) );
+        XCTAssertTrue( (J1939_POWER_TAKEOFF_1 == pdu.SA) );
+        XCTAssertTrue( (J1939_CAB_CONTROLLER_PRIMARY == pdu.PS) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-3].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-3].DATA.bytes[0] == 1) );
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
+        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (235 == pdu.PF) );
+        XCTAssertTrue( (J1939_POWER_TAKEOFF_1 == pdu.SA) );
+        XCTAssertTrue( (J1939_CAB_CONTROLLER_PRIMARY == pdu.PS) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 2) );
+        
+        XCTAssertTrue( (fReceived) );
+        XCTAssertTrue( (pRcv->activity == J1939TP_INACTIVE) );
+        XCTAssertTrue( (pRcv->state == J1939TP_STATE_UNKNOWN) );
+        XCTAssertTrue( (pRcv->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) );
+        XCTAssertTrue( (pXmt->activity == J1939TP_INACTIVE) );
+        XCTAssertTrue( (pXmt->state == J1939TP_STATE_UNKNOWN) );
+        XCTAssertTrue( (pXmt->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) );
+        
+        obj_Release(pRcv);
+        pRcv = OBJ_NIL;
+        obj_Release(pXmt);
+        pXmt = OBJ_NIL;
+        obj_Release(pCAN_XMT);
+        pCAN_XMT = OBJ_NIL;
     }
     
 }
