@@ -56,6 +56,35 @@ typedef struct j1939_msg_data_s {
 
 
 
+void            composeRQ_PGN(
+    J1939_MSG       *pMsg,
+    uint8_t         sa,
+    uint8_t         da,
+    uint32_t        pgn
+);
+
+
+void            composeTP_CTS(
+    J1939_MSG       *pMsg,
+    uint8_t         sa,
+    uint8_t         da,
+    uint32_t        eid,
+    uint8_t         cPackets,
+    uint8_t         nextPacket
+);
+
+
+void            composeTP_EOM(
+    J1939_MSG       *pMsg,
+    uint8_t         sa,
+    uint8_t         da,
+    uint32_t        eid,
+    uint8_t         cPackets,
+    uint16_t        size
+);
+
+
+
 bool            printCanMsg(
     J1939_MSG       *pMessage
 );

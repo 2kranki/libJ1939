@@ -800,10 +800,6 @@ extern "C" {
         if (this->pXmtReflectMsg) {
             (*this->pXmtReflectMsg)(this->pXmtReflectObj, msDelay, pMsg);
         }
-        else {
-            fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
-            DEBUG_BREAK();
-        }
         if (this->pXmtMsg) {
             (*this->pXmtMsg)(this->pXmtObj, msDelay, pMsg);
         }

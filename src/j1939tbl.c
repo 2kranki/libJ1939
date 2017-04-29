@@ -679,6 +679,18 @@ extern "C" {
         };
         
         
+        // SPN 234 - Software Identification Field
+        // Delimited by '*'
+        static
+        const
+        J1939_SPN           spn234 = {
+            234,
+            0,
+            NULL    /*&????*/,
+            "Software Identification Field"
+        };
+        
+        
         // SPN 512 - Driver's Demand Engine - Percent Torque - The requested torque
         // output of the engine by the driver. It is based on input from the following
         // requestors external to the powertrain: operator (via the accelerator pedal),
@@ -1037,6 +1049,17 @@ extern "C" {
             0,
             NULL    /*&????*/,
             "High Resolution Trip Distance"
+        };
+        
+        
+        // SPN 965 - Number of Software Identification Fields
+        static
+        const
+        J1939_SPN           spn965 = {
+            965,
+            0,
+            NULL    /*&????*/,
+            "Number of Software Identification Fields"
         };
         
         
@@ -1943,6 +1966,16 @@ extern "C" {
         
         static
         const
+        J1939_PGNSPN        pgn65242spns[2] = {
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            { 65242,  965,   8,    0,     0,    0,  &spn965 },
+            { 65242,  234,   0,    0,     0,    0,  &spn234 }
+        };
+        
+        
+        static
+        const
         J1939_PGNSPN        pgn65252spns[18] = {
             //                    Bit    Byte
             // PGN    SPN  cBits Offset Offset rsvd spnDef
@@ -2145,15 +2178,30 @@ extern "C" {
         
         
         const
-        J1939_PGN_ENTRY     pgn60416_entry = {
-            // PGN 60416  0x00EC00 -
-            0x0000EE00,
+        J1939_PGN_ENTRY     pgn60160_entry = {
+            // PGN 60160  0x00EC00 - Transport Protocol - Data Transfer
+            0x0000EB00,
             0,                  // msFreq
             8,                  // dlc
             7,                  // priority
             0,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            NULL,               // SPN Table Pointer
+            "Transport Protocol - Data Transfer"
+        };
+        
+        
+        const
+        J1939_PGN_ENTRY     pgn60416_entry = {
+            // PGN 60416  0x00EC00 - Transport Protocol - Connection Management
+            0x0000EC00,
+            0,                  // msFreq
+            8,                  // dlc
+            7,                  // priority
+            0,                  // cSPNs
+            0,                  // --reserved--
+            NULL,               // SPN Table Pointer
+            "Transport Protocol - Connection Management"
         };
         
         
@@ -2306,6 +2354,20 @@ extern "C" {
         
         
         const
+        J1939_PGN_ENTRY     pgn65242_entry = {
+            // PGN 65242  0x00FEDA - Software Identification - SOFT
+            0x0000FEDA,
+            0,                  // msFreq - on demand
+            0,                  // dlc - variable up to 201
+            6,                  // priority
+            2,                  // cSPNs
+            0,                  // --reserved--
+            pgn65242spns,       // SPN Table Pointer
+            "Software Identification - SOFT"
+        };
+        
+        
+        const
         J1939_PGN_ENTRY     pgn65247_entry = {
             // PGN 65247  0x00FEDF - Electronic Engine Controller 3 - EEC3
             0x0000FEDF,
@@ -2445,6 +2507,7 @@ extern "C" {
             &pgn57344_entry,
             &pgn59392_entry,
             &pgn59904_entry,
+            &pgn60160_entry,
             &pgn60416_entry,
             &pgn60928_entry,
             &pgn61184_entry,

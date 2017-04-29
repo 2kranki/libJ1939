@@ -127,6 +127,16 @@ extern "C" {
     );
     
     
+    uint8_t         j1939tp_getClaimedAddress(
+        J1939TP_DATA	*this
+    );
+    
+    bool			j1939tp_setClaimedAddress(
+        J1939TP_DATA	*this,
+        uint8_t         value
+    );
+    
+    
     ERESULT         j1939tp_getLastError(
         J1939TP_DATA	*this
     );

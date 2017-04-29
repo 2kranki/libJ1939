@@ -67,6 +67,7 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/SpeedControl1 - TSC1
         &pgn0_entry,
         (P_SRVCMSG_RTN)j1939er_HandlePgn0,
+        NULL,
         NULL,                // Message Data Constructor
         0,
         0,
@@ -79,7 +80,8 @@ extern	"C" {
         // PGN 61440  0x00F000 - Electronic Retarder Controller 1 - ERC1
         &pgn61440_entry,
         (P_SRVCMSG_RTN)j1939er_HandlePgn61440,
-        (P_MSGDATA_RTN)j1939er_SetupPgn61440,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939er_SetupPgn61440,
         offsetof(J1939ER_DATA, startTime61440),
         0,
         0,

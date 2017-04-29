@@ -152,17 +152,22 @@ extern	"C" {
     typedef struct j1939ca_pgn_entry_s {
         const
         J1939_PGN_ENTRY *pDef;          // Definition
+        // Handle a Standard 8-Byte Incoming Message
         const
-        P_SRVCMSG_RTN   pService;       // First parameter is assumed to be the responder
-                                        // object ptr who handles the incoming message.
+        P_SRVCMSG_RTN   pService;   // First parameter is assumed to be the responder
+                                    // object ptr who handles the incoming message.
+        // Handle a Variable Length Incoming Message
         const
-        P_MSGDATA_RTN   pDataSetup;
+        P_VARMSG_RTN    pDataMsg;   // First parameter is assumed to be the responder
+                                    // object ptr who handles the incoming message.
+        const
+        P_SETUP_MSG_RTN pDataSetup;
         const
         uint32_t        xmtTimeoutOff;  // Offset of Timeout repeat xmt
         const
         uint8_t         da;             // Destination Address if applicable
         const
-        uint8_t         rsvd8;
+        uint8_t         rsvd;
         const
         uint16_t        msXmtRepeat;
     } J1939CA_PGN_ENTRY;
@@ -243,6 +248,17 @@ extern	"C" {
     );
     
     
+    // Engine Intercooler Temperature
+    uint32_t		j1939ca_getSoftwareLevel(
+        J1939CA_DATA	*this
+    );
+    
+    bool			j1939en_setSoftwareLevel(
+        J1939CA_DATA	*this,
+        uint32_t		value
+    );
+    
+    
     OBJ_ID          j1939ca_getSYS(
         J1939CA_DATA	*this
     );
@@ -285,7 +301,7 @@ extern	"C" {
      */
     bool            j1939ca_HandleMessages(
         J1939CA_DATA	*this,
-        uint32_t        eid,
+        uint32_t        eid,            // EID if Message is provided
         J1939_MSG       *pMsg           // NULL == Time-out
     );
     
@@ -405,6 +421,12 @@ extern	"C" {
         uint8_t         da,                 // Destination Address
         uint16_t        cData,
         void            *pData
+    );
+    
+    
+    // PGN 65242  0x00FEDA - Software Identification - SOFT
+    bool            j1939ca_TransmitPgn65242(
+        J1939CA_DATA	*this
     );
     
     

@@ -182,6 +182,7 @@ J1939CAN_VTBL     j1939can_Vtbl = {
     // Properties:
     // Methods:
     j1939can_RcvMsg,
+    NULL,
     j1939can_XmtMsg
  
 };

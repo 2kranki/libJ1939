@@ -288,6 +288,7 @@ extern	"C" {
         // Properties:
         // Methods:
         P_SRVCMSG_RTN   pRcv;
+        P_VARMSG_RTN    pRcvData;
         P_XMTMSG_RTN    pXmt;
     } J1939_CAN_VTBL;
     

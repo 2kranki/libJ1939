@@ -66,7 +66,8 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn0
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn0
     };
 
     static
@@ -75,7 +76,8 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn0,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn0,
         offsetof(J1939TC_DATA, startTime0_10),
         0                   // Engine #1
     };
@@ -86,7 +88,8 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn0,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn0,
         offsetof(J1939TC_DATA, startTime0_50),
         41,                 // Engine #1 Retarder
         0,
@@ -99,6 +102,7 @@ extern	"C" {
         // PGN 256  0x000100 - Transmission Control 1 - TC1
         &pgn256_entry,
         (P_SRVCMSG_RTN)j1939tc_HandlePgn256,
+        NULL,
         NULL,             // Message Data Constructor
         0,
         0,
@@ -111,6 +115,7 @@ extern	"C" {
         // PGN 61184  0x00FE00 - Torque/Speed Control 1 - TSC1
         &pgn61184_entry,
         (P_SRVCMSG_RTN)j1939tc_HandlePgn61184,
+        NULL,
         NULL,             // Message Data Constructor
         0,
         0,
@@ -123,7 +128,8 @@ extern	"C" {
         // PGN 61442  0x00F002 - Electronic Transmission Controller 1 - ETC1
         &pgn61442_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn61442,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn61442,
         offsetof(J1939TC_DATA, startTime61442)
     };
 
@@ -133,7 +139,8 @@ extern	"C" {
         // PGN 61445  0x00F005 - Electronic Transmission Controller 1 - ETC1
         &pgn61445_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn61445,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn61445,
         offsetof(J1939TC_DATA, startTime61445)
     };
 
@@ -143,7 +150,8 @@ extern	"C" {
         // PGN 65098  0x00FE4A - Electronic Transmission Controller 7 - ETC7
         &pgn65098_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn65098,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn65098,
         offsetof(J1939TC_DATA, startTime65098)
     };
 
@@ -153,7 +161,8 @@ extern	"C" {
         // PGN 65226  0x00FECA - Active Diagnostic Trouble Codes - DM1
         &pgn65226_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939tc_SetupPgn65226,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939tc_SetupPgn65226,
         offsetof(J1939TC_DATA, startTime65226)
     };
 

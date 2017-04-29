@@ -67,6 +67,7 @@ extern	"C" {
         // PGN 0  0x000000 - Torque/SpeedControl1 - TSC1
         &pgn0_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn0,
+        NULL,
         NULL,                // Message Data Constructor
         0,
         0,
@@ -81,6 +82,7 @@ extern	"C" {
         &pgn61442_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn61442,
         NULL,
+        NULL,
         0,
         0,
         10
@@ -93,7 +95,8 @@ extern	"C" {
         // PGN 61443  0x00F003 - Electronic Engine Controller 2 - EEC2
         &pgn61443_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn61443,
-        (P_MSGDATA_RTN)j1939en_SetupPgn61443,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn61443,
         offsetof(J1939EN_DATA, startTime61443),
         0,
         0,
@@ -107,7 +110,8 @@ extern	"C" {
         // PGN 61444  0x00F004 - Electronic Engine Controller 1 - EEC1
         &pgn61444_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn61444,
-        (P_MSGDATA_RTN)j1939en_SetupPgn61444,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn61444,
         offsetof(J1939EN_DATA, startTime61444),
         0,
         0,
@@ -122,6 +126,7 @@ extern	"C" {
         &pgn61445_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn61445,
         NULL,
+        NULL,
         0,
         0,
         100
@@ -134,7 +139,8 @@ extern	"C" {
         // PGN 65129  0x00FE69 - Engine Temperature 3 - ET3
         &pgn65129_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn65129,
-        (P_MSGDATA_RTN)j1939en_SetupPgn65129,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn65129,
         offsetof(J1939EN_DATA, startTime65129),
         0,
         0,
@@ -148,7 +154,8 @@ extern	"C" {
         // PGN 65247  0x00FEDF - Electronic Engine Controller 3 - EEC3
         &pgn65247_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn65247,
-        (P_MSGDATA_RTN)j1939en_SetupPgn65247,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn65247,
         offsetof(J1939EN_DATA, startTime65247),
         0,
         0,
@@ -162,7 +169,8 @@ extern	"C" {
         // PGN 65252  0x00FEE4 - Shutdown - SHUTDOW
         &pgn65252_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn65262,
-        (P_MSGDATA_RTN)j1939en_SetupPgn65252,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn65252,
         offsetof(J1939EN_DATA, startTime65252),
         0,
         0,
@@ -176,7 +184,8 @@ extern	"C" {
         // PGN 65262  0x00FEEE - Engine Temperature 1 - ET1
         &pgn65262_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn65262,
-        (P_MSGDATA_RTN)j1939en_SetupPgn65262,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn65262,
         offsetof(J1939EN_DATA, startTime65262),
         0,
         0,
@@ -190,7 +199,8 @@ extern	"C" {
         // PGN 65265  0x00FEF1 - Cruise Control/Vehicle Speed - CCVS
         &pgn65265_entry,
         (P_SRVCMSG_RTN)j1939en_HandlePgn65265,
-        (P_MSGDATA_RTN)j1939en_SetupPgn65265,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939en_SetupPgn65265,
         offsetof(J1939EN_DATA, startTime65265),
         0,
         0,

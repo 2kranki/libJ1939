@@ -40,6 +40,7 @@ static
 bool            fReceived = false;
 
 
+static
 void            messageComplete(
     OBJ_ID          pObj,
     uint32_t        eid,
@@ -49,76 +50,6 @@ void            messageComplete(
 {
     fReceived = true;
     fprintf(stderr, "Received: 0x%08X (%d)'%s'\n\n", eid, cData, pData);
-}
-
-
-
-void            composeTP_CTS(
-    J1939_MSG       *pMsg,
-    uint8_t         sa,
-    uint8_t         da,
-    uint32_t        eid,
-    uint8_t         cPackets,
-    uint8_t         nextPacket
-)
-{
-    J1939_PDU       pdu;
-    J1939_PDU       pduCTS;
-    uint8_t         data[8];
-    bool            fRc;
-    
-    pdu.eid = eid;
-    
-    j1939pdu_Construct(&pduCTS, 236, da, 7, sa);
-    
-    data[0] = 17;
-    data[1] = cPackets;
-    data[2] = nextPacket;
-    data[3] = 0xFF;
-    data[4] = 0xFF;
-    data[5] = eid & 0xFF;
-    data[6] = (eid >> 8) & 0xFF;
-    data[7] = (eid >> 16) & 0xFF;
-    
-    j1939msg_ConstructMsg_E1(pMsg, pduCTS.eid, 8, data);
-    pMsg->CMSGSID.CMSGTS = 0xFFFF;          // Denote transmitting;
-    fRc = xmtHandler(NULL, 0, pMsg);
-    
-}
-
-
-
-void            composeTP_EOM(
-    J1939_MSG       *pMsg,
-    uint8_t         sa,
-    uint8_t         da,
-    uint32_t        eid,
-    uint8_t         cPackets,
-    uint16_t        size
-)
-{
-    J1939_PDU       pdu;
-    J1939_PDU       pduCTS;
-    uint8_t         data[8];
-    bool            fRc;
-    
-    pdu.eid = eid;
-    
-    j1939pdu_Construct(&pduCTS, 236, da, 7, sa);
-    
-    data[0] = 19;
-    data[1] = size & 0xFF;
-    data[2] = (size >> 8) & 0xFF;
-    data[3] = cPackets;
-    data[4] = 0xFF;
-    data[5] = eid & 0xFF;
-    data[6] = (eid >> 8) & 0xFF;
-    data[7] = (eid >> 16) & 0xFF;
-    
-    j1939msg_ConstructMsg_E1(pMsg, pduCTS.eid, 8, data);
-    pMsg->CMSGSID.CMSGTS = 0xFFFF;          // Denote transmitting;
-    fRc = xmtHandler(NULL, 0, pMsg);
-    
 }
 
 
@@ -144,6 +75,7 @@ void            composeTP_EOM(
     pSYS = j1939Sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
+    fReceived = false;
     
 }
 
@@ -688,9 +620,14 @@ void            composeTP_EOM(
         XCTAssertTrue( (curMsg[cCurMsg-5].DATA.bytes[0] == 1) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x1CEB0631 == pdu.eid) );
+        XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
-        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 2) );
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 255) );
+        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
+        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
+        XCTAssertTrue( (0x1CEC3106 == pdu.eid) );
+        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 19) );
         
         obj_Release(pObj);
         pObj = OBJ_NIL;

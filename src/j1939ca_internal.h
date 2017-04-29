@@ -241,7 +241,7 @@ extern "C" {
         uint8_t             curDa;
         uint8_t             curSa;
         uint16_t            reserved16a;
-        J1939CA_TP          TPs[j1989_CA_TP_SIZE];
+        J1939TP_DATA        TPs[j1989_CA_TP_SIZE];
         uint32_t            tpMsgDelay;
         uint32_t            tpTr;           // Timeout ??  (Default: 200ms)
         uint32_t            tpTh;           // Timeout ??  (Default: 500ms)
@@ -270,6 +270,8 @@ extern "C" {
         uint8_t             spn2555;
         J1939_PGN           spn2540;        // Parameter Group Number (RQST)
         J1939CA_MSG_60416   msg60416;
+        
+        uint32_t            softwareLevel;
     };
 #pragma pack(pop)
     
@@ -281,7 +283,16 @@ extern "C" {
     J1939CA_PGN_ENTRY   ca_pgn59904_entry;
     extern
     const
+    J1939CA_PGN_ENTRY   ca_pgn60160_entry;
+    extern
+    const
+    J1939CA_PGN_ENTRY   ca_pgn60416_entry;
+    extern
+    const
     J1939CA_PGN_ENTRY   ca_pgn60928_entry;
+    extern
+    const
+    J1939CA_PGN_ENTRY   ca_pgn65242_entry;
     
     extern
     const
@@ -339,6 +350,13 @@ extern "C" {
     );
     
     
+    bool            j1939ca_HandlePgn60160(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    );
+    
+    
     bool            j1939ca_HandlePgn60416(
         J1939CA_DATA	*this,
         uint32_t        eid,
@@ -350,6 +368,14 @@ extern "C" {
         J1939CA_DATA	*this,
         uint32_t        eid,
         J1939_MSG       *pMsg
+    );
+    
+    
+    bool            j1939ca_HandlePgn65242(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        uint16_t        cData,
+        uint8_t         *pData
     );
     
     
@@ -377,6 +403,14 @@ extern "C" {
     
     bool            j1939ca_TransmitPgn60928(
         J1939CA_DATA	*this
+    );
+    
+    
+    int             j1939ca_SetupPgn65242(
+        J1939CA_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
     );
     
     

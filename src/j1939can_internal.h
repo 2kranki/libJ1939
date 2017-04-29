@@ -68,6 +68,9 @@ struct j1939can_data_s	{
     P_SRVCMSG_RTN       pRcvMsg;
     OBJ_ID              pRcvObj;
     
+    P_VARMSG_RTN        pRcvData;
+    OBJ_ID              pRcvDataObj;
+    
     /* XmtMsg() is the routine called to transmit an 8-byte
      * message. All messages must be sent via this routine.
      */

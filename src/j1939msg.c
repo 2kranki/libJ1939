@@ -74,7 +74,6 @@ extern "C" {
     uint32_t        j1939msg_getEid(
         J1939_MSG       *pMsg
     )
-        
     {
         uint32_t        value = 0;
 
@@ -206,7 +205,8 @@ extern "C" {
         return da;
     }
     
-    
+
+
     J1939_PGN       j1939pdu_getPGN(
         J1939_PDU       pdu
     )

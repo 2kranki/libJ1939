@@ -82,6 +82,7 @@ extern "C" {
         // Properties:
         // Methods:
         bool            (*pRcv)(OBJ_ID,uint32_t,J1939_MSG *);
+        bool            (*pRcvData)(OBJ_ID,uint32_t,uint16_t,uint8_t *);
         bool            (*pXmt)(OBJ_ID,uint32_t,J1939_MSG *);
     } J1939CAN_VTBL;
 

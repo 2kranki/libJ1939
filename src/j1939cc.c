@@ -57,7 +57,8 @@ extern "C" {
         // PGN 57344  0x00F003 - Electronic Engine Controller 2 - EEC2
         &pgn57344_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn57344,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn57344,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn57344,
         offsetof(J1939CC_DATA, startTime57344),
         0,
         0,
@@ -71,7 +72,8 @@ extern "C" {
         // PGN 61443  0x00F003 - Electronic Engine Controller 2 - EEC2
         &pgn61443_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn61443,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn61443,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn61443,
         offsetof(J1939CC_DATA, startTime61443),
         0,
         0,
@@ -84,7 +86,8 @@ extern "C" {
     J1939CA_PGN_ENTRY     ca_pgn65217_entry = {
         &pgn65217_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65217,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn65217,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65217,
         offsetof(J1939CC_DATA, startTime65217),
         0,
         0,
@@ -98,7 +101,8 @@ extern "C" {
         // PGN 65226  0x00FEF1 - Cruise Control/Vehicle Speed - CCVS
         &pgn65226_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65226,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn65226,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65226,
         offsetof(J1939CC_DATA, startTime65226),
         0,
         0,
@@ -111,6 +115,7 @@ extern "C" {
     J1939CA_PGN_ENTRY     ca_pgn65261_entry = {
         &pgn65261_entry,
         NULL, //FIXME: ??? (P_SRVCMSG_RTN)j1939cc_HandlePgn65261,
+        NULL,
         NULL, //FIXME: ??? (P_MSGDATA_RTN)j1939cc_SetupPgn65261,
         0,
         0,
@@ -125,7 +130,8 @@ extern "C" {
         // PGN 65265  0x00FEF1 - Cruise Control/Vehicle Speed - CCVS
         &pgn65265_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65265,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn65265,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65265,
         offsetof(J1939CC_DATA, startTime65265),
         0,
         0,
@@ -139,7 +145,8 @@ extern "C" {
         // PGN 65269  0x00FEF5 - Ambient Conditions - AMB
         &pgn65269_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65269,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn65269,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65269,
         offsetof(J1939CC_DATA, startTime65269),
         0,
         0,
@@ -153,7 +160,8 @@ extern "C" {
         // PGN 65269  0x00FEF5 - Ambient Conditions - AMB
         &pgn65271_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65271,
-        (P_MSGDATA_RTN)j1939cc_SetupPgn65271,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65271,
         offsetof(J1939CC_DATA, startTime65271),
         0,
         0,

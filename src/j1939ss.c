@@ -57,7 +57,8 @@ extern "C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         NULL,
-        (P_MSGDATA_RTN)j1939ss_SetupPgn0,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939ss_SetupPgn0,
         offsetof(J1939SS_DATA, startTime0),
         0,
         0,
@@ -71,6 +72,7 @@ extern "C" {
         // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
         &pgn0_entry,
         (P_SRVCMSG_RTN)j1939ss_HandlePgn65098,
+        NULL,
         NULL,                // Message Data Constructor
         0,
         0,

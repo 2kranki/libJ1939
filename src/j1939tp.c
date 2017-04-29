@@ -359,6 +359,50 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                  C l a i m e d  A d d r e s s
+    //---------------------------------------------------------------
+    
+    uint8_t         j1939tp_getClaimedAddress(
+        J1939TP_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        return this->ca;
+    }
+    
+    
+    bool			j1939tp_setClaimedAddress(
+        J1939TP_DATA	*this,
+        uint8_t         value
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tp_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        this->ca = value;
+        
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                      L a s t  E r r o r
     //---------------------------------------------------------------
     
@@ -1276,7 +1320,7 @@ extern "C" {
     {
         ERESULT         eRc;
         //int             i;
-        uint8_t         numPackets;
+        //uint8_t         numPackets;
         
         // Do initialization.
 #ifdef NDEBUG

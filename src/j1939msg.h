@@ -106,10 +106,17 @@ typedef bool (*P_XMTMSG_RTN) (
             J1939_MSG   *
         );
 
+typedef int     (*P_VARMSG_RTN) (
+    OBJ_ID      ,                       // Object Ptr
+    uint32_t    ,                       // EID or PDU (j1939)
+    uint16_t    ,                       // data area size
+    void        *                       // Message Data Area
+);
+
 /*! Set up PDU and Msg using object data returning
  * amount of data used. 0 means an error.
  */
-typedef int     (*P_MSGDATA_RTN) (
+typedef int     (*P_SETUP_MSG_RTN) (
     OBJ_ID      ,                       // Object Ptr
     uint32_t    *,                      // EID or PDU (j1939) Ptr
     uint16_t    ,                       // data area size
@@ -142,9 +149,8 @@ struct j1939_msg_s {
         uint32_t FILHIT:5;      // Filter Number that accepted msg (RX Only)
         uint32_t CMSGTS:16;     // CAN Message Timestamp - CANTMR if CANCAP == 1 (RX Only)
       };
-      struct {
-        uint32_t w:32;
-      };
+      uint32_t  w:32;
+      uint8_t   bytes[4];
     } CMSGSID;
     union {
       struct {
@@ -167,9 +173,8 @@ struct j1939_msg_s {
                                 //      this bit should always be set.
         uint32_t :2;
       };
-      struct {
-        uint32_t w:32;
-      };
+      uint32_t  w:32;
+      uint8_t   bytes[4];
     } CMSGEID;
     union {
         struct {
@@ -354,28 +359,28 @@ extern "C" {
     uint32_t        j1939msg_getEid(
         J1939_MSG       *pMsg
     );
-        
+    
     bool            j1939msg_setEid(
         J1939_MSG       *pMsg,
         uint32_t        value
     );
-
-
+    
+    
     uint32_t        j1939msg_getDataLength(
         J1939_MSG       *pMsg
     );
-
+    
     bool            j1939msg_setDataLength(
         J1939_MSG       *pMsg,
         uint32_t        value
     );
-
-
+    
+    
     bool            j1939msg_IsEXID(
         J1939_MSG       *pMsg
     );
-
-
+    
+    
     J1939_PDU       j1939msg_getPDU(
         J1939_MSG       *pMsg
     );
@@ -384,7 +389,7 @@ extern "C" {
         J1939_MSG       *pMsg,
         uint32_t        value
     );
-        
+    
     
     J1939_PGN       j1939msg_getPGN(
         J1939_MSG       *pMsg
