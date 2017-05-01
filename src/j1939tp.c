@@ -668,12 +668,6 @@ extern "C" {
         }
 #endif
 
-#ifdef XYZZY
-        if (obj_IsEnabled(this)) {
-            ((J1939TP_VTBL *)obj_getVtbl(this))->devVtbl.pStop((OBJ_DATA *)this,NULL);
-        }
-#endif
-
         j1939tp_setCAN(this, OBJ_NIL);
         j1939tp_setSYS(this, OBJ_NIL);
         
@@ -843,6 +837,7 @@ extern "C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         da;
         uint8_t         sa;
         //bool            fRc;
         uint8_t         spn2572;    // Sequence Number (TP.DT)
@@ -867,8 +862,9 @@ extern "C" {
         }
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
+        da = j1939pdu_getDA(pdu);
         sa = j1939pdu_getSA(pdu);
-        if (sa == this->adr) {
+        if (sa == this->sa) {
             spn2572 = pMsg->DATA.bytes[0];
             pSpn2573 = &pMsg->DATA.bytes[1];
             this->rcvdSeq  = spn2572;
@@ -953,8 +949,9 @@ extern "C" {
                 spn2560.pgn2 = pMsg->DATA.bytes[7];
                 switch (this->activity) {
                     case J1939TP_INACTIVE:
-                        eRc =   j1939tp_MessageReceiveRTS(
+                        eRc =   j1939tp_MessageReceive(
                                                         this,
+                                                        da,
                                                         sa,
                                                         spn2560,
                                                         spn2557,
@@ -1001,7 +998,7 @@ extern "C" {
                         
                     case J1939TP_ACTIVE_XMT_TP:
                         if (this->state == J1939TP_STATE_WAIT_FOR_CTS) {
-                            if ((spn2563.w == this->pgn.w) && (sa == this->adr)) {
+                            if ((spn2563.w == this->pgn.w) && (sa == this->da)) {
                                 if (spn2561) {
                                     this->seq   = spn2562 - 1;
                                     this->limit = spn2561;
@@ -1065,7 +1062,7 @@ extern "C" {
                 spn2569.pgn2 = pMsg->DATA.bytes[7];
                 switch (this->activity) {
                     case J1939TP_INACTIVE:
-                        eRc = j1939tp_MessageReceiveBAM(this, sa, spn2569, spn2567, spn2568);
+                        eRc = j1939tp_MessageReceive(this, da, sa, spn2569, spn2567, spn2568);
                         break;
                         
                     case J1939TP_ACTIVE_RCV_BAM:
@@ -1259,8 +1256,9 @@ extern "C" {
     //                M e s s a g e  R e c e i v e
     //---------------------------------------------------------------
     
-    ERESULT         j1939tp_MessageReceiveBAM(
+    ERESULT         j1939tp_MessageReceive(
         J1939TP_DATA	*this,
+        uint8_t         da,
         uint8_t         sa,
         J1939_PGN       pgn,
         uint16_t        msgSize,
@@ -1268,7 +1266,7 @@ extern "C" {
     )
     {
         //int             i;
-        //ERESULT         eRc;
+        ERESULT         eRc;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1286,10 +1284,10 @@ extern "C" {
             return ERESULT_BUSY;
         }
         
-        this->activity = J1939TP_ACTIVE_RCV_BAM;
         
         this->pgn = pgn;
-        this->adr = sa;
+        this->da = da;
+        this->sa = sa;
         this->size = msgSize;
         //memmove(this->data, pData, cData);
         this->packets = cPackets;
@@ -1298,68 +1296,24 @@ extern "C" {
         this->seq = 1;
         bitmapReset(this);
         
-        this->stateProto = J1939TP_STATE_PROTO_RCV_BAM;
-        //this->msTimeProto = j1939tp_MsTimeGet(this);
-        this->state = J1939TP_STATE_RCV_BAM;
-        this->msTime = j1939tp_MsTimeGet(this);
-        
-        // Return to caller.
-        j1939tp_setLastError(this, ERESULT_SUCCESS);
-        return ERESULT_SUCCESS;
-    }
-    
-    
-    
-    ERESULT         j1939tp_MessageReceiveRTS(
-        J1939TP_DATA	*this,
-        uint8_t         sa,
-        J1939_PGN       pgn,
-        uint16_t        msgSize,
-        uint8_t         cPackets
-    )
-    {
-        ERESULT         eRc;
-        //int             i;
-        //uint8_t         numPackets;
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939tp_Validate(this) ) {
-            DEBUG_BREAK();
-            return j1939tp_getLastError(this);
-        }
-#endif
-        
-        if (this->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) {
+        if (da == J1939_GENERAL_BROADCAST) {
+            this->activity = J1939TP_ACTIVE_RCV_BAM;
+            this->stateProto = J1939TP_STATE_PROTO_RCV_BAM;
+            //this->msTimeProto = j1939tp_MsTimeGet(this);
+            this->state = J1939TP_STATE_RCV_BAM;
+            this->msTime = j1939tp_MsTimeGet(this);
         }
         else {
-            j1939tp_setLastError(this, ERESULT_BUSY);
-            return ERESULT_BUSY;
+            this->activity = J1939TP_ACTIVE_RCV_TP;
+            eRc = j1939tp_TransmitCTS(this, this->limit, this->seq);
+            if (ERESULT_FAILED(eRc)) {
+                return eRc;
+            }
+            this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_T2;
+            this->msTimeProto = j1939tp_MsTimeGet(this);
+            this->state = J1939TP_STATE_RCV_TP;
+            this->msTime = j1939tp_MsTimeGet(this);
         }
-        
-        this->activity = J1939TP_ACTIVE_RCV_TP;
-        
-        this->pgn = pgn;
-        this->adr = sa;
-        this->size = msgSize;
-        //memmove(this->data, pData, cData);
-        this->packets = cPackets;
-        this->cNeeded = this->packets;
-        this->limit = (cPackets < 5) ? cPackets : 4;
-        this->seq = 1;
-        bitmapReset(this);
-        
-        eRc = j1939tp_TransmitCTS(this, this->limit, this->seq);
-        if (ERESULT_FAILED(eRc)) {
-            return eRc;
-        }
-
-        this->stateProto = J1939TP_STATE_PROTO_WAIT_FOR_T2;
-        this->msTimeProto = j1939tp_MsTimeGet(this);
-
-        this->state = J1939TP_STATE_RCV_TP;
-        this->msTime = j1939tp_MsTimeGet(this);
         
         // Return to caller.
         j1939tp_setLastError(this, ERESULT_SUCCESS);
@@ -1401,14 +1355,15 @@ extern "C" {
         
         this->pdu = pdu;
         this->pgn = j1939pdu_getPGN(pdu);
-        this->adr = j1939pdu_getDA(pdu);
+        this->da = j1939pdu_getDA(pdu);
+        this->sa = j1939pdu_getSA(pdu);
         this->size = cData;
         memmove(this->data, pData, cData);
         this->packets = (cData + 7 - 1) / 7;
         this->limit = this->packets;
         this->seq = 0;
         
-        if (255 == this->adr) {
+        if (255 == this->da) {
             this->activity = J1939TP_ACTIVE_XMT_BAM;
             this->stateProto = J1939TP_STATE_PROTO_XMT_BAM;
             this->msTimeProto = j1939tp_MsTimeGet(this);
@@ -1749,6 +1704,8 @@ extern "C" {
     )
     {
         ERESULT         eRc;
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1765,16 +1722,26 @@ extern "C" {
                 break;
                 
             case J1939TP_ACTIVE_RCV_BAM:
-                if (this->pMessageReceived) {
-                    eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
-                }
-                break;
-                
             case J1939TP_ACTIVE_RCV_TP:
                 if (this->pMessageReceived) {
-                    eRc = this->pMessageReceived(this->pMsgRcvObj, this->pgn.pgn, this->size, this->data);
+                    pgn = this->pgn;
+                    j1939pdu_Construct(
+                                       &pdu,
+                                       pgn.PF,
+                                       pgn.PF > 239 ? pgn.GE : this->da,
+                                       6,
+                                       this->sa
+                    );
+                    eRc =   this->pMessageReceived(
+                                                 this->pMsgRcvObj,
+                                                 pdu.eid,
+                                                 this->size,
+                                                 this->data
+                            );
                 }
-                eRc = j1939tp_TransmitEOM(this);
+                if (this->activity == J1939TP_ACTIVE_RCV_TP) {
+                    eRc = j1939tp_TransmitEOM(this);
+                }
                 break;
                 
             case J1939TP_ACTIVE_XMT_BAM:
@@ -1873,7 +1840,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
         
         pData = data;
         *pData  = 255;
@@ -1935,7 +1902,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
         
         pData = data;
         *pData  = 32;
@@ -1999,7 +1966,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->sa, 7, this->ca);
         
         pData = data;
         *pData  = 17;
@@ -2061,7 +2028,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
         
         pData = data;
         *pData  = 19;
@@ -2133,7 +2100,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 235, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 235, this->da, 7, this->ca);
         
         offset = n * 7;
         pDataSrc = this->data + offset;
@@ -2197,7 +2164,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->adr, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
         
         pData = data;
         *pData  = 16;

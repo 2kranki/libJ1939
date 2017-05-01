@@ -1200,7 +1200,7 @@ extern	"C" {
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939er_Vtbl );
 
-        this->super.ca = J1939_ENGINE_RETARDER_EXHAUST_1;
+        j1939ca_Setup((J1939CA_DATA *)this, J1939_ENGINE_RETARDER_EXHAUST_1);
         //this->super.name.ECU = 0;
         this->super.name.FU = 12;
         this->super.name.FUI = 1;

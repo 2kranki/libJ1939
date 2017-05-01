@@ -697,7 +697,7 @@ extern "C" {
         //this->stackSize = obj_getMisc1(this);
         //this->pArray = objArray_New( );
 
-        this->super.ca = J1939_CAB_CONTROLLER;
+        j1939ca_Setup((J1939CA_DATA *)this, J1939_CAB_CONTROLLER);
         //this->super.name.ECU = 0;
         this->super.name.FU = 3;
         this->super.name.FUI = 0;

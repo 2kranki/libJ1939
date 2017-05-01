@@ -135,7 +135,8 @@ void            messageComplete(
         j1939Sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
-        pObj->adr = 255;
+        pObj->da = 255;
+        pObj->sa = J1939_CAB_CONTROLLER_PRIMARY;
         pObj->packets = 2;
         pObj->size = 10;
         memmove(pObj->data, "1234567890", 10);

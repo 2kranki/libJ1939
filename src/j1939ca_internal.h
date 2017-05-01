@@ -379,6 +379,12 @@ extern "C" {
     );
     
     
+    bool            j1939ca_Setup(
+        J1939CA_DATA	*this,
+        uint8_t         ca          // Claimed Address
+    );
+    
+    
     int             j1939ca_SetupPgn60928(
         J1939CA_DATA	*this,
         J1939_PDU       *pEid,

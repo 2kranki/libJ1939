@@ -16,7 +16,11 @@
  *          processing the individual packets of data.
  *
  * Remarks
- *	1.      None
+ *	1.      PGN 60160 has only a source and destination address to
+ *          key off of, no pgn. So, we must search by that. In ad-
+ *          dition, we can only receive a BAM and one RTS/CTS from
+ *          any one source address at a time since the destination
+ *          address would be either 255 or ours.
  *
  * History
  *	04/18/2017 Generated
@@ -200,17 +204,9 @@ extern "C" {
     );
     
  
-    ERESULT         j1939tp_MessageReceiveBAM(
+    ERESULT         j1939tp_MessageReceive(
         J1939TP_DATA	*this,
-        uint8_t         sa,
-        J1939_PGN       pgn,
-        uint16_t        msgSize,
-        uint8_t         cPackets
-    );
-    
-    
-    ERESULT         j1939tp_MessageReceiveRTS(
-        J1939TP_DATA	*this,
+        uint8_t         da,
         uint8_t         sa,
         J1939_PGN       pgn,
         uint16_t        msgSize,

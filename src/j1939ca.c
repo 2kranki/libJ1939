@@ -55,6 +55,7 @@
 /* Header File Inclusion */
 #include        <j1939ca_internal.h>
 #include        <dec.h>
+#include        <trace.h>
 
 
 #ifdef	__cplusplus
@@ -99,7 +100,7 @@ extern	"C" {
     
     const
     J1939CA_PGN_ENTRY   ca_pgn60160_entry = {
-        // PGN 60416  0x00EC00 - Transport ProtocolConnection Management (TP.CM)
+        // PGN 60160  0x00EB00 - Transport Protocol/Data Transfer (TP.DT)
         &pgn60160_entry,
         (P_SRVCMSG_RTN)j1939ca_HandlePgn60160,
         NULL,
@@ -110,7 +111,7 @@ extern	"C" {
     
     const
     J1939CA_PGN_ENTRY   ca_pgn60416_entry = {
-        // PGN 60416  0x00EC00 - Transport ProtocolConnection Management (TP.CM)
+        // PGN 60416  0x00EC00 - Transport Protocol/Connection Management (TP.CM)
         &pgn60416_entry,
         (P_SRVCMSG_RTN)j1939ca_HandlePgn60416,
         NULL,
@@ -150,6 +151,7 @@ extern	"C" {
         &ca_pgn51456_entry,
         &ca_pgn59392_entry,
         &ca_pgn59904_entry,
+        &ca_pgn60160_entry,
         &ca_pgn60416_entry,
         &ca_pgn60928_entry,
         &ca_pgn65242_entry,
@@ -169,6 +171,7 @@ extern	"C" {
     const
     J1939CA_PGN_ENTRY   *xmtPgnIndex[] = {
         &ca_pgn60928_entry,
+        &ca_pgn65242_entry,
         NULL
     };
     
@@ -243,6 +246,29 @@ extern	"C" {
 
     
     
+#if defined(NDEBUG)
+#else
+    void            TraceMsg(
+        J1939CA_DATA	*this,
+        J1939_MSG       *pMsg
+    )
+    {
+        char            data[64];
+        
+        data[0] = 0;
+        if (pMsg) {
+            j1939msg_CreatePrintable( pMsg, data );
+            TRC_OBJ(this, "\tmsg: %s\n", data);
+        }
+        else {
+            TRC_OBJ(this, "\tmsg: NULL\n");
+        }
+
+    }
+#endif
+    
+    
+    
     //---------------------------------------------------------------
     //                  T a s k  B o d y
     //---------------------------------------------------------------
@@ -263,19 +289,62 @@ extern	"C" {
     }
     
     
-    J1939TP_DATA *    tp_Find(
+    bool            tp_CheckActive(
         J1939CA_DATA	*this,
-        uint8_t         activity,
-        uint8_t         adr             // rcv/xmt address 
+        uint8_t         msgSA           // message source address
+    )
+    {
+        int             i;
+        int             cnt = 0;
+        
+        for (i=0; i<j1989_CA_TP_SIZE; ++i) {
+            if (this->TPs[i].activity == J1939TP_INACTIVE) {
+            }
+            else {
+                if (this->TPs[i].sa == msgSA) {
+                    ++cnt;
+                }
+            }
+        }
+        
+        if (cnt > 1) {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    J1939TP_DATA *    tp_FindActive(
+        J1939CA_DATA	*this,
+        uint8_t         msgDA,          // message Destination address
+        uint8_t         msgSA           // message source address
     )
     {
         int             i;
         
         for (i=0; i<j1989_CA_TP_SIZE; ++i) {
-            if (this->TPs[i].activity == activity) {
-                if (this->TPs[i].adr == adr) {
+            if (this->TPs[i].activity == J1939TP_INACTIVE) {
+            }
+            else {
+                if ((this->TPs[i].da == msgDA) && (this->TPs[i].sa == msgSA)) {
                     return &this->TPs[i];
                 }
+            }
+        }
+        
+        return NULL;
+    }
+    
+    
+    J1939TP_DATA *    tp_FindInactive(
+        J1939CA_DATA	*this
+    )
+    {
+        int             i;
+        
+        for (i=0; i<j1989_CA_TP_SIZE; ++i) {
+            if (this->TPs[i].activity == J1939TP_INACTIVE) {
+                return &this->TPs[i];
             }
         }
         
@@ -291,6 +360,7 @@ extern	"C" {
         uint8_t         *pData
     )
     {
+        ERESULT         eRc = ERESULT_GENERAL_FAILURE;
         J1939_PDU       pdu;
         J1939_PGN       pgn;
         bool            fRc;
@@ -320,7 +390,7 @@ extern	"C" {
             while ( (pCurEntry = *pCurIndex++) ) {
                 if (pgn.w == pCurEntry->pDef->pgn ) {
                     fRc = (pCurEntry->pDataMsg)( this, pdu.eid, cData, pData);
-                    return ERESULT_SUCCESS;
+                    eRc = ERESULT_SUCCESS;
                 }
             }
         }
@@ -330,13 +400,11 @@ extern	"C" {
         while ( (pCurEntry = *pCurIndex++) ) {
             if (pgn.w == pCurEntry->pDef->pgn ) {
                 fRc = (pCurEntry->pDataMsg)( this, pdu.eid, cData, pData);
-                return ERESULT_SUCCESS;
+                eRc = ERESULT_SUCCESS;
             }
         }
         
-        // Find an entry for the appropriate msg.
-        
-        return ERESULT_GENERAL_FAILURE;
+        return eRc;
     }
     
     
@@ -761,7 +829,14 @@ extern	"C" {
         if( NULL == this ) {
             return;
         }
-        
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return;
+        }
+#endif
+       
         for (i=0; i<j1989_CA_TP_SIZE; ++i) {
             obj_Release(&this->TPs[i]);
             memset(&this->TPs[i], '\0', sizeof(J1939TP_DATA));
@@ -913,9 +988,11 @@ extern	"C" {
             DEBUG_BREAK();
             return false;
         }
+        //TRC_OBJ(this, "%s:\n", __func__);
 #endif
         
         // Get the PGN requested.
+        //TraceMsg(this, pMsg);
         if (pMsg) {
             pdu = j1939msg_getPDU(pMsg);
             this->curPgn = j1939pdu_getPGN(pdu);
@@ -939,7 +1016,14 @@ extern	"C" {
                 }
                 fRc = j1939ca_FindRcvPgnEntry(this, this->curPgn);
                 if (fRc) {
-                    fRc = (*this->pCurEntry->pService)( this, pdu.eid, pMsg);
+                    if (this->pCurEntry->pService) {
+                        fRc = (*this->pCurEntry->pService)( this, pdu.eid, pMsg);
+                    }
+                    else {
+                        DEBUG_BREAK();
+                        // We have a receive pgn table entry that has no
+                        // service routine! We need to fix the table.
+                    }
                 }
             }
             if (this->pTimedTransmit && this->fTimedTransmit) {
@@ -1207,7 +1291,7 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
-        //bool            fRc;
+        bool            fRc;
         uint8_t         spn2572;    // Sequence Number (TP.DT)
         uint8_t         *pSpn2573;
         J1939TP_DATA    *pTP;
@@ -1229,9 +1313,9 @@ extern	"C" {
         spn2572 = pMsg->DATA.bytes[0];
         pSpn2573 = &pMsg->DATA.bytes[1];
         
-        pTP = tp_Find(this, J1939TP_ACTIVE_RCV_BAM, sa);
+        pTP = tp_FindActive(this, da, sa);
         if (pTP) {
-            ;
+            fRc = j1939tp_HandlePgn60160(pTP, eid, pMsg);
         }
         else {
             // Ignore the message.
@@ -1342,19 +1426,23 @@ extern	"C" {
                 spn2569.pgn1 = pMsg->DATA.bytes[6];
                 spn2569.pgn2 = pMsg->DATA.bytes[7];
                 //FIXME: ??da = j1939pdu_getDA(pdu);
-                pTP = tp_Find(this, J1939TP_INACTIVE, 0);
-                if (pTP) {
-                    eRc =j1939tp_MessageReceiveBAM(pTP, da, spn2569, spn2567, spn2568);
-                    if (ERESULT_FAILED(eRc)) {
-                        fRc = false;
-                    }
-                    else {
-                        fRc = true;
-                    }
+                if (tp_CheckActive(this, sa)) {
                 }
                 else {
-                    DEBUG_BREAK();
-                    return false;
+                    pTP = tp_FindInactive(this);
+                    if (pTP) {
+                        eRc =j1939tp_MessageReceive(pTP, da, sa, spn2569, spn2567, spn2568);
+                        if (ERESULT_FAILED(eRc)) {
+                            fRc = false;
+                        }
+                        else {
+                            fRc = true;
+                        }
+                    }
+                    else {
+                        DEBUG_BREAK();
+                        return false;
+                    }
                 }
                 break;
                 
@@ -1537,8 +1625,10 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
-        J1939_PGN       spn2540;    // Requested PGN
         bool            fRc;
+        uint8_t         spn965;
+        uint8_t         *pSpn234;
+        uint16_t        len = cData - 1;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1547,29 +1637,17 @@ extern	"C" {
             DEBUG_BREAK();
             return false;
         }
+        if (cData < 2) {
+            DEBUG_BREAK();
+            return false;
+        }
 #endif
         pdu.eid = eid;
         
-        // Get the PGN requested.
-        spn2540.w = 0;
-        //FIXME: spn2540.pgn0 = pMsg->DATA.bytes[0];
-        //FIXME: spn2540.pgn1 = pMsg->DATA.bytes[1];
-        //FIXME: spn2540.pgn2 = pMsg->DATA.bytes[2];
+        spn965 = *pData++;
+        pSpn234 = pData;
         
-        if (0x0000EA00 == spn2540.w) {
-            // We should never be requesting a request!
-            return false;
-        }
-        
-        fRc = j1939ca_FindXmtPgnEntry(this, spn2540);
-        if (fRc) {
-            fRc = j1939ca_TransmitPgn(this, this->pCurEntry);
-        }
-        else {
-            if ((spn2540.PF < 240) && !(255 == this->curDa)) {
-                fRc = j1939ca_TransmitPgn59392(this, 1, 0, 0xFF, spn2540);
-            }
-        }
+        ++this->softwareLevel;          // For Testing only.
         
         // Return to caller.
         return true;
@@ -1633,7 +1711,9 @@ extern	"C" {
         this->tpT4 = 1050;
         
         for (i=0; i<j1989_CA_TP_SIZE; ++i) {
-            pTP = j1939tp_Init(&this->TPs[i], pCAN, pSYS, 0);
+            pTP = &this->TPs[i];
+            memset(pTP, '\0', sizeof(J1939TP_DATA));
+            pTP = j1939tp_Init(pTP, pCAN, pSYS, 0);
             j1939tp_setRcvdMsg(pTP, (void *)tp_MessageReceived, this);
         }
         
@@ -1923,7 +2003,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, lenUsed, &data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, lenUsed, pData);
         }
         
         if (pData == data) {
@@ -2429,7 +2509,7 @@ extern	"C" {
             pPDU->PF = 238;
             pPDU->PS = 255;
             pPDU->SA = this->ca;
-            pPDU->P  = 7;             // Priority
+            pPDU->P  = 6;             // Priority
         }
         else {
             return 0;
@@ -2515,7 +2595,7 @@ extern	"C" {
     //           T r a n s m i t  P G N 6 5 2 4 2  0x00FEDA
     //---------------------------------------------------------------
     
-    // Software Identification -SOFT
+    // Software Identification - SOFT
     
     int             j1939ca_SetupPgn65242(
         J1939CA_DATA	*this,
@@ -2542,11 +2622,11 @@ extern	"C" {
             if (cData < 8) {
                 return 0;
             }
+            *pData = 1;                 // SPN965 - Number of Software Fields;
             dec_putInt32A(this->softwareLevel, &len, &pData2);
             *pData2++ = '*';
             *pData2++ = '\0';
-            len = (uint32_t)strlen((char *)pData);
-            *pData = (uint8_t)len;
+            len = (uint32_t)strlen((char *)(pData + 1));
         }
         else {
             return 0;
@@ -2707,7 +2787,7 @@ extern	"C" {
         else {
             ERESULT         eRc;
             da = j1939pdu_getDA(pdu);
-            pTP = tp_Find(this, J1939TP_INACTIVE, 0);
+            pTP = tp_FindInactive(this);
             if (pTP) {
                 eRc =j1939tp_MessageTransmit(pTP, pdu, cData, pData);
                 if (ERESULT_FAILED(eRc)) {

@@ -248,7 +248,6 @@ bool            xmtPGN60928(
     pCAN_RCV = OBJ_NIL;
     obj_Release(pSYS);
     pSYS = OBJ_NIL;
-    //j1939_SharedReset( );
 
     mem_Dump( );
 
@@ -525,7 +524,7 @@ bool            xmtPGN60928(
     bool            fRc;
     J1939_MSG       msg;
     J1939_PDU       pdu;
-    uint8_t         data[8];
+    //uint8_t         data[8];
     
     XCTAssertFalse( (OBJ_NIL == pCAN_RCV) );
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
@@ -553,7 +552,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x1CEEFF00 == pdu.eid) );
+        XCTAssertTrue( (0x18EEFF00 == pdu.eid) );
 
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);
@@ -588,6 +587,7 @@ bool            xmtPGN60928(
     int             i;
     //J1939_MSG       msg;
     bool            fRc;
+    uint32_t        softlvl;
     
     XCTAssertFalse( (OBJ_NIL == pCAN_RCV) );
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
@@ -604,7 +604,7 @@ bool            xmtPGN60928(
                         4              // J1939 Industry Group (3 bits) (Marine)
             );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
-    j1939ca_setClaimedAddress(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
+    j1939ca_Setup(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
     pRcv->cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
 
     pXmt = j1939ca_Alloc(0);
@@ -618,7 +618,7 @@ bool            xmtPGN60928(
                         4              // J1939 Industry Group (3 bits) (Marine)
             );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
-    j1939ca_setClaimedAddress(pXmt, J1939_POWER_TAKEOFF_1);
+    j1939ca_Setup(pXmt, J1939_POWER_TAKEOFF_1);
     pXmt->cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
 
     if (pRcv && pXmt) {
@@ -633,8 +633,9 @@ bool            xmtPGN60928(
         j1939can_setXmtMsg(pCAN_XMT, xmtHandler, NULL);
         j1939can_setRcvMsg(pCAN_XMT, (P_XMTMSG_RTN)j1939ca_HandleMessages, pRcv);
         j1939can_setLoopBackXmt(pCAN_XMT, true);
+        softlvl = pRcv->softwareLevel;
         
-        pgn.pgn = 0x0000FECA;
+        pgn.pgn = 65242;
         fRc = j1939ca_TransmitPgn59904(pRcv, pgn, J1939_POWER_TAKEOFF_1);
         XCTAssertTrue( (fRc) );
         
@@ -647,18 +648,18 @@ bool            xmtPGN60928(
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 32) );
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[1]);
-        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 10) );
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 13) );
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[2]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
         for (i=0; i<6; ++i) {
             j1939Sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
+            eRc = j1939ca_HandleMessages(pXmt, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (3 == cCurMsg) );
+        XCTAssertTrue( (4 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEBFF06 == pdu.eid) );
@@ -670,7 +671,7 @@ bool            xmtPGN60928(
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 2) );
         
-        XCTAssertTrue( (fReceived) );
+        XCTAssertTrue( (!(softlvl == pRcv->softwareLevel)) );
         //FIXME: XCTAssertTrue( (pRcv->activity == J1939TP_INACTIVE) );
         //FIXME: XCTAssertTrue( (pRcv->state == J1939TP_STATE_UNKNOWN) );
         //FIXME: XCTAssertTrue( (pRcv->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) );

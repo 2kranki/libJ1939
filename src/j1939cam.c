@@ -70,28 +70,27 @@ extern	"C" {
     static
     const
     J1939CAM_CA_ENTRY      ca_tbl[] = {
-        {   0,                          // Engine #1
+        {   J1939_ENGINE_1,             // Engine #1
             0,
             0,
             0,
             (OBJ_ALLOC)&j1939en_Alloc,
             (OBJ_INIT)&j1939en_Init
         },
-        {  3,  3, 0, 0, NULL, NULL },   // Transmission #1
-        { 11,  9, 0, 0, NULL, NULL },   // Brake System Controller
-        { 15, 12, 0, 0, NULL, NULL },   // Engine Retarder #1
-                                        // (Compression Braking)
-        { 17, 14, 0, 0, NULL, NULL },   // Cruise Control
-        { 23, 19, 0, 0, NULL, NULL },   // Instrument Cluster #1
-        { 33, 26, 0, 0, NULL, NULL },   // Body Controller
-        {   41,                         // Engine #1 Exhaust Retarder
+        {  J1939_TRANSMISSION_1,  3, 0, 0, NULL, NULL },
+        { J1939_BRAKE_SYSTEM_CONTROLLER,  9, 0, 0, NULL, NULL },
+        { J1939_ENGINE_RETARDER_COMPRESSION_1, 12, 0, 0, NULL, NULL },
+        { J1939_CRUISE_CONTROL, 14, 0, 0, NULL, NULL },
+        { J1939_INSTRUMENT_CLUSTER_1, 19, 0, 0, NULL, NULL },
+        { J1939_BODY_CONTROLLER, 26, 0, 0, NULL, NULL },
+        {   J1939_ENGINE_RETARDER_EXHAUST_1,
             12,
              0,
              0,
              (OBJ_ALLOC)&j1939er_Alloc,
              (OBJ_INIT)&j1939er_Init
         },
-        { 49, 37, 0, 0, NULL, NULL },    // Cab Controller (Primary)
+        { J1939_CAB_CONTROLLER_PRIMARY, 37, 0, 0, NULL, NULL },
         {   253,                         // OEM - Diagnostic CA
             12,
              0,

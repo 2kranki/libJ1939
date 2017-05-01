@@ -104,7 +104,8 @@ struct j1939tp_data_s	{
     OBJ_DATA            *pCAN;
     PSXMUTEX_DATA       *pMutex;
     
-    // This exit is called whenever a TP.CM multi-part message has been received in full.
+    // This exit is called whenever a TP.CM multi-part message
+    // has been received in full.
     ERESULT             (*pMessageReceived)(
                                             OBJ_ID,
                                             uint32_t,       // eid
@@ -117,7 +118,8 @@ struct j1939tp_data_s	{
     J1939_PDU           pdu;            // PDU of Original Message
     
     uint8_t             ca;
-    uint8_t             adr;            // For rcv,
+    uint8_t             da;             // For rcv, msg dest adr
+    uint8_t             sa;             // For rcv, msg src adr
     uint8_t             state;
     uint8_t             stateProto;
     

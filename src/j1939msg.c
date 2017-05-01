@@ -215,9 +215,6 @@ extern "C" {
         
         pgn.w = 0;
         // PDU_CONTROL fits within the eid.
-        if (pdu.EDP) {
-            pgn.EDP = 1;
-        }
         if (pdu.DP) {
             pgn.DP = 1;
         }
