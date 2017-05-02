@@ -118,8 +118,8 @@ struct j1939tp_data_s	{
     J1939_PDU           pdu;            // PDU of Original Message
     
     uint8_t             ca;
-    uint8_t             da;             // For rcv, msg dest adr
-    uint8_t             sa;             // For rcv, msg src adr
+    uint8_t             rcv;            // Receiver of the Multi-packet message
+    uint8_t             xmt;            // Transmitter of the Multi-packet message
     uint8_t             state;
     uint8_t             stateProto;
     

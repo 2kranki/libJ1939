@@ -203,11 +203,19 @@ extern "C" {
         J1939TP_DATA		*this
     );
     
- 
+
+    /*!
+     If this object is waiting for work, set up to receive
+     a multi-packet message and give a CTS to start the
+     process if needed.
+     @param:    this    J1939TP object pointer
+     @return:           If successful, ERROR_SUCCESS, 
+                        otherwise an ERESULT_* error code.
+     */
     ERESULT         j1939tp_MessageReceive(
         J1939TP_DATA	*this,
-        uint8_t         da,
-        uint8_t         sa,
+        uint8_t         rcv,        // Receiver of the Multi-packet message (this)
+        uint8_t         xmt,        // Transmitter of the Multi-packet message
         J1939_PGN       pgn,
         uint16_t        msgSize,
         uint8_t         cPackets
@@ -215,14 +223,15 @@ extern "C" {
     
     
     /*!
-     If this object is waiting for work, set up the message to be
-     transmitted in packets and start the protocol.
+     If this object is waiting for work, set up the message to be transmitted in 
+     packets and start the protocol. The receiver should be a specific address or 
+     255.
      @param:    this    J1939TP object pointer
      @return:   If successful, ERROR_SUCCESS, otherwise an ERESULT_* error code.
      */
     ERESULT         j1939tp_MessageTransmit(
         J1939TP_DATA	*this,
-        J1939_PDU       pdu,
+        J1939_PDU       pdu,        // PGN, da (receiver) & sa (transmitter, this)
         uint16_t        cData,
         void            *pData
     );

@@ -371,6 +371,14 @@ extern "C" {
     );
     
     
+    bool            j1939ca_HandlePgn61184(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+    
+    
     bool            j1939ca_HandlePgn65242(
         J1939CA_DATA	*this,
         uint32_t        eid,
@@ -393,6 +401,12 @@ extern "C" {
     );
     
     
+    bool            j1939ca_TransmitPgn60160(
+        J1939CA_DATA	*this,
+        J1939CA_TP      *pTP
+    );
+    
+    
     int             j1939ca_SetupPgn60416(
         J1939CA_DATA	*this,
         J1939_PDU       *pPDU,
@@ -401,14 +415,25 @@ extern "C" {
     );
     
     
-    bool            j1939ca_TransmitPgn60160(
+    ERESULT         j1939tp_TransmitPgn60416CTS(
         J1939CA_DATA	*this,
-        J1939CA_TP      *pTP
+        uint8_t         da,
+        uint8_t         numPackets,
+        uint8_t         startSeq,
+        J1939_PGN       pgn
     );
     
     
     bool            j1939ca_TransmitPgn60928(
         J1939CA_DATA	*this
+    );
+    
+    
+    int             j1939ca_SetupPgn61184(
+        J1939CA_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
     );
     
     

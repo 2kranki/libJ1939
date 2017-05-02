@@ -135,8 +135,8 @@ void            messageComplete(
         j1939Sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
-        pObj->da = 255;
-        pObj->sa = J1939_CAB_CONTROLLER_PRIMARY;
+        pObj->rcv = 255;
+        pObj->xmt = J1939_CAB_CONTROLLER_PRIMARY;
         pObj->packets = 2;
         pObj->size = 10;
         memmove(pObj->data, "1234567890", 10);
@@ -188,6 +188,9 @@ void            messageComplete(
         pdu.eid = 0x18EFFF31;
         eRc = j1939tp_MessageTransmit(pObj, pdu, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pObj->rcv == 255) );
+        XCTAssertTrue( (pObj->xmt == J1939_CAB_CONTROLLER_PRIMARY) );
+        
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CECFF31 == pdu.eid) );
@@ -197,6 +200,8 @@ void            messageComplete(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 10) );
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[2]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
+        
+        
         
         for (i=0; i<200; i+=20) {
             j1939Sys_BumpMS(pSYS,40);
@@ -245,6 +250,9 @@ void            messageComplete(
         pdu.eid = 0x18EFFF31;
         eRc = j1939tp_MessageTransmit(pObj, pdu, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pObj->rcv == 255) );
+        XCTAssertTrue( (pObj->xmt == J1939_CAB_CONTROLLER_PRIMARY) );
+        
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CECFF31 == pdu.eid) );
@@ -314,6 +322,11 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pXmt, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pRcv->rcv == 255) );
+        XCTAssertTrue( (pRcv->xmt == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pXmt->rcv == 255) );
+        XCTAssertTrue( (pXmt->xmt == J1939_POWER_TAKEOFF_1) );
+        
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CECFF06 == pdu.eid) );
@@ -389,6 +402,11 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pXmt, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pRcv->rcv == 255) );
+        XCTAssertTrue( (pRcv->xmt == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pXmt->rcv == 255) );
+        XCTAssertTrue( (pXmt->xmt == J1939_POWER_TAKEOFF_1) );
+
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CECFF06 == pdu.eid) );
@@ -456,6 +474,9 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pObj, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pObj->rcv == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pObj->xmt == J1939_CAB_CONTROLLER_PRIMARY) );
+
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
@@ -538,6 +559,9 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pObj, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pObj->rcv == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pObj->xmt == J1939_CAB_CONTROLLER_PRIMARY) );
+
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
@@ -661,6 +685,9 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pObj, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pObj->rcv == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pObj->xmt == J1939_CAB_CONTROLLER_PRIMARY) );
+
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
@@ -780,6 +807,11 @@ void            messageComplete(
         pgnMsg = j1939pdu_getPGN(pduMsg);
         eRc = j1939tp_MessageTransmit(pXmt, pduMsg, 10, "1234567890");
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
+        XCTAssertTrue( (pRcv->rcv == J1939_CAB_CONTROLLER_PRIMARY) );
+        XCTAssertTrue( (pRcv->xmt == J1939_POWER_TAKEOFF_1) );
+        XCTAssertTrue( (pXmt->rcv == J1939_CAB_CONTROLLER_PRIMARY) );
+        XCTAssertTrue( (pXmt->xmt == J1939_POWER_TAKEOFF_1) );
+
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC3106 == pdu.eid) );

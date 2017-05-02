@@ -864,7 +864,7 @@ extern "C" {
         pgn = j1939pdu_getPGN(pdu);
         da = j1939pdu_getDA(pdu);
         sa = j1939pdu_getSA(pdu);
-        if (sa == this->sa) {
+        if (sa == this->xmt) {
             spn2572 = pMsg->DATA.bytes[0];
             pSpn2573 = &pMsg->DATA.bytes[1];
             this->rcvdSeq  = spn2572;
@@ -872,6 +872,9 @@ extern "C" {
             offset = (spn2572 - 1) * 7;
             len = (this->size - offset) > 7 ? 7 : (this->size - offset);
             memmove(this->data+offset, pSpn2573, len);
+        }
+        else {
+            DEBUG_BREAK();
         }
         
         // Return to caller.
@@ -939,6 +942,9 @@ extern "C" {
         // Handle the message.
         switch (spn2556) {
             case 16:                    // TP.CM_RTS
+                // Request-to-Send is received by a network node to inform it that the
+                // originator (source address) of this message wants to send a mult-
+                // packet message to this node (destination address).
                 spn2557  = pMsg->DATA.bytes[1];
                 spn2557 |= pMsg->DATA.bytes[2] << 8;
                 spn2558  = pMsg->DATA.bytes[3];         // Total Number of Packets
@@ -977,6 +983,10 @@ extern "C" {
                 break;
                 
             case 17:                    // TP.CM_CTS
+                // Clear-to-Send is received by the multi-packet message transmitter
+                // (destination address).  The multi-packet message receiver
+                // (source address) uses this message to either ok sending more
+                // packets or pause transmission.
                 spn2561  = pMsg->DATA.bytes[1];
                 spn2562  = pMsg->DATA.bytes[2];
                 spn2563.w = 0;
@@ -998,7 +1008,7 @@ extern "C" {
                         
                     case J1939TP_ACTIVE_XMT_TP:
                         if (this->state == J1939TP_STATE_WAIT_FOR_CTS) {
-                            if ((spn2563.w == this->pgn.w) && (sa == this->da)) {
+                            if ((spn2563.w == this->pgn.w) && (sa == this->rcv)) {
                                 if (spn2561) {
                                     this->seq   = spn2562 - 1;
                                     this->limit = spn2561;
@@ -1022,6 +1032,11 @@ extern "C" {
                 break;
                 
             case 19:                    // TP.CM_EndOfMsgACK
+                // End-of-Message Acknowledgement is sent from the receiver
+                // (source address) to the transmitter of the multi-packet
+                // message to acknowledge receipt of the full message. It
+                // should be ignored if the message has not been fully trans-
+                // mitted.
                 spn2564  = pMsg->DATA.bytes[1];
                 spn2564 |= pMsg->DATA.bytes[2] << 8;
                 spn2565  = pMsg->DATA.bytes[3];
@@ -1053,6 +1068,10 @@ extern "C" {
                 break;
                 
             case 32:                    // TP.CM_BAM
+                // A Broadcast-Announce-Message is sent by the multi-packet transmitter
+                // (source address) to all possible receivers (destination address).
+                // We should ignore it if we don't handle the PGN of the multi-packet
+                // message.
                 spn2567  = pMsg->DATA.bytes[1];         // Message Size
                 spn2567 |= pMsg->DATA.bytes[2] << 8;
                 spn2568  = pMsg->DATA.bytes[3];         // Number of Packets
@@ -1083,6 +1102,8 @@ extern "C" {
                 break;
                 
             case 255:                   // TP.Conn_Abort
+                // Connection-Abort is used by either end of a multi-packet message
+                // connection to abort the connection.
                 spn2570 = pMsg->DATA.bytes[1];
                 spn2571.w = 0;
                 spn2571.pgn0 = pMsg->DATA.bytes[5];
@@ -1258,8 +1279,8 @@ extern "C" {
     
     ERESULT         j1939tp_MessageReceive(
         J1939TP_DATA	*this,
-        uint8_t         da,
-        uint8_t         sa,
+        uint8_t         rcv,        // Receiver of the Multi-packet message
+        uint8_t         xmt,        // Transmitter of the Multi-packet message
         J1939_PGN       pgn,
         uint16_t        msgSize,
         uint8_t         cPackets
@@ -1275,6 +1296,16 @@ extern "C" {
             DEBUG_BREAK();
             return j1939tp_getLastError(this);
         }
+        if ((rcv == J1939_GENERAL_BROADCAST) || (rcv == this->ca)) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
+        if (!(xmt == this->ca)) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
 #endif
         
         if (this->stateProto == J1939TP_STATE_PROTO_WAITING_FOR_WORK) {
@@ -1286,8 +1317,8 @@ extern "C" {
         
         
         this->pgn = pgn;
-        this->da = da;
-        this->sa = sa;
+        this->rcv = rcv;
+        this->xmt = xmt;
         this->size = msgSize;
         //memmove(this->data, pData, cData);
         this->packets = cPackets;
@@ -1296,7 +1327,7 @@ extern "C" {
         this->seq = 1;
         bitmapReset(this);
         
-        if (da == J1939_GENERAL_BROADCAST) {
+        if (rcv == J1939_GENERAL_BROADCAST) {
             this->activity = J1939TP_ACTIVE_RCV_BAM;
             this->stateProto = J1939TP_STATE_PROTO_RCV_BAM;
             //this->msTimeProto = j1939tp_MsTimeGet(this);
@@ -1328,13 +1359,18 @@ extern "C" {
     
     ERESULT         j1939tp_MessageTransmit(
         J1939TP_DATA	*this,
-        J1939_PDU       pdu,
+        J1939_PDU       pdu,        // PGN, da(receiver) & sa(transmitter)
         uint16_t        cData,
         void            *pData
     )
     {
         //int             i;
         ERESULT         eRc;
+#ifdef NDEBUG
+#else
+        uint8_t         da;
+        uint8_t         sa;
+#endif
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1342,6 +1378,18 @@ extern "C" {
         if( !j1939tp_Validate(this) ) {
             DEBUG_BREAK();
             return j1939tp_getLastError(this);
+        }
+        da = j1939pdu_getDA(pdu);
+        sa = j1939pdu_getSA(pdu);
+        if ((da == J1939_GENERAL_BROADCAST) || !(da == this->ca)) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
+        if (sa == this->ca) {
+        }
+        else {
+            DEBUG_BREAK();
         }
 #endif
         
@@ -1354,16 +1402,16 @@ extern "C" {
         
         
         this->pdu = pdu;
+        this->rcv = j1939pdu_getDA(pdu);
+        this->xmt = j1939pdu_getSA(pdu);
         this->pgn = j1939pdu_getPGN(pdu);
-        this->da = j1939pdu_getDA(pdu);
-        this->sa = j1939pdu_getSA(pdu);
         this->size = cData;
         memmove(this->data, pData, cData);
         this->packets = (cData + 7 - 1) / 7;
         this->limit = this->packets;
         this->seq = 0;
         
-        if (255 == this->da) {
+        if (255 == this->rcv) {
             this->activity = J1939TP_ACTIVE_XMT_BAM;
             this->stateProto = J1939TP_STATE_PROTO_XMT_BAM;
             this->msTimeProto = j1939tp_MsTimeGet(this);
@@ -1728,9 +1776,9 @@ extern "C" {
                     j1939pdu_Construct(
                                        &pdu,
                                        pgn.PF,
-                                       pgn.PF > 239 ? pgn.GE : this->da,
+                                       pgn.PF > 239 ? pgn.GE : this->xmt,
                                        6,
-                                       this->sa
+                                       this->rcv
                     );
                     eRc =   this->pMessageReceived(
                                                  this->pMsgRcvObj,
@@ -1840,7 +1888,13 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
+        j1939pdu_Construct(
+                           &pdu,
+                           236,
+                           this->rcv == this->ca ? this->xmt : this->rcv,
+                           7,
+                           this->ca
+        );
         
         pData = data;
         *pData  = 255;
@@ -1902,7 +1956,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->rcv, 7, this->ca);
         
         pData = data;
         *pData  = 32;
@@ -1966,7 +2020,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->sa, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->xmt, 7, this->ca);
         
         pData = data;
         *pData  = 17;
@@ -2026,9 +2080,14 @@ extern "C" {
             DEBUG_BREAK();
             return j1939tp_getLastError(this);
         }
+        if (this->rcv == this->ca) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->xmt, 7, this->ca);
         
         pData = data;
         *pData  = 19;
@@ -2100,7 +2159,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 235, this->da, 7, this->ca);
+        j1939pdu_Construct(&pdu, 235, this->rcv, 7, this->ca);
         
         offset = n * 7;
         pDataSrc = this->data + offset;
@@ -2164,7 +2223,7 @@ extern "C" {
         }
 #endif
         
-        j1939pdu_Construct(&pdu, 236, this->da, 7, this->ca);
+        j1939pdu_Construct(&pdu, 236, this->rcv, 7, this->ca);
         
         pData = data;
         *pData  = 16;

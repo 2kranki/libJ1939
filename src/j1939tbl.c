@@ -2224,11 +2224,11 @@ extern "C" {
             // PGN 61184  0x00EF00 - Proprietary A
             0x0000EF00,
             0,                  // msFreq
-            8,                  // dlc
+            0,                  // dlc  - variable up to 1785
             6,                  // priority
-            0,                  // cSPNs
+            0,                  // cSPNs                (No SAE defined SPNs)
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            NULL                // SPN Table Pointer    (No SAE defined SPNs)
         };
         
         

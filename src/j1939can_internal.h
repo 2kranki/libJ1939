@@ -51,6 +51,7 @@ extern "C" {
 #endif
 
 
+#define J1939CAN_MAX_XMT    5
 
 
 #pragma pack(push, 1)
@@ -74,8 +75,9 @@ struct j1939can_data_s	{
     /* XmtMsg() is the routine called to transmit an 8-byte
      * message. All messages must be sent via this routine.
      */
-    P_XMTMSG_RTN        pXmtMsg;
-    OBJ_ID              pXmtObj;
+    P_XMTMSG_RTN        pXmtMsg[J1939CAN_MAX_XMT];
+    OBJ_ID              pXmtObj[J1939CAN_MAX_XMT];
+    uint32_t            cXmts;
     
     /* XmtReflectMsg() is used to T the xmt side. This allows
      * monitoring of the message flow.

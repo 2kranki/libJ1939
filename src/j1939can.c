@@ -265,8 +265,13 @@ extern "C" {
         }
 #endif
         
-        this->pXmtMsg  = pRoutine;
-        this->pXmtObj = pData;
+        if (this->cXmts == J1939CAN_MAX_XMT) {
+            return false;
+        }
+        
+        this->pXmtMsg[this->cXmts]  = pRoutine;
+        this->pXmtObj[this->cXmts] = pData;
+        ++this->cXmts;
         
         return true;
     }
@@ -784,6 +789,7 @@ extern "C" {
     )
     {
         J1939CAN_DATA	*this = pObject;
+        uint32_t        i;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -800,12 +806,10 @@ extern "C" {
         if (this->pXmtReflectMsg) {
             (*this->pXmtReflectMsg)(this->pXmtReflectObj, msDelay, pMsg);
         }
-        if (this->pXmtMsg) {
-            (*this->pXmtMsg)(this->pXmtObj, msDelay, pMsg);
-        }
-        else {
-            fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
-            DEBUG_BREAK();
+        for (i=0; i<this->cXmts; ++i) {
+            if (this->pXmtMsg[i]) {
+                (*this->pXmtMsg[i])(this->pXmtObj[i], msDelay, pMsg);
+            }
         }
         if (this->fLoopXmt) {
             if (this->pRcvMsg) {

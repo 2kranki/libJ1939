@@ -70,9 +70,10 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn51456,
         NULL,
         NULL,                // Message Data Constructor
-        0,
-        0,
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
     
     
@@ -83,7 +84,10 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn59392,
         NULL,
         NULL,                // Message Data Constructor
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
     
     
@@ -94,7 +98,10 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn59904,
         NULL,
         NULL,                // Message Data Constructor
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
     
     
@@ -105,7 +112,10 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn60160,
         NULL,
         NULL,                // Message Data Constructor
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
     
     
@@ -116,7 +126,10 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn60416,
         NULL,
         NULL,                // Message Data Constructor
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
     
     
@@ -127,9 +140,26 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939ca_HandlePgn60928,
         NULL,
         (P_SETUP_MSG_RTN)j1939ca_SetupPgn60928,
-        0
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
     };
 
+    
+    const
+    J1939CA_PGN_ENTRY   ca_pgn61184_entry = {
+        // PGN 61184  0x00EF00 - Proprietary A - PROPA
+        &pgn61184_entry,
+        NULL,
+        (P_VARMSG_RTN)j1939ca_HandlePgn61184,
+        (P_SETUP_MSG_RTN)j1939ca_SetupPgn61184,
+        0,                              // Offset of Timeout
+        0,                              // da
+        0,                              // rsvd
+        0                               // ms Xmt Repeat
+    };
+    
     
     const
     J1939CA_PGN_ENTRY   ca_pgn65242_entry = {
@@ -154,6 +184,7 @@ extern	"C" {
         &ca_pgn60160_entry,
         &ca_pgn60416_entry,
         &ca_pgn60928_entry,
+        &ca_pgn61184_entry,
         &ca_pgn65242_entry,
         NULL
     };
@@ -171,6 +202,7 @@ extern	"C" {
     const
     J1939CA_PGN_ENTRY   *xmtPgnIndex[] = {
         &ca_pgn60928_entry,
+        &ca_pgn61184_entry,
         &ca_pgn65242_entry,
         NULL
     };
@@ -301,7 +333,7 @@ extern	"C" {
             if (this->TPs[i].activity == J1939TP_INACTIVE) {
             }
             else {
-                if (this->TPs[i].sa == msgSA) {
+                if (this->TPs[i].xmt == msgSA) {
                     ++cnt;
                 }
             }
@@ -316,8 +348,8 @@ extern	"C" {
     
     J1939TP_DATA *    tp_FindActive(
         J1939CA_DATA	*this,
-        uint8_t         msgDA,          // message Destination address
-        uint8_t         msgSA           // message source address
+        uint8_t         rcv,
+        uint8_t         xmt
     )
     {
         int             i;
@@ -326,7 +358,7 @@ extern	"C" {
             if (this->TPs[i].activity == J1939TP_INACTIVE) {
             }
             else {
-                if ((this->TPs[i].da == msgDA) && (this->TPs[i].sa == msgSA)) {
+                if ((this->TPs[i].rcv == rcv) && (this->TPs[i].xmt == xmt)) {
                     return &this->TPs[i];
                 }
             }
@@ -1339,7 +1371,7 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
-        bool            fRc;
+        bool            fRc = false;
         uint8_t         spn2556;    // Control Byte (TP.CM)
         ERESULT         eRc;
         J1939TP_DATA    *pTP;
@@ -1388,6 +1420,9 @@ extern	"C" {
         // Handle the message.
         switch (spn2556) {
             case 16:                    // TP.CM_RTS
+                // Request-to-Send is received by a network node to inform it that the
+                // originator (source address) of this message wants to send a mult-
+                // packet message to this node (destination address).
                 spn2557  = pMsg->DATA.bytes[1];
                 spn2557 |= pMsg->DATA.bytes[2] << 8;
                 spn2558  = pMsg->DATA.bytes[3];
@@ -1396,42 +1431,19 @@ extern	"C" {
                 spn2560.pgn0 = pMsg->DATA.bytes[5];
                 spn2560.pgn1 = pMsg->DATA.bytes[6];
                 spn2560.pgn2 = pMsg->DATA.bytes[7];
-                break;
-                
-            case 17:                    // TP.CM_CTS
-                spn2561  = pMsg->DATA.bytes[1];
-                spn2562  = pMsg->DATA.bytes[2];
-                spn2563.w = 0;
-                spn2563.pgn0 = pMsg->DATA.bytes[5];
-                spn2563.pgn1 = pMsg->DATA.bytes[6];
-                spn2563.pgn2 = pMsg->DATA.bytes[7];
-                break;
-                
-            case 19:                    // TP.CM_EndOfMsgACK
-                spn2564  = pMsg->DATA.bytes[1];
-                spn2564 |= pMsg->DATA.bytes[2] << 8;
-                spn2565  = pMsg->DATA.bytes[3];
-                spn2566.w = 0;
-                spn2566.pgn0 = pMsg->DATA.bytes[5];
-                spn2566.pgn1 = pMsg->DATA.bytes[6];
-                spn2566.pgn2 = pMsg->DATA.bytes[7];
-                break;
-                
-            case 32:                    // TP.CM_BAM
-                spn2567  = pMsg->DATA.bytes[1];
-                spn2567 |= pMsg->DATA.bytes[2] << 8;
-                spn2568  = pMsg->DATA.bytes[3];
-                spn2569.w = 0;
-                spn2569.pgn0 = pMsg->DATA.bytes[5];
-                spn2569.pgn1 = pMsg->DATA.bytes[6];
-                spn2569.pgn2 = pMsg->DATA.bytes[7];
-                //FIXME: ??da = j1939pdu_getDA(pdu);
                 if (tp_CheckActive(this, sa)) {
                 }
                 else {
                     pTP = tp_FindInactive(this);
                     if (pTP) {
-                        eRc =j1939tp_MessageReceive(pTP, da, sa, spn2569, spn2567, spn2568);
+                        eRc =   j1939tp_MessageReceive(
+                                                    pTP,
+                                                    da,         // Receiver
+                                                    sa,         // Transmitter
+                                                    spn2560,
+                                                    spn2557,
+                                                    spn2558
+                                );
                         if (ERESULT_FAILED(eRc)) {
                             fRc = false;
                         }
@@ -1446,32 +1458,121 @@ extern	"C" {
                 }
                 break;
                 
+            case 17:                    // TP.CM_CTS
+                // Clear-to-Send is received by the multi-packet message transmitter
+                // (destination address).  The multi-packet message receiver
+                // (source address) uses this message to either ok sending more
+                // packets or pause transmission.
+                spn2561  = pMsg->DATA.bytes[1];
+                spn2562  = pMsg->DATA.bytes[2];
+                spn2563.w = 0;
+                spn2563.pgn0 = pMsg->DATA.bytes[5];
+                spn2563.pgn1 = pMsg->DATA.bytes[6];
+                spn2563.pgn2 = pMsg->DATA.bytes[7];
+                pTP = tp_FindActive(this, sa, da);
+                if (pTP) {
+                    fRc =   j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                }
+                else {
+                    DEBUG_BREAK();
+                    return false;
+                }
+                break;
+        
+            case 19:                    // TP.CM_EndOfMsgACK
+                // End-of-Message Acknowledgement is sent from the receiver
+                // (source address) to the transmitter of the multi-packet
+                // message to acknowledge receipt of the full message. It
+                // should be ignored if the message has not been fully trans-
+                // mitted.
+                spn2564  = pMsg->DATA.bytes[1];
+                spn2564 |= pMsg->DATA.bytes[2] << 8;
+                spn2565  = pMsg->DATA.bytes[3];
+                spn2566.w = 0;
+                spn2566.pgn0 = pMsg->DATA.bytes[5];
+                spn2566.pgn1 = pMsg->DATA.bytes[6];
+                spn2566.pgn2 = pMsg->DATA.bytes[7];
+                pTP = tp_FindActive(this, sa, da);
+                if (pTP) {
+                    fRc =   j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                }
+                else {
+                    DEBUG_BREAK();
+                    return false;
+                }
+                break;
+                
+            case 32:                    // TP.CM_BAM
+                // A Broadcast-Announce-Message is sent by the multi-packet transmitter
+                // (source address) to all possible receivers (destination address).
+                // We should ignore it if we don't handle the PGN of the multi-packet
+                // message.
+                spn2567  = pMsg->DATA.bytes[1];
+                spn2567 |= pMsg->DATA.bytes[2] << 8;
+                spn2568  = pMsg->DATA.bytes[3];
+                spn2569.w = 0;
+                spn2569.pgn0 = pMsg->DATA.bytes[5];
+                spn2569.pgn1 = pMsg->DATA.bytes[6];
+                spn2569.pgn2 = pMsg->DATA.bytes[7];
+                if (j1939ca_FindRcvPgnEntry(this, spn2569)) {
+                    if (tp_CheckActive(this, sa)) {
+                    }
+                    else {
+                        pTP = tp_FindInactive(this);
+                        if (pTP) {
+                            eRc =   j1939tp_MessageReceive(
+                                                           pTP,
+                                                           da,      // Receiver
+                                                           sa,      // Transmitter
+                                                           spn2569,
+                                                           spn2567,
+                                                           spn2568
+                                    );
+                            if (ERESULT_FAILED(eRc)) {
+                                fRc = false;
+                            }
+                            else {
+                                fRc = true;
+                            }
+                        }
+                        else {
+                            DEBUG_BREAK();
+                            return false;
+                        }
+                    }
+                }
+                break;
+                
             case 255:                   // TP.Conn_Abort
+                // Connection-Abort is used by either end of a multi-packet message
+                // connection to abort the connection.
                 spn2570 = pMsg->DATA.bytes[1];
                 spn2571.w = 0;
                 spn2571.pgn0 = pMsg->DATA.bytes[5];
                 spn2571.pgn1 = pMsg->DATA.bytes[6];
                 spn2571.pgn2 = pMsg->DATA.bytes[7];
+                pTP = tp_FindActive(this, da, sa);
+                if (pTP) {
+                    fRc = j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                }
+                else {
+                    pTP = tp_FindActive(this, da, sa);
+                    if (pTP) {
+                        fRc = j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                    }
+                    else {
+                        DEBUG_BREAK();
+                        return false;
+                    }
+                }
                 break;
                 
             default:
                 break;
         }
 
-/***
-        fRc = j1939ca_FindXmtPgnEntry(this, spn2540);
-        if (fRc) {
-            fRc = j1939ca_TransmitPgn(this, this->pCurEntry);
-        }
-        else {
-            if ((spn2540.PF < 240) && !(255 == this->curDa)) {
-                fRc = j1939ca_TransmitPgn59392(this, 1, 0, 0xFF, spn2540);
-            }
-        }
- ***/
-        
         // Return to caller.
-        return true;
+        return fRc;
     }
     
     
@@ -1604,6 +1705,50 @@ extern	"C" {
             default:
                 break;
         }
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //          H a n d l e  PGN 61184    0x00EF00              PROPA
+    //---------------------------------------------------------------
+    
+    // Proprietary A - OEM Defined
+    
+    bool            j1939ca_HandlePgn61184(
+        J1939CA_DATA	*this,
+        uint32_t        eid,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        J1939_PDU       pdu;
+        bool            fRc;
+        uint8_t         spn965;
+        uint8_t         *pSpn234;
+        uint16_t        len = cData - 1;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+        if (cData < 2) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        
+        spn965 = *pData++;
+        pSpn234 = pData;
+        
+        ++this->softwareLevel;          // For Testing only.
         
         // Return to caller.
         return true;
@@ -1991,7 +2136,7 @@ extern	"C" {
         if (0 ==  dlc) {
             dlc = 1785;
         }
-        if ((0 == dlc) || (dlc > 8)) {
+        if (dlc > 8) {
             pData = mem_Malloc(dlc);
             if (NULL == pData) {
                 return false;
@@ -2480,12 +2625,73 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, data);
         }
         
         // Return to caller.
         return true;
     }
+    
+    
+    
+    ERESULT         j1939tp_TransmitPgn60416CTS(
+        J1939CA_DATA	*this,
+        uint8_t         da,
+        uint8_t         numPackets,
+        uint8_t         startSeq,
+        J1939_PGN       pgn
+    )
+    {
+        J1939_PDU       pdu;
+        uint8_t         *pData;
+        uint8_t         data[8];
+        bool            fRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939ca_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939ca_getLastError(this);
+        }
+#endif
+        
+        j1939pdu_Construct(&pdu, 236, da, 7, this->ca);
+        
+        pData = data;
+        *pData  = 17;
+        ++pData;    // 1
+        *pData  = numPackets;
+        ++pData;    // 2
+        *pData  = startSeq;
+        ++pData;    // 3
+        *pData  = 0xFF;
+        ++pData;    // 4
+        *pData  = 0xFF;
+        ++pData;    // 5
+        *pData  = pgn.pgn0;
+        ++pData;    // 6
+        *pData  = pgn.pgn1;
+        ++pData;    // 7
+        *pData  = pgn.pgn2;
+        
+        if (this->pXmtMsgDL) {
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, 8, data);
+            if (!fRc) {
+                j1939ca_setLastError(this, ERESULT_IO_ERROR);
+                return ERESULT_IO_ERROR;
+            }
+        }
+        else {
+            j1939ca_setLastError(this, ERESULT_DATA_ERROR);
+            return ERESULT_DATA_ERROR;
+        }
+        
+        // Return to caller.
+        j1939ca_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
     
     
     
@@ -2567,23 +2773,71 @@ extern	"C" {
     //  Data is manufacturer specified and is variable length
     //  (0 - 1785 bytes)
     
-    bool            j1939ca_TransmitPgn61164(
+    // For testing we will use it as if it was 65242 (SOFT)
+    
+    int             j1939ca_SetupPgn61184(
         J1939CA_DATA	*this,
-        uint8_t         da,                 // Destination Address
+        J1939_PDU       *pPDU,
         uint16_t        cData,
-        void            *pData
+        uint8_t         *pData
     )
     {
-        uint16_t        dlc = 8;
+        char            *pData2 = (char *)pData + 1;
+        uint32_t        len = 32;
+        
+        if (pPDU) {
+            pPDU->eid = 0;
+            pPDU->PF = 239;
+            pPDU->PS = this->curSa;
+            pPDU->SA = this->ca;
+            pPDU->P  = 6;             // Priority
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 8) {
+                return 0;
+            }
+            *pData = 1;                 // SPN965 - Number of Software Fields;
+            dec_putInt32A(this->softwareLevel, &len, &pData2);
+            *pData2++ = '*';
+            *pData2++ = '\0';
+            len = (uint32_t)strlen((char *)(pData + 1));
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return len + 1;
+    }
+    
+    
+    
+    bool            j1939ca_TransmitPgn61184(
+        J1939CA_DATA	*this,
+        uint8_t         da                  // Destination Address
+    )
+    {
+        uint16_t        dlc = 32;
         J1939_PDU       pdu = {0};
-        bool            fRc;
+        uint8_t         data[32];
+        bool            fRc = false;
+        int             len;
         
-        pdu.PF = 239;
-        pdu.PS = da;
-        pdu.SA = this->ca;
-        pdu.P  = 6;             // Priority
+        this->curSa = da;
+        len = j1939ca_SetupPgn61184(this, &pdu, dlc, data);
+        if ((len > 0) && (len <= 1785)) {
+        }
+        else {
+            return false;
+        }
         
-        fRc = j1939ca_XmtMsgDL(this, 0, pdu, dlc, pData);
+        if (this->pXmtMsgDL) {
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
+        }
         
         // Return to caller.
         return true;
@@ -2642,9 +2896,9 @@ extern	"C" {
         J1939CA_DATA	*this
     )
     {
-        uint16_t        dlc = 8;
+        uint16_t        dlc = 32;
         J1939_PDU       pdu = {0};
-        uint8_t         data[8];
+        uint8_t         data[32];
         bool            fRc = false;
         int             len;
         
