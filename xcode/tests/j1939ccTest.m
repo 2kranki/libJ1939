@@ -82,6 +82,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 {
     J1939CC_DATA	*pCC = OBJ_NIL;
    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pCC = j1939cc_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pCC) );
     pCC = j1939cc_Init( pCC,
@@ -110,6 +114,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     J1939CC_DATA	*pCC = OBJ_NIL;
     J1939_PDU       pdu;
     bool            fRc;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pCC = j1939cc_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pCC) );

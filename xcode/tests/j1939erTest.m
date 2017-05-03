@@ -110,6 +110,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
     pER = j1939er_Init(
@@ -151,6 +153,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (NULL == pER), @"Could not alloc pER" );
     pER = j1939er_Init(
@@ -205,6 +209,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -275,6 +281,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -349,6 +357,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -421,6 +431,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -493,6 +505,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -557,6 +571,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(
@@ -678,6 +694,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pER = j1939er_Alloc();
     XCTAssertFalse( (OBJ_NIL == pER) );
     pER =  j1939er_Init(

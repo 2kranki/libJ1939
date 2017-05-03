@@ -111,6 +111,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pDG = j1939dg_Alloc();
     XCTAssertFalse( (NULL == pDG), @"Could not alloc pDG" );
     pDG = j1939dg_Init(

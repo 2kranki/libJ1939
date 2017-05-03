@@ -120,6 +120,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pCAM = j1939cam_Alloc();
     XCTAssertFalse( (NULL == pCAM) );
     pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
@@ -147,6 +149,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
@@ -193,6 +197,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
@@ -228,7 +234,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939cam_HandleMessages( pCAM, j1939msg_getEid(&msg), &msg );
-        XCTAssertTrue( (true == pEN->fActive) );
+        XCTAssertTrue( (true == pEN->fRetarding) );
         XCTAssertTrue( (3 == pEN->spn1480) );
         
         for (int i=0; i<50; ++i) {
@@ -272,6 +278,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {

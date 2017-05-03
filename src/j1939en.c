@@ -2443,16 +2443,16 @@ extern	"C" {
         J1939_PGN       pgn;
         uint8_t         sa;
         uint8_t         spn518;         // Requested Torque / Torque Limit
-        // offset: -125%, -125 to 125 (0 - 250)
+                                        // offset: -125%, -125 to 125 (0 - 250)
         uint8_t         spn695;         // Override Control Mode
-        // 0 - Disable override by the source of msg
-        // 1 - Override speed
-        // 2 - Override torque
-        // 3 - Limit Speed/Torque
+                                        // 0 - Disable override by the source of msg
+                                        // 1 - Override speed
+                                        // 2 - Override torque
+                                        // 3 - Limit Speed/Torque
         uint8_t         spn696;         // Requested Speed Control Conditions
         uint8_t         spn897;         // Override Control Mode Priority
-        // 0 == Highest Priority
-        // 3 == Lowest Priority
+                                        // 0 == Highest Priority
+                                        // 3 == Lowest Priority
         uint16_t        spn898;         // Requested Speed / Speed Limit
         bool            fRc = false;
 
@@ -2475,8 +2475,8 @@ extern	"C" {
             spn898 = pMsg->DATA.bytes[1] | (pMsg->DATA.bytes[2] << 8);
             spn518 = pMsg->DATA.bytes[3];
 
-            if (this->fActive && (0 == spn695)) {      // *** Stop Retarding ***
-                this->fActive = false;
+            if (this->fRetarding && (0 == spn695)) {      // *** Stop Retarding ***
+                this->fRetarding = false;
                 this->timeOut = 0;
                 this->spn1480 = 0xFF;
                 // Turn off retarder.
@@ -2485,11 +2485,11 @@ extern	"C" {
             }
             if ((1 == spn695) || (3 == spn695)) {
                 this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
-                if (this->fActive) {
+                if (this->fRetarding) {
                     // Just update time
                 }
                 else {
-                    this->fActive = true;
+                    this->fRetarding = true;
                     this->spn1480 = sa;
                     // Turn on retarder.
                     fRc = true;
@@ -2498,8 +2498,8 @@ extern	"C" {
             }
         }
         else {
-            if ( this->fActive && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
-                this->fActive = false;
+            if ( this->fRetarding && (this->timeOut <= j1939ca_MsTimeGet((J1939CA_DATA *)this)) ) {
+                this->fRetarding = false;
                 this->timeOut = 0;
                 this->spn1480 = 255;
                 // Turn off retarder.
@@ -2992,7 +2992,7 @@ extern	"C" {
                 j1939en_TransmitPgn65265(this);
             }
         }
-        if (this->fActive) {
+        if (this->fRetarding) {
             j1939en_HandlePgn0( this, 0, NULL );
         }
 

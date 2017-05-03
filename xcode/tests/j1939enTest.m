@@ -133,6 +133,8 @@ void        shiftExit(void *ptr,bool fShifting)
 
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
@@ -166,6 +168,8 @@ void        shiftExit(void *ptr,bool fShifting)
         
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
@@ -297,7 +301,7 @@ void        shiftExit(void *ptr,bool fShifting)
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
-        XCTAssertTrue( (true == pEng->fActive) );
+        XCTAssertTrue( (true == pEng->fRetarding) );
         XCTAssertTrue( (3 == pEng->spn1480) );
         
         for (int i=0; i<50; ++i) {
@@ -321,7 +325,7 @@ void        shiftExit(void *ptr,bool fShifting)
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, pdu.eid, &msg);
-        XCTAssertTrue( (false == pEng->fActive) );
+        XCTAssertTrue( (false == pEng->fRetarding) );
         XCTAssertTrue( (255 == pEng->spn1480) );
         
         
@@ -353,6 +357,8 @@ void        shiftExit(void *ptr,bool fShifting)
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
@@ -385,7 +391,7 @@ void        shiftExit(void *ptr,bool fShifting)
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
-        XCTAssertTrue( (true == pEng->fActive) );
+        XCTAssertTrue( (true == pEng->fRetarding) );
         XCTAssertTrue( (3 == pEng->spn1480) );
         
         for (int i=0; i<200; ++i) {
@@ -410,7 +416,7 @@ void        shiftExit(void *ptr,bool fShifting)
         fRc = xmtHandler(NULL, 0, &msg);
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, pdu.eid, &msg );
 #endif
-        XCTAssertTrue( (false == pEng->fActive) );
+        XCTAssertTrue( (false == pEng->fRetarding) );
         XCTAssertTrue( (255 == pEng->spn1480) );
         
         
@@ -445,6 +451,8 @@ void        shiftExit(void *ptr,bool fShifting)
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
@@ -463,7 +471,7 @@ void        shiftExit(void *ptr,bool fShifting)
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pEng->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (0 == cCurMsg) );
-        XCTAssertTrue( (false == pEng->fActive) ); // Should not be retarded
+        XCTAssertTrue( (false == pEng->fRetarding) ); // Should not be retarded
         
         // Send all msg02 msgs.
         for (i=0; i<cMsgs02; ++i) {
@@ -473,7 +481,7 @@ void        shiftExit(void *ptr,bool fShifting)
             fRc = xmtHandler(NULL, 0, &msg);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, Msgs02[i].pdu, &msg );
             //FIXME: why did we think that this is constantly retarded ???
-            //FIXME: XCTAssertTrue( (true == pEng->fActive) );
+            //FIXME: XCTAssertTrue( (true == pEng->fRetarding) );
             if (pEng->fShifting) {
                 fprintf(stderr, "\tShifting with detorque!\n");
                 ++count;
@@ -506,6 +514,11 @@ void        shiftExit(void *ptr,bool fShifting)
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    fprintf(stderr, "Number of messages in 01: %d\n", cMsgs01);
+    fprintf(stderr, "Number of messages in 02: %d\n", cMsgs02);
+    fprintf(stderr, "Number of messages in 03: %d\n", cMsgs03);
+   
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
     pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
@@ -533,7 +546,7 @@ void        shiftExit(void *ptr,bool fShifting)
             fRc = xmtHandler(NULL, 0, &msg);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pEng, Msgs03[i].pdu, &msg );
             //FIXME: why did we think that this is constantly retarded ???
-            //FIXME: XCTAssertTrue( (true == pEng->fActive) );
+            //FIXME: XCTAssertTrue( (true == pEng->fRetarding) );
             if (pEng->fShifting) {
                 fprintf(stderr, "\tShifting with detorque!\n");
                 ++count;

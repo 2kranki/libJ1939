@@ -113,6 +113,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -140,6 +142,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -197,6 +201,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -254,6 +260,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -309,6 +317,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -363,6 +373,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -406,6 +418,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
@@ -490,6 +504,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
     pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);

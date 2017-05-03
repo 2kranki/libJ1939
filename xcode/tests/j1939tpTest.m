@@ -103,6 +103,10 @@ void            messageComplete(
 {
     J1939TP_DATA	*pObj = OBJ_NIL;
    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
@@ -125,6 +129,10 @@ void            messageComplete(
     J1939TP_DATA	*pObj = OBJ_NIL;
     ERESULT         eRc;
     J1939_PDU       pdu;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -175,6 +183,10 @@ void            messageComplete(
     ERESULT         eRc;
     J1939_PDU       pdu;
     int             i;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -237,6 +249,10 @@ void            messageComplete(
     ERESULT         eRc;
     J1939_PDU       pdu;
     int             i;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -301,6 +317,10 @@ void            messageComplete(
     J1939_PGN       pgnMsg;
     int             i;
     //J1939_MSG       msg;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pRcv = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pRcv) );
@@ -382,6 +402,10 @@ void            messageComplete(
     int             i;
     //J1939_MSG       msg;
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pRcv = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv = j1939tp_Init(pRcv, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
@@ -460,6 +484,10 @@ void            messageComplete(
     J1939_PGN       pgnMsg;
     int             i;
     J1939_MSG       msg;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -545,6 +573,10 @@ void            messageComplete(
     J1939_PGN       pgnMsg;
     int             i;
     J1939_MSG       msg;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -672,6 +704,10 @@ void            messageComplete(
     int             i;
     J1939_MSG       msg;
     
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pObj = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
@@ -774,6 +810,10 @@ void            messageComplete(
     J1939_PGN       pgnMsg;
     int             i;
     //J1939_MSG       msg;
+    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
     
     pRcv = j1939tp_Alloc(0);
     XCTAssertFalse( (OBJ_NIL == pRcv) );

@@ -125,8 +125,10 @@ extern "C" {
         uint8_t             spn974;             // Remote Accelerator Pedal Position
         uint8_t             spn976;             // PTO State
 
-        uint8_t             spn1109;            // Engine Protection System Approaching Shutdown
-        uint8_t             spn1110;            // Engine Protection System has Shutdown Engine
+        uint8_t             spn1109;            // Engine Protection System
+        //                                      // Approaching Shutdown
+        uint8_t             spn1110;            // Engine Protection System has
+        //                                      // Shutdown Engine
         uint8_t             spn1134;            // Engine Intercooler Thermostat Opening
         uint8_t             spn1237;            // Engine Shutdown Override Switch
 
@@ -156,7 +158,7 @@ extern "C" {
         // The last spn is used in Init() to establish size of area to initialize.
 
         uint32_t            timeOut;
-        uint8_t             fActive;            // Retarding is Active
+        uint8_t             fRetarding;         // Retarding is Active
         uint8_t             fShifting;          // Shift in progress
         uint8_t             fShutdown;          // Shutdown is Active
         uint8_t             reserved8c[1];

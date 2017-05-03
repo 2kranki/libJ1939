@@ -85,6 +85,10 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     bool            fRc;
     J1939_PDU       pdu;
    
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+    
     pSS = j1939ss_Alloc();
     XCTAssertFalse( (OBJ_NIL == pSS) );
     pSS =   j1939ss_Init(

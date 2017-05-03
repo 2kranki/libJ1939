@@ -166,8 +166,10 @@ bool            printCanMsg(
 }
 
 
+#define CMN_MAX_MSGS    50000
 
-J1939_MSG   curMsg[500];
+
+J1939_MSG   curMsg[CMN_MAX_MSGS];
 uint16_t    cCurMsg = 0;
 uint8_t     fSkipMsg = false;
 
@@ -182,7 +184,7 @@ bool        rcvHandler(
 {
 
     if (pMsg) {
-        if (cCurMsg < 500) {
+        if (cCurMsg < CMN_MAX_MSGS) {
             memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
             ++cCurMsg;
         }
@@ -213,7 +215,7 @@ bool        xmtHandler(
                 pMsg->CMSGSID.CMSGTS = ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS(pSYS);
             }
         }
-        if (cCurMsg < 500) {
+        if (cCurMsg < CMN_MAX_MSGS) {
             memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
             ++cCurMsg;
         }
