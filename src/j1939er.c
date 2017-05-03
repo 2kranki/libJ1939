@@ -1224,13 +1224,19 @@ extern	"C" {
 
 #ifdef NDEBUG
 #else
-        BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,spn84));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,timeOut));
         if( !j1939er_Validate( this ) ) {
             DEBUG_BREAK();
             obj_Release(this);
             return NULL;
         }
+#ifdef __APPLE__
+        fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939ER_DATA,spn84));
+        fprintf(stderr, "offsetof(timeOut) = %lu\n", offsetof(J1939ER_DATA,timeOut));
+        fprintf(stderr, "sizeof(J1939ER_DATA) = %lu\n", sizeof(J1939ER_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,spn84));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,timeOut));
+        BREAK_NOT_BOUNDARY4(sizeof(J1939ER_DATA));
 #endif
 
         // Return to caller.

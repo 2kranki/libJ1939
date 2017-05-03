@@ -110,7 +110,9 @@ struct j1939ss_data_s	{
     //                              //   |
     //                              // 11110
     //                              // 11111 - Temporary Power Train Control
+    uint8_t         rsvd8;
     uint16_t        tsc1Time;       // Broadcast Interval for PGN0 (TSC1)
+    uint16_t        rsvd16;
 
 };
 #pragma pack(pop)

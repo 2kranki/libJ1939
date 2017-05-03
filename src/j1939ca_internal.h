@@ -121,29 +121,31 @@ extern "C" {
         union {
             uint8_t         bytes[7];
             struct {    // TP.CM_RTS (16)
-                struct {
-                    uint8_t        spn2557L;   // Total Message Size (TP.CM_RTS)
-                    uint8_t        spn2557H;   // Total Message Size (TP.CM_RTS)
-                };
+                uint8_t         spn2557L;   // Total Message Size (TP.CM_RTS)
+                uint8_t         spn2557H;   // Total Message Size (TP.CM_RTS)
                 uint8_t         spn2558;    // Total Number of Packets (TP.CM_RTS)
                 uint8_t         spn2559;    // Maximum Number of Packets (TP.CM_RTS)
-                J1939_PGN       spn2560;    // Parameter Group Number of packeted message (TP.CM_RTS)
+                uint8_t         spn2560L;   // PGN of packeted message (TP.CM_RTS)
+                uint8_t         spn2560M;
+                uint8_t         spn2560H;
             };
             struct {    // TP.CM_CTS (17)
                 uint8_t         spn2561;    // Number of Packets that can be sent (TP.CM_CTS)
                 uint8_t         spn2562;    // Next Packet Number to be sent (TP.CM_RTS)
                 uint8_t         rsvd8a;
                 uint8_t         rsvd8b;
-                J1939_PGN       spn2563;    // Parameter Group Number of packeted message (TP.CM_CTS)
+                uint8_t         spn2563L;   // PGN of packeted message (TP.CM_CTS)
+                uint8_t         spn2563M;
+                uint8_t         spn2563H;
             };
             struct {    // End of Message TP.CM_ACK (19)
-                struct {
-                    uint8_t         spn2564L;   // Total Message Size (TP.CM_ACK)
-                    uint8_t         spn2564H;   // Total Message Size (TP.CM_ACK)
-                };
+                uint8_t         spn2564L;   // Total Message Size (TP.CM_ACK)
+                uint8_t         spn2564H;   // Total Message Size (TP.CM_ACK)
                 uint8_t         spn2565;    // Total Number of Packets (TP.CM_ACK)
                 uint8_t         rsvd8c;
-                J1939_PGN       spn2566;    // Parameter Group Number of packeted message (TP.CM_ACK)
+                uint8_t         spn2566L;   // PGN of packeted message (TP.CM_ACK)
+                uint8_t         spn2566M;
+                uint8_t         spn2566H;
             };
             struct {    // TP.Conn_Abort (255)
                 uint8_t         spn2570;    // Connection Abort Reason (TP.Conn_Abort)
@@ -162,16 +164,18 @@ extern "C" {
                 uint8_t         rsvd8d;
                 uint8_t         rsvd8e;
                 uint8_t         rsvd8f;
-                J1939_PGN       spn2571;    // Parameter Group Number of packeted message (TP.Conn_Abort)
+                uint8_t         spn2571L;   // PGN of packeted message (TP.Conn_Abort)
+                uint8_t         spn2571M;
+                uint8_t         spn2571H;
             };
             struct {    // TP.CM_BAM (32)
-                struct {
-                    uint8_t         spn2567L;   // Total Message Size (TP.CM_BAM)
-                    uint8_t         spn2567H;   // Total Message Size (TP.CM_BAM)
-                };
+                uint8_t         spn2567L;   // Total Message Size (TP.CM_BAM)
+                uint8_t         spn2567H;   // Total Message Size (TP.CM_BAM)
                 uint8_t         spn2568;    // Total Number of Packets (TP.CM_BAM)
                 uint8_t         rsvd8g;
-                J1939_PGN       spn2569;    // Parameter Group Number of packeted message (TP.CM_BAM)
+                uint8_t         spn2569L;   // PGN of packeted message (TP.CM_BAM)
+                uint8_t         spn2569M;
+                uint8_t         spn2569H;
             };
         };
     } J1939CA_MSG_60416;
@@ -268,6 +272,7 @@ extern "C" {
 
         uint8_t             spn2553;
         uint8_t             spn2555;
+        uint16_t            rsvd16;
         J1939_PGN           spn2540;        // Parameter Group Number (RQST)
         J1939CA_MSG_60416   msg60416;
         

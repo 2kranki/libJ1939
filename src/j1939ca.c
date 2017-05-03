@@ -1884,7 +1884,40 @@ extern	"C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,curPgn));
+#ifdef __APPLE__
+        fprintf(stderr, "sizeof J1939CA_MSG_60416 = %lu\n", sizeof(J1939CA_MSG_60416));
+        if (sizeof(J1939CA_MSG_60416) == 8) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
+        fprintf(stderr, "sizeof J1939_PGN = %lu\n", sizeof(J1939_PGN));
+        if (sizeof(J1939_PGN) == 4) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
+        fprintf(stderr, "sizeof J1939_PDU = %lu\n", sizeof(J1939_PDU));
+        if (sizeof(J1939_PDU) == 4) {
+        }
+        else {
+            DEBUG_BREAK();
+        }
+        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939CA_DATA,eRc));
+        fprintf(stderr, "offsetof(startTime) = %lu\n", offsetof(J1939CA_DATA,startTime));
+        fprintf(stderr, "offsetof(pCurEntry) = %lu\n", offsetof(J1939CA_DATA,pCurEntry));
+        fprintf(stderr, "offsetof(TPs) = %lu\n", offsetof(J1939CA_DATA,TPs));
+        fprintf(stderr, "offsetof(spn2540) = %lu\n", offsetof(J1939CA_DATA,spn2540));
+        fprintf(stderr, "offsetof(softwareLevel) = %lu\n", offsetof(J1939CA_DATA,softwareLevel));
+        fprintf(stderr, "sizeof(J1939TP_DATA) = %lu\n", sizeof(J1939CA_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,eRc));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,startTime));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,pCurEntry));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,TPs));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,spn2540));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,softwareLevel));
+        BREAK_NOT_BOUNDARY4(sizeof(J1939CA_DATA));
 #endif
         
         // Return to caller.
@@ -2507,11 +2540,11 @@ extern	"C" {
                     ++pData;    // 4
                     *pData  = this->msg60416.spn2559;
                     ++pData;    // 5
-                    *pData  = this->msg60416.spn2560.pgn0;
+                    *pData  = this->msg60416.spn2560L;
                     ++pData;    // 6
-                    *pData  = this->msg60416.spn2560.pgn1;
+                    *pData  = this->msg60416.spn2560M;
                     ++pData;    // 7
-                    *pData  = this->msg60416.spn2560.pgn2;
+                    *pData  = this->msg60416.spn2560H;
                     break;
                     
                 case 17:                    // TP.CM_CTS
@@ -2525,11 +2558,11 @@ extern	"C" {
                     ++pData;    // 4
                     *pData  = 0xFF;
                     ++pData;    // 5
-                    *pData  = this->msg60416.spn2563.pgn0;
+                    *pData  = this->msg60416.spn2563L;
                     ++pData;    // 6
-                    *pData  = this->msg60416.spn2563.pgn1;
+                    *pData  = this->msg60416.spn2563M;
                     ++pData;    // 7
-                    *pData  = this->msg60416.spn2563.pgn2;
+                    *pData  = this->msg60416.spn2563H;
                     break;
                     
                 case 19:                    // TP.CM_EndOfMsgACK
@@ -2543,11 +2576,11 @@ extern	"C" {
                     ++pData;    // 4
                     *pData  = 0xFF;
                     ++pData;    // 5
-                    *pData  = this->msg60416.spn2566.pgn0;
+                    *pData  = this->msg60416.spn2566L;
                     ++pData;    // 6
-                    *pData  = this->msg60416.spn2566.pgn1;
+                    *pData  = this->msg60416.spn2566M;
                     ++pData;    // 7
-                    *pData  = this->msg60416.spn2566.pgn2;
+                    *pData  = this->msg60416.spn2566H;
                     break;
                     
                 case 32:                    // TP.CM_BAM
@@ -2561,11 +2594,11 @@ extern	"C" {
                     ++pData;    // 4
                     *pData  = 0xFF;
                     ++pData;    // 5
-                    *pData  = this->msg60416.spn2569.pgn0;
+                    *pData  = this->msg60416.spn2569L;
                     ++pData;    // 6
-                    *pData  = this->msg60416.spn2569.pgn1;
+                    *pData  = this->msg60416.spn2569M;
                     ++pData;    // 7
-                    *pData  = this->msg60416.spn2569.pgn2;
+                    *pData  = this->msg60416.spn2569H;
                     break;
                     
                 case 255:                   // TP.Conn_Abort
@@ -2579,11 +2612,11 @@ extern	"C" {
                     ++pData;    // 4
                     *pData  = 0xFF;
                     ++pData;    // 5
-                    *pData  = this->msg60416.spn2571.pgn0;
+                    *pData  = this->msg60416.spn2571L;
                     ++pData;    // 6
-                    *pData  = this->msg60416.spn2571.pgn1;
+                    *pData  = this->msg60416.spn2571M;
                     ++pData;    // 7
-                    *pData  = this->msg60416.spn2571.pgn2;
+                    *pData  = this->msg60416.spn2571H;
                     break;
                     
                 default:

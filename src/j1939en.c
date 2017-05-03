@@ -3076,9 +3076,17 @@ extern	"C" {
 
 #ifdef NDEBUG
 #else
+#ifdef __APPLE__
+        fprintf(stderr, "offset_eRc = %lu\n", offsetof(J1939EN_DATA,eRc));
+        fprintf(stderr, "offset_spn84 = %lu\n", offsetof(J1939EN_DATA,spn84));
+        fprintf(stderr, "offset_timeout = %lu\n", offsetof(J1939EN_DATA,timeOut));
+        fprintf(stderr, "offset_pShiftExit = %lu\n", offsetof(J1939EN_DATA,pShiftExit));
+#endif
+        BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,eRc));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,timeOut));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,pShiftExit));
+        BREAK_NOT_BOUNDARY4(sizeof(J1939EN_DATA));
         if( !j1939en_Validate(this) ) {
             DEBUG_BREAK();
             obj_Release(this);

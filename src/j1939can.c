@@ -578,7 +578,10 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-        //BREAK_NOT_BOUNDARY4(&this->thread);
+        BREAK_NOT_BOUNDARY4(&this->eRc);
+        BREAK_NOT_BOUNDARY4(&this->pRcvMsg);
+        BREAK_NOT_BOUNDARY4(&this->pXmtReflectMsg);
+        BREAK_NOT_BOUNDARY4(sizeof(J1939CAN_DATA));
     #endif
 
         return this;

@@ -122,6 +122,7 @@ struct j1939tp_data_s	{
     uint8_t             xmt;            // Transmitter of the Multi-packet message
     uint8_t             state;
     uint8_t             stateProto;
+    uint8_t             rsvd8a[3];
     
     uint32_t            msTimeProto;    // Time of Last Protocol Action
     uint32_t            msTime;         // Time of Last Packet Receipt/Transmit
@@ -147,7 +148,6 @@ struct j1939tp_data_s	{
     //                                  // hold open the connection.
     //                                  // Action: Close connection.
     
-    uint16_t            rsvd16a;
     uint8_t             activity;       // 0 == inactive
     //                                  // 1 == receive TP
     //                                  // 2 == transmit TP

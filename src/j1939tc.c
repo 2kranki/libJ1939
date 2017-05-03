@@ -772,9 +772,18 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
+#ifdef __APPLE__
+        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939TC_DATA,eRc));
+        fprintf(stderr, "offsetof(spn123) = %lu\n", offsetof(J1939TC_DATA,spn123));
+        fprintf(stderr, "offsetof(spn161) = %lu\n", offsetof(J1939TC_DATA,spn161));
+        fprintf(stderr, "offsetof(timeOut) = %lu\n", offsetof(J1939TC_DATA,timeOut));
+        fprintf(stderr, "sizeof(J1939TC_DATA) = %lu\n", sizeof(J1939TC_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,eRc));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn123));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn161));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,timeOut));
+        BREAK_NOT_BOUNDARY4(sizeof(J1939TC_DATA));
 #endif
 
         // Return to caller.

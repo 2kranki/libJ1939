@@ -99,7 +99,7 @@ extern "C" {
         uint16_t            spn515;             // Engine's Desired Operating Speed
         uint16_t            spn1636;            // Intake Manifold 1 Air Temperature
         uint16_t            spn1637;            // Engine Coolant Temperature
-        //uint16_t            reserved16;
+        uint16_t            rsvd16[1];
         // The last spn is used in Init() to establish size of area to initialize.
 
     };

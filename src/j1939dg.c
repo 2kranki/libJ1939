@@ -481,6 +481,16 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
+#ifdef __APPLE__
+        fprintf(stderr, "offsetof(nextTime61440) = %lu\n", offsetof(J1939DG_DATA,nextTime61440));
+        fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939DG_DATA,spn84));
+        fprintf(stderr, "offsetof(spn1637) = %lu\n", offsetof(J1939DG_DATA,spn1637));
+        fprintf(stderr, "sizeof(J1939DG_DATA) = %lu\n", sizeof(J1939DG_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(&this->nextTime61440);
+        BREAK_NOT_BOUNDARY4(&this->spn84);
+        BREAK_NOT_BOUNDARY4(&this->spn1637);
+        BREAK_NOT_BOUNDARY4(sizeof(J1939DG_DATA));
 #endif
 
         // Return to caller.

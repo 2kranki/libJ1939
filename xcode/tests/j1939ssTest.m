@@ -107,7 +107,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x1CEEFF29 == pdu.eid) );
+        XCTAssertTrue( (0x18EEFF05 == pdu.eid) );
         
         // Send "Timed Out".
         j1939Sys_BumpMS(pSYS, 250);

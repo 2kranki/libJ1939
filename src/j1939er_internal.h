@@ -129,6 +129,7 @@ extern "C" {
 
         uint32_t            timeOut;
         uint8_t             fActive;
+        uint8_t             rsvd8[3];
 
     };
 #pragma pack(pop)

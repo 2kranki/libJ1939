@@ -782,6 +782,7 @@ extern	"C" {
             obj_Release(this);
             return OBJ_NIL;
         }
+        BREAK_NOT_BOUNDARY4(sizeof(J1939DG_DATA));
 #endif
         
         // Return to caller.

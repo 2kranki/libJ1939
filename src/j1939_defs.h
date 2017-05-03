@@ -141,8 +141,10 @@ extern	"C" {
 #       define BREAK_NOT_BOUNDARY4(n) /**/
 #   else
 #       define BREAK_NOT_BOUNDARY4(n) \
-            if( !(0 == (((uint32_t)n) & 0x3)) ) \
-                DEBUG_BREAK();
+            if( !(0 == (((uint32_t)n) & 0x3)) ) {\
+                fprintf(stderr, "error: %d\n", ((uint32_t)n) & 0x3)); \
+                DEBUG_BREAK(); \
+            }
 #   endif
 #endif
     
@@ -313,8 +315,6 @@ extern	"C" {
         OBJ_IDENT_J1939CU_CLASS,
         OBJ_IDENT_J1939DG,              // J1939 Diagnostic/Test CA
         OBJ_IDENT_J1939DG_CLASS,
-        OBJ_IDENT_J1939DL,              // J1939 Data Link Layer
-        OBJ_IDENT_J1939DL_CLASS,
         OBJ_IDENT_J1939ECU,             // J1939 Engine Control Unit ECU
         OBJ_IDENT_J1939ECU_CLASS,
         OBJ_IDENT_J1939EN,              // J1939 Engine #1 CA

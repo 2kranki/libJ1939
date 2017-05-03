@@ -63,8 +63,9 @@ struct j1939can_data_s	{
 
     // Common Data
     ERESULT             eRc;
-    bool                fLoopRcv;   // Loop Rcv back to Xmt
-    bool                fLoopXmt;   // Loop Xmt back to Rcv
+    uint8_t             fLoopRcv;   // Loop Rcv back to Xmt
+    uint8_t             fLoopXmt;   // Loop Xmt back to Rcv
+    uint16_t            rsvd16;
 
     P_SRVCMSG_RTN       pRcvMsg;
     OBJ_ID              pRcvObj;

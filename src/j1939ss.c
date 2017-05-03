@@ -1464,7 +1464,15 @@ bool			j1939ss_setSpn3350(
             obj_Release(this);
             return OBJ_NIL;
         }
-        //BREAK_NOT_BOUNDARY4(&this->thread);
+#ifdef __APPLE__
+        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939SS_DATA,eRc));
+        //fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939SS_DATA,spn84));
+        fprintf(stderr, "offsetof(spn1637) = %lu\n", offsetof(J1939SS_DATA,tsc1Time));
+        fprintf(stderr, "sizeof(J1939SS_DATA) = %lu\n", sizeof(J1939SS_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(&this->eRc);
+        BREAK_NOT_BOUNDARY4(&this->tsc1Time);
+        BREAK_NOT_BOUNDARY4(sizeof(J1939SS_DATA));
     #endif
 
         return this;

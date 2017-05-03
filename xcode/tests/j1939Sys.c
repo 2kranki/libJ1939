@@ -459,7 +459,14 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-        //BREAK_NOT_BOUNDARY4(&this->thread);
+#ifdef __APPLE__
+        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939SYS_DATA,eRc));
+        fprintf(stderr, "offsetof(time) = %lu\n", offsetof(J1939SYS_DATA,time));
+        fprintf(stderr, "sizeof(J1939SYS_DATA) = %lu\n", sizeof(J1939SYS_DATA));
+#endif
+        BREAK_NOT_BOUNDARY4(offsetof(J1939SYS_DATA,eRc));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939SYS_DATA,time));
+        BREAK_NOT_BOUNDARY4(sizeof(J1939SYS_DATA));
     #endif
 
         return this;

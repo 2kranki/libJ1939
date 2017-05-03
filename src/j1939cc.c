@@ -712,6 +712,7 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
+        BREAK_NOT_BOUNDARY4(sizeof(J1939CC_DATA));
         //BREAK_NOT_BOUNDARY4(&this->thread);
     #endif
 
