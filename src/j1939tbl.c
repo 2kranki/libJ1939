@@ -727,6 +727,17 @@ extern "C" {
         };
         
         
+        // SPN 518 - Engine Requested Torque/Torque Limit
+        static
+        const
+        J1939_SPN           spn518 = {
+            518,
+            0,
+            NULL    /*&????*/,
+            "Engine Requested Torque/Torque Limit"
+        };
+        
+        
         // SPN 527 - Cruise Control States
         // 000 Off/Disabled
         // 001 Hold
@@ -991,6 +1002,42 @@ extern "C" {
         };
         
         
+        // SPN 695 - Engine Override Control Mode
+        // 00 Override disabled - Disable any existing control commanded by the
+        //      source of this command.
+        // 01 Speed control - Govern speed to the included “desired speed” value.
+        // 10 Torque control - Control torque to the included “desired torque” value.
+        // 11 Speed/torque limit control - Limit speed and/or torque based on the
+        //      included limit values. The speed limit governor is a droop governor
+        //      where the speed limit value defines the speed at the maximum torque
+        //      available during this operation.
+        static
+        const
+        J1939_SPN           spn695 = {
+            695,
+            0,
+            NULL    /*&????*/,
+            "Engine Override Control Mode"
+        };
+        
+        
+        // SPN 696 - Engine Requested Speed Control Conditions
+        // 00 Transient Optimized for driveline disengaged and non-lockup conditions
+        // 01 Stability Optimized for driveline disengaged and non-lockup conditions
+        // 10 Stability Optimized for driveline engaged and/or in lockup condition
+        //      1 (e.g., vehicle driveline)
+        // 11 Stability Optimized for driveline engaged and/or in lockup condition
+        //      2 (e.g., PTO driveline)
+        static
+        const
+        J1939_SPN           spn696 = {
+            696,
+            0,
+            NULL    /*&????*/,
+            "Engine Requested Speed Control Conditions"
+        };
+        
+        
         // SPN 875 - Refrigerant Low Pressure Switch
         // 00 Pressure normal
         // 01 Pressure too low, compressor clutch may be disengaged
@@ -1003,6 +1050,34 @@ extern "C" {
             0,
             NULL    /*&????*/,
             "Refrigerant Low Pressure Switch"
+        };
+        
+        
+        // SPN 897 - Override Control Mode Priority
+        static
+        const
+        J1939_SPN           spn897 = {
+            897,
+            0,
+            NULL    /*&????*/,
+            "Override Control Mode Priority"
+        };
+        
+        
+        // SPN 898 - Engine Requested Speed/Speed Limit
+        // Parameter provided to the engine from external sources in the torque/
+        // speed control message. This is the engine speed which the engine is
+        // expected to operate at if the speed control mode is active or the
+        // engine speed which the engine is not expected to exceed if the speed
+        // limit mode is active.
+        // Resolution: 0.125 rpm/bit   range: 0 - 8,031.875 rpm
+        static
+        const
+        J1939_SPN           spn898 = {
+            898,
+            0,
+            NULL    /*&????*/,
+            "Engine Requested Speed/Speed Limit"
         };
         
         
@@ -1867,7 +1942,44 @@ extern "C" {
         };
         
         
+        // SPN 3349 - TSC1 Transmission Rate
+        static
+        const
+        J1939_SPN           spn3349 = {
+            3349,
+            0,
+            NULL    /*&????*/,
+            "TSC1 Transmission Rate"
+        };
+        
+        
+        // SPN 3350 - TSC1 Control Purpose
+        static
+        const
+        J1939_SPN           spn3350 = {
+            3350,
+            0,
+            NULL    /*&????*/,
+            "TSC1 Control Purpose"
+        };
+        
+        
 
+        
+        static
+        const
+        J1939_PGNSPN        pgn0spns[7] = {
+            //                    Bit    Byte
+            // PGN    SPN  cBits Offset Offset rsvd spnDef
+            {     0,  695,   2,    0,     0,    0,  &spn695 },
+            {     0,  696,   2,    2,     0,    0,  &spn696 },
+            {     0,  897,   2,    4,     0,    0,  &spn897 },
+            {     0,  898,  16,    0,     1,    0,  &spn898 },
+            {     0,  518,   8,    0,     3,    0,  &spn518 },
+            {     0, 3349,   3,    0,     4,    0,  &spn3349 },
+            {     0, 3350,   5,    3,     4,    0,  &spn3350 }
+        };
+        
         
         static
         const
@@ -2099,20 +2211,21 @@ extern "C" {
         
         const
         J1939_PGN_ENTRY     pgn0_entry = {
-            // PGN 0  0x000000 - Torque/Speed Control 1 - TSC1
+            // PGN 0  0x000100 - Transmission Control 1 - TSC1
             0x00000000,
-            50,                 // msFreq (to Retarder)(10ms to Engine)
+            50,                 // msFreq (only when active)
             8,                  // dlc
             3,                  // priority
             7,                  // cSPNs
             0,                  // --reserved--
-            NULL                // SPN Table Pointer
+            pgn0spns,           // SPN Table Pointer
+            "Torque/Speed Control 1 - TSC1"
         };
         
         
         const
         J1939_PGN_ENTRY     pgn256_entry = {
-            // PGN 0  0x000100 - Transmission Control 1 - TC1
+            // PGN 256  0x000100 - Transmission Control 1 - TC1
             0x00000100,
             50,                 // msFreq (only when active)
             8,                  // dlc

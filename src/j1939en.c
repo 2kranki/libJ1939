@@ -2958,8 +2958,6 @@ extern	"C" {
     )
     {
         uint32_t        curTime;
-        const
-        J1939_PGN_ENTRY *pEntry = &pgn61443_entry;
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2972,32 +2970,25 @@ extern	"C" {
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         if (j1939ca_getTimedTransmits((J1939CA_DATA *)this)) {
-            if ((curTime - this->startTime61443) >= 50) {
-                pEntry = &pgn61443_entry;
+            if ((curTime - this->startTime61443) >= pgn61443_entry.msFreq) {
                 j1939en_TransmitPgn61443(this);
             }
-            if ((curTime - this->startTime61444) >= 100) {
-                pEntry = &pgn61444_entry;
+            if ((curTime - this->startTime61444) >= pgn61444_entry.msFreq) {
                 j1939en_TransmitPgn61444(this);
             }
-            if ((curTime - this->startTime65129) >= 1000) {
-                pEntry = &pgn65129_entry;
+            if ((curTime - this->startTime65129) >= pgn65129_entry.msFreq) {
                 j1939en_TransmitPgn65129(this);
             }
-            if ((curTime - this->startTime65247) >= 250) {
-                pEntry = &pgn65247_entry;
+            if ((curTime - this->startTime65247) >= pgn65247_entry.msFreq) {
                 j1939en_TransmitPgn65247(this);
             }
-            if (this->fShutdown && ((curTime - this->startTime65252) >= 1000)) {
-                pEntry = &pgn65252_entry;
+            if (this->fShutdown && ((curTime - this->startTime65252) >= pgn65252_entry.msFreq)) {
                 j1939en_TransmitPgn65252(this);
             }
-            if ((curTime - this->startTime65262) >= 1000) {
-                pEntry = &pgn65262_entry;
+            if ((curTime - this->startTime65262) >= pgn65262_entry.msFreq) {
                 j1939en_TransmitPgn65262(this);
             }
-            if ((curTime - this->startTime65265) >= 100) {
-                pEntry = &pgn65265_entry;
+            if ((curTime - this->startTime65265) >= pgn65265_entry.msFreq) {
                 j1939en_TransmitPgn65265(this);
             }
         }
@@ -3025,6 +3016,7 @@ extern	"C" {
     )
     {
         uint16_t		cbSize = sizeof(J1939EN_DATA);
+        uint32_t        curTime;
 
         // Do initialization.
         if (NULL == this) {
@@ -3073,7 +3065,15 @@ extern	"C" {
         this->spn110  = 0x67;       // spn110 - Engine Coolant Temp - 63 C
         this->spn514  = 0x8D;       // spn514 - Nominal Friction - Percent Torque - 16%
 
-
+        curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->startTime61443 = curTime;
+        this->startTime61444 = curTime;
+        this->startTime65129 = curTime;
+        this->startTime65247 = curTime;
+        this->startTime65252 = curTime;
+        this->startTime65262 = curTime;
+        this->startTime65265 = curTime;
+        
 #ifdef NDEBUG
 #else
 #ifdef __APPLE__
@@ -3149,11 +3149,11 @@ extern	"C" {
             *pData  = 0xFF;
         }
         else {
-            return false;
+            return 0;
         }
 
         // Return to caller.
-        return true;
+        return 8;
     }
 
 
@@ -3211,7 +3211,7 @@ extern	"C" {
         
         if (pData) {
             if (cData < 8) {
-                return false;
+                return 0;
             }
             *pData  = 0xF0;
             *pData |= this->spn899 & 0xF;
@@ -3232,11 +3232,11 @@ extern	"C" {
             *pData  = this->spn2432;
         }
         else {
-            return false;
+            return 0;
         }
 
         // Return to caller.
-        return true;
+        return 8;
     }
 
 

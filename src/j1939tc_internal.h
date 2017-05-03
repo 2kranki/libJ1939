@@ -48,8 +48,8 @@
 #define	J1939TC_INTERNAL_H
 
 
-#include        "j1939tc.h"
-#include        "j1939ca_internal.h"
+#include        <j1939tc.h>
+#include        <j1939ca_internal.h>
 
 
 #ifdef	__cplusplus

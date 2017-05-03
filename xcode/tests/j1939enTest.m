@@ -159,8 +159,10 @@ void        shiftExit(void *ptr,bool fShifting)
 - (void)testTimedMessages
 {
     J1939EN_DATA    *pEng = NULL;
-    J1939_PDU       pdu;
+    //J1939_PDU       pdu;
     bool            fRc;
+    int             i;
+    int             j;
         
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -180,10 +182,10 @@ void        shiftExit(void *ptr,bool fShifting)
         XCTAssertTrue( (0 == cCurMsg) );
 
         // We need to go long enough (1200ms) to get all timed messages to pop.
-        // PGN 61443 - F003 - every 50ms        24ea
-        // PGN 61444 - F004 - every 100ms       13ea
-        // PGN 65265 - FEF1 - every 100ms       13ea
-        // PGN 65247 - FEDF - every 250ms        5ea
+        // PGN 61443 - F003 - every 50ms        28ea
+        // PGN 61444 - F004 - every 100ms       14ea
+        // PGN 65265 - FEF1 - every 100ms       14ea
+        // PGN 65247 - FEDF - every 250ms        6ea
         // PGN 65129 - FE69 - every 1000ms       1ea
         // PGN 65262 - FEEE - every 1000ms       1ea
         for (int i=0; i<120; ++i) {
@@ -196,12 +198,56 @@ void        shiftExit(void *ptr,bool fShifting)
         }
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        //FIXME:  Message Count is too hard to track for the moment.
-        //XCTAssertTrue( (57 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
-        //XCTAssertTrue( (0x0CF00300 == pdu.eid) );
-        
+        XCTAssertTrue( (64 == cCurMsg) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 61443) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (28 == j) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 61444) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (14 == j) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 65265) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (14 == j) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 65247) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (6 == j) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 65129) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (1 == j) );
+        j = 0;
+        for (i=0; i<cCurMsg; ++i) {
+            if (j1939msg_getPGN(&curMsg[i]).pgn == 65262) {
+                ++j;
+            }
+        }
+        fprintf(stderr, "j = %d\n", j);
+        XCTAssertTrue( (1 == j) );
+       
         obj_Release(pEng);
         pEng = NULL;
     }
@@ -236,18 +282,17 @@ void        shiftExit(void *ptr,bool fShifting)
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (0 == cCurMsg) );
         
-        // Setup up msg from #3 Transmission to TSC1;
-        pdu.eid = 0;
-        pdu.SA = 3;
-        pdu.P = 3;
-        pdu.PF = 0;                 // TSC1 PF
-        pdu.PS = 0;
+        // Setup up TSC1 msg from Transmission;
+        j1939pdu_Construct(&pdu, 0, J1939_ENGINE_1, 3, J1939_TRANSMISSION_1);
         for (int i=0; i<8; ++i) {
             data[i] = 0xFF;
         }
-        data[0] = 1;                // Engine
-        //data[1] = 240;
-        //data[2] = 0x00;
+        data[0] = 0xC1;
+        data[1] = 240;
+        data[2] = 0;
+        for (int i=3; i<8; ++i) {
+            data[i] = 0xFF;
+        }
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, 0, &msg);
@@ -326,7 +371,7 @@ void        shiftExit(void *ptr,bool fShifting)
         
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
-        pdu.SA = 3;
+        pdu.SA = J1939_TRANSMISSION_1;
         pdu.P = 3;
         pdu.PF = 0;                 // TSC1 PF
         pdu.PS = 41;
@@ -350,7 +395,7 @@ void        shiftExit(void *ptr,bool fShifting)
 #ifdef XYZZY
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
-        pdu.SA = 3;
+        pdu.SA = J1939_TRANSMISSION_1;
         pdu.P = 3;
         pdu.PF = 0;                 // TSC1 PF
         pdu.PS = 0;
