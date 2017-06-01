@@ -1,0 +1,320 @@
+# Generated file do not edit!
+# ( 6/ 1/2017 19:35:40.000)
+
+
+LIBNAM=libJ1939
+SYS=macosx
+TEMP=/tmp
+BASEDIR = $(TEMP)/$(LIBNAM)
+
+CFLAGS += -g -Isrc -Isrc/$(SYS)
+CFLAGS += -I../libCmn/src -I../libCmn/src/$(SYS)
+CFLAGS += -D__MACOSX_ENV__
+
+INSTALL_BASE = $(HOME)/Support/lib/$(SYS)
+INSTALLDIR = $(INSTALL_BASE)/$(LIBNAM)
+LIBDIR = $(BASEDIR)/$(SYS)
+SRCDIR = ./src
+SRCSYSDIR = ./src/$(SYS)
+ifdef  NDEBUG
+CFLAGS += -DNDEBUG 
+LIB_FILENAME=$(LIBNAM)R.a
+OBJDIR = $(LIBDIR)/o/r
+else   #DEBUG
+CFLAGS += -D_DEBUG 
+LIB_FILENAME=$(LIBNAM)D.a
+OBJDIR = $(LIBDIR)/o/d
+endif  #NDEBUG
+LIBPATH = $(LIBDIR)/$(LIB_FILENAME)
+
+
+.SUFFIXES:
+.SUFFIXES: .asm .c .o
+
+
+
+
+
+OBJS =
+OBJS += $(OBJDIR)/j1939ca.o $(OBJDIR)/j1939ca_object.o
+
+
+$(OBJDIR)/j1939ca.o: $(SRCDIR)/j1939ca.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939ca_object.o: $(SRCDIR)/j1939ca_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939cam.o $(OBJDIR)/j1939cam_object.o
+
+
+$(OBJDIR)/j1939cam.o: $(SRCDIR)/j1939cam.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939cam_object.o: $(SRCDIR)/j1939cam_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939can.o $(OBJDIR)/j1939can_object.o
+
+
+$(OBJDIR)/j1939can.o: $(SRCDIR)/j1939can.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939can_object.o: $(SRCDIR)/j1939can_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939cc.o $(OBJDIR)/j1939cc_object.o
+
+
+$(OBJDIR)/j1939cc.o: $(SRCDIR)/j1939cc.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939cc_object.o: $(SRCDIR)/j1939cc_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939cu.o $(OBJDIR)/j1939cu_object.o
+
+
+$(OBJDIR)/j1939cu.o: $(SRCDIR)/j1939cu.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939cu_object.o: $(SRCDIR)/j1939cu_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939dg.o $(OBJDIR)/j1939dg_object.o
+
+
+$(OBJDIR)/j1939dg.o: $(SRCDIR)/j1939dg.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939dg_object.o: $(SRCDIR)/j1939dg_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939ecu.o $(OBJDIR)/j1939ecu_object.o
+
+
+$(OBJDIR)/j1939ecu.o: $(SRCDIR)/j1939ecu.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939ecu_object.o: $(SRCDIR)/j1939ecu_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939en.o $(OBJDIR)/j1939en_object.o
+
+
+$(OBJDIR)/j1939en.o: $(SRCDIR)/j1939en.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939en_object.o: $(SRCDIR)/j1939en_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939er.o $(OBJDIR)/j1939er_object.o
+
+
+$(OBJDIR)/j1939er.o: $(SRCDIR)/j1939er.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939er_object.o: $(SRCDIR)/j1939er_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939ss.o $(OBJDIR)/j1939ss_object.o
+
+
+$(OBJDIR)/j1939ss.o: $(SRCDIR)/j1939ss.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939ss_object.o: $(SRCDIR)/j1939ss_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939tbl.o $(OBJDIR)/j1939tbl_object.o
+
+
+$(OBJDIR)/j1939tbl.o: $(SRCDIR)/j1939tbl.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939tbl_object.o: $(SRCDIR)/j1939tbl_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939tc.o $(OBJDIR)/j1939tc_object.o
+
+
+$(OBJDIR)/j1939tc.o: $(SRCDIR)/j1939tc.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939tc_object.o: $(SRCDIR)/j1939tc_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939tcu.o $(OBJDIR)/j1939tcu_object.o
+
+
+$(OBJDIR)/j1939tcu.o: $(SRCDIR)/j1939tcu.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939tcu_object.o: $(SRCDIR)/j1939tcu_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939tp.o $(OBJDIR)/j1939tp_object.o
+
+
+$(OBJDIR)/j1939tp.o: $(SRCDIR)/j1939tp.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939tp_object.o: $(SRCDIR)/j1939tp_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+$(OBJDIR)/j1939msg.o: $(SRCDIR)/j1939msg.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939msg.o
+
+
+
+
+
+$(LIBPATH):  $(OBJS)
+	-cd $(LIBDIR) ; [ -d $(LIB_FILENAME) ] && rm $(LIB_FILENAME)
+	ar rc $(LIBPATH) $(OBJS)
+
+
+
+
+
+
+TESTS =
+
+
+
+TESTS += test_j1939ca
+
+test_j1939ca:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ca.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939cc
+
+test_j1939cc:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cc.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939cu
+
+test_j1939cu:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cu.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939ecu
+
+test_j1939ecu:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ecu.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939ss
+
+test_j1939ss:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ss.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939Sys
+
+test_j1939Sys:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939Sys.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939tcu
+
+test_j1939tcu:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tcu.c
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939tp
+
+test_j1939tp:
+	$(CC) $(CFLAGS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tp.c
+	$(OBJDIR)/$(@F)
+
+
+
+
+test:  $(TESTS)
+
+
+
+
+
+
+
+.PHONY: clean
+clean:
+	-cd $(TEMP) ; [ -d $(LIBNAM) ] && rm -fr $(LIBNAM)
+
+
+.PHONY: install
+install:
+	-cd $(INSTALL_BASE) ; [ -d $(LIBNAM) ] && rm -fr $(LIBNAM)
+	-cd $(INSTALL_BASE) ; [ ! -d $(LIBNAM)/include ] && mkdir -p $(LIBNAM)/include
+	cp $(LIBPATH) $(INSTALLDIR)/$(LIBNAM).a
+	cp src/*.h $(INSTALLDIR)/include/
+	-cp src/$(SYS)/*.h $(INSTALLDIR)/include/
+
+
+.PHONY: create_dirs
+create_dirs:
+	[ ! -d $(OBJDIR) ] && mkdir -p $(OBJDIR)
+
+
+.PHONY: all
+all:  clean create_dirs $(LIBPATH)
+
+
+
