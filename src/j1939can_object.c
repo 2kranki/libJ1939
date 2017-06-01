@@ -170,9 +170,10 @@ J1939CAN_VTBL     j1939can_Vtbl = {
         j1939can_Dealloc,
         j1939can_Class,
         j1939can_WhoAmI,
+        NULL,           // (P_OBJ_QUERYINFO)
+        (P_OBJ_TOSTRING)j1939can_ToDebugString,
         NULL,			// j1939can_Enable,
         NULL,			// j1939can_Disable,
-        (P_OBJ_TOSTRING)j1939can_ToDebugString,
         NULL,			// (P_OBJ_ASSIGN)j1939can_Assign,
         NULL,			// (P_OBJ_COMPARE)j1939can_Compare,
         NULL, 			// (P_OBJ_PTR)j1939can_Copy,

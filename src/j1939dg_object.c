@@ -178,9 +178,10 @@ J1939DG_VTBL     j1939dg_Vtbl = {
         j1939dg_Dealloc,
         j1939dg_Class,
         j1939dg_WhoAmI,
+        NULL,           // (P_OBJ_QUERYINFO)
+        NULL,           // (P_OBJ_TOSTRING)j1939dg_ToDebugString,
         NULL,			// j1939dg_Enable,
         NULL,			// j1939dg_Disable,
-        NULL,           // (P_OBJ_TOSTRING)j1939dg_ToDebugString,
         NULL,			// (P_OBJ_ASSIGN)j1939dg_Assign,
         NULL,			// (P_OBJ_COMPARE)j1939dg_Compare,
         NULL, 			// (P_OBJ_PTR)j1939dg_Copy,

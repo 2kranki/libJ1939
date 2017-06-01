@@ -11,10 +11,10 @@
  *          be built upon.
  *
  *          Notes to self. The Control Units need to be able to
- *          change spn's within its CAs and force msgs to sent
+ *          change spn's within its CAs and force msgs to be sent
  *          at specific times.  For instance, the Engine Shutdown
  *          procedure is two phases apparently given the msg,
- *          SHUTDOW. The first phase is shutdown is approaching.
+ *          SHUTDOW. The first phase is "shutdown is approaching".
  *          So, clean up all the CAs and get them ready to stop. 
  *          After an appropriate pause, the second phase is to
  *          tell everyone that they need to actually shutdown.
@@ -33,20 +33,6 @@
             Another approach would be to spawn a separate task
             for each special task and have it handle the request
             and post back when it is done.
- 
-            Currently, the CA can not handle multi-segment
-            messages for input or output. Output is fairly
-            simple using the timed message mechanism for
-            output. We would need a task(??) to handle all
-            multi-segment input messages since we need to
-            be able to receive other messages as well and
-            receive other multi-segment messages using a
-            different eid that is directed to us. Of course,
-            there must be limits to how much of this that
-            we can do, because we need to be aware of memory
-            usage for embedded processes. Maybe we have 2 or
-            3 tasks with a fixed amount of memory to be 
-            used for multiple purposes.
  *
  *
  * Remarks

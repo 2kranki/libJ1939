@@ -178,9 +178,10 @@ J1939EN_VTBL     j1939en_Vtbl = {
         j1939en_Dealloc,
         j1939en_Class,
         j1939en_WhoAmI,
+        NULL,           // (P_OBJ_QUERYINFO)
+        NULL,           // (P_OBJ_TOSTRING)j1939en_ToDebugString,
         NULL,			// j1939en_Enable,
         NULL,			// j1939en_Disable,
-        NULL,           // (P_OBJ_TOSTRING)j1939en_ToDebugString,
         NULL,			// (P_OBJ_ASSIGN)j1939en_Assign,
         NULL,			// (P_OBJ_COMPARE)j1939en_Compare,
         NULL, 			// (P_OBJ_PTR)j1939en_Copy,

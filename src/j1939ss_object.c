@@ -177,9 +177,10 @@ J1939SS_VTBL     j1939ss_Vtbl = {
         j1939ss_Dealloc,
         j1939ss_Class,
         j1939ss_WhoAmI,
+        NULL,           // (P_OBJ_QUERYINFO)
+        (P_OBJ_TOSTRING)j1939ss_ToDebugString,
         NULL,			// j1939ss_Enable,
         NULL,			// j1939ss_Disable,
-        (P_OBJ_TOSTRING)j1939ss_ToDebugString,
         NULL,			// (P_OBJ_ASSIGN)j1939ss_Assign,
         NULL,			// (P_OBJ_COMPARE)j1939ss_Compare,
         NULL, 			// (P_OBJ_PTR)j1939ss_Copy,

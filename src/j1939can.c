@@ -630,6 +630,7 @@ extern "C" {
     )
     {
         J1939CAN_DATA	*this = pObject;
+        int             i;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -648,12 +649,14 @@ extern "C" {
             DEBUG_BREAK();
         }
         if (this->fLoopRcv) {
-            if (this->pXmtMsg) {
-                (*this->pXmtMsg)(this->pXmtObj, 0, pMsg);
-            }
-            else {
-                fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
-                DEBUG_BREAK();
+            for (i=0; i<this->cXmts; ++i) {
+                if (this->pXmtMsg[i]) {
+                    (*this->pXmtMsg[i])(this->pXmtObj[i], 0, pMsg);
+                }
+                else {
+                    fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
+                    DEBUG_BREAK();
+                }
             }
         }
         

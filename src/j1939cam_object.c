@@ -172,9 +172,10 @@ J1939CAM_VTBL     j1939cam_Vtbl = {
         j1939cam_Dealloc,
         j1939cam_Class,
         j1939cam_WhoAmI,
+        NULL,           // (P_OBJ_QUERYINFO)
+        NULL,           // (P_OBJ_TOSTRING)j1939cam_ToDebugString,
         NULL,			// j1939cam_Enable,
         NULL,			// j1939cam_Disable,
-        NULL,           // (P_OBJ_TOSTRING)j1939cam_ToDebugString,
         NULL,			// (P_OBJ_ASSIGN)j1939cam_Assign,
         NULL,			// (P_OBJ_COMPARE)j1939cam_Compare,
         NULL, 			// (P_OBJ_PTR)j1939cam_Copy,

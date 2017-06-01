@@ -42,6 +42,25 @@
 
 
 /*
+                        C L A S S  H I E R A R C H Y
+ 
+ 
+    Engine Control Unit (ECU) -> Control Unit Base (CU)
+        Control Application Manager (CAM)
+            Engine Control Application (EN) -> Control Application (CA)
+            Engine Retarder Application (ER) -> Control Application (CA)
+ 
+    Transmission Control Unit (TCU) -> Control Unit Base (CU)
+        Control Application Manager (CAM)
+            Transmission Control Application (TC) -> Control Application (CA)
+            (???)Engine Retarder Application (ER) -> Control Application (CA)
+ 
+ */
+
+
+
+
+/*
  This is free and unencumbered software released into the public domain.
  
  Anyone is free to copy, modify, publish, use, compile, sell, or

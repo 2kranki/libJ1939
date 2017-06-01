@@ -16,5 +16,15 @@
     ],
     "routines": [
         "j1939msg.c"
+    ],
+    "tests": [
+        "test_j1939ca.c",
+        "test_j1939cc.c",
+        "test_j1939cu.c",
+        "test_j1939ecu.c",
+        "test_j1939ss.c",
+        "test_j1939Sys.c",
+        "test_j1939tcu.c",
+        "test_j1939tp.c"
     ]
 }

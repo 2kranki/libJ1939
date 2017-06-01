@@ -1726,10 +1726,10 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
-        bool            fRc;
+        //bool            fRc;
         uint8_t         spn965;
         uint8_t         *pSpn234;
-        uint16_t        len = cData - 1;
+        //uint16_t        len = cData - 1;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -1770,10 +1770,10 @@ extern	"C" {
     )
     {
         J1939_PDU       pdu;
-        bool            fRc;
+        //bool            fRc;
         uint8_t         spn965;
         uint8_t         *pSpn234;
-        uint16_t        len = cData - 1;
+        //uint16_t        len = cData - 1;
         
         // Do initialization.
 #ifdef NDEBUG
