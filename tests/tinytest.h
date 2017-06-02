@@ -60,7 +60,7 @@ typedef struct TinyTestRegistryStruct
 #define TINYTEST_FALSE_MSG(actual, msg)                                 \
   if ( (actual) )                                                       \
   {                                                                     \
-    fprintf(stderr,"%s:%d false, actual: %s\n",                         \
+    fprintf(stderr,"ERROR: %s:%d false, actual: %s\n",                  \
            __FILE__, __LINE__, #actual);                                \
     if ( msg ) printf(msg);                                             \
     return 0;                                                           \
@@ -69,10 +69,13 @@ typedef struct TinyTestRegistryStruct
 #define TINYTEST_FALSE(actual)                                          \
   TINYTEST_FALSE_MSG(actual, NULL)
 
+#define XCTAssertFalse(actual)                                          \
+  TINYTEST_FALSE_MSG(actual, NULL)
+
 #define TINYTEST_TRUE_MSG(actual, msg)                                  \
   if ( !(actual) )                                                      \
   {                                                                     \
-    fprintf(stderr,"%s:%d true, actual: %s\n",                          \
+    fprintf(stderr,"ERROR: %s:%d true, actual: %s\n",                   \
            __FILE__, __LINE__, #actual);                                \
     if ( msg ) printf(msg);                                             \
     return 0;                                                           \
@@ -81,10 +84,13 @@ typedef struct TinyTestRegistryStruct
 #define TINYTEST_TRUE(actual)                                           \
   TINYTEST_TRUE_MSG(actual, NULL)
 
+#define XCTAssertTrue(actual)                                           \
+  TINYTEST_TRUE_MSG(actual, NULL)
+
 #define TINYTEST_EQUAL_MSG(expected, actual, msg)                       \
   if ( (expected) != (actual) )                                         \
   {                                                                     \
-    fprintf(stderr,"%s:%d expected %s, actual: %s\n",                   \
+    fprintf(stderr,"ERROR: %s:%d expected %s, actual: %s\n",            \
            __FILE__, __LINE__, #expected, #actual);                     \
     if ( msg ) printf(msg);                                             \
     return 0;                                                           \
@@ -96,7 +102,7 @@ typedef struct TinyTestRegistryStruct
 #define TINYTEST_STR_EQUAL_MSG(expected, actual, msg)                   \
   if ( strcmp((expected), (actual)) )                                   \
   {                                                                     \
-    fprintf(stderr,"%s:%d expected \"%s\", actual: \"%s\"\n",           \
+    fprintf(stderr,"ERROR: %s:%d expected \"%s\", actual: \"%s\"\n",    \
            __FILE__, __LINE__, expected, actual);                       \
     if ( msg ) printf(msg);                                             \
     return 0;                                                           \
@@ -108,7 +114,7 @@ typedef struct TinyTestRegistryStruct
 #define TINYTEST_ASSERT_MSG(assertion, msg)                             \
   if ( !(assertion) )                                                   \
   {                                                                     \
-    fprintf(stderr,"%s:%d assertion failed: \"%s\"\n",                  \
+    fprintf(stderr,"ERROR: %s:%d assertion failed: \"%s\"\n",           \
            __FILE__, __LINE__, #assertion);                             \
     if ( msg ) printf(msg);                                             \
     return 0;                                                           \

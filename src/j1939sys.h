@@ -1,15 +1,15 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 SYS Test Object (j1939Sys) Header
+//          J1939 SYS Test Object (j1939sys) Header
 //****************************************************************
 /*
  * Program
- *			J1939 SYS Test Object (j1939Sys)
+ *			J1939 SYS Test Object (j1939sys)
  * Purpose
  *			This object provides a means of testing the operation
  *          of libJ1939 without actually having the library connected
- *          to a CAN Port and using an O/S. It requires j1939Can as well.
+ *          to a CAN Port and using an O/S. It requires j1939can as well.
  *
  * Remarks
  *	1.      J1939SYS_VTBL must be in sync with the J1939_SYS_VTBL in
@@ -73,9 +73,9 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939Sys_data_s	J1939SYS_DATA;    // Inherits from OBJ.
+    typedef struct j1939sys_data_s	J1939SYS_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939Sys_vtbl_s	{
+    typedef struct j1939sys_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
         // method names to the vtbl definition in j1939Sys_object.c.
@@ -98,11 +98,11 @@ extern "C" {
     //                      *** Class Methods ***
     //---------------------------------------------------------------
 
-    J1939SYS_DATA *     j1939Sys_Alloc(
+    J1939SYS_DATA *     j1939sys_Alloc(
     );
     
     
-    J1939SYS_DATA *     j1939Sys_New(
+    J1939SYS_DATA *     j1939sys_New(
     );
     
     
@@ -111,7 +111,7 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939Sys_getLastError(
+    ERESULT     j1939sys_getLastError(
         J1939SYS_DATA	*this
     );
 
@@ -122,23 +122,23 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    uint32_t    j1939Sys_BumpMS(
+    uint32_t    j1939sys_BumpMS(
         J1939SYS_DATA   *this,
         uint32_t        ms
     );
     
     
-    ERESULT     j1939Sys_Disable(
+    ERESULT     j1939sys_Disable(
         J1939SYS_DATA	*this
     );
 
 
-    ERESULT     j1939Sys_Enable(
+    ERESULT     j1939sys_Enable(
         J1939SYS_DATA	*this
     );
 
    
-    J1939SYS_DATA * j1939Sys_Init(
+    J1939SYS_DATA * j1939sys_Init(
         J1939SYS_DATA   *this
     );
 
@@ -149,7 +149,7 @@ extern "C" {
      @param:    ms      Time to sleep in ms
      @return:   returns the current test time
      */
-    uint32_t    j1939Sys_SleepMS(
+    uint32_t    j1939sys_SleepMS(
         J1939SYS_DATA   *this,
         uint32_t        ms
     );
@@ -160,7 +160,7 @@ extern "C" {
      @param:    this    J1939SYS object pointer
      @return:   returns the current test time
      */
-    uint32_t    j1939Sys_TimeMS(
+    uint32_t    j1939sys_TimeMS(
         J1939SYS_DATA   *this
     );
     
@@ -171,7 +171,7 @@ extern "C" {
      @param:    ms      Time to sleep in ms
      @return:   returns the current test time
      */
-    uint32_t    j1939Sys_TimeReset(
+    uint32_t    j1939sys_TimeReset(
         J1939SYS_DATA   *this,
         uint32_t        ms
     );
@@ -189,7 +189,7 @@ extern "C" {
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA * j1939Sys_ToDebugString(
+    ASTR_DATA * j1939sys_ToDebugString(
         J1939SYS_DATA   *this,
         int             indent
     );

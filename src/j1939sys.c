@@ -1,6 +1,6 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /*
- * File:   j1939Sys.c
+ * File:   j1939sys.c
  *	Generated 04/06/2017 16:09:23
  *
  */
@@ -41,7 +41,7 @@
 //*****************************************************************
 
 /* Header File Inclusion */
-#include "j1939Sys_internal.h"
+#include <j1939sys_internal.h>
 
 
 
@@ -60,7 +60,7 @@ extern "C" {
 
 #ifdef XYZZY
     static
-    void            j1939Sys_task_body(
+    void            j1939sys_task_body(
         void            *pData
     )
     {
@@ -80,7 +80,7 @@ extern "C" {
     //                      *** Class Methods ***
     //===============================================================
 
-    J1939SYS_DATA * j1939Sys_Alloc(
+    J1939SYS_DATA * j1939sys_Alloc(
     )
     {
         J1939SYS_DATA   *this;
@@ -96,14 +96,14 @@ extern "C" {
 
 
 
-    J1939SYS_DATA *     j1939Sys_New(
+    J1939SYS_DATA *     j1939sys_New(
     )
     {
         J1939SYS_DATA       *this;
         
-        this = j1939Sys_Alloc( );
+        this = j1939sys_Alloc( );
         if (this) {
-            this = j1939Sys_Init(this);
+            this = j1939sys_Init(this);
         } 
         return this;
     }
@@ -116,7 +116,7 @@ extern "C" {
     //                      P r o p e r t i e s
     //===============================================================
 
-    ERESULT         j1939Sys_getLastError(
+    ERESULT         j1939sys_getLastError(
         J1939SYS_DATA     *this
     )
     {
@@ -124,7 +124,7 @@ extern "C" {
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             return this->eRc;
         }
@@ -135,14 +135,14 @@ extern "C" {
     }
 
 
-    bool            j1939Sys_setLastError(
+    bool            j1939sys_setLastError(
         J1939SYS_DATA     *this,
         ERESULT         value
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -172,14 +172,14 @@ extern "C" {
      a copy of the object is performed.
      Example:
      @code:
-        ERESULT eRc = j1939Sys__Assign(this,pOther);
+        ERESULT eRc = j1939sys__Assign(this,pOther);
      @endcode:
      @param:    this    J1939SYS object pointer
      @param:    pOther  a pointer to another J1939SYS object
      @return:   If successful, ERESULT_SUCCESS otherwise an 
                 ERESULT_* error 
      */
-    ERESULT         j1939Sys_Assign(
+    ERESULT         j1939sys_Assign(
         J1939SYS_DATA		*this,
         J1939SYS_DATA      *pOther
     )
@@ -188,13 +188,13 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
-        if( !j1939Sys_Validate(pOther) ) {
+        if( !j1939sys_Validate(pOther) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(pOther);
+            return j1939sys_getLastError(pOther);
         }
 #endif
 
@@ -225,11 +225,11 @@ extern "C" {
         //goto eom;
 
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
     eom:
         //FIXME: Implement the assignment.        
-        j1939Sys_setLastError(this, ERESULT_NOT_IMPLEMENTED);
-        return j1939Sys_getLastError(this);
+        j1939sys_setLastError(this, ERESULT_NOT_IMPLEMENTED);
+        return j1939sys_getLastError(this);
     }
     
     
@@ -238,7 +238,7 @@ extern "C" {
     //                       B u m p  M S
     //---------------------------------------------------------------
     
-    uint32_t        j1939Sys_BumpMS(
+    uint32_t        j1939sys_BumpMS(
         J1939SYS_DATA	*this,
         uint32_t        ms
     )
@@ -247,16 +247,16 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
 #endif
         
         this->time += ms;
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return this->time;
     }
     
@@ -270,14 +270,14 @@ extern "C" {
      Copy the current object creating a new object.
      Example:
      @code:
-        j1939Sys      *pCopy = j1939Sys_Copy(this);
+        j1939Sys      *pCopy = j1939sys_Copy(this);
      @endcode:
      @param:    this    J1939SYS object pointer
      @return:   If successful, a J1939SYS object which must be released,
                 otherwise OBJ_NIL.
      @warning: Remember to release the returned the J1939SYS object.
      */
-    J1939SYS_DATA *     j1939Sys_Copy(
+    J1939SYS_DATA *     j1939sys_Copy(
         J1939SYS_DATA       *this
     )
     {
@@ -287,15 +287,15 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
 #endif
         
-        pOther = j1939Sys_New( );
+        pOther = j1939sys_New( );
         if (pOther) {
-            eRc = j1939Sys_Assign(this, pOther);
+            eRc = j1939sys_Assign(this, pOther);
             if (ERESULT_HAS_FAILED(eRc)) {
                 obj_Release(pOther);
                 pOther = OBJ_NIL;
@@ -304,7 +304,7 @@ extern "C" {
         
         // Return to caller.
         //obj_Release(pOther);
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return pOther;
     }
     
@@ -314,7 +314,7 @@ extern "C" {
     //                        D e a l l o c
     //---------------------------------------------------------------
 
-    void            j1939Sys_Dealloc(
+    void            j1939sys_Dealloc(
         OBJ_ID          objId
     )
     {
@@ -326,7 +326,7 @@ extern "C" {
         }        
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             return;
         }
@@ -338,7 +338,7 @@ extern "C" {
         }
 #endif
 
-        //j1939Sys_setStr(this, OBJ_NIL);
+        //j1939sys_setStr(this, OBJ_NIL);
 
         obj_setVtbl(this, this->pSuperVtbl);
         //other_Dealloc(this);          // Needed for inheritance
@@ -354,21 +354,21 @@ extern "C" {
     //                      D i s a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939Sys_Disable(
+    ERESULT         j1939sys_Disable(
         J1939SYS_DATA		*this
     )
     {
 
         // Do initialization.
         if (NULL == this) {
-            j1939Sys_setLastError(this, ERESULT_INVALID_OBJECT);
-            return j1939Sys_getLastError(this);
+            j1939sys_setLastError(this, ERESULT_INVALID_OBJECT);
+            return j1939sys_getLastError(this);
         }
     #ifdef NDEBUG
     #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
     #endif
 
@@ -377,8 +377,8 @@ extern "C" {
         obj_Disable(this);
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
-        return j1939Sys_getLastError(this);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
+        return j1939sys_getLastError(this);
     }
 
 
@@ -387,7 +387,7 @@ extern "C" {
     //                          E n a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939Sys_Enable(
+    ERESULT         j1939sys_Enable(
         J1939SYS_DATA		*this
     )
     {
@@ -395,9 +395,9 @@ extern "C" {
         // Do initialization.
     #ifdef NDEBUG
     #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
     #endif
         
@@ -406,8 +406,8 @@ extern "C" {
         // Put code here...
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
-        return j1939Sys_getLastError(this);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
+        return j1939sys_getLastError(this);
     }
 
 
@@ -416,7 +416,7 @@ extern "C" {
     //                          I n i t
     //---------------------------------------------------------------
 
-    J1939SYS_DATA *   j1939Sys_Init(
+    J1939SYS_DATA *   j1939sys_Init(
         J1939SYS_DATA       *this
     )
     {
@@ -446,15 +446,15 @@ extern "C" {
         //obj_setSize(this, cbSize);                        // Needed for Inheritance
         //obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939SYS);         // Needed for Inheritance
         this->pSuperVtbl = obj_getVtbl(this);
-        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939Sys_Vtbl);
+        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939sys_Vtbl);
         
-        j1939Sys_setLastError(this, ERESULT_GENERAL_FAILURE);
+        j1939sys_setLastError(this, ERESULT_GENERAL_FAILURE);
         //this->stackSize = obj_getMisc1(this);
         //this->pArray = objArray_New( );
 
     #ifdef NDEBUG
     #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
@@ -478,7 +478,7 @@ extern "C" {
     //                       S l e e p  M S
     //---------------------------------------------------------------
     
-    uint32_t        j1939Sys_SleepMS(
+    uint32_t        j1939sys_SleepMS(
         J1939SYS_DATA	*this,
         uint32_t        ms
     )
@@ -487,9 +487,9 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
 #endif
         
@@ -497,7 +497,7 @@ extern "C" {
         this->time += ms;
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return this->time;
     }
     
@@ -507,7 +507,7 @@ extern "C" {
     //                       T i m e  M S
     //---------------------------------------------------------------
     
-    uint32_t        j1939Sys_TimeMS(
+    uint32_t        j1939sys_TimeMS(
         J1939SYS_DATA	*this
     )
     {
@@ -515,16 +515,16 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
 #endif
         
         ++this->time;       // Bump to simulate real clock
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return this->time;
     }
     
@@ -534,7 +534,7 @@ extern "C" {
     //                       T i m e  R e s e t
     //---------------------------------------------------------------
     
-    uint32_t        j1939Sys_TimeReset(
+    uint32_t        j1939sys_TimeReset(
         J1939SYS_DATA	*this,
         uint32_t        ms
     )
@@ -543,9 +543,9 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939Sys_getLastError(this);
+            return j1939sys_getLastError(this);
         }
 #endif
         
@@ -553,7 +553,7 @@ extern "C" {
         this->time = ms;
         
         // Return to caller.
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return this->time;
     }
     
@@ -575,7 +575,7 @@ extern "C" {
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *     j1939Sys_ToDebugString(
+    ASTR_DATA *     j1939sys_ToDebugString(
         J1939SYS_DATA      *this,
         int             indent
     )
@@ -590,7 +590,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939Sys_Validate(this) ) {
+        if( !j1939sys_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
@@ -629,7 +629,7 @@ extern "C" {
         j = snprintf(str, sizeof(str), " %p(j1939Sys)}\n", this);
         AStr_AppendA(pStr, str);
         
-        j1939Sys_setLastError(this, ERESULT_SUCCESS);
+        j1939sys_setLastError(this, ERESULT_SUCCESS);
         return pStr;
     }
     
@@ -641,7 +641,7 @@ extern "C" {
 
     #ifdef NDEBUG
     #else
-    bool            j1939Sys_Validate(
+    bool            j1939sys_Validate(
         J1939SYS_DATA      *this
     )
     {
@@ -649,7 +649,7 @@ extern "C" {
         // WARNING: We have established that we have a valid pointer
         //          in 'this' yet.
        if( this ) {
-            if ( obj_IsKindOf(this,OBJ_IDENT_J1939SYS) )
+            if ( obj_IsKindOf(this, OBJ_IDENT_J1939SYS) )
                 ;
             else {
                 // 'this' is not our kind of data. We really don't

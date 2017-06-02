@@ -22,23 +22,23 @@
 
 
 #include    <tinytest.h>
-#include    <cmn_defs.h>
-#include    <j1939Can_internal.h>
+#include    <j1939_defs.h>
+#include    <j1939can_internal.h>
 
 
 
 
 
-int         test_j1939Can_OpenClose(
+int         test_j1939can_OpenClose(
     const
     char        *test_name
 )
 {
     J1939CAN_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939Can_Alloc(0);
+    pObj = j1939can_Alloc(0);
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939Can_Init( pObj );
+    pObj = j1939can_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
 
@@ -54,11 +54,11 @@ int         test_j1939Can_OpenClose(
 
 
 
-TINYTEST_START_SUITE(test_j1939Can);
-  TINYTEST_ADD_TEST(test_j1939Can_OpenClose);
+TINYTEST_START_SUITE(test_j1939can);
+  TINYTEST_ADD_TEST(test_j1939can_OpenClose);
 TINYTEST_END_SUITE();
 
-TINYTEST_MAIN_SINGLE_SUITE(test_j1939Can);
+TINYTEST_MAIN_SINGLE_SUITE(test_j1939can);
 
 
 

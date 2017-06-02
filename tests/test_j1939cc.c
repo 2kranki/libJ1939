@@ -23,10 +23,10 @@
 
 #include    <tinytest.h>
 #include    <common.h>
-#include    <cmn_defs.h>
+#include    <j1939_defs.h>
 #include    <j1939cc_internal.h>
 #include    <j1939can.h>
-#include    "j1939Sys.h"
+#include    <j1939sys.h>
 
 
 static
@@ -47,7 +47,7 @@ int         setUp(
     
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -88,13 +88,20 @@ int         test_j1939cc_OpenClose(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
    
-    pObj = j1939cc_Alloc(0);
+    pObj = j1939cc_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
-    pObj = j1939cc_Init( pObj );
+    pObj = j1939cc_Init( 
+                    pObj, 
+                    (OBJ_ID)pCAN,
+                    (OBJ_ID)pSYS,
+                    1,             // J1939 Identity Number (21 bits)
+                    8192,          // J1939 Manufacturer Code (11 bits)
+                    4              // J1939 Industry Group (3 bits) (Marine)
+            );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pObj);
@@ -131,7 +138,7 @@ int         test_j1939cc_Transmits(
     XCTAssertFalse( (OBJ_NIL == pCC) );
     if (pCC) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939cc_TransmitPgn61443(pCC);
@@ -186,6 +193,7 @@ int         test_j1939cc_Transmits(
         pCC = OBJ_NIL;
     }
     
+    return 1;
 }
 
 

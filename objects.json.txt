@@ -2,7 +2,7 @@
     "name":"libJ1939",
     "lib_deps":
     [
-        "libCmn"
+        "Cmn"
     ],
     "headers_public": [
         "j1939_defs.h"
@@ -21,19 +21,20 @@
         "j1939ss":null,
         "j1939tbl":null,
         "j1939tc":null,
-        "j1939tp":null
+        "j1939tp":null,
+        "j1939sys":null
     },
     "routines": [
         "j1939msg.c"
     ],
-    "tests": [
-        "test_j1939ca.c",
-        "test_j1939cc.c",
-        "test_j1939cu.c",
-        "test_j1939ecu.c",
-        "test_j1939ss.c",
-        "test_j1939Sys.c",
-        "test_j1939tcu.c",
-        "test_j1939tp.c"
-    ]
+    "tests":
+    {
+        "test_j1939cc.c": ["common.c","common2.c","common3.c"],
+        "test_j1939cu.c": ["common.c","common2.c","common3.c"],
+        "test_j1939ecu.c":["common.c","common2.c","common3.c"],
+        "test_j1939ss.c": ["common.c","common2.c","common3.c"],
+        "test_j1939sys.c":["common.c","common2.c","common3.c"],
+        "test_j1939tcu.c":["common.c","common2.c","common3.c"],
+        "test_j1939tp.c": ["common.c","common2.c","common3.c"]
+    }
 }

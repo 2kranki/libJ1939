@@ -1,6 +1,6 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /* 
- * File:   j1939Sys_internal.h
+ * File:   j1939sys_internal.h
  *	Generated 04/06/2017 16:09:23
  *
  * Notes:
@@ -38,7 +38,7 @@
 
 
 
-#include    "j1939Sys.h"
+#include    <j1939sys.h>
 
 
 #ifndef J1939SYS_INTERNAL_H
@@ -54,7 +54,7 @@ extern "C" {
 
 
 #pragma pack(push, 1)
-struct j1939Sys_data_s	{
+struct j1939sys_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     OBJ_DATA        super;
@@ -69,19 +69,19 @@ struct j1939Sys_data_s	{
 
     extern
     const
-    struct j1939Sys_class_data_s  j1939Sys_ClassObj;
+    struct j1939sys_class_data_s  j1939sys_ClassObj;
 
     extern
     const
-    J1939SYS_VTBL         j1939Sys_Vtbl;
+    J1939SYS_VTBL         j1939sys_Vtbl;
 
 
     // Internal Functions
-    void            j1939Sys_Dealloc(
+    void            j1939sys_Dealloc(
         OBJ_ID          objId
     );
 
-    bool            j1939Sys_setLastError(
+    bool            j1939sys_setLastError(
         J1939SYS_DATA     *this,
         ERESULT         value
     );
@@ -91,7 +91,7 @@ struct j1939Sys_data_s	{
 
 #ifdef NDEBUG
 #else
-    bool			j1939Sys_Validate(
+    bool			j1939sys_Validate(
         J1939SYS_DATA       *this
     );
 #endif
