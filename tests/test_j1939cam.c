@@ -1,5 +1,5 @@
 /*
- *	Generated 04/13/2017 20:44:32
+ *	Generated 04/08/2017 00:51:45
  */
 
 
@@ -25,7 +25,7 @@
 #include    <common.h>
 #include    <trace.h>
 #include    <j1939_defs.h>
-#include    <j1939cu_internal.h>
+#include    <j1939cam_internal.h>
 #include    <j1939can.h>
 #include    <j1939sys.h>
 
@@ -35,12 +35,17 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
 
 
 
+
+
+
+
 int         setUp(
     const
     char        *pTestName
 )
 {
     mem_Init( );
+    trace_Shared( );
     
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
@@ -65,6 +70,7 @@ int         tearDown(
     pSYS = OBJ_NIL;
     //j1939_SharedReset( );
     
+    trace_SharedReset( );
     mem_Dump( );
     mem_Release( );
     return 1; 
@@ -77,30 +83,25 @@ int         tearDown(
 
 
 
-
-
-int         test_j1939cu_OpenClose(
+int         test_j1939cam_OpenClose(
     const
     char        *test_name
 )
 {
-    J1939CU_DATA	*pObj = OBJ_NIL;
+    J1939CAM_DATA   *pObj = OBJ_NIL;
    
-    pObj = j1939cu_Alloc( );
+    pObj = j1939cam_Alloc(0);
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939cu_Init( pObj,
-                       (OBJ_ID)pCAN,
-                       (OBJ_ID)pSYS,
-                       1,             // J1939 Identity Number (21 bits)
-                       8192,          // J1939 Manufacturer Code (11 bits)
-                       4              // J1939 Industry Group (3 bits) (Marine)
+    pObj = j1939cam_Init(
+                    pObj, 
+                    (OBJ_ID)pCAN,
+                    (OBJ_ID)pSYS
             );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
 
-        j1939sys_TimeReset(pSYS, 0);
-        j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
-        
+        // Test something.
+
         obj_Release(pObj);
         pObj = OBJ_NIL;
     }
@@ -111,11 +112,11 @@ int         test_j1939cu_OpenClose(
 
 
 
-TINYTEST_START_SUITE(test_j1939cu);
-  TINYTEST_ADD_TEST(test_j1939cu_OpenClose,setUp,tearDown);
+TINYTEST_START_SUITE(test_j1939cam);
+  TINYTEST_ADD_TEST(test_j1939cam_OpenClose,setUp,tearDown);
 TINYTEST_END_SUITE();
 
-TINYTEST_MAIN_SINGLE_SUITE(test_j1939cu);
+TINYTEST_MAIN_SINGLE_SUITE(test_j1939cam);
 
 
 

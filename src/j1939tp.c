@@ -1207,14 +1207,6 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(ca) = %lu\n", offsetof(J1939TP_DATA,ca));
-        fprintf(stderr, "offsetof(stateProto) = %lu\n", offsetof(J1939TP_DATA,stateProto));
-        fprintf(stderr, "offsetof(msTimeProto) = %lu\n", offsetof(J1939TP_DATA,msTimeProto));
-        fprintf(stderr, "offsetof(activity) = %lu\n", offsetof(J1939TP_DATA,activity));
-        fprintf(stderr, "offsetof(bitmap) = %lu\n", offsetof(J1939TP_DATA,bitmap));
-        fprintf(stderr, "sizeof(J1939TP_DATA) = %lu\n", sizeof(J1939TP_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(this);
         BREAK_NOT_BOUNDARY4(&this->pgn);
         BREAK_NOT_BOUNDARY4(&this->ca);

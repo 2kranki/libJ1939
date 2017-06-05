@@ -1,0 +1,234 @@
+# Generated file do not edit!
+# ( 6/ 5/2017  2:09:07.000)
+
+
+LIBNAM=libJ1939
+SYS=win32
+INSTALL_BASE = $(HOMEDRIVE)$(HOMEPATH)\Support\lib\$(SYS)
+
+LIBS = 
+CFLAGS = $(CFLAGS) /Isrc /Isrc\$(SYS)
+CFLAGS = $(CFLAGS) /I..\libCmn\src /I..\libCmn\src\$(SYS)
+LIBS = $(LIBS) $(INSTALL_BASE)\libCmn\libCmn.lib
+CFLAGS = $(CFLAGS) /D__MSVC32__ /D__WIN32_ENV__
+
+INSTALLDIR = $(INSTALL_BASE)\$(LIBNAM)
+!IFDEF  NDEBUG
+CFLAGS = $(CFLAGS) /DNDEBUG
+LIB_FILENAME=$(LIBNAM)R.lib
+OBJDIR = $(TEMP)\$(SYS)\Release
+LRFNAM = $(LIBNAM)_$(SYS)_r.lbc
+!ELSE   #DEBUG
+CFLAGS = $(CFLAGS) /D_DEBUG
+LIB_FILENAME=$(LIBNAM)D.lib
+OBJDIR = $(TEMP)\$(SYS)\Debug
+LRFNAM = $(LIBNAM)_$(SYS)_d.lbc
+!ENDIF  #NDEBUG
+LIBPATH = $(OBJDIR)\$(LIB_FILENAME)
+
+
+.SUFFIXES:
+.SUFFIXES: .asm .c .cpp .obj
+
+
+
+
+
+OBJS =
+OBJS = $(OBJS) $(OBJDIR)\j1939ca.obj $(OBJDIR)\j1939ca_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939cam.obj $(OBJDIR)\j1939cam_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939can.obj $(OBJDIR)\j1939can_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939cc.obj $(OBJDIR)\j1939cc_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939cu.obj $(OBJDIR)\j1939cu_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939dg.obj $(OBJDIR)\j1939dg_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939ecu.obj $(OBJDIR)\j1939ecu_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939en.obj $(OBJDIR)\j1939en_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939er.obj $(OBJDIR)\j1939er_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939ss.obj $(OBJDIR)\j1939ss_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939sys.obj $(OBJDIR)\j1939sys_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939tbl.obj $(OBJDIR)\j1939tbl_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939tc.obj $(OBJDIR)\j1939tc_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939tcu.obj $(OBJDIR)\j1939tcu_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939tp.obj $(OBJDIR)\j1939tp_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939msg.obj
+
+
+{src}.asm{$(OBJDIR)}.obj:
+	$(AS) $(AFLAGS) /c /Fo$(OBJDIR)\$(@F) $<
+
+
+{src}.c{$(OBJDIR)}.obj:
+	$(CC) $(CFLAGS) /c /Fo$(OBJDIR)\$(@F) $<
+
+
+
+
+{src\$(SYS)}.asm{$(OBJDIR)}.obj:
+	$(AS) $(AFLAGS) /c /Fo$(OBJDIR)\$(@F) $<
+
+
+{src\$(SYS)}.c{$(OBJDIR)}.obj:
+	$(CC) $(CFLAGS) /c /Fo$(OBJDIR)\$(@F) $<
+
+
+
+
+
+$(LIBPATH):  $(OBJS)
+	cd $(OBJDIR)
+	if exist $(LIB_FILENAME) del $(LIB_FILENAME)
+	lib /OUT:$(LIB_FILENAME) @<<$(LRFNAM)
+$(OBJS: =  )
+<<NOKEEP
+
+
+
+
+
+
+TESTS =
+
+
+
+TESTS = $(TESTS) test_j1939ca
+
+test_j1939ca:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ca.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939cam
+
+test_j1939cam:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cam.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939cc
+
+test_j1939cc:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cc.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939cu
+
+test_j1939cu:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939dg
+
+test_j1939dg:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939dg.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939ecu
+
+test_j1939ecu:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ecu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939en
+
+test_j1939en:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939en.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939er
+
+test_j1939er:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939er.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939ss
+
+test_j1939ss:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ss.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939sys
+
+test_j1939sys:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939sys.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939tbl
+
+test_j1939tbl:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tbl.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939tc
+
+test_j1939tc:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tc.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939tcu
+
+test_j1939tcu:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tcu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939tp
+
+test_j1939tp:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tp.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+
+
+test:  $(TESTS)
+
+
+
+
+
+
+
+clean:
+	if exist $(OBJDIR) rmdir /S /Q $(OBJDIR)
+
+
+create_dirs:
+	if not exist $(OBJDIR) mkdir $(OBJDIR)
+
+
+all:  clean create_dirs $(LIBPATH)
+
+
+
+install:
+	pushd $(INSTALL_BASE) & if exist $(LIBNAM) rmdir /S /Q $(LIBNAM) & popd
+	pushd $(INSTALL_BASE) & mkdir $(LIBNAM)\include & popd
+	copy $(LIBPATH) $(INSTALLDIR)\$(LIBNAM).lib
+	copy src\*.h $(INSTALLDIR)\include
+	if exist src\$(SYS) copy src\$(SYS)\*.h $(INSTALLDIR)\include
+
+

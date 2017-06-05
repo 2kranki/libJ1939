@@ -23,6 +23,7 @@
 
 #include    <tinytest.h>
 #include    <common.h>
+#include    <trace.h>
 #include    <j1939_defs.h>
 #include    <j1939cc_internal.h>
 #include    <j1939can.h>
@@ -44,6 +45,7 @@ int         setUp(
 )
 {
     mem_Init( );
+    trace_Shared( );
     
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
@@ -68,6 +70,7 @@ int         tearDown(
     pSYS = OBJ_NIL;
     //j1939_SharedReset( );
     
+    trace_SharedReset( );
     mem_Dump( );
     mem_Release( );
     return 1; 
@@ -141,6 +144,7 @@ int         test_j1939cc_Transmits(
         j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
+        fprintf(stderr, "\n\nTransmit 61443...\n");
         fRc = j1939cc_TransmitPgn61443(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -149,6 +153,7 @@ int         test_j1939cc_Transmits(
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x0CF00325 == pdu.eid) );
         
+        fprintf(stderr, "\n\nTransmit 65217...\n");
         fRc = j1939cc_TransmitPgn65217(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -157,6 +162,7 @@ int         test_j1939cc_Transmits(
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEC125 == pdu.eid) );
         
+        fprintf(stderr, "\n\nTransmit 65261...\n");
         fRc = j1939cc_TransmitPgn65261(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -165,6 +171,7 @@ int         test_j1939cc_Transmits(
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEED25 == pdu.eid) );
         
+        fprintf(stderr, "\n\nTransmit 65265...\n");
         fRc = j1939cc_TransmitPgn65265(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -173,6 +180,7 @@ int         test_j1939cc_Transmits(
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEF125 == pdu.eid) );
         
+        fprintf(stderr, "\n\nTransmit 65269...\n");
         fRc = j1939cc_TransmitPgn65269(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -181,6 +189,7 @@ int         test_j1939cc_Transmits(
         fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
         XCTAssertTrue( (0x18FEF525 == pdu.eid) );
         
+        fprintf(stderr, "\n\nTransmit 65271...\n");
         fRc = j1939cc_TransmitPgn65271(pCC);
         XCTAssertTrue( (fRc) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -200,8 +209,8 @@ int         test_j1939cc_Transmits(
 
 
 TINYTEST_START_SUITE(test_j1939cc);
-  TINYTEST_ADD_TEST(test_j1939cc_OpenClose,setUp,tearDown);
   TINYTEST_ADD_TEST(test_j1939cc_Transmits,setUp,tearDown);
+  TINYTEST_ADD_TEST(test_j1939cc_OpenClose,setUp,tearDown);
 TINYTEST_END_SUITE();
 
 TINYTEST_MAIN_SINGLE_SUITE(test_j1939cc);

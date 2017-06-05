@@ -55,7 +55,7 @@
 #include    <j1939en_internal.h>
 #include    <j1939er_internal.h>
 #include    <j1939can.h>
-#include    "j1939Sys.h"
+#include    "j1939sys.h"
 
 
 #include    "common.h"
@@ -81,7 +81,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -128,7 +128,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pCAM);
@@ -155,7 +155,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pEN = (J1939EN_DATA *)j1939cam_FindCA(pCAM, J1939_ENGINE_1);
@@ -203,7 +203,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pEN = (J1939EN_DATA *)j1939cam_FindCA(pCAM, J1939_ENGINE_1);
@@ -284,7 +284,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         for (int i=0; i<250; ++i) {

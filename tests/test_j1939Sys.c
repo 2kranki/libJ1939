@@ -22,6 +22,7 @@
 
 
 #include    <tinytest.h>
+#include    <trace.h>
 #include    <j1939_defs.h>
 #include    <j1939sys_internal.h>
 

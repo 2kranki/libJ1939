@@ -35,7 +35,7 @@
 
 #include    <j1939_defs.h>
 #include    <j1939msg.h>
-#include    "j1939Sys.h"
+#include    "j1939sys.h"
 
 
 
@@ -93,24 +93,24 @@ extern
 J1939SYS_DATA   *pSYS;
 
 extern
-J1939_MSG   curMsg[];
+J1939_MSG       curMsg[];
 extern
-uint16_t    cCurMsg;
+uint16_t        cCurMsg;
 
 
 // This must conform to P_SRVCMSG_RTN!
-bool        rcvHandler(
-    OBJ_PTR     pObj,
-    uint32_t    eid,
-    J1939_MSG   *pMsg
+bool            rcvHandler(
+    OBJ_PTR         pObj,
+    uint32_t        eid,
+    J1939_MSG       *pMsg
 );
 
 
 // This must conform to P_XMTMSG_RTN!
-bool        xmtHandler(
-    OBJ_PTR     pObj,
-    uint32_t    msDelay,
-    J1939_MSG   *pMsg
+bool            xmtHandler(
+    OBJ_PTR         pObj,
+    uint32_t        msDelay,
+    J1939_MSG       *pMsg
 );
 
 

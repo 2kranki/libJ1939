@@ -53,8 +53,8 @@
 
 #include    "j1939dg_internal.h"
 #include    "common.h"
-#include    "j1939Can.h"
-#include    "j1939Sys.h"
+#include    "j1939can.h"
+#include    "j1939sys.h"
 
 
 
@@ -77,7 +77,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -126,7 +126,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (NULL == pDG), @"Could not init pDG" );
     if (pDG) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pDG);

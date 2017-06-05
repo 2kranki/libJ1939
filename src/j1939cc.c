@@ -54,7 +54,7 @@ extern "C" {
     static
     const
     J1939CA_PGN_ENTRY     ca_pgn57344_entry = {
-        // PGN 57344  0x00F003 - Electronic Engine Controller 2 - EEC2
+        // PGN 57344  0x00E000 - Cab Message 1 - CM1
         &pgn57344_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn57344,
         NULL,
@@ -84,6 +84,7 @@ extern "C" {
     static
     const
     J1939CA_PGN_ENTRY     ca_pgn65217_entry = {
+        // PGN 65217  0x00FEC1 - High Resolution Vehicle Distance - VDHR
         &pgn65217_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65217,
         NULL,
@@ -97,22 +98,8 @@ extern "C" {
     
     static
     const
-    J1939CA_PGN_ENTRY     ca_pgn65226_entry = {
-        // PGN 65226  0x00FEF1 - Cruise Control/Vehicle Speed - CCVS
-        &pgn65226_entry,
-        (P_SRVCMSG_RTN)j1939cc_HandlePgn65226,
-        NULL,
-        (P_SETUP_MSG_RTN)j1939cc_SetupPgn65226,
-        offsetof(J1939CC_DATA, startTime65226),
-        0,
-        0,
-        1000
-    };
-    
-    
-    static
-    const
     J1939CA_PGN_ENTRY     ca_pgn65261_entry = {
+        // PGN 65261 FEED - Cruise Control/Vehicle Speed Setup - CCSS
         &pgn65261_entry,
         NULL, //FIXME: ??? (P_SRVCMSG_RTN)j1939cc_HandlePgn65261,
         NULL,
@@ -157,7 +144,7 @@ extern "C" {
     static
     const
     J1939CA_PGN_ENTRY     ca_pgn65271_entry = {
-        // PGN 65269  0x00FEF5 - Ambient Conditions - AMB
+        // PGN 65271  0x00FEF7 - Vehicle Electrical Power #1 - VEP1
         &pgn65271_entry,
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65271,
         NULL,
@@ -194,7 +181,6 @@ extern "C" {
         &ca_pgn57344_entry,
         &ca_pgn61443_entry,
         &ca_pgn65217_entry,
-        &ca_pgn65226_entry,
         &ca_pgn65265_entry,
         &ca_pgn65261_entry,
         &ca_pgn65269_entry,
@@ -608,13 +594,13 @@ extern "C" {
 
 
     //---------------------------------------------------------------
-    //                  H a n d l e  P G N 6 5 2 6 5
+    //          PGN 57344  0x00E000 - Cab Message 1 - CM1
     //---------------------------------------------------------------
     
-    bool            j1939cc_HandlePgn65265(
-       J1939CC_DATA     *this,
-       uint32_t         eid,
-       J1939_MSG        *pMsg               // NULL == Timed Out
+    bool            j1939cc_HandlePgn57344(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
     )
     {
         J1939_PDU       pdu;
@@ -630,10 +616,210 @@ extern "C" {
 #endif
         pdu.eid = eid;
         pgn = j1939pdu_getPGN(pdu);
-
         
         
         
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //  PGN 61443  0x00F003 - Electronic Engine Controller 2 - EEC2
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn61443(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    // PGN 65217  0x00FEC1 - High Resolution Vehicle Distance - VDHR
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn65217(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //    PGN 65261 FEED - Cruise Control/Vehicle Speed Setup - CCSS
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn65261(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //      PGN 65265 FEF1 - Cruise Control/Vehicle Speed - CCVS
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn65265(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //         PGN 65269  0x00FEF5 - Ambient Conditions - AMB
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn65269(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    // PGN 65271  0x00FEF7 - Vehicle Electrical Power #1 - VEP1
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn65271(
+        J1939CC_DATA     *this,
+        uint32_t         eid,
+        J1939_MSG        *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu.eid = eid;
+        pgn = j1939pdu_getPGN(pdu);
         
         
         
@@ -822,6 +1008,89 @@ extern "C" {
         
         j1939cc_setLastError(this, ERESULT_SUCCESS);
         return pStr;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //           T r a n s m i t  P G N 5 7 3 4 4   0xE000        CM1
+    //---------------------------------------------------------------
+    
+    /* PGN 57344  0x00E000 - Cab Message 1 - CM1
+     * Freq: 1000 ms
+     * Priority: 6
+     */
+    int             j1939cc_SetupPgn57344(
+        J1939CC_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = 254;
+            pPDU->PS = 247;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65271_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 8) {
+                return 0;
+            }
+            //FIXME: NOT 57344
+            //          // 0
+            *pData  = this->spn114;
+            ++pData;    // 1
+            *pData  = this->spn115;
+            ++pData;    // 2
+            *pData  = this->spn167 & 0xFF;
+            ++pData;    // 3
+            *pData  = (this->spn167 >> 8) & 0xFF;
+            ++pData;    // 4
+            *pData  = this->spn168 & 0xFF;
+            ++pData;    // 5
+            *pData  = (this->spn168 >> 8) & 0xFF;
+            ++pData;    // 6
+            *pData  = this->spn158 & 0xFF;
+            ++pData;    // 7
+            *pData  = (this->spn158 >> 8) & 0xFF;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939cc_TransmitPgn57344(
+        J1939CC_DATA	*this
+    )
+    {
+        uint16_t        dlc = 8;
+        uint8_t         data[8];
+        J1939_PDU       pdu = {0};
+        int             iRc;
+        bool            fRc;
+        
+        iRc = j1939cc_SetupPgn57344(this, &pdu, dlc, data);
+        if (iRc == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        this->startTime57344 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return fRc;
     }
     
     

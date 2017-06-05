@@ -23,6 +23,7 @@
 
 #include    <tinytest.h>
 #include    <common.h>
+#include    <trace.h>
 #include    <j1939_defs.h>
 #include    <j1939tcu_internal.h>
 #include    <j1939can.h>

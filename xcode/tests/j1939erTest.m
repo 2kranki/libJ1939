@@ -32,7 +32,7 @@
 #include    <j1939er_internal.h>
 #include    "common.h"              // Tests Common Routines
 #include    <j1939can.h>
-#include    "j1939Sys.h"
+#include    "j1939sys.h"
 
 
 // All code under test must be linked into the Unit Test bundle
@@ -77,7 +77,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -126,7 +126,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -169,7 +169,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939er_TransmitPgn61440(pER);
@@ -225,7 +225,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -237,7 +237,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs), @"" );
 
@@ -297,7 +297,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -309,7 +309,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs), @"" );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -373,7 +373,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -385,7 +385,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs), @"" );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -447,7 +447,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -459,7 +459,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs), @"" );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -521,7 +521,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -532,7 +532,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs), @"" );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -542,7 +542,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         // We should see 10 ERC1s because they are
         // issued every 100ms.
         for (int i=0; i<100; ++i) {
-            j1939Sys_BumpMS(pSYS, 10);
+            j1939sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
         }        
 
@@ -587,7 +587,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -598,7 +598,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -635,7 +635,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         // Put us 1000ms into the future.
         // Should give us 10 ERC1s.
         for (int i=0; i<100; ++i) {
-            j1939Sys_BumpMS(pSYS, 10);
+            j1939sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
         }
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -710,7 +710,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     cCurMsg = 0;
     if (pER) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -721,7 +721,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -756,7 +756,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
         for (int i=0; i<100; ++i) {
-            j1939Sys_BumpMS(pSYS, 10);
+            j1939sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
         }
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );

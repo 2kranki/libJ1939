@@ -29,8 +29,8 @@
 #import     <cmn_defs.h>
 #include    "j1939ss_internal.h"
 #include    "common.h"              // Tests Common Routines
-#include    "j1939Can.h"
-#include    "j1939Sys.h"
+#include    "j1939can.h"
+#include    "j1939sys.h"
 
 
 
@@ -53,7 +53,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -102,7 +102,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSS) );
     if (pSS) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
                 
         // Initiate Address Claim.
@@ -114,7 +114,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
         XCTAssertTrue( (0x18EEFF05 == pdu.eid) );
         
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pSS->super.cs), @"" );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );

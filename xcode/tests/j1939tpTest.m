@@ -28,8 +28,8 @@
 
 #include    <j1939tp_internal.h>
 #include	"common.h"
-#include    "j1939Can.h"
-#include    "j1939Sys.h"
+#include    "j1939can.h"
+#include    "j1939sys.h"
 
 
 
@@ -72,7 +72,7 @@ void            messageComplete(
     
     mem_Init( );
     
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     fReceived = false;
@@ -113,7 +113,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         obj_Release(pObj);
@@ -140,7 +140,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pObj->rcv = 255;
@@ -194,7 +194,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pdu.eid = 0x18EFFF31;
@@ -216,7 +216,7 @@ void            messageComplete(
         
         
         for (i=0; i<200; i+=20) {
-            j1939Sys_BumpMS(pSYS,40);
+            j1939sys_BumpMS(pSYS,40);
             eRc = j1939tp_ProcessPackets(pObj);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -260,7 +260,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         pdu.eid = 0x18EFFF31;
@@ -280,7 +280,7 @@ void            messageComplete(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
         for (i=0; i<200; i+=20) {
-            j1939Sys_BumpMS(pSYS,40);
+            j1939sys_BumpMS(pSYS,40);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -332,7 +332,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     if (pRcv && pXmt) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         j1939can_setRcvMsg(pCAN, (P_SRVCMSG_RTN)j1939tp_HandleMessages, pRcv);
         j1939can_setLoopBackXmt(pCAN, true);
@@ -358,7 +358,7 @@ void            messageComplete(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -416,7 +416,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     if (pRcv && pXmt) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         j1939can_setRcvMsg(pCAN, (P_SRVCMSG_RTN)j1939tp_HandleMessages, pRcv);
         j1939can_setLoopBackXmt(pCAN, true);
@@ -441,11 +441,11 @@ void            messageComplete(
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[2]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
-        j1939Sys_BumpMS(pSYS,100);
+        j1939sys_BumpMS(pSYS,100);
         eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
 
         for (i=0; i<10; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pRcv, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -495,7 +495,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         j1939pdu_Construct(&pduMsg, 239, J1939_POWER_TAKEOFF_1, 6, J1939_CAB_CONTROLLER_PRIMARY);
@@ -527,7 +527,7 @@ void            messageComplete(
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -584,7 +584,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         j1939pdu_Construct(&pduMsg, 239, J1939_POWER_TAKEOFF_1, 6, J1939_CAB_CONTROLLER_PRIMARY);
@@ -617,7 +617,7 @@ void            messageComplete(
         
         // Allow one message to be sent
         for (i=0; i<4; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -634,7 +634,7 @@ void            messageComplete(
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<5; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -651,7 +651,7 @@ void            messageComplete(
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -714,7 +714,7 @@ void            messageComplete(
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         j1939pdu_Construct(&pduMsg, 239, J1939_POWER_TAKEOFF_1, 6, J1939_CAB_CONTROLLER_PRIMARY);
@@ -746,7 +746,7 @@ void            messageComplete(
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<13; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -767,7 +767,7 @@ void            messageComplete(
 #endif
         
         for (i=0; i<20; ++i) {
-            j1939Sys_BumpMS(pSYS,200);
+            j1939sys_BumpMS(pSYS,200);
             eRc = j1939tp_HandleMessages(pObj, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -831,7 +831,7 @@ void            messageComplete(
     if (pRcv && pXmt) {
         
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         // We need two J1939CAN objects, because we are doing bidirectional messaging
         // now. We assign pCAN to the Receiver and pCAN_XMT to the Transmitter.
         //j1939can_setRcvMsg(pCAN, (P_SRVCMSG_RTN)j1939tp_HandleMessages, pCAN);
@@ -872,7 +872,7 @@ void            messageComplete(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 1) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
             eRc = j1939tp_HandleMessages(pRcv, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );

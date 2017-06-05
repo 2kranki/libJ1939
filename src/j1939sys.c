@@ -58,16 +58,6 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
-#ifdef XYZZY
-    static
-    void            j1939sys_task_body(
-        void            *pData
-    )
-    {
-        //J1939SYS_DATA  *this = pData;
-        
-    }
-#endif
 
 
 
@@ -459,14 +449,6 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939SYS_DATA,eRc));
-        fprintf(stderr, "offsetof(time) = %lu\n", offsetof(J1939SYS_DATA,time));
-        fprintf(stderr, "sizeof(J1939SYS_DATA) = %lu\n", sizeof(J1939SYS_DATA));
-#endif
-        BREAK_NOT_BOUNDARY4(offsetof(J1939SYS_DATA,eRc));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939SYS_DATA,time));
-        BREAK_NOT_BOUNDARY4(sizeof(J1939SYS_DATA));
     #endif
 
         return this;
@@ -474,6 +456,73 @@ extern "C" {
 
      
 
+    //---------------------------------------------------------------
+    //                     Q u e r y  I n f o
+    //---------------------------------------------------------------
+    
+    void *          j1939sys_QueryInfo(
+        OBJ_ID          objId,
+        uint32_t        type,
+        const
+        char            *pStr
+    )
+    {
+        J1939SYS_DATA   *this = objId;
+        
+        if (OBJ_NIL == this) {
+            return NULL;
+        }
+#ifdef NDEBUG
+#else
+        if( !j1939sys_Validate(this) ) {
+            DEBUG_BREAK();
+            return NULL;
+        }
+#endif
+        
+        switch (type) {
+                
+            case OBJ_QUERYINFO_TYPE_INFO:
+                return (void *)obj_getInfo(this);
+                break;
+                
+            case OBJ_QUERYINFO_TYPE_METHOD:
+                switch (*pStr) {
+                    case 'B':
+                        if (str_Compare("BumpMS", (char *)pStr) == 0) {
+                            return j1939sys_BumpMS;
+                        }
+                        break;
+                        
+                    case 'S':
+                        if (str_Compare("SleepMS", (char *)pStr) == 0) {
+                            return j1939sys_SleepMS;
+                        }
+                        break;
+                        
+                    case 'T':
+                        if (str_Compare("TimeMS", (char *)pStr) == 0) {
+                            return j1939sys_TimeMS;
+                        }
+                        if (str_Compare("TimeReset", (char *)pStr) == 0) {
+                            return j1939sys_TimeReset;
+                        }
+                        break;
+                        
+                    default:
+                        break;
+                }
+                break;
+                
+            default:
+                break;
+        }
+        
+        return obj_QueryInfo(objId, type, pStr);
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                       S l e e p  M S
     //---------------------------------------------------------------

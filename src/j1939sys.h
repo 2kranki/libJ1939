@@ -85,6 +85,10 @@ extern "C" {
         //                                              // in milliseconds.
         uint32_t        (*pSleepMS)(OBJ_ID, uint32_t);  // Sleep for N ms and return
         //                                              // amount of time slept (ms)
+        uint32_t        (*pBumpMS)(OBJ_ID, uint32_t);   // Increase the system time
+        //                                              // by the specified amount.
+        uint32_t        (*pTimeReset)(OBJ_ID, uint32_t);// Set the system time
+        //                                              // to the specified amount.
     } J1939SYS_VTBL;
 
 

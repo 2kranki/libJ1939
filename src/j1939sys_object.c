@@ -170,7 +170,7 @@ J1939SYS_VTBL     j1939sys_Vtbl = {
         j1939sys_Dealloc,
         j1939sys_Class,
         j1939sys_WhoAmI,
-        NULL,           // (P_OBJ_QUERYINFO)
+        (P_OBJ_QUERYINFO)j1939sys_QueryInfo,
         (P_OBJ_TOSTRING)j1939sys_ToDebugString,
         NULL,			// j1939Sys_Enable,
         NULL,			// j1939Sys_Disable,
@@ -183,7 +183,9 @@ J1939SYS_VTBL     j1939sys_Vtbl = {
     // Properties:
     // Methods:
     (void *)j1939sys_TimeMS,
-    (void *)j1939sys_SleepMS
+    (void *)j1939sys_SleepMS,
+    (void *)j1939sys_BumpMS,
+    (void *)j1939sys_TimeReset
  
 };
 

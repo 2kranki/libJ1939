@@ -1,5 +1,5 @@
 /*
- *	Generated 04/08/2017 00:51:45
+ *	Generated 04/15/2017 08:51:40
  */
 
 
@@ -25,7 +25,7 @@
 #include    <common.h>
 #include    <trace.h>
 #include    <j1939_defs.h>
-#include    <j1939ss_internal.h>
+#include    <j1939dg_internal.h>
 #include    <j1939can.h>
 #include    <j1939sys.h>
 
@@ -45,7 +45,6 @@ int         setUp(
 )
 {
     mem_Init( );
-    trace_Shared( );
     
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
@@ -70,7 +69,6 @@ int         tearDown(
     pSYS = OBJ_NIL;
     //j1939_SharedReset( );
     
-    trace_SharedReset( );
     mem_Dump( );
     mem_Release( );
     return 1; 
@@ -80,55 +78,35 @@ int         tearDown(
 
 
 
-
-
-
-int         test_j1939ss_OpenClose(
+int         test_j1939dg_OpenClose(
     const
     char        *test_name
 )
 {
-    J1939SS_DATA	*pSS = OBJ_NIL;
-    bool            fRc;
-    J1939_PDU       pdu;
+    J1939DG_DATA	*pObj = OBJ_NIL;
    
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
-    
-    pSS = j1939ss_Alloc();
-    XCTAssertFalse( (OBJ_NIL == pSS) );
-    pSS =   j1939ss_Init(
-                pSS,
-                (OBJ_ID)pCAN,
-                (OBJ_ID)pSYS,
-                1,             // J1939 Identity Number (21 bits)
-                8192,          // J1939 Manufacturer Code (11 bits)
-                4              // J1939 Industry Group (3 bits) (Marine)
+   
+    pObj = j1939dg_Alloc( );
+    XCTAssertFalse( (OBJ_NIL == pObj) );
+    pObj = j1939dg_Init( 
+                    pObj, 
+                    (OBJ_ID)pCAN,
+                    (OBJ_ID)pSYS,
+                    1,             // J1939 Identity Number (21 bits)
+                    8192,          // J1939 Manufacturer Code (11 bits)
+                    4              // J1939 Industry Group (3 bits) (Marine)
             );
-    XCTAssertFalse( (OBJ_NIL == pSS) );
-    if (pSS) {
+    XCTAssertFalse( (OBJ_NIL == pObj) );
+    if (pObj) {
 
         j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
-                
-        // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pSS->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF05 == pdu.eid) );
         
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, 0, NULL);
-        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pSS->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        
-        obj_Release(pSS);
-        pSS = OBJ_NIL;
+        obj_Release(pObj);
+        pObj = OBJ_NIL;
     }
 
     return 1;
@@ -137,11 +115,13 @@ int         test_j1939ss_OpenClose(
 
 
 
-TINYTEST_START_SUITE(test_j1939ss);
-  TINYTEST_ADD_TEST(test_j1939ss_OpenClose,setUp,tearDown);
+
+
+TINYTEST_START_SUITE(test_j1939dg);
+  TINYTEST_ADD_TEST(test_j1939dg_OpenClose,setUp,tearDown);
 TINYTEST_END_SUITE();
 
-TINYTEST_MAIN_SINGLE_SUITE(test_j1939ss);
+TINYTEST_MAIN_SINGLE_SUITE(test_j1939dg);
 
 
 

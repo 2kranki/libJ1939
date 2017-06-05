@@ -1879,44 +1879,17 @@ extern	"C" {
         
 #ifdef NDEBUG
 #else
-        if( !j1939ca_Validate( this ) ) {
+        if( !j1939ca_Validate(this) ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "sizeof J1939CA_MSG_60416 = %lu\n", sizeof(J1939CA_MSG_60416));
-        if (sizeof(J1939CA_MSG_60416) == 8) {
-        }
-        else {
-            DEBUG_BREAK();
-        }
-        fprintf(stderr, "sizeof J1939_PGN = %lu\n", sizeof(J1939_PGN));
-        if (sizeof(J1939_PGN) == 4) {
-        }
-        else {
-            DEBUG_BREAK();
-        }
-        fprintf(stderr, "sizeof J1939_PDU = %lu\n", sizeof(J1939_PDU));
-        if (sizeof(J1939_PDU) == 4) {
-        }
-        else {
-            DEBUG_BREAK();
-        }
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939CA_DATA,eRc));
-        fprintf(stderr, "offsetof(startTime) = %lu\n", offsetof(J1939CA_DATA,startTime));
-        fprintf(stderr, "offsetof(pCurEntry) = %lu\n", offsetof(J1939CA_DATA,pCurEntry));
-        fprintf(stderr, "offsetof(TPs) = %lu\n", offsetof(J1939CA_DATA,TPs));
-        fprintf(stderr, "offsetof(spn2540) = %lu\n", offsetof(J1939CA_DATA,spn2540));
-        fprintf(stderr, "offsetof(softwareLevel) = %lu\n", offsetof(J1939CA_DATA,softwareLevel));
-        fprintf(stderr, "sizeof(J1939TP_DATA) = %lu\n", sizeof(J1939CA_DATA));
-#endif
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,eRc));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,startTime));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,pCurEntry));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,TPs));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,spn2540));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939CA_DATA,softwareLevel));
+        BREAK_NOT_BOUNDARY4(&this->eRc);
+        BREAK_NOT_BOUNDARY4(&this->startTime);
+        BREAK_NOT_BOUNDARY4(&this->pCurEntry);
+        BREAK_NOT_BOUNDARY4(&this->TPs);
+        BREAK_NOT_BOUNDARY4(&this->spn2540);
+        BREAK_NOT_BOUNDARY4(&this->softwareLevel);
         BREAK_NOT_BOUNDARY4(sizeof(J1939CA_DATA));
 #endif
         

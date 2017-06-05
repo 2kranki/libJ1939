@@ -33,7 +33,7 @@
 #include    <j1939ca_internal.h>
 #include    "common.h"              // Tests Common Routines
 #include    <j1939can.h>
-#include    "j1939Sys.h"
+#include    "j1939sys.h"
 
 
 
@@ -232,7 +232,7 @@ bool            xmtPGN60928(
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN_RCV = j1939can_New();
     pCAN_XMT = j1939can_New();
     cCurMsg = 0;
@@ -280,7 +280,7 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtHandler, NULL);
         
         obj_Release(pJ1939ca);
@@ -318,7 +318,7 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pCA) );
     if (pCA) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtHandler, NULL);
         
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
@@ -332,7 +332,7 @@ bool            xmtPGN60928(
         
         // Send "Time Out" which should allow us to accept our claimed address
         // and go into normal operation.
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
 
@@ -372,7 +372,7 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
     if (pJ1939ca) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
@@ -424,7 +424,7 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
@@ -489,7 +489,7 @@ bool            xmtPGN60928(
     XCTAssertFalse( (OBJ_NIL == pCA) );
     if (pCA) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtHandler, NULL);
         
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
@@ -503,7 +503,7 @@ bool            xmtPGN60928(
         
         // Send "Time Out" which should allow us to accept our claimed address
         // and go into normal operation.
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
@@ -544,7 +544,7 @@ bool            xmtPGN60928(
     cCurMsg = 0;
     if (pCA) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN_RCV, xmtHandler, NULL);
         
         // Initiate Address Claim.
@@ -555,7 +555,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (0x18EEFF00 == pdu.eid) );
 
         // Send "Timed Out".
-        j1939Sys_BumpMS(pSYS, 250);
+        j1939sys_BumpMS(pSYS, 250);
         fRc = j1939ca_HandleMessages(pCA, 0, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
@@ -623,7 +623,7 @@ bool            xmtPGN60928(
 
     if (pRcv && pXmt) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
 
         // We need two J1939CAN objects, because we are doing bidirectional messaging
         // now. We assign pCAN_RCV to the Receiver and pCAN_XMT to the Transmitter.
@@ -650,7 +650,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939ca_HandleMessages(pXmt, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
@@ -726,7 +726,7 @@ bool            xmtPGN60928(
     
     if (pRcv && pXmt) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         
         // We need two J1939CAN objects, because we are doing bidirectional messaging
         // now. We assign pCAN_RCV to the Receiver and pCAN_XMT to the Transmitter.
@@ -762,7 +762,7 @@ bool            xmtPGN60928(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 1) );
         
         for (i=0; i<6; ++i) {
-            j1939Sys_BumpMS(pSYS,100);
+            j1939sys_BumpMS(pSYS,100);
             eRc = j1939ca_HandleMessages(pXmt, 0, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }

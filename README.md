@@ -3,8 +3,8 @@ libJ1939
 ===============
 
 **libJ1939** is one approach to providing simple C objects for
-various environments such as Mac, PIC32MX7xx, and iOS that
-support J1939 Message Reception and Transmission. They were
+various environments such as MacOSX, Windows, PIC32MX7xx, and iOS
+that support J1939 Message Reception and Transmission. They were
 initially operational in MacOSX and a Microchip PIC32MX795
 computer. I used a multi-tasking O/S in the Microchip computer
 and ran a task for each service (ie, UART, CAN and J1939).
@@ -12,7 +12,14 @@ Within the UART and CAN routines, I buffered the data in circular
 buffers. I used a consumer/producer object to communicate between
 the CAN and J1939 objects. It seemed to keep up with the message
 flow, because the PIC32MX795 is fairly powerful. I would use
-a PIC32MZ today. 
+a PIC32MZ today.
+
+My test environment is primarily MacOSX using TinyTest programs to
+provide regression testing. Those routines are now working in
+Windows as well. Initially, I did not add tracing functions,
+because the PIC32MX environment did not support it. Since then I
+have started adding tracing by object. The trace facility is not
+included if the 'NDEBUG' preprocessor variable is defined.
 
 It is intended that each object be self documenting and consistent
 in its usage from other objects within this library.

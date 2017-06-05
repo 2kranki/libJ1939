@@ -56,8 +56,8 @@
 
 
 #include	"common.h"
-#include    "j1939Can.h"
-#include    "j1939Sys.h"
+#include    "j1939can.h"
+#include    "j1939sys.h"
 
 
 
@@ -100,7 +100,7 @@ void        shiftExit(void *ptr,bool fShifting)
     // test method in the class.
     
     mem_Init( );
-    pSYS = j1939Sys_New();
+    pSYS = j1939sys_New();
     pCAN = j1939can_New();
     cCurMsg = 0;
     
@@ -141,7 +141,7 @@ void        shiftExit(void *ptr,bool fShifting)
     XCTAssertFalse( (NULL == pEng) );
     if (pEng) {
 
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
@@ -176,7 +176,7 @@ void        shiftExit(void *ptr,bool fShifting)
     XCTAssertFalse( (NULL == pEng) );
     if (pEng) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
@@ -193,7 +193,7 @@ void        shiftExit(void *ptr,bool fShifting)
         // PGN 65129 - FE69 - every 1000ms       1ea
         // PGN 65262 - FEEE - every 1000ms       1ea
         for (int i=0; i<120; ++i) {
-            j1939Sys_BumpMS(pSYS, 10);
+            j1939sys_BumpMS(pSYS, 10);
             fRc =   (*j1939ca_getHandler((J1939CA_DATA *)pEng))(
                                             (J1939CA_DATA *)pEng,
                                             0,
@@ -277,7 +277,7 @@ void        shiftExit(void *ptr,bool fShifting)
     cCurMsg = 0;
     if (pEng) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
@@ -305,7 +305,7 @@ void        shiftExit(void *ptr,bool fShifting)
         XCTAssertTrue( (3 == pEng->spn1480) );
         
         for (int i=0; i<50; ++i) {
-            j1939Sys_BumpMS(pSYS, 10);
+            j1939sys_BumpMS(pSYS, 10);
             fRc = j1939ca_HandleMessages((J1939CA_DATA *)pEng, 0, NULL);
         }
         
@@ -366,7 +366,7 @@ void        shiftExit(void *ptr,bool fShifting)
     cCurMsg = 0;
     if (pEng) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim, but not necessary.
@@ -460,7 +460,7 @@ void        shiftExit(void *ptr,bool fShifting)
     cCurMsg = 0;
     if (pEng) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
@@ -526,7 +526,7 @@ void        shiftExit(void *ptr,bool fShifting)
     cCurMsg = 0;
     if (pEng) {
         
-        j1939Sys_TimeReset(pSYS, 0);
+        j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         fRc = j1939en_setShiftExit(pEng, shiftExit, NULL);
