@@ -183,21 +183,19 @@ struct j1939tp_data_s	{
 
     
     bool            j1939tp_setLastError(
-        J1939TP_DATA     *this,
+        J1939TP_DATA    *this,
         ERESULT         value
     );
 
 
     bool            j1939tp_HandlePgn60160(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939tp_HandlePgn60416(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     

@@ -2435,7 +2435,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn0(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -2466,7 +2465,7 @@ extern	"C" {
 #endif
 
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn695 = pMsg->DATA.bytes[0] & 0x3;
@@ -2527,7 +2526,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn61442(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2551,7 +2549,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         // SPN 560  1.1     2bits       Transmission Driveline Engaged
         spn560 = pMsg->DATA.bytes[0] & 0x3;
@@ -2615,7 +2613,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn61443(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2640,7 +2637,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // SPN 558  1.1     2bits       Accelerator Pedal 1 Low Idle Switch
@@ -2676,7 +2673,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn61444(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2691,7 +2687,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -2706,7 +2702,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn61445(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2721,7 +2716,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // SPN 524  1       8bits       Transmission Selected Gear
@@ -2763,7 +2758,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn65129(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2778,7 +2772,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -2793,7 +2787,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn65247(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2808,7 +2801,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -2823,7 +2816,6 @@ extern	"C" {
     
     bool            j1939en_HandlePgn65252(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2838,7 +2830,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         
         // Return to caller.
@@ -2853,7 +2845,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn65262(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2868,7 +2859,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -2883,7 +2874,6 @@ extern	"C" {
 
     bool            j1939en_HandlePgn65265(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2898,7 +2888,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -2913,7 +2903,6 @@ extern	"C" {
     
     bool            j1939en_HandlePgn65272(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -2933,7 +2922,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         if (pMsg) {
             spn123 = pMsg->DATA.bytes[0];
@@ -2993,7 +2982,7 @@ extern	"C" {
             }
         }
         if (this->fRetarding) {
-            j1939en_HandlePgn0( this, 0, NULL );
+            j1939en_HandlePgn0(this, NULL);
         }
 
         // Return to caller.
@@ -3076,12 +3065,6 @@ extern	"C" {
         
 #ifdef NDEBUG
 #else
-#ifdef __APPLE__
-        fprintf(stderr, "offset_eRc = %lu\n", offsetof(J1939EN_DATA,eRc));
-        fprintf(stderr, "offset_spn84 = %lu\n", offsetof(J1939EN_DATA,spn84));
-        fprintf(stderr, "offset_timeout = %lu\n", offsetof(J1939EN_DATA,timeOut));
-        fprintf(stderr, "offset_pShiftExit = %lu\n", offsetof(J1939EN_DATA,pShiftExit));
-#endif
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,eRc));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,timeOut));
@@ -3130,15 +3113,15 @@ extern	"C" {
                 return false;
             }
             *pData  = 0xC0;
-            *pData |= this->spn558 & 0x3;
-            *pData |= (this->spn559 & 0x3) << 2;
-            *pData |= (this->spn1437 & 0x3) << 4;
+            *pData |= this->spn558 & 0x3;           // Accelerator Pedal 1 Low Idle Switch
+            *pData |= (this->spn559 & 0x3) << 2;    // Accelerator Pedal Kickdown Switch
+            *pData |= (this->spn1437 & 0x3) << 4;   // Road Speed Limit Status
             ++pData;    // 1
-            *pData  = this->spn91;                   // Accelerator Pedal Position 1
+            *pData  = this->spn91;                  // Accelerator Pedal Position 1
             ++pData;    // 2
-            *pData  = this->spn92;
+            *pData  = this->spn92;                  // Percent Load At Current Speed
             ++pData;    // 3
-            *pData  = this->spn974;
+            *pData  = this->spn974;                 // Remote Accelerator Pedal Position
             ++pData;    // 4
             *pData  = 0xFF;
             ++pData;    // 5
@@ -3174,7 +3157,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime61443 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -3184,7 +3167,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //           T r a n s m i t  P G N 6 1 4 4 4   0xF004
+    //           T r a n s m i t  P G N 6 1 4 4 4              0xF004
     //---------------------------------------------------------------
 
     // Electronic Engine Controller 1 - EEC1 -
@@ -3214,22 +3197,22 @@ extern	"C" {
                 return 0;
             }
             *pData  = 0xF0;
-            *pData |= this->spn899 & 0xF;
+            *pData |= this->spn899 & 0xF;   // Engine Torque Mode
             ++pData;    // 1
-            *pData  = this->spn512;
+            *pData  = this->spn512;         // Driver's Demand Engine - Percent Torque
             ++pData;    // 2
-            *pData  = this->spn513;
+            *pData  = this->spn513;         // Actual Engine - Percent Torque
             ++pData;    // 3
-            *pData  = this->spn190 & 0xFF;
+            *pData  = this->spn190 & 0xFF;  // Engine Speed
             ++pData;    // 4
             *pData  = (this->spn190 >> 8) & 0xFF;
             ++pData;    // 5
-            *pData  = this->spn1483;
+            *pData  = this->spn1483;        // Source Address of Controlling Device
             ++pData;    // 6
             *pData  = 0xF0;
-            *pData |= this->spn1675 & 0xF;
+            *pData |= this->spn1675 & 0xF;  // Engine Starter Mode
             ++pData;    // 7
-            *pData  = this->spn2432;
+            *pData  = this->spn2432;        // Engine Demand - Percent Torque
         }
         else {
             return 0;
@@ -3257,7 +3240,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime61444 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -3338,7 +3321,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65129 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -3419,7 +3402,7 @@ extern	"C" {
             return false;
         }
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -3502,7 +3485,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
@@ -3583,7 +3566,7 @@ extern	"C" {
             return false;
         }
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65262 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -3681,7 +3664,7 @@ extern	"C" {
             return false;
         }
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65265 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.

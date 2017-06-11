@@ -1,20 +1,25 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 ECU (j1939ecu) Header
+//          J1939CCU Console Transmit Task (j1939ccu) Header
 //****************************************************************
 /*
  * Program
- *			J1939 ECU (j1939ecu)
+ *			Separate j1939ccu (j1939ccu)
  * Purpose
- *			This object provides an ECU which is made up of a CAM
- *          and multiple CAs.
+ *			This object provides a standardized way of handling
+ *          a separate j1939ccu to run things without complications
+ *          of interfering with the main j1939ccu. A j1939ccu may be 
+ *          called a j1939ccu on other O/S's.
  *
  * Remarks
- *	1.      None
+ *	1.      Using this object allows for testable code, because a
+ *          function, TaskBody() must be supplied which is repeatedly
+ *          called on the internal j1939ccu. A testing unit simply calls
+ *          the TaskBody() function as many times as needed to test.
  *
  * History
- *	04/13/2017 Generated
+ *	06/05/2017 Generated
  */
 
 
@@ -53,8 +58,8 @@
 #include        <AStr.h>
 
 
-#ifndef         J1939ECU_H
-#define         J1939ECU_H
+#ifndef         J1939CCU_H
+#define         J1939CCU_H
 
 
 
@@ -68,16 +73,16 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939ecu_data_s	J1939ECU_DATA;    // Inherits from J1939CU
+    typedef struct j1939ccu_data_s	J1939CCU_DATA;    // Inherits from OBJ.
 
-    typedef struct j1939ecu_vtbl_s	{
+    typedef struct j1939ccu_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
         // Put other methods below this as pointers and add their
-        // method names to the vtbl definition in j1939ecu_object.c.
+        // method names to the vtbl definition in j1939ccu_object.c.
         // Properties:
         // Methods:
-        //bool        (*pIsEnabled)(J1939ECU_DATA *);
-    } J1939ECU_VTBL;
+        //bool        (*pIsEnabled)(J1939CCU_DATA *);
+    } J1939CCU_VTBL;
 
 
 
@@ -94,13 +99,13 @@ extern "C" {
      Allocate a new Object and partially initialize. Also, this sets an
      indicator that the object was alloc'd which is tested when the object is
      released.
-     @return:   pointer to j1939ecu object if successful, otherwise OBJ_NIL.
+     @return:   pointer to j1939ccu object if successful, otherwise OBJ_NIL.
      */
-    J1939ECU_DATA *     j1939ecu_Alloc(
+    J1939CCU_DATA *     j1939ccu_Alloc(
     );
     
     
-    J1939ECU_DATA *     j1939ecu_New(
+    J1939CCU_DATA *     j1939ccu_New(
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -114,8 +119,8 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939ecu_getLastError(
-        J1939ECU_DATA		*this
+    ERESULT     j1939ccu_getLastError(
+        J1939CCU_DATA		*this
     );
 
 
@@ -125,38 +130,18 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
-    ERESULT         j1939ecu_Disable(
-        J1939ECU_DATA	*this
+    ERESULT     j1939ccu_Disable(
+        J1939CCU_DATA		*this
     );
 
 
-    ERESULT         j1939ecu_Enable(
-        J1939ECU_DATA	*this
+    ERESULT     j1939ccu_Enable(
+        J1939CCU_DATA		*this
     );
 
    
-    /*!
-     Passed messages from a message source such as a CAN FIFO Receive
-     Queue. This routine handles the message either internally or via
-     its responder chain. It should be called about every 10ms even
-     if a message is not available. A NULL message pointer and zero
-     eid, tell the Handler to simply process any time transmitted
-     messages.
-     @param:    this    J1939ECU object pointer
-     @param:    eid     Message EID
-     @param:    pMsg    Message Pointer or NULL
-     @return:   if successful, true otherwise, false
-     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
-     */
-    bool            j1939ecu_HandleMessages(
-        J1939ECU_DATA	*this,
-        uint32_t        eid,
-        J1939_MSG       *pMsg
-    );
-    
-    
-    J1939ECU_DATA * j1939ecu_Init(
-        J1939ECU_DATA   *this,
+    J1939CCU_DATA *   j1939ccu_Init(
+        J1939CCU_DATA   *this,
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -165,18 +150,24 @@ extern "C" {
     );
 
 
-    ERESULT         j1939ecu_IsEnabled(
-        J1939ECU_DATA	*this
+    ERESULT     j1939ccu_IsEnabled(
+        J1939CCU_DATA		*this
     );
     
  
-    ERESULT         j1939ecu_Shutdown(
-        J1939ECU_DATA	*this
+    /*!
+     The driver just released the engine start.
+     */
+    ERESULT     j1939ccu_StartEnd(
+        J1939CCU_DATA		*this
     );
     
     
-    ERESULT         j1939ecu_Start(
-        J1939ECU_DATA	*this
+    /*!
+     The driver just pressed the engine start.
+     */
+    ERESULT     j1939ccu_StartInitiate(
+        J1939CCU_DATA		*this
     );
     
     
@@ -184,16 +175,16 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939ecu_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939ccu_ToDebugString(this,4);
      @endcode:
-     @param:    this    J1939ECU object pointer
+     @param:    this    J1939CCU object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
      @return:   If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *    j1939ecu_ToDebugString(
-        J1939ECU_DATA     *this,
+    ASTR_DATA *    j1939ccu_ToDebugString(
+        J1939CCU_DATA     *this,
         int             indent
     );
     
@@ -204,5 +195,5 @@ extern "C" {
 }
 #endif
 
-#endif	/* J1939ECU_H */
+#endif	/* J1939CCU_H */
 

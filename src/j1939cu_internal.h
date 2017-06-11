@@ -41,6 +41,9 @@
 
 #include    <j1939cu.h>
 #include    <j1939cam.h>
+#include    <trace.h>
+#include    <consumer.h>
+
 
 
 #ifndef J1939CU_INTERNAL_H
@@ -60,18 +63,22 @@ struct j1939cu_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     OBJ_DATA        super;
-    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+    OBJ_IUNKNOWN    *pSuperVtbl;    // Needed for Inheritance
 
     // Common Data
     ERESULT         eRc;
     J1939CAM_DATA   *pCam;
     OBJ_DATA        *pSYS;
     OBJ_DATA        *pCAN;
+    CONSUMER_DATA   *pConsumer;     // Input Message Queue
     
     uint32_t        spn2837;        // J1939 Identity Number (21 bits)
     uint16_t        spn2838;        // J1939 Manufacturer Code (11 bits)
     uint8_t         spn2846;        // J1939 Industry Group (3 bits)
     uint8_t         rsvd8[1];
+    
+    int             (*pMsgFilter)(void *, void *);
+    void            *pMsgFilterData;
 
 };
 #pragma pack(pop)

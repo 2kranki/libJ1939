@@ -1219,7 +1219,6 @@ bool			j1939ss_setSpn3350(
     
     bool            j1939ss_HandlePgn0(
         J1939SS_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -1250,7 +1249,7 @@ bool			j1939ss_setSpn3350(
 #endif
         
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn695 = pMsg->DATA.bytes[0] & 0x3;
@@ -1311,7 +1310,6 @@ bool			j1939ss_setSpn3350(
     
     bool            j1939ss_HandlePgn65098(
         J1939SS_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1341,7 +1339,7 @@ bool			j1939ss_setSpn3350(
 #endif
 
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             spn1850 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
             spn1849 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
@@ -1464,12 +1462,6 @@ bool			j1939ss_setSpn3350(
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939SS_DATA,eRc));
-        //fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939SS_DATA,spn84));
-        fprintf(stderr, "offsetof(spn1637) = %lu\n", offsetof(J1939SS_DATA,tsc1Time));
-        fprintf(stderr, "sizeof(J1939SS_DATA) = %lu\n", sizeof(J1939SS_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(&this->eRc);
         BREAK_NOT_BOUNDARY4(&this->tsc1Time);
         BREAK_NOT_BOUNDARY4(sizeof(J1939SS_DATA));
@@ -1665,7 +1657,7 @@ bool			j1939ss_setSpn3350(
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime0 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.

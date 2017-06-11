@@ -109,7 +109,7 @@ int         test_j1939er_OpenClose(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -216,7 +216,7 @@ int         test_j1939er_RequestNameDirect(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -225,7 +225,7 @@ int         test_j1939er_RequestNameDirect(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
 
         // Setup up msg from #3 Transmission to ER requesting NAME;
@@ -242,8 +242,8 @@ int         test_j1939er_RequestNameDirect(
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (4 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
@@ -292,7 +292,7 @@ int         test_j1939er_RequestBadNameDirect(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -301,7 +301,7 @@ int         test_j1939er_RequestBadNameDirect(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -320,8 +320,8 @@ int         test_j1939er_RequestBadNameDirect(
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (4 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
@@ -372,7 +372,7 @@ int         test_j1939er_RequestBadNameGlobal(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -381,7 +381,7 @@ int         test_j1939er_RequestBadNameGlobal(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -400,8 +400,8 @@ int         test_j1939er_RequestBadNameGlobal(
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         // It will not nak since we asked globablly.
         XCTAssertTrue( (3 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
@@ -450,7 +450,7 @@ int         test_j1939er_RequestIRC1Direct(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -459,7 +459,7 @@ int         test_j1939er_RequestIRC1Direct(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -478,8 +478,8 @@ int         test_j1939er_RequestIRC1Direct(
         data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (4 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
@@ -528,7 +528,7 @@ int         test_j1939er_TimedIRC1(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -536,7 +536,7 @@ int         test_j1939er_TimedIRC1(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -546,7 +546,7 @@ int         test_j1939er_TimedIRC1(
         // issued every 100ms.
         for (int i=0; i<100; ++i) {
             j1939sys_BumpMS(pSYS, 10);
-            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
+            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, NULL );
         }        
 
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -598,7 +598,7 @@ int         test_j1939er_TSC1_Direct_Clean(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -606,7 +606,7 @@ int         test_j1939er_TSC1_Direct_Clean(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -626,8 +626,8 @@ int         test_j1939er_TSC1_Direct_Clean(
         //data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (true == pER->fActive) );
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -643,7 +643,7 @@ int         test_j1939er_TSC1_Direct_Clean(
         // Should give us 10 ERC1s.
         for (int i=0; i<100; ++i) {
             j1939sys_BumpMS(pSYS, 10);
-            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
+            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, NULL );
         }
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
@@ -667,8 +667,8 @@ int         test_j1939er_TSC1_Direct_Clean(
         //data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);    // Show that we are sending this.
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);    // Show that we are sending this.
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (false == pER->fActive) );
         XCTAssertTrue( (255 == pER->spn1480) );
         
@@ -725,7 +725,7 @@ int         test_j1939er_TSC1_Direct_Timeout(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -733,7 +733,7 @@ int         test_j1939er_TSC1_Direct_Timeout(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -753,8 +753,8 @@ int         test_j1939er_TSC1_Direct_Timeout(
         //data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (true == pER->fActive) );
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -768,7 +768,7 @@ int         test_j1939er_TSC1_Direct_Timeout(
         
         for (int i=0; i<100; ++i) {
             j1939sys_BumpMS(pSYS, 10);
-            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, 0, NULL );
+            fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, NULL );
         }
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
@@ -792,8 +792,8 @@ int         test_j1939er_TSC1_Direct_Timeout(
         //data[2] = 0x00;
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
-        fRc = xmtHandler(NULL, 0, &msg);
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, pdu.eid, &msg );
+        fRc = xmtHandler(NULL, &msg);
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         XCTAssertTrue( (false == pER->fActive) );
         XCTAssertTrue( (255 == pER->spn1480) );
         

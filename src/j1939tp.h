@@ -181,7 +181,6 @@ extern "C" {
    
     bool            j1939tp_HandleMessages(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // if NULL, receive timed out
     );
     
@@ -249,8 +248,8 @@ extern "C" {
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *    j1939tp_ToDebugString(
-        J1939TP_DATA     *this,
+    ASTR_DATA *     j1939tp_ToDebugString(
+        J1939TP_DATA    *this,
         int             indent
     );
     

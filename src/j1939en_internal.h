@@ -186,77 +186,66 @@ extern "C" {
 
     bool            j1939en_HandlePgn0(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61184(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61442(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61443(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61444(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn61445(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65129(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65247(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65252(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939en_HandlePgn65262(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939en_HandlePgn65265(
         J1939EN_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 

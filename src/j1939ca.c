@@ -314,7 +314,6 @@ extern	"C" {
     {
         J1939CA_DATA    *this = pData;
         
-        j1939ca_XmtDelayedMsgs(this);
         if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS) {
             ((J1939_SYS_VTBL *)this->pSYS)->pSleepMS(this->pSYS, 10);
         }
@@ -874,11 +873,6 @@ extern	"C" {
             memset(&this->TPs[i], '\0', sizeof(J1939TP_DATA));
         }
         
-        if (this->pDelayTable) {
-            obj_Release(this->pDelayTable);
-            this->pDelayTable = OBJ_NIL;
-        }
-        
         if (this->pCAN) {
             obj_Release(this->pCAN);
             this->pCAN = OBJ_NIL;
@@ -1005,7 +999,6 @@ extern	"C" {
     
     bool            j1939ca_HandleMessages(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // if NULL, receive timed out
     )
     {
@@ -1020,7 +1013,7 @@ extern	"C" {
             DEBUG_BREAK();
             return false;
         }
-        //TRC_OBJ(this, "%s:\n", __func__);
+        TRC_OBJ(this, "%s:\n", __func__);
 #endif
         
         // Get the PGN requested.
@@ -1049,7 +1042,7 @@ extern	"C" {
                 fRc = j1939ca_FindRcvPgnEntry(this, this->curPgn);
                 if (fRc) {
                     if (this->pCurEntry->pService) {
-                        fRc = (*this->pCurEntry->pService)( this, pdu.eid, pMsg);
+                        fRc = (*this->pCurEntry->pService)(this, pMsg);
                     }
                     else {
                         DEBUG_BREAK();
@@ -1064,18 +1057,14 @@ extern	"C" {
         }
         else {
             // Address claim procedure is necessary.
-            fRc = j1939ca_HandlePgn60928( this, pdu.eid, pMsg );
-        }
-        
-        if (!this->fUseTask) {
-            j1939ca_XmtDelayedMsgs(this);
+            fRc = j1939ca_HandlePgn60928(this, pMsg);
         }
         
         for (i=0; i<j1989_CA_TP_SIZE; ++i) {
             if (this->TPs[i].activity == J1939TP_INACTIVE) {
             }
             else {
-                j1939tp_HandleMessages(&this->TPs[i], 0, NULL);
+                j1939tp_HandleMessages(&this->TPs[i], NULL);
             }
         }
         
@@ -1094,7 +1083,6 @@ extern	"C" {
     
     bool            j1939ca_HandlePgn51456(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1111,7 +1099,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         
         // Get the PGN requested.
         spn2574.w = 0;
@@ -1149,7 +1137,6 @@ extern	"C" {
     
     bool            j1939ca_HandlePgn59392(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1190,7 +1177,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
      
         spn2541 = pMsg->DATA.bytes[0];
         spn2542 = pMsg->DATA.bytes[1];
@@ -1265,7 +1252,6 @@ extern	"C" {
     
     bool            j1939ca_HandlePgn59904(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1281,7 +1267,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         
         // Get the PGN requested.
         spn2540.w = 0;
@@ -1318,7 +1304,6 @@ extern	"C" {
     
     bool            j1939ca_HandlePgn60160(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1338,7 +1323,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         sa = j1939pdu_getSA(pdu);
         da = j1939pdu_getDA(pdu);
         
@@ -1347,7 +1332,7 @@ extern	"C" {
         
         pTP = tp_FindActive(this, da, sa);
         if (pTP) {
-            fRc = j1939tp_HandlePgn60160(pTP, eid, pMsg);
+            fRc = j1939tp_HandlePgn60160(pTP, pMsg);
         }
         else {
             // Ignore the message.
@@ -1366,7 +1351,6 @@ extern	"C" {
     // Transport Protocol/Connection Management (TP.CM)
     bool            j1939ca_HandlePgn60416(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -1412,7 +1396,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         sa = j1939pdu_getSA(pdu);
         da = j1939pdu_getDA(pdu);
         spn2556 = pMsg->DATA.bytes[0];
@@ -1471,7 +1455,7 @@ extern	"C" {
                 spn2563.pgn2 = pMsg->DATA.bytes[7];
                 pTP = tp_FindActive(this, sa, da);
                 if (pTP) {
-                    fRc =   j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                    fRc =   j1939tp_HandlePgn60416(pTP, pMsg);
                 }
                 else {
                     DEBUG_BREAK();
@@ -1494,7 +1478,7 @@ extern	"C" {
                 spn2566.pgn2 = pMsg->DATA.bytes[7];
                 pTP = tp_FindActive(this, sa, da);
                 if (pTP) {
-                    fRc =   j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                    fRc =   j1939tp_HandlePgn60416(pTP, pMsg);
                 }
                 else {
                     DEBUG_BREAK();
@@ -1553,12 +1537,12 @@ extern	"C" {
                 spn2571.pgn2 = pMsg->DATA.bytes[7];
                 pTP = tp_FindActive(this, da, sa);
                 if (pTP) {
-                    fRc = j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                    fRc = j1939tp_HandlePgn60416(pTP, pMsg);
                 }
                 else {
                     pTP = tp_FindActive(this, da, sa);
                     if (pTP) {
-                        fRc = j1939tp_HandlePgn60416(pTP, eid, pMsg);
+                        fRc = j1939tp_HandlePgn60416(pTP, pMsg);
                     }
                     else {
                         DEBUG_BREAK();
@@ -1583,12 +1567,11 @@ extern	"C" {
     
     bool            j1939ca_HandlePgn60928(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
-        J1939_PDU       pdu;
-        J1939_PGN       pgn;
+        J1939_PDU       pdu = {0};
+        J1939_PGN       pgn = {0};
         bool            fRc;
         uint32_t        msTime = 0;
         
@@ -1691,7 +1674,8 @@ extern	"C" {
                 if (pMsg) {
                     if (60298 == pgn.pgn) {
                         if (pdu.SA == this->ca) {
-                            if (this->pSYS && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
+                            if (this->pSYS
+                                && ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS) {
                                 msTime = ((J1939_SYS_VTBL *)this->pSYS->pVtbl)->pGetTimeMS(this->pSYS);
                             }
                             this->ca = 254;
@@ -1864,18 +1848,6 @@ extern	"C" {
         
         uint32_t            blkNum = 64;
         blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
-        this->pDelayTable = table_Alloc( );
-        this->pDelayTable = table_Init(
-                                this->pDelayTable,
-                                blkNum,
-                                sizeof(struct j1939_msg_s),
-                                true
-                            );
-        if (OBJ_NIL == this->pDelayTable) {
-            DEBUG_BREAK();
-            obj_Release(this);
-            return OBJ_NIL;
-        }
         
 #ifdef NDEBUG
 #else
@@ -2154,7 +2126,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, lenUsed, pData);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, lenUsed, pData);
         }
         
         if (pData == data) {
@@ -2268,7 +2240,7 @@ extern	"C" {
         pdu.P  = 6;         // Priority
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &data);
         }
         
         // Return to caller.
@@ -2350,7 +2322,7 @@ extern	"C" {
         i = j1939ca_SetupPgn59904(this, &pdu, dlc, data);
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &data);
         }
 
         // We must respond to our own global request for Address Claimed.
@@ -2462,7 +2434,7 @@ extern	"C" {
             *pData++ = 0xFF;
         }
         
-        fRc = j1939ca_XmtMsgDL(this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL(this, pdu, dlc, &data);
         pTP->msTime = j1939ca_MsTimeGet(this);
         
         // Return to caller.
@@ -2631,7 +2603,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, data);
         }
         
         // Return to caller.
@@ -2682,7 +2654,7 @@ extern	"C" {
         *pData  = pgn.pgn2;
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, 8, data);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, 8, data);
             if (!fRc) {
                 j1939ca_setLastError(this, ERESULT_IO_ERROR);
                 return ERESULT_IO_ERROR;
@@ -2762,7 +2734,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &this->name);
         }
         
         // Return to caller.
@@ -2842,7 +2814,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &this->name);
         }
         
         // Return to caller.
@@ -2916,7 +2888,7 @@ extern	"C" {
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, 0, pdu, dlc, &this->name);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &this->name);
         }
         
         // Return to caller.
@@ -2925,47 +2897,8 @@ extern	"C" {
     
     
     
-    //---------------------------------------------------------------
-    //                T r a n s m i t  M e s s a g e
-    //---------------------------------------------------------------
-    
-    void            j1939ca_XmtDelayedMsgs(
-        J1939CA_DATA	*this
-    )
-    {
-        J1939CA_MSG     *pCurrent;
-        J1939CA_MSG     *pNext;
-        uint32_t        curTime = j1939ca_MsTimeGet(this);
-        bool            fRc = false;
-        
-        table_Lock(this->pDelayTable);
-        pCurrent = table_Head(this->pDelayTable);
-        while (pCurrent) {
-            pNext = table_Next(this->pDelayTable, pCurrent);
-            if (pCurrent->msTime <= curTime) {
-                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                                         this->pCAN,
-                                                                         0,
-                                                                         &pCurrent->msg
-                                                                         );
-                }
-                table_Delete(this->pDelayTable, pCurrent);
-            }
-            if (pCurrent->msTime > curTime) {
-                break;
-            }
-            pCurrent = pNext;
-        }
-        table_Unlock(this->pDelayTable);
-        
-    }
-    
-    
-    
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,
-        uint32_t        msDelay,
         J1939_PDU       pdu,
         uint16_t        cData,
         void            *pData
@@ -2973,8 +2906,8 @@ extern	"C" {
     {
         J1939_MSG       msg;
         bool            fRc = false;
-        J1939CA_MSG     *pCurrent;
-        J1939CA_MSG     *pInsert;
+        //J1939CA_MSG     *pCurrent;
+        //J1939CA_MSG     *pInsert;
         J1939TP_DATA    *pTP;
         uint8_t         da;
         
@@ -3006,42 +2939,14 @@ extern	"C" {
         
         if (cData < 9) {
             fRc = j1939msg_ConstructMsg_E(&msg, pdu.eid, cData, pData);
-            if (msDelay) {
-                table_Lock(this->pDelayTable);
-                
-                pCurrent = table_Add(this->pDelayTable);
-                if (NULL == pCurrent) {
-                    table_Unlock(this->pDelayTable);
-                    return false;
-                }
-                memmove(&pCurrent->msg, pData, sizeof(J1939_MSG));
-                pCurrent->msDelay = msDelay;
-                pCurrent->msTime  = j1939ca_MsTimeGet(this);
-                pCurrent->msTime += msDelay;
-                
-                // Move the msg to the appropriate place in the queue.
-                pInsert = table_Head(this->pDelayTable);
-                while (!(NULL == pInsert)) {
-                    if (pInsert->msTime > pCurrent->msTime) {
-                        fRc = table_MoveBefore(this->pDelayTable, pInsert, pCurrent);
-                        break;
-                    }
-                    pInsert = table_Next(this->pDelayTable, pInsert);
-                }
-                
-                table_Unlock(this->pDelayTable);
-            }
-            else {
-                if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-                    fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                                this->pCAN,
-                                                                msDelay,
-                                                                &msg
-                                                );
-                }
+            if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
+                fRc = (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
+                                                            this->pCAN,
+                                                            &msg
+                                            );
             }
             //if (this->pXmtMsg) {
-                //fRc = (*this->pXmtMsg)(this->pXmtData, msDelay, &msg);
+                //fRc = (*this->pXmtMsg)(this->pXmtData, &msg);
             //}
         }
         else {

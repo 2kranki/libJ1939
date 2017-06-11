@@ -301,7 +301,6 @@ extern	"C" {
      */
     bool            j1939ca_HandleMessages(
         J1939CA_DATA	*this,
-        uint32_t        eid,            // EID if Message is provided
         J1939_MSG       *pMsg           // NULL == Time-out
     );
     
@@ -430,7 +429,6 @@ extern	"C" {
     
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,
-        uint32_t        msDelay,
         J1939_PDU       pdu,
         uint16_t        cData,
         void            *pData

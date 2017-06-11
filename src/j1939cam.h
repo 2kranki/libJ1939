@@ -110,6 +110,12 @@ extern	"C" {
     );
     
         
+    J1939CAM_DATA * j1939cam_New(
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS
+    );
+    
+    
     J1939CAM_DATA * j1939cam_NewEngine(
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
@@ -204,7 +210,6 @@ extern	"C" {
      */
     bool            j1939cam_HandleMessages(
         J1939CAM_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
@@ -215,22 +220,6 @@ extern	"C" {
         OBJ_ID          pSYS
     );
         
-    
-    /*!
-     Transmist the given message reflecting it if necessary. Reflection
-     is used primarily for debugging and is immediate.
-     @param:    this    J1939CAM object pointer
-     @param:    msDelay Message EID
-     @param:    pMsg    Message Pointer or NULL
-     @return:   if successful, true otherwise, false
-     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
-     */
-    bool            j1939cam_TransmitDelayedMsg(
-        void            *pData,
-        uint32_t        msDelay,
-        J1939_MSG       *pMsg
-    );
-    
     
 #ifdef	__cplusplus
 };

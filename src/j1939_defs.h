@@ -330,6 +330,8 @@ extern	"C" {
         OBJ_IDENT_J1939CAN_CLASS,
         OBJ_IDENT_J1939CC,              // J1939 Cab Controller CA
         OBJ_IDENT_J1939CC_CLASS,
+        OBJ_IDENT_J1939CCU,             // J1939 Cab Control Unit
+        OBJ_IDENT_J1939CCU_CLASS,
         OBJ_IDENT_J1939CU,              // J1939 Control Unit Base CU
         OBJ_IDENT_J1939CU_CLASS,
         OBJ_IDENT_J1939DG,              // J1939 Diagnostic/Test CA
@@ -376,7 +378,6 @@ extern	"C" {
     
     typedef bool (*P_J1939_XMTRTN)(
                         OBJ_PTR,
-                        uint32_t,       // msDelay 
                         J1939_PDU,
                         uint16_t,       // Data Length (1..1785)
                         void *          // Data Ptr
@@ -485,10 +486,8 @@ extern	"C" {
         const
         uint16_t            reserved16;
         const
-        J1939_PGN_ENTRY     *(*pPGNs)[];// PGN Index Ptr - It is assumed that the PGNs
-        //                  are sorted by ascending PGN
-        //                  and that the index is NULL
-        //                  terminated.
+        J1939_PGN_ENTRY     **pPGNs;    // PGN Index Ptr - It is assumed that the PGNs
+        //                              //                 are sorted by ascending PGN
     } J1939_PGN_TABLE;
 #pragma pack(pop)
     

@@ -81,9 +81,9 @@ extern "C" {
         // method names to the vtbl definition in j1939Can_object.c.
         // Properties:
         // Methods:
-        bool            (*pRcv)(OBJ_ID,uint32_t,J1939_MSG *);
-        bool            (*pRcvData)(OBJ_ID,uint32_t,uint16_t,uint8_t *);
-        bool            (*pXmt)(OBJ_ID,uint32_t,J1939_MSG *);
+        bool            (*pRcv)(OBJ_ID, J1939_MSG *);
+        bool            (*pRcvData)(OBJ_ID, uint32_t, uint16_t, uint8_t *);
+        bool            (*pXmt)(OBJ_ID, J1939_MSG *);
     } J1939CAN_VTBL;
 
 
@@ -175,7 +175,6 @@ extern "C" {
 
     bool            j1939can_RcvMsg(
         OBJ_ID          pObject,
-        uint32_t        msDelay,
         J1939_MSG       *pMsg
     );
     
@@ -200,7 +199,6 @@ extern "C" {
     
     bool            j1939can_XmtMsg(
         OBJ_ID          pObject,
-        uint32_t        msDelay,
         J1939_MSG       *pMsg
     );
     

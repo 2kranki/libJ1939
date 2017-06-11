@@ -246,7 +246,7 @@ extern "C" {
         if (pMsg && this->pCAN) {
             pVtbl = (J1939CAN_VTBL *)obj_getVtbl(this->pCAN);
             if (pVtbl) {
-                fRc = pVtbl->pXmt(this->pCAN, 0, pMsg);
+                fRc = pVtbl->pXmt(this->pCAN, pMsg);
             }
         }
         if (pTime) {
@@ -760,7 +760,6 @@ extern "C" {
     
     bool            j1939tp_HandleMessages(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // if NULL, receive timed out
     )
     {
@@ -798,11 +797,11 @@ extern "C" {
         }
 
         if (pgn.w == 60416) {
-            fRc = j1939tp_HandlePgn60416(this, eid, pMsg);
+            fRc = j1939tp_HandlePgn60416(this, pMsg);
         }
         
         if (pgn.w == 60160) {
-            fRc = j1939tp_HandlePgn60160(this, eid, pMsg);
+            fRc = j1939tp_HandlePgn60160(this, pMsg);
         }
         
         if (this->activity == J1939TP_INACTIVE) {
@@ -831,7 +830,6 @@ extern "C" {
     
     bool            j1939tp_HandlePgn60160(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -890,7 +888,6 @@ extern "C" {
     // Transport Protocol/Connection Management (TP.CM)
     bool            j1939tp_HandlePgn60416(
         J1939TP_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {

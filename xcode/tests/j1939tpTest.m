@@ -281,7 +281,7 @@ void            messageComplete(
         
         for (i=0; i<200; i+=20) {
             j1939sys_BumpMS(pSYS,40);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -359,7 +359,7 @@ void            messageComplete(
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
+            eRc = j1939tp_HandleMessages(pXmt, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -442,11 +442,11 @@ void            messageComplete(
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 0) );
         
         j1939sys_BumpMS(pSYS,100);
-        eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
+        eRc = j1939tp_HandleMessages(pXmt, NULL);
 
         for (i=0; i<10; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pRcv, 0, NULL);
+            eRc = j1939tp_HandleMessages(pRcv, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -523,12 +523,12 @@ void            messageComplete(
                       2,
                       1
         );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -540,7 +540,7 @@ void            messageComplete(
                       2,
                       10
         );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -612,13 +612,13 @@ void            messageComplete(
                       1,                // # of packets
                       1                 // Seq Number
                       );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         // Allow one message to be sent
         for (i=0; i<4; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -630,12 +630,12 @@ void            messageComplete(
                       0,                // # of packets (0 == pause)
                       255               // Seq Number
         );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<5; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -647,12 +647,12 @@ void            messageComplete(
                       1,                // # of packets
                       2                 // Seq Number
                       );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -665,7 +665,7 @@ void            messageComplete(
                       2,
                       10
                       );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -742,12 +742,12 @@ void            messageComplete(
                       2,
                       1
                       );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         
         for (i=0; i<13; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -762,13 +762,13 @@ void            messageComplete(
                       2,
                       10
                       );
-        eRc = j1939tp_HandleMessages(pObj, j1939msg_getPDU(&msg).eid, &msg);
+        eRc = j1939tp_HandleMessages(pObj, &msg);
         XCTAssertFalse( (ERESULT_FAILED(eRc)) );
 #endif
         
         for (i=0; i<20; ++i) {
             j1939sys_BumpMS(pSYS,200);
-            eRc = j1939tp_HandleMessages(pObj, 0, NULL);
+            eRc = j1939tp_HandleMessages(pObj, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -873,8 +873,8 @@ void            messageComplete(
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939tp_HandleMessages(pXmt, 0, NULL);
-            eRc = j1939tp_HandleMessages(pRcv, 0, NULL);
+            eRc = j1939tp_HandleMessages(pXmt, NULL);
+            eRc = j1939tp_HandleMessages(pRcv, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         

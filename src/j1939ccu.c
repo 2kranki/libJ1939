@@ -1,7 +1,7 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /*
- * File:   j1939ecu.c
- *	Generated 04/13/2017 15:27:22
+ * File:   j1939ccu.c
+ *	Generated 06/05/2017 08:35:58
  *
  */
 
@@ -36,15 +36,14 @@
 
 
 
-
 //*****************************************************************
 //* * * * * * * * * * * *  Data Definitions   * * * * * * * * * * *
 //*****************************************************************
 
 /* Header File Inclusion */
-#include    <j1939ecu_internal.h>
-#include    <j1939en.h>
-#include    <j1939er.h>
+#include    <j1939ccu_internal.h>
+#include    <j1939cc.h>
+#include    <j1939ss.h>
 
 
 
@@ -53,20 +52,7 @@ extern "C" {
 #endif
     
 
-    // This table is based on Cummins iSX15 Engine Specifications
-    // found in Cummins' literature.
-    // Engine Idle is between 600 and 800 rpm (default 600).
-    ENG_TRQ_HP      engTorque[] = {
-        {   0, 200,  750},      // Idle
-        {1000, 400, 1850},
-        {1150, 450, 1850},
-        {1300, 525, 1850},
-        {1450, 560, 1850},
-        {1500, 575, 1690},
-        {1700, 575, 1600},
-        {1800, 560, 1440},
-    };
-    uint16_t        cEngTorque = (sizeof(engTorque)/sizeof(ENG_TRQ_HP)) - 1;
+    
 
 
  
@@ -74,27 +60,9 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
-#ifdef NDEBUG
-#else
-    bool        j1939ecu_Validate(
-        J1939ECU_DATA *this
-    );
-#endif
-    
-    
-    
-    void            j1939ecu_CalcTorque(
-        J1939ECU_DATA   *this
-    )
-    {
-        //J1939ECU_DATA  *this = pData;
-        
-    }
 
 
 
-    
-    
     
     /****************************************************************
     * * * * * * * * * * *  External Subroutines   * * * * * * * * * *
@@ -105,11 +73,11 @@ extern "C" {
     //                      *** Class Methods ***
     //===============================================================
 
-    J1939ECU_DATA * j1939ecu_Alloc(
+    J1939CCU_DATA *     j1939ccu_Alloc(
     )
     {
-        J1939ECU_DATA   *this;
-        uint32_t        cbSize = sizeof(J1939ECU_DATA);
+        J1939CCU_DATA   *this;
+        uint32_t        cbSize = sizeof(J1939CCU_DATA);
         
         // Do initialization.
         
@@ -121,7 +89,7 @@ extern "C" {
 
 
 
-    J1939ECU_DATA * j1939ecu_New(
+    J1939CCU_DATA *     j1939ccu_New(
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -129,11 +97,11 @@ extern "C" {
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
     )
     {
-        J1939ECU_DATA       *this;
+        J1939CCU_DATA   *this;
         
-        this = j1939ecu_Alloc( );
+        this = j1939ccu_Alloc( );
         if (this) {
-            this = j1939ecu_Init(this, pCAN, pSYS, spn2837, spn2838, spn2846);
+            this = j1939ccu_Init(this, pCAN, pSYS, spn2837, spn2838, spn2846);
         } 
         return this;
     }
@@ -146,29 +114,33 @@ extern "C" {
     //                      P r o p e r t i e s
     //===============================================================
 
-    ERESULT         j1939ecu_getLastError(
-        J1939ECU_DATA     *this
+    //---------------------------------------------------------------
+    //                      L a s t  E r r o r
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939ccu_getLastError(
+        J1939CCU_DATA   *this
     )
     {
         ERESULT         eRc;
-        
+
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return ERESULT_INVALID_OBJECT;
         }
 #endif
-        
+
         eRc = j1939cu_getLastError((J1939CU_DATA *)this);
         
         return eRc;
     }
 
 
-    bool            j1939ecu_setLastError(
-        J1939ECU_DATA     *this,
+    bool            j1939ccu_setLastError(
+        J1939CCU_DATA   *this,
         ERESULT         value
     )
     {
@@ -176,7 +148,7 @@ extern "C" {
         
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
@@ -189,58 +161,59 @@ extern "C" {
     
     
 
-    uint16_t        j1939ecu_getRpm(
-        J1939ECU_DATA     *this
+    uint16_t        j1939ccu_getPriority(
+        J1939CCU_DATA     *this
     )
     {
 
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
 
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
-        return this->rpm;
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        //return this->priority;
+        return 0;
     }
 
-    bool            j1939ecu_setRpm(
-        J1939ECU_DATA   *this,
+    bool            j1939ccu_setPriority(
+        J1939CCU_DATA     *this,
         uint16_t        value
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return false;
         }
 #endif
 
-        this->rpm = value;
+        //this->priority = value;
 
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
 
 
 
-    uint32_t        j1939ecu_getSize(
-        J1939ECU_DATA       *this
+    uint32_t        j1939ccu_getSize(
+        J1939CCU_DATA       *this
     )
     {
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return 0;
         }
 #endif
 
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
         return 0;
     }
 
@@ -264,29 +237,29 @@ extern "C" {
      a copy of the object is performed.
      Example:
      @code:
-        ERESULT eRc = j1939ecu__Assign(this,pOther);
+        ERESULT eRc = j1939ccu__Assign(this,pOther);
      @endcode:
-     @param:    this    J1939ECU object pointer
-     @param:    pOther  a pointer to another J1939ECU object
+     @param:    this    J1939CCU object pointer
+     @param:    pOther  a pointer to another J1939CCU object
      @return:   If successful, ERESULT_SUCCESS otherwise an 
                 ERESULT_* error 
      */
-    ERESULT         j1939ecu_Assign(
-        J1939ECU_DATA		*this,
-        J1939ECU_DATA      *pOther
+    ERESULT         j1939ccu_Assign(
+        J1939CCU_DATA		*this,
+        J1939CCU_DATA      *pOther
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
-        if( !j1939ecu_Validate(pOther) ) {
+        if( !j1939ccu_Validate(pOther) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(pOther);
+            return j1939ccu_getLastError(pOther);
         }
 #endif
 
@@ -317,11 +290,11 @@ extern "C" {
         //goto eom;
 
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
     eom:
         //FIXME: Implement the assignment.        
-        j1939ecu_setLastError(this, ERESULT_NOT_IMPLEMENTED);
-        return j1939ecu_getLastError(this);
+        j1939ccu_setLastError(this, ERESULT_NOT_IMPLEMENTED);
+        return j1939ccu_getLastError(this);
     }
     
     
@@ -334,32 +307,32 @@ extern "C" {
      Copy the current object creating a new object.
      Example:
      @code:
-        j1939ecu      *pCopy = j1939ecu_Copy(this);
+        j1939ccu      *pCopy = j1939ccu_Copy(this);
      @endcode:
-     @param:    this    J1939ECU object pointer
-     @return:   If successful, a J1939ECU object which must be released,
+     @param:    this    J1939CCU object pointer
+     @return:   If successful, a J1939CCU object which must be released,
                 otherwise OBJ_NIL.
-     @warning: Remember to release the returned the J1939ECU object.
+     @warning: Remember to release the returned the J1939CCU object.
      */
-    J1939ECU_DATA *     j1939ecu_Copy(
-        J1939ECU_DATA       *this
+    J1939CCU_DATA *     j1939ccu_Copy(
+        J1939CCU_DATA       *this
     )
     {
-        J1939ECU_DATA       *pOther = OBJ_NIL;
+        J1939CCU_DATA       *pOther = OBJ_NIL;
         ERESULT         eRc;
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
 #endif
         
-        //FIXME: pOther = j1939ecu_New(obj_getSize(this));
+        //FIXME: pOther = j1939ccu_New(obj_getSize(this));
         if (pOther) {
-            eRc = j1939ecu_Assign(this, pOther);
+            eRc = j1939ccu_Assign(this, pOther);
             if (ERESULT_HAS_FAILED(eRc)) {
                 obj_Release(pOther);
                 pOther = OBJ_NIL;
@@ -368,7 +341,7 @@ extern "C" {
         
         // Return to caller.
         //obj_Release(pOther);
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
         return pOther;
     }
     
@@ -378,11 +351,11 @@ extern "C" {
     //                        D e a l l o c
     //---------------------------------------------------------------
 
-    void            j1939ecu_Dealloc(
+    void            j1939ccu_Dealloc(
         OBJ_ID          objId
     )
     {
-        J1939ECU_DATA   *this = objId;
+        J1939CCU_DATA   *this = objId;
 
         // Do initialization.
         if (NULL == this) {
@@ -390,7 +363,7 @@ extern "C" {
         }        
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return;
         }
@@ -410,21 +383,21 @@ extern "C" {
     //                      D i s a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939ecu_Disable(
-        J1939ECU_DATA		*this
+    ERESULT         j1939ccu_Disable(
+        J1939CCU_DATA		*this
     )
     {
 
         // Do initialization.
         if (NULL == this) {
-            j1939ecu_setLastError(this, ERESULT_INVALID_OBJECT);
-            return j1939ecu_getLastError(this);
+            j1939ccu_setLastError(this, ERESULT_INVALID_OBJECT);
+            return j1939ccu_getLastError(this);
         }
     #ifdef NDEBUG
     #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
     #endif
 
@@ -433,8 +406,8 @@ extern "C" {
         obj_Disable(this);
         
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
-        return j1939ecu_getLastError(this);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return j1939ccu_getLastError(this);
     }
 
 
@@ -443,17 +416,17 @@ extern "C" {
     //                          E n a b l e
     //---------------------------------------------------------------
 
-    ERESULT         j1939ecu_Enable(
-        J1939ECU_DATA		*this
+    ERESULT         j1939ccu_Enable(
+        J1939CCU_DATA		*this
     )
     {
 
         // Do initialization.
     #ifdef NDEBUG
     #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
     #endif
         
@@ -462,53 +435,18 @@ extern "C" {
         // Put code here...
         
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
-        return j1939ecu_getLastError(this);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return j1939ccu_getLastError(this);
     }
 
 
 
-    //---------------------------------------------------------------
-    //                  H a n d l e  M e s s a g e s
-    //---------------------------------------------------------------
-    
-    /* HandleMessages() is passed messages from a message source such
-     * as a CAN FIFO Receive Queue. This routine handles the message
-     * either internally or via its responder chain.
-     * Warning: This function must conform to P_SRVCMSG_RTN specs.
-     */
-    
-    bool            j1939ecu_HandleMessages(
-        J1939ECU_DATA	*this,
-        uint32_t        eid,
-        J1939_MSG       *pMsg           // if NULL, receive timed out
-    )
-    {
-        bool            fRc;
-        
-        // Do initialization.
-#ifdef NDEBUG
-#else
-        if( !j1939ecu_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-
-        fRc = j1939cam_HandleMessages(j1939cu_getCam((J1939CU_DATA *)this), pMsg);
-        
-        // Return to caller.
-        return fRc;
-    }
-    
-    
-    
     //---------------------------------------------------------------
     //                          I n i t
     //---------------------------------------------------------------
 
-    J1939ECU_DATA * j1939ecu_Init(
-        J1939ECU_DATA   *this,
+    J1939CCU_DATA *   j1939ccu_Init(
+        J1939CCU_DATA   *this,
         OBJ_ID          *pCAN,
         OBJ_ID          *pSYS,
         uint32_t        spn2837,        // J1939 Identity Number (21 bits)
@@ -516,9 +454,9 @@ extern "C" {
         uint8_t         spn2846         // J1939 Industry Group (3 bits)
     )
     {
-        uint32_t        cbSize = sizeof(J1939ECU_DATA);
-        J1939EN_DATA    *pEN;
-        J1939ER_DATA    *pER;
+        uint32_t        cbSize = sizeof(J1939CCU_DATA);
+        J1939CC_DATA    *pCC;
+        J1939SS_DATA    *pSS;
         
         if (OBJ_NIL == this) {
             return OBJ_NIL;
@@ -534,59 +472,59 @@ extern "C" {
             return OBJ_NIL;
         }
 
-        this = (OBJ_ID)j1939cu_Init(            // Needed for Inheritance
-                                    (J1939CU_DATA *)this,
-                                    pCAN,
-                                    pSYS,
-                                    spn2837,
-                                    spn2838,
-                                    spn2846
+        this =  (OBJ_ID)j1939cu_Init(           // Needed for Inheritance
+                    (J1939CU_DATA *)this,
+                    pCAN,
+                    pSYS,
+                    spn2837,
+                    spn2838,
+                    spn2846
                 );
-        //this = (OBJ_ID)obj_Init(this, cbSize, OBJ_IDENT_J1939ECU);
+        //this = (OBJ_ID)obj_Init(this, cbSize, OBJ_IDENT_J1939CCU);
         if (OBJ_NIL == this) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
         obj_setSize(this, cbSize);                          // Needed for Inheritance
-        obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939ECU);     // Needed for Inheritance
+        obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939CCU);     // Needed for Inheritance
         this->pSuperVtbl = obj_getVtbl(this);
-        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939ecu_Vtbl);
+        obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939ccu_Vtbl);
         
-        j1939ecu_setLastError(this, ERESULT_GENERAL_FAILURE);
-
-        // Create the Engine #1.
-        pEN = j1939en_Alloc();
-        pEN = j1939en_Init(pEN, pCAN, pSYS, spn2837, spn2838, spn2846);
-        if( OBJ_NIL == pEN ) {
+        j1939ccu_setLastError(this, ERESULT_GENERAL_FAILURE);
+        
+        // Create the Cab Controller.
+        pCC = j1939cc_Alloc();
+        pCC = j1939cc_Init(pCC, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == pCC ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pEN);
-        obj_Release(pEN);
-        pEN = OBJ_NIL;
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pCC);
+        obj_Release(pCC);
+        pCC = OBJ_NIL;
         
-        // Create the Engine #1 Retarder.
-        pER = j1939er_Alloc();
-        pER = j1939er_Init(pER, pCAN, pSYS, spn2837, spn2838, spn2846);
-        if( OBJ_NIL == pER ) {
+        // Create the Shift Controller.
+        pSS = j1939ss_Alloc();
+        pSS = j1939ss_Init(pSS, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == pSS ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pER);
-        obj_Release(pER);
-        pER = OBJ_NIL;
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pSS);
+        obj_Release(pSS);
+        pSS = OBJ_NIL;
         
     #ifdef NDEBUG
     #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-        //BREAK_NOT_BOUNDARY4(&this->thread);
+        BREAK_NOT_BOUNDARY4(sizeof(J1939CCU_DATA));
     #endif
 
         return this;
@@ -598,84 +536,141 @@ extern "C" {
     //                       I s E n a b l e d
     //---------------------------------------------------------------
     
-    ERESULT         j1939ecu_IsEnabled(
-        J1939ECU_DATA		*this
+    ERESULT         j1939ccu_IsEnabled(
+        J1939CCU_DATA		*this
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
 #endif
         
         if (obj_IsEnabled(this)) {
-            j1939ecu_setLastError(this, ERESULT_SUCCESS_TRUE);
-            return j1939ecu_getLastError(this);
+            j1939ccu_setLastError(this, ERESULT_SUCCESS_TRUE);
+            return j1939ccu_getLastError(this);
         }
         
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS_FALSE);
-        return j1939ecu_getLastError(this);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS_FALSE);
+        return j1939ccu_getLastError(this);
     }
     
     
     
     //---------------------------------------------------------------
-    //                          S h u t d o w n
+    //                     Q u e r y  I n f o
     //---------------------------------------------------------------
     
-    ERESULT         j1939ecu_Shutdown(
-        J1939ECU_DATA	*this
+    void *          j1939ccu_QueryInfo(
+        OBJ_ID          objId,
+        uint32_t        type,
+        const
+        char            *pStr
+    )
+    {
+        J1939CCU_DATA   *this = objId;
+        
+        if (OBJ_NIL == this) {
+            return NULL;
+        }
+#ifdef NDEBUG
+#else
+        if( !j1939ccu_Validate(this) ) {
+            DEBUG_BREAK();
+            return NULL;
+        }
+#endif
+        
+        switch (type) {
+                
+            case OBJ_QUERYINFO_TYPE_INFO:
+                return (void *)obj_getInfo(this);
+                break;
+                
+            case OBJ_QUERYINFO_TYPE_METHOD:
+                switch (*pStr) {
+                        
+                    case 'D':
+                        if (str_Compare("Disable", (char *)pStr) == 0) {
+                            return j1939ccu_Disable;
+                        }
+                        break;
+
+                    case 'E':
+                        if (str_Compare("Ensable", (char *)pStr) == 0) {
+                            return j1939ccu_Enable;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+                
+            default:
+                break;
+        }
+        
+        return obj_QueryInfo(objId, type, pStr);
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                       S t a r t  E n d
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939ccu_StartEnd(
+        J1939CCU_DATA	*this
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
 #endif
         
-        // Put code here...
         
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
         return ERESULT_NOT_IMPLEMENTED;
-        return j1939ecu_getLastError(this);
+        return j1939ccu_getLastError(this);
     }
     
     
     
     //---------------------------------------------------------------
-    //                          S t a r t
+    //                  S t a r t  I n i t i a t e
     //---------------------------------------------------------------
     
-    ERESULT         j1939ecu_Start(
-        J1939ECU_DATA	*this
+    ERESULT         j1939ccu_StartInitiate(
+        J1939CCU_DATA	*this
     )
     {
         
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
-            return j1939ecu_getLastError(this);
+            return j1939ccu_getLastError(this);
         }
 #endif
         
-        // Put code here...
         
         // Return to caller.
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS_FALSE);
         return ERESULT_NOT_IMPLEMENTED;
-        return j1939ecu_getLastError(this);
+        return j1939ccu_getLastError(this);
     }
     
     
@@ -688,16 +683,16 @@ extern "C" {
      Create a string that describes this object and the objects within it.
      Example:
      @code:
-        ASTR_DATA      *pDesc = j1939ecu_ToDebugString(this,4);
+        ASTR_DATA      *pDesc = j1939ccu_ToDebugString(this,4);
      @endcode:
-     @param:    this    J1939ECU object pointer
+     @param:    this    J1939CCU object pointer
      @param:    indent  number of characters to indent every line of output, can be 0
      @return:   If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
      @warning: Remember to release the returned AStr object.
      */
-    ASTR_DATA *     j1939ecu_ToDebugString(
-        J1939ECU_DATA      *this,
+    ASTR_DATA *     j1939ccu_ToDebugString(
+        J1939CCU_DATA      *this,
         int             indent
     )
     {
@@ -711,7 +706,7 @@ extern "C" {
         // Do initialization.
 #ifdef NDEBUG
 #else
-        if( !j1939ecu_Validate(this) ) {
+        if( !j1939ccu_Validate(this) ) {
             DEBUG_BREAK();
             return OBJ_NIL;
         }
@@ -725,8 +720,9 @@ extern "C" {
         j = snprintf(
                      str,
                      sizeof(str),
-                     "{%p(j1939ecu)\n",
-                     this
+                     "{%p(j1939ccu) size=%d\n",
+                     this,
+                     j1939ccu_getSize(this)
             );
         AStr_AppendA(pStr, str);
 
@@ -746,10 +742,10 @@ extern "C" {
         if (indent) {
             AStr_AppendCharRepeatW(pStr, indent, ' ');
         }
-        j = snprintf(str, sizeof(str), " %p(j1939ecu)}\n", this);
+        j = snprintf(str, sizeof(str), " %p(j1939ccu)}\n", this);
         AStr_AppendA(pStr, str);
         
-        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
         return pStr;
     }
     
@@ -761,15 +757,15 @@ extern "C" {
 
     #ifdef NDEBUG
     #else
-    bool            j1939ecu_Validate(
-        J1939ECU_DATA      *this
+    bool            j1939ccu_Validate(
+        J1939CCU_DATA      *this
     )
     {
  
         // WARNING: We have established that we have a valid pointer
         //          in 'this' yet.
        if( this ) {
-            if ( obj_IsKindOf(this,OBJ_IDENT_J1939ECU) )
+            if ( obj_IsKindOf(this,OBJ_IDENT_J1939CCU) )
                 ;
             else {
                 // 'this' is not our kind of data. We really don't
@@ -785,7 +781,7 @@ extern "C" {
         // 'this'.
 
 
-        if( !(obj_getSize(this) >= sizeof(J1939ECU_DATA)) ) {
+        if( !(obj_getSize(this) >= sizeof(J1939CCU_DATA)) ) {
             j1939cu_setLastError((J1939CU_DATA *)this, ERESULT_INVALID_OBJECT);
             return false;
         }

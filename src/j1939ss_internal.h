@@ -133,7 +133,6 @@ struct j1939ss_data_s	{
 
     bool            j1939ss_HandlePgn65098(
         J1939SS_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     

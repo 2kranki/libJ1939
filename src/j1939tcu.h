@@ -73,7 +73,7 @@ extern "C" {
     //****************************************************************
 
 
-    typedef struct j1939tcu_data_s	J1939TCU_DATA;    // Inherits from OBJ.
+    typedef struct j1939tcu_data_s	J1939TCU_DATA;    // Inherits from J1939CU
 
     typedef struct j1939tcu_vtbl_s	{
         OBJ_IUNKNOWN    iVtbl;              // Inherited Vtbl.
@@ -140,6 +140,26 @@ extern "C" {
     );
 
    
+    /*!
+     Passed messages from a message source such as a CAN FIFO Receive
+     Queue. This routine handles the message either internally or via
+     its responder chain. It should be called about every 10ms even
+     if a message is not available. A NULL message pointer and zero
+     eid, tell the Handler to simply process any time transmitted
+     messages.
+     @param:    this    J1939ECU object pointer
+     @param:    eid     Message EID
+     @param:    pMsg    Message Pointer or NULL
+     @return:   if successful, true otherwise, false
+     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
+     */
+    bool            j1939tcu_HandleMessages(
+        J1939TCU_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg
+    );
+    
+    
     J1939TCU_DATA * j1939tcu_Init(
         J1939TCU_DATA   *this,
         OBJ_ID          *pCAN,

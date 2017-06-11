@@ -43,6 +43,7 @@
 
 /* Header File Inclusion */
 #include    <j1939tcu_internal.h>
+#include    <j1939tc.h>
 
 
 
@@ -67,17 +68,9 @@ extern "C" {
 #endif
     
     
-#ifdef XYZZY
-    static
-    void            j1939tcu_task_body(
-        void            *pData
-    )
-    {
-        //J1939TCU_DATA  *this = pData;
-        
-    }
-#endif
-
+    
+    
+    
 
 
     /****************************************************************
@@ -134,18 +127,20 @@ extern "C" {
         J1939TCU_DATA     *this
     )
     {
-
+        ERESULT         eRc;
+        
         // Validate the input parameters.
 #ifdef NDEBUG
 #else
         if( !j1939tcu_Validate(this) ) {
             DEBUG_BREAK();
-            return this->eRc;
+            return ERESULT_INVALID_OBJECT;
         }
 #endif
-
-        //this->eRc = ERESULT_SUCCESS;
-        return this->eRc;
+        
+        eRc = j1939cu_getLastError((J1939CU_DATA *)this);
+        
+        return eRc;
     }
 
 
@@ -154,6 +149,8 @@ extern "C" {
         ERESULT         value
     )
     {
+        bool            fRc;
+        
 #ifdef NDEBUG
 #else
         if( !j1939tcu_Validate(this) ) {
@@ -162,9 +159,9 @@ extern "C" {
         }
 #endif
         
-        this->eRc = value;
+        fRc = j1939cu_setLastError((J1939CU_DATA *)this, value);
         
-        return true;
+        return fRc;
     }
     
     
@@ -228,50 +225,6 @@ extern "C" {
 
 
 
-    ASTR_DATA * j1939tcu_getStr(
-        J1939TCU_DATA     *this
-    )
-    {
-        
-        // Validate the input parameters.
-#ifdef NDEBUG
-#else
-        if( !j1939tcu_Validate(this) ) {
-            DEBUG_BREAK();
-            return OBJ_NIL;
-        }
-#endif
-        
-        j1939tcu_setLastError(this, ERESULT_SUCCESS);
-        return this->pStr;
-    }
-    
-    
-    bool        j1939tcu_setStr(
-        J1939TCU_DATA     *this,
-        ASTR_DATA   *pValue
-    )
-    {
-#ifdef NDEBUG
-#else
-        if( !j1939tcu_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-
-        obj_Retain(pValue);
-        if (this->pStr) {
-            obj_Release(this->pStr);
-        }
-        this->pStr = pValue;
-        
-        j1939tcu_setLastError(this, ERESULT_SUCCESS);
-        return true;
-    }
-    
-    
-    
     
 
     //===============================================================
@@ -421,14 +374,6 @@ extern "C" {
         }
 #endif
 
-#ifdef XYZZY
-        if (obj_IsEnabled(this)) {
-            ((J1939TCU_VTBL *)obj_getVtbl(this))->devVtbl.pStop((OBJ_DATA *)this,NULL);
-        }
-#endif
-
-        //j1939tcu_setStr(this, OBJ_NIL);
-
         obj_setVtbl(this, this->pSuperVtbl);
         j1939cu_Dealloc(this);          // Needed for inheritance
         //obj_Dealloc(this);
@@ -502,6 +447,41 @@ extern "C" {
 
 
     //---------------------------------------------------------------
+    //                  H a n d l e  M e s s a g e s
+    //---------------------------------------------------------------
+    
+    /* HandleMessages() is passed messages from a message source such
+     * as a CAN FIFO Receive Queue. This routine handles the message
+     * either internally or via its responder chain.
+     * Warning: This function must conform to P_SRVCMSG_RTN specs.
+     */
+    
+    bool            j1939tcu_HandleMessages(
+        J1939TCU_DATA	*this,
+        uint32_t        eid,
+        J1939_MSG       *pMsg           // if NULL, receive timed out
+    )
+    {
+        bool            fRc;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tcu_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        fRc = j1939cam_HandleMessages(j1939cu_getCam((J1939CU_DATA *)this), pMsg);
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                          I n i t
     //---------------------------------------------------------------
 
@@ -515,6 +495,7 @@ extern "C" {
     )
     {
         uint32_t        cbSize = sizeof(J1939TCU_DATA);
+        J1939TC_DATA    *pTC;
         
         if (OBJ_NIL == this) {
             return OBJ_NIL;
@@ -550,9 +531,19 @@ extern "C" {
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939tcu_Vtbl);
         
         j1939tcu_setLastError(this, ERESULT_GENERAL_FAILURE);
-        //this->stackSize = obj_getMisc1(this);
-        //this->pArray = objArray_New( );
 
+        // Create the Transmission #1.
+        pTC = j1939tc_Alloc();
+        pTC = j1939tc_Init(pTC, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == pTC ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pTC);
+        obj_Release(pTC);
+        pTC = OBJ_NIL;
+        
     #ifdef NDEBUG
     #else
         if( !j1939tcu_Validate(this) ) {
@@ -704,12 +695,12 @@ extern "C" {
 
 
         if( !(obj_getSize(this) >= sizeof(J1939TCU_DATA)) ) {
-            this->eRc = ERESULT_INVALID_OBJECT;
+            j1939cu_setLastError((J1939CU_DATA *)this, ERESULT_INVALID_OBJECT);
             return false;
         }
 
         // Return to caller.
-        this->eRc = ERESULT_SUCCESS;
+        j1939cu_setLastError((J1939CU_DATA *)this, ERESULT_SUCCESS);
         return true;
     }
     #endif

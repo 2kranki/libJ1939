@@ -649,11 +649,11 @@ extern "C" {
 #endif
         pHex = hex_New();
         i = pMsg->CMSGSID.CMSGTS & 0xFFFF;
-        hex_putU16( pHex, i, &len, (char **)&pOut );
+        hex_putU16A( pHex, i, &len, (char **)&pOut );
         *pOut++ = ' ';
         
         sid = j1939msg_getSid(pMsg);
-        hex_putU32( pHex, sid, &len, (char **)&pOut );
+        hex_putU32A( pHex, sid, &len, (char **)&pOut );
 
         *pOut++ = ' ';
         if( pMsg->CMSGEID.RTR ) {
@@ -662,12 +662,12 @@ extern "C" {
             *pOut++ = 'r';
         }
         else {
-            hex_putU8( pHex, pMsg->CMSGEID.DLC, &len, (char **)&pOut );
+            hex_putU8A( pHex, pMsg->CMSGEID.DLC, &len, (char **)&pOut );
             if( pMsg->CMSGEID.DLC ) {
                 *pOut++ = ' ';
                 //for( i=0; i<pMsg->CMSGEID.DLC; ++i ) {
                 for( i=0; i<8; ++i ) {
-                    hex_putU8( pHex, pMsg->DATA.bytes[i], &len, (char **)&pOut );
+                    hex_putU8A( pHex, pMsg->DATA.bytes[i], &len, (char **)&pOut );
                 }
             }
         }

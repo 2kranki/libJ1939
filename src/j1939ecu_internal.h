@@ -44,6 +44,7 @@
 
 
 
+
 #ifndef J1939ECU_INTERNAL_H
 #define	J1939ECU_INTERNAL_H
 
@@ -53,26 +54,26 @@
 extern "C" {
 #endif
 
+    
+    typedef struct eng_trq_hp_s {
+        uint16_t        rpm;            // 0 == idle
+        uint16_t        hp;             //
+        uint16_t        torque;         // foot-lbs ???
+    } ENG_TRQ_HP;
 
 
-
+    
 #pragma pack(push, 1)
 struct j1939ecu_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     J1939CU_DATA    super;
-    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+    OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
 
-    // Common Data
-    ERESULT         eRc;
-    uint16_t        size;		/* maximum number of elements           */
-    uint16_t        reserved;
-    ASTR_DATA       *pStr;
-
-    volatile
-    int32_t         numRead;
-    // WARNING - 'elems' must be last element of this structure!
-    uint32_t        elems[0];
+    // Current Criteria
+    uint16_t        rpm;
+    uint16_t        torque;
+    uint16_t        hp;
 
 };
 #pragma pack(pop)

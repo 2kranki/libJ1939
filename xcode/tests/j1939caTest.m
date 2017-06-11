@@ -111,7 +111,6 @@ LOOPBACK_STATE  state = LOOPBACK_STATE_HANDLEMESSAGE;
 static
 bool        xmtLoopback(
     void        *pObject,           // J1939CA_DATA ptr
-    uint32_t    msDelay,            // Ignore delays for now
     J1939_MSG   *pMsg
 )
 {
@@ -128,11 +127,11 @@ bool        xmtLoopback(
     switch (state) {
             
         case LOOPBACK_STATE_HANDLEMESSAGE:
-            fRc = j1939ca_HandleMessages(cbp, pdu.eid, pMsg);
+            fRc = j1939ca_HandleMessages(cbp, pMsg);
             break;
             
         case LOOPBACK_STATE_HANDLEPGN60928:
-            fRc = j1939ca_HandlePgn60928(cbp, pdu.eid, pMsg);
+            fRc = j1939ca_HandlePgn60928(cbp, pMsg);
             break;
             
         default:
@@ -154,8 +153,7 @@ uint8_t     daNeeded = 255;
 static
 bool            xmtPGN60928(
     void            *pObject,           // J1939CA_DATA ptr
-    uint32_t        msDelay,            // Ignore delays for now
-    J1939_MSG         *pMsg
+    J1939_MSG       *pMsg
 )
 {
     J1939_PDU       pdu = {0};
@@ -323,7 +321,7 @@ bool            xmtPGN60928(
         
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
         // an Address Claim.
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -333,7 +331,7 @@ bool            xmtPGN60928(
         // Send "Time Out" which should allow us to accept our claimed address
         // and go into normal operation.
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
 
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -376,18 +374,18 @@ bool            xmtPGN60928(
         j1939can_setXmtMsg(pCAN_RCV, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
 
         // This will have a larger NAME so it should insist on the claimed address.
         pdu = j1939msg_getPDU(&testMsg);
 
         // Send conflict.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
 
         // Send conflict.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
 
         obj_Release(pJ1939ca);
@@ -428,32 +426,32 @@ bool            xmtPGN60928(
         j1939can_setXmtMsg(pCAN_RCV, xmtPGN60928, pJ1939ca);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, 0, NULL);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, NULL);
         j1939msg_Copy( &lastMsg, &testMsg );
         // This will have the same NAME so ca should try a new address.
         --pName->IDN;
         pdu = j1939msg_getPDU(&testMsg);
         // Send conflict.
         caNeeded = 1;
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         // Send conflict.
         pdu.SA = caNeeded;
         j1939msg_setPDU(&testMsg,pdu.eid);
         caNeeded = 128;
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         // Send lots of conflicts.
         for ( ; caNeeded<248; ++caNeeded) {
             pdu.SA = caNeeded - 1;
             j1939msg_setPDU(&testMsg,pdu.eid);
-            fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+            fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
             XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pJ1939ca->cs) );
         }
         // Send one more for we done!.
         pdu.SA = caNeeded - 1;
         j1939msg_setPDU(&testMsg,pdu.eid);
-        fRc = j1939ca_HandlePgn60928(pJ1939ca, pdu.eid, &testMsg);
+        fRc = j1939ca_HandlePgn60928(pJ1939ca, &testMsg);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_COMMANDED_ADDRESS == pJ1939ca->cs) );
         obj_Release(pJ1939ca);
         pJ1939ca = OBJ_NIL;
@@ -494,7 +492,7 @@ bool            xmtPGN60928(
         
         // The CA is in the Starting State. So, calling pgn 60928 will initiate
         // an Address Claim.
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -504,7 +502,7 @@ bool            xmtPGN60928(
         // Send "Time Out" which should allow us to accept our claimed address
         // and go into normal operation.
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
@@ -548,7 +546,7 @@ bool            xmtPGN60928(
         j1939can_setXmtMsg(pCAN_RCV, xmtHandler, NULL);
         
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pCA->cs) );
         XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
@@ -556,12 +554,12 @@ bool            xmtPGN60928(
 
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages(pCA, 0, NULL);
+        fRc = j1939ca_HandleMessages(pCA, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pCA->cs) );
         
         // Setup up msg from #3 Transmission to ER requesting NAME;
         composeRQ_PGN(&msg, 3, 41, 0x0000EE00);
-        fRc = j1939ca_HandleMessages( pCA, 0, &msg );
+        fRc = j1939ca_HandleMessages( pCA, &msg );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (3 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
@@ -651,7 +649,7 @@ bool            xmtPGN60928(
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939ca_HandleMessages(pXmt, 0, NULL);
+            eRc = j1939ca_HandleMessages(pXmt, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
@@ -763,7 +761,7 @@ bool            xmtPGN60928(
         
         for (i=0; i<6; ++i) {
             j1939sys_BumpMS(pSYS,100);
-            eRc = j1939ca_HandleMessages(pXmt, 0, NULL);
+            eRc = j1939ca_HandleMessages(pXmt, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         

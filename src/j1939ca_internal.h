@@ -266,10 +266,6 @@ extern "C" {
         //                                  // hold open the connection.
         //                                  // Action: Close connection.
 
-        TABLE_DATA          *pDelayTable;   // If a message is delayed, it is in this chain.
-        //                                  // This chain is sorted by expiration time
-        //                                  // (Youngest to Oldest).
-
         uint8_t             spn2553;
         uint8_t             spn2555;
         uint16_t            rsvd16;
@@ -336,42 +332,36 @@ extern "C" {
     
     bool            j1939ca_HandlePgn51456(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn59392(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn59904(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn60160(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn60416(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939ca_HandlePgn60928(
         J1939CA_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
@@ -450,13 +440,8 @@ extern "C" {
     );
     
     
-    void            j1939ca_XmtDelayedMsgs(
-        J1939CA_DATA	*this
-    );
-    
     bool            j1939ca_XmtMsgDL(
         J1939CA_DATA	*this,
-        uint32_t        msDelay,
         J1939_PDU       pdu,
         uint16_t        cData,
         void            *pData

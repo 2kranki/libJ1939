@@ -2613,7 +2613,7 @@ extern "C" {
         
         
         const
-        J1939_PGN_ENTRY     *pgn_index[] = {
+        J1939_PGN_ENTRY     *pgn_index[28] = {
             &pgn0_entry,
             &pgn256_entry,
             &pgn51456_entry,
@@ -2640,16 +2640,15 @@ extern "C" {
             &pgn65265_entry,
             &pgn65269_entry,
             &pgn65271_entry,
-            &pgn65272_entry,
-            NULL
+            &pgn65272_entry
         };
         
         
         const
         J1939_PGN_TABLE     pgn_table = {
-            (sizeof(pgn_index)/sizeof(J1939_PGN_ENTRY *)) - 1,
+            (sizeof(pgn_index)/sizeof(J1939_PGN_ENTRY *)),
             0,
-            &pgn_index
+            pgn_index
         };
         
         
@@ -2662,6 +2661,63 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
+        //---------------------------------------------------------------
+        //                  F i n d  P G N  E n t r y
+        //---------------------------------------------------------------
+        
+        const
+        J1939_PGN_ENTRY * j1939tbl_Find_Pgn(
+            J1939_PGN       pgn
+        )
+        {
+            const
+            J1939_PGN_TABLE *pTable = &pgn_table;
+            const
+            J1939_PGN_ENTRY **ppPgnEntry = NULL;
+            const
+            J1939_PGN_ENTRY *pPgnEntry = NULL;
+            int             i;
+            
+            ppPgnEntry = pTable->pPGNs;
+            for( i=0; i<pTable->cPGNs; ++i) {
+                pPgnEntry = ppPgnEntry[i];
+                if (pgn.w == pPgnEntry->pgn) {
+                    return pPgnEntry;
+                }
+            }
+            
+            return NULL;
+        }
+        
+        
+        
+        const
+        J1939_PGNSPN *  j1939tbl_FindPgnSpn(
+            J1939_PGN       pgn,
+            uint32_t        spn
+        )
+        {
+            const
+            J1939_PGN_ENTRY *pPgnEntry = NULL;
+            const
+            J1939_PGNSPN    *pSpns;
+            int             i;
+            
+            pPgnEntry = j1939tbl_Find_Pgn(pgn);
+            if (pPgnEntry) {
+                pSpns = pPgnEntry->pSpns;
+                for( i=0; i<pPgnEntry->cSpns; ++i) {
+                    if (spn == pSpns[i].spn) {
+                        return &pSpns[i];
+                    }
+                }
+            }
+            
+            return NULL;
+        }
+        
+        
+        
 
 
     /****************************************************************
@@ -2866,6 +2922,41 @@ extern "C" {
 
      
 
+        //---------------------------------------------------------------
+        //                     E x t r a c t  S P N
+        //---------------------------------------------------------------
+        
+        bool            j1939tbl_extractSPN512(
+            J1939TBL_DATA   *this,
+            J1939_MSG       *pMsg
+        )
+        {
+            const
+            J1939_PGN_ENTRY *pPgnEntry = &pgn61444_entry;
+            const
+            J1939_SPN       *pSpn = &spn512;
+            J1939_PDU       pdu;
+            J1939_PGN       pgn;
+            int             i;
+            
+#ifdef NDEBUG
+#else
+            if( !j1939tbl_Validate( this ) ) {
+                DEBUG_BREAK();
+            }
+#endif
+
+            pdu = j1939msg_getPDU(pMsg);
+            pgn = j1939pdu_getPGN(pdu);
+
+            
+            
+            //this->priority = value;
+            return true;
+        }
+        
+        
+        
     //---------------------------------------------------------------
     //                      V a l i d a t e
     //---------------------------------------------------------------

@@ -113,7 +113,7 @@ int         test_j1939ss_OpenClose(
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
                 
         // Initiate Address Claim.
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, NULL);
         XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pSS->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
@@ -122,7 +122,7 @@ int         test_j1939ss_OpenClose(
         
         // Send "Timed Out".
         j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, 0, NULL);
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pSS->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );

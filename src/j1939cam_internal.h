@@ -129,21 +129,18 @@ extern "C" {
     
     bool            j1939cam_HandlePgn59392(
         J1939CAM_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939cam_HandlePgn59904(
         J1939CAM_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     
     
     bool            j1939cam_HandlePgn60928(
         J1939CAM_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     );
     

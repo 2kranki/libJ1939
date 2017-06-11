@@ -96,12 +96,13 @@ extern
 J1939_MSG       curMsg[];
 extern
 uint16_t        cCurMsg;
+extern
+uint8_t         fSkipPrt;
 
 
 // This must conform to P_SRVCMSG_RTN!
 bool            rcvHandler(
     OBJ_PTR         pObj,
-    uint32_t        eid,
     J1939_MSG       *pMsg
 );
 
@@ -109,7 +110,6 @@ bool            rcvHandler(
 // This must conform to P_XMTMSG_RTN!
 bool            xmtHandler(
     OBJ_PTR         pObj,
-    uint32_t        msDelay,
     J1939_MSG       *pMsg
 );
 

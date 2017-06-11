@@ -79,7 +79,7 @@ void            composeTP_EOM(
     
     j1939msg_ConstructMsg_E1(pMsg, pduCTS.eid, 8, data);
     pMsg->CMSGSID.CMSGTS = 0xFFFF;          // Denote transmitting;
-    fRc = xmtHandler(NULL, 0, pMsg);
+    fRc = xmtHandler(NULL, pMsg);
     
 }
 
@@ -107,7 +107,7 @@ void            composeRQ_PGN(
     
     j1939msg_ConstructMsg_E1(pMsg, pdu.eid, 8, data);
     pMsg->CMSGSID.CMSGTS = 0xFFFF;          // Denote transmitting;
-    fRc = xmtHandler(NULL, 0, pMsg);
+    fRc = xmtHandler(NULL, pMsg);
     
 }
 
@@ -142,9 +142,19 @@ void            composeTP_CTS(
     
     j1939msg_ConstructMsg_E1(pMsg, pduCTS.eid, 8, data);
     pMsg->CMSGSID.CMSGTS = 0xFFFF;          // Denote transmitting;
-    fRc = xmtHandler(NULL, 0, pMsg);
+    fRc = xmtHandler(NULL, pMsg);
     
 }
+
+
+
+#define CMN_MAX_MSGS    50000
+
+
+J1939_MSG   curMsg[CMN_MAX_MSGS];
+uint16_t    cCurMsg = 0;
+uint8_t     fSkipMsg = false;
+uint8_t     fSkipPrt = false;
 
 
 
@@ -154,31 +164,25 @@ bool            printCanMsg(
 {
     char            data[64];
     
-    data[0] = 0;
-    j1939msg_CreatePrintable( pMessage, data );
-    fprintf(    stderr,
+    if (fSkipPrt) {
+    }
+    else {
+        data[0] = 0;
+        j1939msg_CreatePrintable( pMessage, data );
+        fprintf(    stderr,
                 "time: %5d  pgn: %08X  msg: %s",
                 pMessage->CMSGSID.CMSGTS,
                 j1939msg_getPGN(pMessage).w,
                 data
-    );
+        );
+    }
     return true;
 }
-
-
-#define CMN_MAX_MSGS    50000
-
-
-J1939_MSG   curMsg[CMN_MAX_MSGS];
-uint16_t    cCurMsg = 0;
-uint8_t     fSkipMsg = false;
-
 
 
 // This must conform to P_SRVCMSG_RTN!
 bool        rcvHandler(
     OBJ_PTR     pObj,
-    uint32_t    eid,
     J1939_MSG   *pMsg
 )
 {
@@ -203,17 +207,12 @@ bool        rcvHandler(
 // This must conform to P_XMTMSG_RTN!
 bool        xmtHandler(
     OBJ_PTR     pObj,
-    uint32_t    msDelay,
     J1939_MSG   *pMsg
 )
 {
     if (pMsg) {
-        if (msDelay == -1) {        // *** Transmit ***
-        }
-        else {
-            if (pSYS && ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS) {
-                pMsg->CMSGSID.CMSGTS = ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS(pSYS);
-            }
+        if (pSYS && ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS) {
+            pMsg->CMSGSID.CMSGTS = ((J1939SYS_VTBL *)obj_getVtbl(pSYS))->pTimeMS(pSYS);
         }
         if (cCurMsg < CMN_MAX_MSGS) {
             memmove( &curMsg[cCurMsg], pMsg, sizeof(J1939_MSG) );
@@ -224,9 +223,6 @@ bool        xmtHandler(
             // Too Many Messages
         }
         printCanMsg(pMsg);
-    }
-    else {
-        fprintf(stderr, "delay: %5d  msg: Time Out\n", msDelay);
     }
     return true;
 }

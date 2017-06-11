@@ -568,8 +568,6 @@ extern "C" {
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939can_Vtbl);
         
         j1939can_setLastError(this, ERESULT_GENERAL_FAILURE);
-        //this->stackSize = obj_getMisc1(this);
-        //this->pArray = objArray_New( );
 
     #ifdef NDEBUG
     #else
@@ -625,7 +623,6 @@ extern "C" {
     
     bool            j1939can_RcvMsg(
         OBJ_ID          pObject,
-        uint32_t        eid,                // NOTE - Ignore this value
         J1939_MSG       *pMsg
     )
     {
@@ -642,7 +639,7 @@ extern "C" {
 #endif
         
         if (this->pRcvMsg) {
-            (*this->pRcvMsg)(this->pRcvObj, j1939msg_getEid(pMsg), pMsg);
+            (*this->pRcvMsg)(this->pRcvObj, pMsg);
         }
         else {
             fprintf(stderr, "ERROR - j1939can_RcvMsg is missing pRcvMsg Handler!\n");
@@ -651,7 +648,7 @@ extern "C" {
         if (this->fLoopRcv) {
             for (i=0; i<this->cXmts; ++i) {
                 if (this->pXmtMsg[i]) {
-                    (*this->pXmtMsg[i])(this->pXmtObj[i], 0, pMsg);
+                    (*this->pXmtMsg[i])(this->pXmtObj[i], pMsg);
                 }
                 else {
                     fprintf(stderr, "ERROR - j1939can_XmtMsg is missing pXmtMsg Handler!\n");
@@ -790,7 +787,6 @@ extern "C" {
     
     bool            j1939can_XmtMsg(
         OBJ_ID          pObject,
-        uint32_t        msDelay,
         J1939_MSG       *pMsg
     )
     {
@@ -804,22 +800,19 @@ extern "C" {
             DEBUG_BREAK();
             return false;
         }
-        if( msDelay ) {                 // *** Temporary ***
-            DEBUG_BREAK();
-        }
 #endif
         
         if (this->pXmtReflectMsg) {
-            (*this->pXmtReflectMsg)(this->pXmtReflectObj, msDelay, pMsg);
+            (*this->pXmtReflectMsg)(this->pXmtReflectObj, pMsg);
         }
         for (i=0; i<this->cXmts; ++i) {
             if (this->pXmtMsg[i]) {
-                (*this->pXmtMsg[i])(this->pXmtObj[i], msDelay, pMsg);
+                (*this->pXmtMsg[i])(this->pXmtObj[i], pMsg);
             }
         }
         if (this->fLoopXmt) {
             if (this->pRcvMsg) {
-                (*this->pRcvMsg)(this->pRcvObj, j1939msg_getEid(pMsg), pMsg);
+                (*this->pRcvMsg)(this->pRcvObj, pMsg);
             }
             else {
                 fprintf(stderr, "ERROR - j1939can_RcvMsg is missing pRcvMsg Handler!\n");

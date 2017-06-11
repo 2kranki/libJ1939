@@ -1,7 +1,7 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 /* 
- * File:   j1939tcu_internal.h
- *	Generated 04/13/2017 19:42:48
+ * File:   j1939ccu_internal.h
+ *	Generated 06/05/2017 08:35:58
  *
  * Notes:
  *  --	N/A
@@ -39,14 +39,14 @@
 
 
 
-#include    <j1939tcu.h>
+#include    <j1939ccu.h>
 #include    <j1939cu_internal.h>
 
 
 
 
-#ifndef J1939TCU_INTERNAL_H
-#define	J1939TCU_INTERNAL_H
+#ifndef J1939CCU_INTERNAL_H
+#define	J1939CCU_INTERNAL_H
 
 
 
@@ -55,46 +55,56 @@ extern "C" {
 #endif
 
 
-    typedef struct tc_gears_s {
-        uint16_t        name;           // ["R2", "R1", "N", "1", "2", "3", "4", ...]
-        uint16_t        rpmLow;         // downshift point
-        uint16_t        rpmHigh;        // upshift point
-        uint16_t        ratio;          //
-    } TC_GEAR;
-    
-    
 
 
 #pragma pack(push, 1)
-struct j1939tcu_data_s	{
+struct j1939ccu_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     J1939CU_DATA    super;
     OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
+
+    // Common Data
 
 };
 #pragma pack(pop)
 
     extern
     const
-    struct j1939tcu_class_data_s  j1939tcu_ClassObj;
+    struct j1939ccu_class_data_s  j1939ccu_ClassObj;
 
     extern
     const
-    J1939TCU_VTBL         j1939tcu_Vtbl;
+    J1939CCU_VTBL         j1939ccu_Vtbl;
 
 
     // Internal Functions
-    void            j1939tcu_Dealloc(
+    void            j1939ccu_Dealloc(
         OBJ_ID          objId
     );
 
-    bool            j1939tcu_setLastError(
-        J1939TCU_DATA     *this,
+    void *          j1939ccu_QueryInfo(
+        OBJ_ID          objId,
+        uint32_t        type,
+        const
+        char            *pStr
+    );
+
+
+    bool            j1939ccu_setLastError(
+        J1939CCU_DATA     *this,
         ERESULT         value
     );
 
 
+
+
+#ifdef NDEBUG
+#else
+    bool			j1939ccu_Validate(
+        J1939CCU_DATA       *this
+    );
+#endif
 
 
 
@@ -102,5 +112,5 @@ struct j1939tcu_data_s	{
 }
 #endif
 
-#endif	/* J1939TCU_INTERNAL_H */
+#endif	/* J1939CCU_INTERNAL_H */
 

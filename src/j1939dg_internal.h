@@ -123,42 +123,36 @@ extern "C" {
 
     bool            j1939dg_HandlePgn61440(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939dg_HandlePgn61444(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939dg_HandlePgn65129(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939dg_HandlePgn65247(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939dg_HandlePgn65262(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939dg_HandlePgn65265(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 

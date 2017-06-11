@@ -147,49 +147,42 @@ struct j1939cc_data_s	{
 
     bool            j1939cc_HandlePgn57344(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn61443(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn65217(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn65226(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn65265(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn65269(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939cc_HandlePgn65271(
         J1939CC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     

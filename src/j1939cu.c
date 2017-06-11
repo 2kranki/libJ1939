@@ -43,6 +43,7 @@
 
 /* Header File Inclusion */
 #include    <j1939cu_internal.h>
+#include    <j1939dg.h>
 
 
 
@@ -67,19 +68,30 @@ extern "C" {
 #endif
     
     
-#ifdef XYZZY
     static
-    void            j1939cu_task_body(
-        void            *pData
+    void *          j1939cu_task_body(
+        void            *pData,
+        void            *pMsgData
     )
     {
-        //J1939CU_DATA  *this = pData;
+        J1939CU_DATA    *this = pData;
+        J1939_MSG       *pMsg = pMsgData;
+        uint32_t        eid = 0;
         
+        if (obj_Flag(this, OBJ_FLAG_ENABLED)) {
+            if (pMsg) {
+                eid = j1939msg_getEid(pMsg);
+            }
+            j1939cam_HandleMessages(this->pCam, pMsg);
+        }
+        return NULL;
     }
-#endif
 
 
 
+
+    
+    
     /****************************************************************
     * * * * * * * * * * *  External Subroutines   * * * * * * * * * *
     ****************************************************************/
@@ -267,6 +279,30 @@ extern "C" {
     
     
 
+    bool			j1939cu_setMsgFilter(
+        J1939CU_DATA	*this,
+        int             (*pMsgFilter)(void *, void *),
+        void            *pMsgFilterData
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cu_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pMsgFilter  = pMsgFilter;
+        this->pMsgFilterData = pMsgFilterData;
+        
+        return true;
+    }
+    
+    
+    
     uint16_t        j1939cu_getPriority(
         J1939CU_DATA     *this
     )
@@ -621,12 +657,13 @@ extern "C" {
         }
 #endif
 
-#ifdef XYZZY
-        if (obj_IsEnabled(this)) {
-            ((J1939CU_VTBL *)obj_getVtbl(this))->devVtbl.pStop((OBJ_DATA *)this,NULL);
+        j1939cu_Disable(this);
+        
+        if (this->pConsumer) {
+            obj_Release(this->pConsumer);
+            this->pConsumer = OBJ_NIL;
         }
-#endif
-
+        
         j1939cu_setCam(this, OBJ_NIL);
         j1939cu_setCAN(this, OBJ_NIL);
         j1939cu_setSYS(this, OBJ_NIL);
@@ -717,6 +754,7 @@ extern "C" {
     )
     {
         uint32_t        cbSize = sizeof(J1939CU_DATA);
+        J1939DG_DATA    *pDG;
         
         if (OBJ_NIL == this) {
             return OBJ_NIL;
@@ -745,9 +783,33 @@ extern "C" {
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939cu_Vtbl);
         
         j1939cu_setLastError(this, ERESULT_GENERAL_FAILURE);
-        //this->stackSize = obj_getMisc1(this);
-        //this->pArray = objArray_New( );
 
+        this->pConsumer = consumer_New(sizeof(J1939_MSG), 100, j1939cu_task_body, this);
+        if( OBJ_NIL == this->pConsumer ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        
+        this->pCam = j1939cam_New(pCAN, pSYS);
+        if( OBJ_NIL == this->pCam ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+
+        // Create the Diagnostic Application.
+        pDG = j1939dg_Alloc( );
+        pDG = j1939dg_Init(pDG, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == pDG ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        j1939cam_AddCA(this->pCam, pDG);
+        obj_Release(pDG);
+        pDG = OBJ_NIL;
+        
     #ifdef NDEBUG
     #else
         if( !j1939cu_Validate(this) ) {

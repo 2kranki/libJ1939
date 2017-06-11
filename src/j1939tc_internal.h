@@ -206,63 +206,54 @@ extern "C" {
 
     bool            j1939tc_HandlePgn256(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn61184(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn61441(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
     
     
     bool            j1939tc_HandlePgn61442(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn61444(
         J1939TC_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65098(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65129(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65226(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 
 
     bool            j1939tc_HandlePgn65265(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     );
 

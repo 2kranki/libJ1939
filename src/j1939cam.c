@@ -180,6 +180,41 @@ extern	"C" {
     
     
         
+    J1939CAM_DATA * j1939cam_New(
+        OBJ_ID          pCAN,
+        OBJ_ID          pSYS
+    )
+    {
+        J1939CAM_DATA   *pCAM;
+        
+#ifdef NDEBUG
+#else
+        if( pCAN && (obj_IsKindOf(pCAN, OBJ_IDENT_J1939CAN)) ) {
+        }
+        else {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+        if( pSYS && (obj_IsKindOf(pSYS, OBJ_IDENT_J1939SYS)) ) {
+        }
+        else {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+#endif
+        
+        pCAM = j1939cam_Alloc();
+        pCAM = j1939cam_Init( pCAM, pCAN, pSYS );
+        if( OBJ_NIL == pCAM ) {
+            DEBUG_BREAK();
+            return OBJ_NIL;
+        }
+        
+        return pCAM;
+    }
+    
+    
+    
     J1939CAM_DATA * j1939cam_NewEngine(
         OBJ_ID          pCAN,
         OBJ_ID          pSYS,
@@ -680,11 +715,10 @@ extern	"C" {
     
     bool            j1939cam_HandleMessages(
         J1939CAM_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // if NULL, receive timed out
     )
     {
-        J1939_PDU       pdu;
+        J1939_PDU       pdu = {0};
         J1939_PGN       pgn = {0};
         uint8_t         da = 255;      // Destination Address - default general broadcast
         J1939CA_DATA    *pCA;
@@ -699,7 +733,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         
         // Get the PGN requested.
         if (pMsg) {
@@ -717,7 +751,7 @@ extern	"C" {
                 for (i=0; i<this->cCAs; ++i) {
                     pCA = this->pCAs[i];
                     if (pCA) {
-                        fRc = (*j1939ca_getHandler(pCA))( pCA, pdu.eid, pMsg);
+                        fRc = (*j1939ca_getHandler(pCA))(pCA, pMsg);
                     }
                 }
             }
@@ -725,7 +759,7 @@ extern	"C" {
                 for (i=0; i<this->cCAs; ++i) {
                     pCA = this->pCAs[i];
                     if (pCA && (da == j1939ca_getClaimedAddress(pCA))) {
-                        fRc = (*j1939ca_getHandler(pCA))( pCA, pdu.eid, pMsg);
+                        fRc = (*j1939ca_getHandler(pCA))(pCA, pMsg);
                         return true;
                     }
                 }
@@ -736,7 +770,7 @@ extern	"C" {
             for (i=0; i<this->cCAs; ++i) {
                 pCA = this->pCAs[i];
                 if (pCA) {
-                    fRc = (*j1939ca_getHandler(pCA))( pCA, 0, NULL);
+                    fRc = (*j1939ca_getHandler(pCA))(pCA, NULL);
                 }
             }
         }
@@ -791,33 +825,6 @@ extern	"C" {
 
 
 
-    //---------------------------------------------------------------
-    //              T r a n s m i t  D e l a y e d  M s g
-    //---------------------------------------------------------------
-    
-    bool            j1939cam_TransmitDelayedMsg(
-        void            *pData,
-        uint32_t        msDelay,
-        J1939_MSG       *pMsg
-    )
-    {
-        J1939CAM_DATA   *this = pData;
-        bool            fRc = false;
-        
-        if (this->pCAN && ((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt) {
-            fRc =   (*((J1939_CAN_VTBL *)this->pCAN->pVtbl)->pXmt)(
-                                                        this->pCAN,
-                                                        msDelay,
-                                                        pMsg
-                    );
-        }
-        
-        // Return to caller.
-        return fRc;
-    }
-    
-    
-    
     //**********************************************************
     //                      Validate
     //**********************************************************

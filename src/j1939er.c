@@ -952,7 +952,6 @@ extern	"C" {
 
     bool            j1939er_HandlePgn59904(
         J1939ER_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -968,7 +967,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         if (NULL == pMsg) {
@@ -1016,7 +1015,6 @@ extern	"C" {
 
     bool            j1939er_HandlePgn0(
         J1939ER_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -1047,7 +1045,7 @@ extern	"C" {
 #endif
 
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn695 = pMsg->DATA.bytes[0] & 0x3;
@@ -1103,7 +1101,6 @@ extern	"C" {
 
     bool            j1939er_HandlePgn61440(
         J1939ER_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -1118,7 +1115,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -1152,7 +1149,7 @@ extern	"C" {
             j1939er_TransmitPgn61440(this);
         }
         if (this->fActive) {
-            j1939er_HandlePgn0( this, 0, NULL );
+            j1939er_HandlePgn0( this, NULL );
         }
 
         // Return to caller.
@@ -1229,11 +1226,6 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939ER_DATA,spn84));
-        fprintf(stderr, "offsetof(timeOut) = %lu\n", offsetof(J1939ER_DATA,timeOut));
-        fprintf(stderr, "sizeof(J1939ER_DATA) = %lu\n", sizeof(J1939ER_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,timeOut));
         BREAK_NOT_BOUNDARY4(sizeof(J1939ER_DATA));
@@ -1323,7 +1315,7 @@ extern	"C" {
             return false;
         }
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
@@ -1367,7 +1359,7 @@ extern	"C" {
         pdu.P  = 6;             // Priority
 
         //FIXME: We need to implement 21 Data Link Layer!
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
 
         this->startTime65249 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 

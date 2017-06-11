@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/ 5/2017  2:09:30.000)
+# ( 6/10/2017  3:42:43.000)
 
 
 LIBNAM=libJ1939
@@ -82,6 +82,18 @@ $(OBJDIR)/j1939cc.o: $(SRCDIR)/j1939cc.c
 
 
 $(OBJDIR)/j1939cc_object.o: $(SRCDIR)/j1939cc_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939ccu.o $(OBJDIR)/j1939ccu_object.o
+
+
+$(OBJDIR)/j1939ccu.o: $(SRCDIR)/j1939ccu.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939ccu_object.o: $(SRCDIR)/j1939ccu_object.c
 	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
 
 
@@ -263,6 +275,13 @@ test_j1939cc:
 	$(OBJDIR)/$(@F)
 
 
+TESTS += test_j1939ccu
+
+test_j1939ccu:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ccu.c tests/common.c tests/common2.c tests/common3.c 
+	$(OBJDIR)/$(@F)
+
+
 TESTS += test_j1939cu
 
 test_j1939cu:
@@ -337,6 +356,13 @@ TESTS += test_j1939tp
 
 test_j1939tp:
 	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tp.c tests/common.c tests/common2.c tests/common3.c 
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_truck
+
+test_truck:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_truck.c tests/common.c tests/common2.c tests/common3.c 
 	$(OBJDIR)/$(@F)
 
 

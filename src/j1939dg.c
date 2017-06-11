@@ -244,7 +244,6 @@ extern	"C" {
 
     bool            j1939dg_HandlePgn59904(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg
     )
     {
@@ -260,7 +259,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         if (NULL == pMsg) {
@@ -308,7 +307,6 @@ extern	"C" {
 
     bool            j1939dg_HandlePgn0(
         J1939DG_DATA	*cbp,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -335,7 +333,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         sa = pdu.SA;
         spn695 = pMsg->DATA.bytes[0] & 0x3;
@@ -361,7 +359,6 @@ extern	"C" {
 
     bool            j1939dg_HandlePgn61440(
         J1939DG_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -376,7 +373,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -481,12 +478,6 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(nextTime61440) = %lu\n", offsetof(J1939DG_DATA,nextTime61440));
-        fprintf(stderr, "offsetof(spn84) = %lu\n", offsetof(J1939DG_DATA,spn84));
-        fprintf(stderr, "offsetof(spn1637) = %lu\n", offsetof(J1939DG_DATA,spn1637));
-        fprintf(stderr, "sizeof(J1939DG_DATA) = %lu\n", sizeof(J1939DG_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(&this->nextTime61440);
         BREAK_NOT_BOUNDARY4(&this->spn84);
         BREAK_NOT_BOUNDARY4(&this->spn1637);
@@ -536,7 +527,7 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
 
         // Return to caller.
@@ -579,7 +570,7 @@ extern	"C" {
         pdu.SA = this->super.ca;
         pdu.P  = 6;             // Priority
 
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
 
         // Return to caller.

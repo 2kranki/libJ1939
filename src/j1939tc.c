@@ -377,7 +377,6 @@ extern	"C" {
 
     bool            j1939tc_HandlePgn256(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -421,7 +420,7 @@ extern	"C" {
 #endif
 
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             spn681 = pMsg->DATA.bytes[0] & 0x3;
@@ -491,7 +490,6 @@ extern	"C" {
 
     bool            j1939tc_HandlePgn61184(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg           // NULL == Timed Out
     )
     {
@@ -513,7 +511,7 @@ extern	"C" {
 #endif
 
         if (pMsg) {
-            pdu.eid = eid;
+            pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
             sa = pdu.SA;
             type = pMsg->DATA.bytes[0];
@@ -566,7 +564,6 @@ extern	"C" {
 
     bool            j1939tc_HandlePgn61440(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -581,7 +578,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
         // Return to caller.
@@ -596,7 +593,6 @@ extern	"C" {
     
     bool            j1939tc_HandlePgn61441(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
@@ -611,7 +607,7 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
+        pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         
         // Return to caller.
@@ -626,12 +622,11 @@ extern	"C" {
     
     bool            j1939tc_HandlePgn65272(
         J1939TC_DATA	*this,
-        uint32_t        eid,
         J1939_MSG       *pMsg               // NULL == Timed Out
     )
     {
-        J1939_PDU       pdu;
-        J1939_PGN       pgn;
+        J1939_PDU       pdu = {0};
+        J1939_PGN       pgn = {0};
         
         // Do initialization.
 #ifdef NDEBUG
@@ -641,9 +636,9 @@ extern	"C" {
             return false;
         }
 #endif
-        pdu.eid = eid;
-        pgn = j1939pdu_getPGN(pdu);
         if (pMsg) {
+            pdu = j1939msg_getPDU(pMsg);
+            pgn = j1939pdu_getPGN(pdu);
             this->spn123 = pMsg->DATA.bytes[0];
             this->spn124 = pMsg->DATA.bytes[1];
             this->spn126 = pMsg->DATA.bytes[2];
@@ -692,7 +687,7 @@ extern	"C" {
             }
         }
         if (this->fActive) {
-            j1939tc_HandlePgn61184( this, 0, NULL );
+            j1939tc_HandlePgn61184(this, NULL);
         }
 
         // Return to caller.
@@ -772,13 +767,6 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939TC_DATA,eRc));
-        fprintf(stderr, "offsetof(spn123) = %lu\n", offsetof(J1939TC_DATA,spn123));
-        fprintf(stderr, "offsetof(spn161) = %lu\n", offsetof(J1939TC_DATA,spn161));
-        fprintf(stderr, "offsetof(timeOut) = %lu\n", offsetof(J1939TC_DATA,timeOut));
-        fprintf(stderr, "sizeof(J1939TC_DATA) = %lu\n", sizeof(J1939TC_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,eRc));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn123));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn161));
@@ -944,7 +932,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime61442 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
@@ -1030,7 +1018,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime61445 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
@@ -1124,7 +1112,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65098 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
@@ -1210,7 +1198,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65226 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
@@ -1296,7 +1284,7 @@ extern	"C" {
             return false;
         }
         
-        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, 0, pdu, dlc, &data);
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
         this->startTime65272 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
