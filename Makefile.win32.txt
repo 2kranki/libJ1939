@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/10/2017  3:42:43.000)
+# ( 6/13/2017  4:58:58.000)
 
 
 LIBNAM=libJ1939
@@ -36,6 +36,7 @@ LIBPATH = $(OBJDIR)\$(LIB_FILENAME)
 
 OBJS =
 OBJS = $(OBJS) $(OBJDIR)\j1939ca.obj $(OBJDIR)\j1939ca_object.obj
+OBJS = $(OBJS) $(OBJDIR)\j1939cab.obj $(OBJDIR)\j1939cab_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939cam.obj $(OBJDIR)\j1939cam_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939can.obj $(OBJDIR)\j1939can_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939cc.obj $(OBJDIR)\j1939cc_object.obj
@@ -51,6 +52,7 @@ OBJS = $(OBJS) $(OBJDIR)\j1939tbl.obj $(OBJDIR)\j1939tbl_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939tc.obj $(OBJDIR)\j1939tc_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939tcu.obj $(OBJDIR)\j1939tcu_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939tp.obj $(OBJDIR)\j1939tp_object.obj
+OBJS = $(OBJS) $(OBJDIR)\truck.obj $(OBJDIR)\truck_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939msg.obj
 
 
@@ -91,10 +93,26 @@ TESTS =
 
 
 
+TESTS = $(TESTS) test_dump
+
+test_dump:
+	$(CC) $(CFLAGS) /Itests tests\test_dump.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
 TESTS = $(TESTS) test_j1939ca
 
 test_j1939ca:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939ca.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ca.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939cab
+
+test_j1939cab:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cab.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -102,7 +120,7 @@ test_j1939ca:
 TESTS = $(TESTS) test_j1939cam
 
 test_j1939cam:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939cam.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cam.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -110,7 +128,7 @@ test_j1939cam:
 TESTS = $(TESTS) test_j1939cc
 
 test_j1939cc:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939cc.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cc.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -118,7 +136,7 @@ test_j1939cc:
 TESTS = $(TESTS) test_j1939ccu
 
 test_j1939ccu:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939ccu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ccu.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -126,7 +144,7 @@ test_j1939ccu:
 TESTS = $(TESTS) test_j1939cu
 
 test_j1939cu:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939cu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939cu.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -134,7 +152,7 @@ test_j1939cu:
 TESTS = $(TESTS) test_j1939dg
 
 test_j1939dg:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939dg.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939dg.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -142,7 +160,7 @@ test_j1939dg:
 TESTS = $(TESTS) test_j1939ecu
 
 test_j1939ecu:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939ecu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ecu.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -150,7 +168,7 @@ test_j1939ecu:
 TESTS = $(TESTS) test_j1939en
 
 test_j1939en:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939en.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939en.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -158,7 +176,7 @@ test_j1939en:
 TESTS = $(TESTS) test_j1939er
 
 test_j1939er:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939er.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939er.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -166,7 +184,7 @@ test_j1939er:
 TESTS = $(TESTS) test_j1939ss
 
 test_j1939ss:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939ss.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939ss.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -174,7 +192,7 @@ test_j1939ss:
 TESTS = $(TESTS) test_j1939sys
 
 test_j1939sys:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939sys.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939sys.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -182,7 +200,7 @@ test_j1939sys:
 TESTS = $(TESTS) test_j1939tbl
 
 test_j1939tbl:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939tbl.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tbl.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -190,7 +208,7 @@ test_j1939tbl:
 TESTS = $(TESTS) test_j1939tc
 
 test_j1939tc:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939tc.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tc.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -198,7 +216,7 @@ test_j1939tc:
 TESTS = $(TESTS) test_j1939tcu
 
 test_j1939tcu:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939tcu.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tcu.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -206,7 +224,7 @@ test_j1939tcu:
 TESTS = $(TESTS) test_j1939tp
 
 test_j1939tp:
-	$(CC) $(CFLAGS) /Itests tests\test_j1939tp.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_j1939tp.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 
@@ -214,7 +232,7 @@ test_j1939tp:
 TESTS = $(TESTS) test_truck
 
 test_truck:
-	$(CC) $(CFLAGS) /Itests tests\test_truck.c tests\common.c tests\common2.c tests\common3.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	$(CC) $(CFLAGS) /Itests tests\test_truck.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 

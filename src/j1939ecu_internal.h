@@ -54,12 +54,14 @@
 extern "C" {
 #endif
 
-    
+
+#ifdef XYZZY
     typedef struct eng_trq_hp_s {
         uint16_t        rpm;            // 0 == idle
         uint16_t        hp;             //
         uint16_t        torque;         // foot-lbs ???
     } ENG_TRQ_HP;
+#endif
 
 
     
@@ -71,9 +73,11 @@ struct j1939ecu_data_s	{
     OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
 
     // Current Criteria
-    uint16_t        rpm;
-    uint16_t        torque;
-    uint16_t        hp;
+    uint32_t        rpm;
+    void            (*pRpmRoutine)(void *, uint32_t);
+    void            *pRpmData;
+    uint32_t        torque;
+    uint32_t        hp;
 
 };
 #pragma pack(pop)
@@ -98,6 +102,12 @@ struct j1939ecu_data_s	{
     );
 
 
+    ERESULT         j1939ecu_NewRpm(
+        J1939ECU_DATA	*this,
+        uint32_t        rpm
+    );
+    
+    
 
 
 

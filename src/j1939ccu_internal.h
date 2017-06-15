@@ -65,6 +65,9 @@ struct j1939ccu_data_s	{
     OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
 
     // Common Data
+    uint32_t        rpm;
+    void            (*pRpmRoutine)(void *, uint32_t);
+    void            *pRpmData;
 
 };
 #pragma pack(pop)
@@ -83,6 +86,13 @@ struct j1939ccu_data_s	{
         OBJ_ID          objId
     );
 
+
+    ERESULT         j1939ccu_NewRpm(
+        J1939CCU_DATA	*this,
+        uint32_t        rpm
+    );
+    
+    
     void *          j1939ccu_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,

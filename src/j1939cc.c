@@ -41,7 +41,8 @@
 //*****************************************************************
 
 /* Header File Inclusion */
-#include <j1939cc_internal.h>
+#include        <j1939cc_internal.h>
+#include        <j1939ccu_internal.h>
 
 
 
@@ -78,6 +79,21 @@ extern "C" {
         0,
         0,
         50
+    };
+    
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn61444_entry = {
+        // PGN 61444  0x00F004 - Electronic Engine Controller 1 - EEC1
+        &pgn61444_entry,
+        (P_SRVCMSG_RTN)j1939cc_HandlePgn61444,
+        NULL,
+        NULL,
+        0,                  // Offset of Timeout repeat xmt
+        0,                  // Destination Address if applicable
+        0,                  // Reserved
+        0                   // ms Transmit Repeat
     };
     
     
@@ -268,6 +284,46 @@ extern "C" {
     //                      P r o p e r t i e s
     //===============================================================
 
+    OBJ_ID          j1939cc_getCCU(
+        J1939CC_DATA     *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        j1939cc_setLastError(this, ERESULT_SUCCESS);
+        //return this->priority;
+        return 0;
+    }
+    
+    bool            j1939cc_setCCU(
+        J1939CC_DATA    *this,
+        OBJ_ID          pValue
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pCCU = pValue;        // NOT owned
+        
+        j1939cc_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
     ERESULT         j1939cc_getLastError(
         J1939CC_DATA     *this
     )
@@ -660,6 +716,44 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //  PGN 61444  0x00F004 - Electronic Engine Controller 1 - EEC1
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandlePgn61444(
+        J1939CC_DATA	*this,
+        J1939_MSG       *pMsg
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint16_t        spn190;
+        uint32_t        rpm;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 190  4-5     16bits      Engine Speed (rpm)
+        spn190 = (pMsg->DATA.bytes[4] << 8) | pMsg->DATA.bytes[3];
+        rpm = ((spn190 * 125) + 124) / 1000;
+        if (this->pCCU) {
+            j1939ccu_NewRpm(this->pCCU, rpm);
+        }
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     // PGN 65217  0x00FEC1 - High Resolution Vehicle Distance - VDHR
     //---------------------------------------------------------------
     
@@ -736,6 +830,25 @@ extern "C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn69;
+        uint8_t         spn70;
+        uint8_t         spn1633;
+        uint16_t        spn84;
+        uint8_t         spn595;
+        uint8_t         spn596;
+        uint8_t         spn597;
+        uint8_t         spn598;
+        uint8_t         spn599;
+        uint8_t         spn600;
+        uint8_t         spn601;
+        uint8_t         spn602;
+        uint8_t         spn86;
+        uint8_t         spn976;
+        uint8_t         spn527;
+        uint8_t         spn968;
+        uint8_t         spn967;
+        uint8_t         spn966;
+        uint8_t         spn1237;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -748,9 +861,44 @@ extern "C" {
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
         
-        
-        
-        
+        // SPN   69  1.1     2bits       Two Speed Axle Switch
+        spn69 = pMsg->DATA.bytes[0] & 0x03;
+        // SPN   70  1.3     2bits       Parking Brake Switch
+        spn70 = (pMsg->DATA.bytes[0] >> 2) & 0x03;
+        // SPN 1633  1.5     2bits       Cruise Control Pause Switch
+        spn1633 = (pMsg->DATA.bytes[0] >> 2) & 0x03;
+        // SPN   84  2-3     16bits      Wheel-Based Vehicle Speed
+        spn84 = (pMsg->DATA.bytes[2] << 8) | pMsg->DATA.bytes[1];
+        // SPN  595  4.1      2bits      Cruise Control Active
+        spn595 = pMsg->DATA.bytes[3] & 0x03;
+        // SPN  596  4.3     2bits       Cruise Control Enable Switch
+        spn596 = (pMsg->DATA.bytes[3] >> 2) & 0x03;
+        // SPN  597  4.5     2bits       Brake Switch
+        spn597 = (pMsg->DATA.bytes[3] >> 2) & 0x03;
+        // SPN  598  4.7     2bits       Clutch Switch
+        spn598 = (pMsg->DATA.bytes[3] >> 2) & 0x03;
+        // SPN  599  5.1      2bits      Cruise Control Set Switch
+        spn599 = pMsg->DATA.bytes[4] & 0x03;
+        // SPN  600  5.3     2bits       Cruise Control Coast (Decelerate) Switch
+        spn600 = (pMsg->DATA.bytes[4] >> 2) & 0x03;
+        // SPN  601  5.5     2bits       Cruise Control Resume Switch
+        spn601 = (pMsg->DATA.bytes[4] >> 2) & 0x03;
+        // SPN  602  5.7     2bits       Cruise Control Accelerate Switch
+        spn602 = (pMsg->DATA.bytes[4] >> 2) & 0x03;
+        // SPN   86  6       8bits       Cruise Control Set Speed
+        spn86 = pMsg->DATA.bytes[5];
+        // SPN  976  7.1     5bits       PTO State
+        spn976 = pMsg->DATA.bytes[6] & 0x1F;
+        // SPN  600  7.6     3bits       Cruise Control States
+        spn527 = (pMsg->DATA.bytes[6] >> 5) & 0x07;
+        // SPN  968  8.1      2bits      Engine Idle Increment Switch
+        spn968 = pMsg->DATA.bytes[7] & 0x03;
+        // SPN  967  8.3     2bits       Engine Idle Decrement Switch
+        spn967 = (pMsg->DATA.bytes[7] >> 2) & 0x03;
+        // SPN  966  8.5     2bits       Engine Test Mode Switch
+        spn966 = (pMsg->DATA.bytes[7] >> 2) & 0x03;
+        // SPN 1237  8.7     2bits       Engine Shutdown Override Switch
+        spn1237 = (pMsg->DATA.bytes[7] >> 2) & 0x03;
         
         // Return to caller.
         return false;
@@ -878,7 +1026,7 @@ extern "C" {
 
         j1939ca_Setup((J1939CA_DATA *)this, J1939_CAB_CONTROLLER);
         //this->super.name.ECU = 0;
-        this->super.name.FU = 3;
+        this->super.name.FU = J1939_CRUISE_CONTROL;
         this->super.name.FUI = 0;
         //FIXME: this->super.pRcvPgnTbl = &rcvPgntbl;
         //FIXME: this->super.pXmtPgnTbl = &xmtPgntbl;
@@ -1037,9 +1185,9 @@ extern "C" {
             }
             //FIXME: NOT 57344
             //          // 0
-            *pData  = this->spn114;
+            //*pData  = this->spn114;
             ++pData;    // 1
-            *pData  = this->spn115;
+            //*pData  = this->spn115;
             ++pData;    // 2
             *pData  = this->spn167 & 0xFF;
             ++pData;    // 3
@@ -1364,8 +1512,8 @@ extern "C" {
                 return 0;
             }
             *pData  = 0xC0;
-            *pData |= (this->spn69 & 0x3);
-            *pData |= (this->spn70 & 0x3) << 2;
+            //*pData |= (this->spn69 & 0x3);
+            //*pData |= (this->spn70 & 0x3) << 2;
             *pData |= (this->spn1633 & 0x3) << 4;
             ++pData;    // 1
             *pData  = this->spn84 & 0xFF;
@@ -1387,7 +1535,7 @@ extern "C" {
             *pData  = (this->spn86 & 0xFF);
             ++pData;    // 6
             *pData  = 0;
-            *pData |= (this->spn976 & 0x1F);
+            //*pData |= (this->spn976 & 0x1F);
             *pData |= (this->spn527 & 0x7) << 5;
             ++pData;    // 7
             *pData  = 0;
@@ -1461,7 +1609,7 @@ extern "C" {
             if (cData < 8) {
                 return 0;
             }
-            *pData  = this->spn108;
+            //*pData  = this->spn108;
             ++pData;    // 1
             *pData  = this->spn170 & 0xFF;
             ++pData;    // 2
@@ -1471,7 +1619,7 @@ extern "C" {
             ++pData;    // 4
             *pData  = (this->spn171 >> 8) & 0xFF;
             ++pData;    // 5
-            *pData  = this->spn172;
+            //*pData  = this->spn172;
             ++pData;    // 6
             *pData  = this->spn79 & 0xFF;
             ++pData;    // 7
@@ -1543,9 +1691,9 @@ extern "C" {
                 return 0;
             }
             //          // 0
-            *pData  = this->spn114;
+            //*pData  = this->spn114;
             ++pData;    // 1
-            *pData  = this->spn115;
+            //*pData  = this->spn115;
             ++pData;    // 2
             *pData  = this->spn167 & 0xFF;
             ++pData;    // 3

@@ -1106,6 +1106,17 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn900;
+        uint8_t         spn571;
+        uint8_t         spn572;
+        uint8_t         spn520;
+        uint8_t         spn1085;
+        uint8_t         spn1082;
+        uint8_t         spn1667;
+        uint8_t         spn1480;
+        uint8_t         spn1715;
+        uint8_t         spn1716;
+        uint8_t         spn1717;
 
         // Do initialization.
 #ifdef NDEBUG
@@ -1117,6 +1128,29 @@ extern	"C" {
 #endif
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
+
+        // SPN 900  1.1     4bits       Retarder Torque Mode
+        spn900 = pMsg->DATA.bytes[0] & 0xF;
+        // SPN 571  1.5     2bits       Retarder Enable - Brake Assist Switch
+        spn571 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
+        // SPN 572  1.7     2bits       Retarder Enable - Shift Assist Switch
+        spn572 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
+        // SPN 520  2       8bits       Actual Retarder - Percent Torque
+        spn520 = pMsg->DATA.bytes[1];
+        // SPN 1085 3       8bits       Intended Retarder Percent Torque
+        spn1085 = pMsg->DATA.bytes[1];
+        // SPN 1082 4.1     2bits       Engine Coolant Load Increase
+        spn1082 = pMsg->DATA.bytes[0] & 0x3;
+        // SPN 1667 4.3     2bits       Retarder Requesting Brake Light
+        spn1667 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
+        // SPN 1480 5       8bits       Source Address of Controlling Device for Retarder Control
+        spn1480 = pMsg->DATA.bytes[1];
+        // SPN 1715 6       8bits       Drivers Demand Retarder - Percent Torque
+        spn1715 = pMsg->DATA.bytes[1];
+        // SPN 1716 7       8bits       Retarder Selection, non-engine
+        spn1716 = pMsg->DATA.bytes[1];
+        // SPN 1717 8       8bits       Actual Maximum Available Retarder - Percent Torque
+        spn1717 = pMsg->DATA.bytes[1];
 
         // Return to caller.
         return true;

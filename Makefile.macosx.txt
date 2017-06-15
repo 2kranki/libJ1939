@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/10/2017  3:42:43.000)
+# ( 6/13/2017  4:58:58.000)
 
 
 LIBNAM=libJ1939
@@ -46,6 +46,18 @@ $(OBJDIR)/j1939ca.o: $(SRCDIR)/j1939ca.c
 
 
 $(OBJDIR)/j1939ca_object.o: $(SRCDIR)/j1939ca_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
+OBJS += $(OBJDIR)/j1939cab.o $(OBJDIR)/j1939cab_object.o
+
+
+$(OBJDIR)/j1939cab.o: $(SRCDIR)/j1939cab.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939cab_object.o: $(SRCDIR)/j1939cab_object.c
 	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
 
 
@@ -230,6 +242,18 @@ $(OBJDIR)/j1939tp_object.o: $(SRCDIR)/j1939tp_object.c
 
 
 
+OBJS += $(OBJDIR)/truck.o $(OBJDIR)/truck_object.o
+
+
+$(OBJDIR)/truck.o: $(SRCDIR)/truck.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/truck_object.o: $(SRCDIR)/truck_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
 $(OBJDIR)/j1939msg.o: $(SRCDIR)/j1939msg.c
 	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
 
@@ -254,115 +278,129 @@ TESTS =
 
 
 
+TESTS += test_dump
+
+test_dump:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_dump.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
+	$(OBJDIR)/$(@F)
+
+
 TESTS += test_j1939ca
 
 test_j1939ca:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ca.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ca.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
+	$(OBJDIR)/$(@F)
+
+
+TESTS += test_j1939cab
+
+test_j1939cab:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cab.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939cam
 
 test_j1939cam:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cam.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cam.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939cc
 
 test_j1939cc:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cc.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cc.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939ccu
 
 test_j1939ccu:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ccu.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ccu.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939cu
 
 test_j1939cu:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cu.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939cu.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939dg
 
 test_j1939dg:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939dg.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939dg.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939ecu
 
 test_j1939ecu:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ecu.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ecu.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939en
 
 test_j1939en:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939en.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939en.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939er
 
 test_j1939er:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939er.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939er.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939ss
 
 test_j1939ss:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ss.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939ss.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939sys
 
 test_j1939sys:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939sys.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939sys.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939tbl
 
 test_j1939tbl:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tbl.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tbl.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939tc
 
 test_j1939tc:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tc.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tc.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939tcu
 
 test_j1939tcu:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tcu.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tcu.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_j1939tp
 
 test_j1939tp:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tp.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tp.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
 TESTS += test_truck
 
 test_truck:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_truck.c tests/common.c tests/common2.c tests/common3.c 
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_truck.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 

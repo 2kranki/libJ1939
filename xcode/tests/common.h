@@ -35,7 +35,7 @@
 
 #include    <j1939_defs.h>
 #include    <j1939msg.h>
-#include    "j1939sys.h"
+#include    <j1939sys.h>
 
 
 
@@ -166,6 +166,17 @@ J1939_MSG_DATA	Msgs03[];
 
 extern
 uint32_t		cMsgs03;
+
+
+
+/* Captured messages just from Kenworth
+ * Short Run
+ */
+extern
+J1939_MSG_DATA	Msgs04[];
+
+extern
+uint32_t		cMsgs04;
 
 
 

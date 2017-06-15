@@ -100,6 +100,19 @@ extern "C" {
     );
     
     
+    /*!
+     Create an 8-bit mask given the number of bits and position.
+     @param:    this    J1939TBL object pointer
+     @param:    numBits number of bits in the mask (0 < numBits < 9)
+     @param:    pos     number of bits to shift left
+     @return:   If successful, the byte mask otherwise 0
+     */
+    uint8_t         j1939tbl_CreateBitMask(
+        uint16_t        numBits,
+        uint16_t        pos
+    );
+    
+    
     int32_t         j1939tbl_SpnToS32(
         J1939_SPN_TYPE  *pType,
         uint16_t        data
@@ -112,46 +125,24 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    /* If Quit is set, the j1939tbl ends upon
-     * completion of its next record. Set-
-     * ting this does not end the j1939tbl un-
-     * less a record is received or we timed
-     * out.
-     */
-    bool            j1939tbl_getQuit(
-        J1939TBL_DATA     *this
+    bool            j1939tbl_setFileOut(
+        J1939TBL_DATA   *this,
+        FILE            *pValue
     );
-
-    bool            j1939tbl_setQuit(
-        J1939TBL_DATA     *this,
-        bool            flag
-    );
-
-
-    /* When Skip is set to true, all messages are skpped over
-     * and purged from the queue.
-     */
-    bool            j1939tbl_getSkip(
-        J1939TBL_DATA     *this
-    );
-
-    bool            j1939tbl_setSkip(
-        J1939TBL_DATA     *this,
-        bool            flag
-    );
-
-
-    void *          j1939tbl_getTask(
-        J1939TBL_DATA     *this
-    );
-
-
+    
+    
 
     
     //---------------------------------------------------------------
     //                      *** Methods ***
     //---------------------------------------------------------------
 
+    bool            j1939tbl_DumpMessage(
+        J1939TBL_DATA	*this,
+        J1939_MSG       *pMsg
+    );
+    
+    
     J1939TBL_DATA *     j1939tbl_Init(
         J1939TBL_DATA       *this
     );

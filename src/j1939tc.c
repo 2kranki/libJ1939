@@ -598,6 +598,28 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn561;
+        uint8_t         spn562;
+        uint8_t         spn563;
+        uint8_t         spn1121;
+        uint8_t         spn521;
+        uint8_t         spn575;
+        uint8_t         spn576;
+        uint8_t         spn577;
+        uint8_t         spn1238;
+        uint8_t         spn972;
+        uint8_t         spn971;
+        uint8_t         spn970;
+        uint8_t         spn969;
+        uint8_t         spn973;
+        uint8_t         spn1243;
+        uint8_t         spn1439;
+        uint8_t         spn1438;
+        uint8_t         spn1793;
+        uint8_t         spn1481;
+        uint8_t         spn2911;
+        uint8_t         spn1836;
+        uint8_t         spn1792;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -609,6 +631,114 @@ extern	"C" {
 #endif
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 561  1.1     2bits       ASR Engine Control Active
+        spn561 = pMsg->DATA.bytes[0] & 0x3;
+        // SPN 562  1.3     2bits       ASR Brake Control Active
+        spn562 = (pMsg->DATA.bytes[0] >> 2) & 0x3;
+        // SPN 563  1.5     2bits       Anti-Lock Braking (ABS) Active
+        spn563 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
+        // SPN 1121 1.7     2bits       EBS Brake Switch
+        spn1121 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
+        // SPN 521  2       8bits       Brake Pedal Position
+        spn521 = pMsg->DATA.bytes[1];
+        // SPN 575  3.1     2bits       ABS Off-road Switch
+        spn575 = pMsg->DATA.bytes[2] & 0x3;
+        // SPN 576  3.3     2bits       ASR Off-road Switch
+        spn576 = (pMsg->DATA.bytes[2] >> 2) & 0x3;
+        // SPN 577  3.5     2bits       ASR 'Hill Holder' Switch
+        spn577 = (pMsg->DATA.bytes[2] >> 4) & 0x3;
+        // SPN 1238 3.7     2bits       Traction Control Override Switch
+        spn1238 = (pMsg->DATA.bytes[2] >> 6) & 0x3;
+        // SPN 972  4.1     2bits       Accelerator Interlock Switch
+        spn972 = pMsg->DATA.bytes[3] & 0x3;
+        // SPN 971  4.3     2bits       Engine Derate Switch
+        spn971 = (pMsg->DATA.bytes[3] >> 2) & 0x3;
+        // SPN 970  4.5     2bits       Engine Auxiliary Shutdown Switch
+        spn970 = (pMsg->DATA.bytes[3] >> 4) & 0x3;
+        // SPN 969  4.7     2bits       Remote Accelerator Enable Switch
+        spn969 = (pMsg->DATA.bytes[3] >> 6) & 0x3;
+        // SPN 973  5       8bits       Engine Retarder Selection
+        spn973 = pMsg->DATA.bytes[4];
+        // SPN 1243 6.1     2bits       ABS Fully Operational
+        spn1243 = pMsg->DATA.bytes[5] & 0x3;
+        // SPN 1439 6.3     2bits       EBS Red Warning Signal
+        spn1439 = (pMsg->DATA.bytes[5] >> 2) & 0x3;
+        // SPN 1438 6.5     2bits       ABS/EBS Amber Warning Signal (Powered Vehicle)
+        spn1438 = (pMsg->DATA.bytes[5] >> 4) & 0x3;
+        // SPN 1793 6.7     2bits       ATC/ASR Information Signal
+        spn1793 = (pMsg->DATA.bytes[5] >> 6) & 0x3;
+        // SPN 1481 7       8bits       Source Address of Controlling Device for Brake Control
+        spn1481 = pMsg->DATA.bytes[6];
+        // SPN 2911 8.3     2bits       Halt brake switch
+        spn2911 = (pMsg->DATA.bytes[7] >> 2) & 0x3;
+        // SPN 1836 8.5     2bits       Trailer ABS Status
+        spn1836 = (pMsg->DATA.bytes[7] >> 4) & 0x3;
+        // SPN 1792 8.7     2bits       Tractor-Mounted Trailer ABS Warning Signal
+        spn1792 = (pMsg->DATA.bytes[7] >> 6) & 0x3;
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 0 9 8             ETC7
+    //---------------------------------------------------------------
+    
+    bool            j1939tc_HandlePgn65098(
+        J1939TC_DATA	*this,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn1850;
+        uint8_t         spn1849;
+        uint8_t         spn3086;
+        uint8_t         spn2945;
+        uint8_t         spn2900;
+        uint8_t         spn1851;
+        uint8_t         spn2539;
+        uint8_t         spn2538;
+        uint8_t         spn2537;
+        uint8_t         spn2536;
+        uint8_t         spn3289;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939tc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 1850 1.5     2bits       Transmission Requested Range Display Blank State
+        spn1850 = (pMsg->DATA.bytes[0] >> 4) & 0x3;
+        // SPN 1849 1.7     2bits       Transmission Requested Range Display Flash State
+        spn1849 = (pMsg->DATA.bytes[0] >> 6) & 0x3;
+        // SPN 3086 2.1     2bits       Transmission Ready for Brake Release
+        spn3086 = pMsg->DATA.bytes[1] & 0x3;
+        // SPN 2945 2.3     2bits       Active Shift Console Indicator
+        spn2945 = (pMsg->DATA.bytes[1] >> 2) & 0x3;
+        // SPN 2900 2.5     2bits       Transmission Engine Crank Enable
+        spn2900 = (pMsg->DATA.bytes[1] >> 4) & 0x3;
+        // SPN 1851 2.7     2bits       Transmission Shift Inhibit Indicator
+        spn1851 = (pMsg->DATA.bytes[1] >> 6) & 0x3;
+        // SPN 2539 3.1     2bits       Transmission Mode 4 Indicator
+        spn2539 = pMsg->DATA.bytes[2] & 0x3;
+        // SPN 2538 3.3     2bits       Transmission Mode 3 Indicator
+        spn2538 = (pMsg->DATA.bytes[2] >> 2) & 0x3;
+        // SPN 2537 3.5     2bits       Transmission Mode 2 Indicator
+        spn2537 = (pMsg->DATA.bytes[2] >> 4) & 0x3;
+        // SPN 2536 3.7     2bits       Transmission Mode 1 Indicator
+        spn2536 = (pMsg->DATA.bytes[2] >> 6) & 0x3;
+        // SPN 3289 4       8bits       Transmission Requested Gear Feedback
+        spn3289 = pMsg->DATA.bytes[3];
         
         // Return to caller.
         return false;
@@ -627,6 +757,14 @@ extern	"C" {
     {
         J1939_PDU       pdu = {0};
         J1939_PGN       pgn = {0};
+        uint8_t         spn123;
+        uint8_t         spn124;
+        uint8_t         spn126;
+        uint8_t         spn127;
+        uint16_t        spn177;
+        uint8_t         spn3027;
+        uint8_t         spn3028;
+        uint8_t         spn3026;
         
         // Do initialization.
 #ifdef NDEBUG
@@ -636,14 +774,27 @@ extern	"C" {
             return false;
         }
 #endif
+        
         if (pMsg) {
             pdu = j1939msg_getPDU(pMsg);
             pgn = j1939pdu_getPGN(pdu);
-            this->spn123 = pMsg->DATA.bytes[0];
-            this->spn124 = pMsg->DATA.bytes[1];
-            this->spn126 = pMsg->DATA.bytes[2];
-            this->spn127 = pMsg->DATA.bytes[3];
-            this->spn177 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+            
+            // SPN 123  1       8bits       Clutch Pressure
+            spn123 = pMsg->DATA.bytes[0];
+            // SPN 124  2       8bits       Transmission Oil Level
+            spn124 = pMsg->DATA.bytes[1];
+            // SPN 126  3       8bits       Transmission Filter Differential Pressure
+            spn126 = pMsg->DATA.bytes[2];
+            // SPN 127  4       8bits       Transmission Oil Pressure
+            spn127 = pMsg->DATA.bytes[3];
+            // SPN 177  5-6     16bits       Transmission Oil Temperature
+            spn177 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+            // SPN 3027 7       8bits       Transmission Oil Level High / Low
+            spn3027 = pMsg->DATA.bytes[0];
+            // SPN 3028 8.1     4bits       Transmission Oil Level Countdown Timer
+            spn3028 = pMsg->DATA.bytes[0] & 0xF;
+            // SPN 3026 8.5     4bits       Transmission Oil Level Measurement Status
+            spn3026 = (pMsg->DATA.bytes[0] >> 4) & 0xF;
         }
        
         // Return to caller.

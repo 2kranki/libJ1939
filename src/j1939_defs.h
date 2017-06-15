@@ -324,11 +324,13 @@ extern	"C" {
         OBJ_IDENT_J1939_BASE=OBJ_IDENT_J1939_ENTRIES,
         OBJ_IDENT_J1939CA,              // J1939 Control Application Base CA
         OBJ_IDENT_J1939CA_CLASS,
+        OBJ_IDENT_J1939CAB,             // J1939 Cab Controller CA
+        OBJ_IDENT_J1939CAB_CLASS,
         OBJ_IDENT_J1939CAM,
         OBJ_IDENT_J1939CAM_CLASS,
         OBJ_IDENT_J1939CAN,             // CAN Test Module
         OBJ_IDENT_J1939CAN_CLASS,
-        OBJ_IDENT_J1939CC,              // J1939 Cab Controller CA
+        OBJ_IDENT_J1939CC,              // J1939 Cruise Controller CA
         OBJ_IDENT_J1939CC_CLASS,
         OBJ_IDENT_J1939CCU,             // J1939 Cab Control Unit
         OBJ_IDENT_J1939CCU_CLASS,
@@ -358,6 +360,8 @@ extern	"C" {
         OBJ_IDENT_J1939TCU_CLASS,
         OBJ_IDENT_J1939TP,              // J1939 Transport Protocol
         OBJ_IDENT_J1939TP_CLASS,
+        OBJ_IDENT_TRUCK,                // Truck for Testing Purposes
+        OBJ_IDENT_TRUCK_CLASS,
     } OBJ_J1939_IDENTS;
 
     
@@ -443,6 +447,8 @@ extern	"C" {
         J1939_SPN_TYPE  *pType;
         const
         char            *pDesc;
+        const
+        char            *pExpl;         // Optional Explanation
     } J1939_SPN;
 #pragma pack(pop)
     

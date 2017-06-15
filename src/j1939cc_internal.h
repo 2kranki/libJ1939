@@ -43,6 +43,7 @@
 #include        <j1939ca_internal.h>
 
 
+
 #ifndef J1939CC_INTERNAL_H
 #define	J1939CC_INTERNAL_H
 
@@ -64,6 +65,7 @@ struct j1939cc_data_s	{
 
     // Common Data
     ERESULT             eRc;
+    OBJ_ID              pCCU;
 
     uint32_t            startTime57344;     // Repeat every 50ms
     uint32_t            startTime61443;     // Repeat every 50ms
@@ -75,19 +77,12 @@ struct j1939cc_data_s	{
     uint32_t            startTime65271;     // Repeat every 1000ms
 
     // The first spn is used in Init() to establish size of area to initialize.
-    uint8_t             spn52;              // Engine Intercooler Temperature
-    uint8_t             spn69;              // Two Speed Axle Switch
-    uint8_t             spn70;              // Parking Brake Switch
     uint8_t             spn74;              // Maximum Vehicle Speed Limit
     uint8_t             spn86;              // Cruise Control Set Speed
     uint8_t             spn87;              // Cruise Control High Set Limit Speed
     uint8_t             spn88;              // Cruise Control Low Set Limit Speed
     uint8_t             spn91;              // Accelerator Pedal Position 1
     uint8_t             spn92;              // Percent Load At Current Speed
-    uint8_t             spn108;             // Barometric Pressure
-    uint8_t             spn114;             // Net Battery Current
-    uint8_t             spn115;             // Alternator Current
-    uint8_t             spn172;             // Engine Air Inlet Temperature
     uint8_t             spn527;             // Cruise Control States
     uint8_t             spn558;             // Accelerator Pedal 1 Low Idle Switch    
     uint8_t             spn559;             // Accelerator Pedal Kickdown Switch
@@ -104,7 +99,6 @@ struct j1939cc_data_s	{
     uint8_t             spn967;             // Idle Decrement Switch
     uint8_t             spn968;             // Idle Increment Switch
     uint8_t             spn974;             // Remote Accelerator Pedal Position
-    uint8_t             spn976;             // PTO State
     uint8_t             spn1237;            // Engine Shutdown Override Switch
     uint8_t             spn1437;            // Road Speed Limit Status
     uint8_t             spn1633;            // Cruise Control Pause Switch
@@ -147,43 +141,49 @@ struct j1939cc_data_s	{
 
     bool            j1939cc_HandlePgn57344(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn61443(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
+    );
+    
+    
+    bool            j1939cc_HandlePgn61444(
+        J1939CC_DATA	*this,
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn65217(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn65226(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn65265(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn65269(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg
     );
     
     
     bool            j1939cc_HandlePgn65271(
         J1939CC_DATA	*this,
-        J1939_MSG       *pMsg               // NULL == Timed Out
+        J1939_MSG       *pMsg               
     );
     
     

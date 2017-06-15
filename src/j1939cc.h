@@ -128,6 +128,12 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
+    bool            j1939cc_setCCU(
+        J1939CC_DATA    *this,
+        OBJ_ID          pValue
+    );
+    
+    
     ERESULT     j1939cc_getLastError(
         J1939CC_DATA		*this
     );

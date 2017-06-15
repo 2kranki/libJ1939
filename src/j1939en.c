@@ -48,7 +48,8 @@
 
 
 
-#include "j1939en_internal.h"
+#include    <j1939en_internal.h>
+#include    <j1939ecu_internal.h>
 
 
 
@@ -297,6 +298,46 @@ extern	"C" {
     //                      *** Properties ***
     //===============================================================
 
+    OBJ_ID          j1939en_getECU(
+        J1939EN_DATA    *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return this->pECU;
+    }
+
+    
+    bool            j1939en_setECU(
+        J1939EN_DATA    *this,
+        OBJ_ID          pValue
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pECU = pValue;        // NOT owned
+        
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
     ERESULT         j1939en_getLastError(
         J1939EN_DATA    *this
     )
@@ -331,6 +372,29 @@ extern	"C" {
         
         this->eRc = value;
         
+        return true;
+    }
+    
+    
+    
+    bool            j1939en_setRpmRoutine(
+        J1939EN_DATA    *this,
+        void            (*pRpmRoutine)(void *, uint16_t),
+        void            *pRpmData
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pRpmRoutine = pRpmRoutine;
+        this->pRpmData = pRpmData;
+        
+        j1939en_setLastError(this, ERESULT_SUCCESS);
         return true;
     }
     
@@ -2678,6 +2742,13 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint16_t        spn190;         // Engine Speed
+        uint8_t         spn512;         // Driver's Demand Engine - Percent Torque
+        uint8_t         spn513;         // Actual Engine - Percent Torque
+        uint8_t         spn899;         // Engine Torque Mode
+        uint8_t         spn1483;        // Source Address of Controlling Device for Engine Control
+        uint8_t         spn1675;        // Engine Starter Mode
+        uint8_t         spn2432;        // Engine Demand - Percent Torque
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2689,6 +2760,29 @@ extern	"C" {
 #endif
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
+
+        // SPN 899  1.1     4bits       Engine Torque Mode
+        spn899 = pMsg->DATA.bytes[0] & 0x0F;
+        // SPN 512  2       8bits       Driver's Demand Engine - Percent Torque
+        spn512 = pMsg->DATA.bytes[1];
+        // SPN 513  3       8bits       Actual Engine - Percent Torque
+        spn513 = pMsg->DATA.bytes[2];
+        // SPN 190  4-5     16bits      Engine Speed (rpm)
+        spn190 = (pMsg->DATA.bytes[4] << 8) | pMsg->DATA.bytes[3];
+        // SPN 1483 6       8bits       Source Address of Controlling Device for Engine Control
+        spn1483 = pMsg->DATA.bytes[5];
+        // SPN 1675 7.1     4bits       Engine Starter Mode
+        spn1675 = pMsg->DATA.bytes[0] & 0x0F;
+        // SPN 2432 8       8bits       Engine Demand - Percent Torque
+        spn2432 = pMsg->DATA.bytes[2];
+        
+        if (spn190 == 0xFFFF) {
+        }
+        else {
+            if (this->pRpmRoutine) {
+                this->pRpmRoutine(this->pRpmData, spn190);
+            }
+        }
 
         // Return to caller.
         return false;
@@ -2707,6 +2801,11 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn524;         // Transmission Selected Gear
+        uint16_t        spn526;         // Transmission Actual Gear Ratio
+        uint8_t         spn523;         // Transmission Current Gear
+        uint16_t        spn162;         // Transmission Requested Range
+        uint16_t        spn163;         // Transmission Current Range
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2720,27 +2819,42 @@ extern	"C" {
         pgn = j1939pdu_getPGN(pdu);
 
         // SPN 524  1       8bits       Transmission Selected Gear
-        this->spn524 = pMsg->DATA.bytes[0];
+        spn524 = pMsg->DATA.bytes[0];
         // SPN 526  2-3     16bits      Transmission Actual Gear Ratio
+        spn526 = (pMsg->DATA.bytes[2] << 8) + pMsg->DATA.bytes[1];
         // SPN 523  4       8bits       Transmission Current Gear
-        this->spn523 = pMsg->DATA.bytes[3];
+        spn523 = pMsg->DATA.bytes[3];
         // SPN 162  5-6     16bits      Transmission Requested Range
+        // Range selected by the operator. Characters may include P, Rx, Rx-1...R2,
+        // R1, R, Nx, Nx-1...N2, N1, N, D, D1, D2..., Dx, L, L1, L2..., Lx-1, 1, 2,
+        // 3,... If only one displayed character is required, the second character
+        // shall be used and the first character shall be a space (ASCII 32) or a
+        // control character (ASCII 0 to 31). If the first character is a control
+        // character, refer to the manufacturer’s application document for definition.
+        spn162 = (pMsg->DATA.bytes[5] << 8) + pMsg->DATA.bytes[4];
         // SPN 163  7-8     16bits      Transmission Current Range
+        // Range selected by the operator. Characters may include P, Rx, Rx-1...R2,
+        // R1, R, Nx, Nx-1...N2, N1, N, D, D1, D2..., Dx, L, L1, L2..., Lx-1, 1, 2,
+        // 3,... If only one displayed character is required, the second character
+        // shall be used and the first character shall be a space (ASCII 32) or a
+        // control character (ASCII 0 to 31). If the first character is a control
+        // character, refer to the manufacturer’s application document for definition.
+        spn163 = (pMsg->DATA.bytes[7] << 8) + pMsg->DATA.bytes[6];
 
         if (this->fShifting) {
-            if (this->spn523 == this->spn524) {
+            if (spn523 == spn524) {
                 this->fShifting = false;
                 if (this->pShiftExit) {
-                    (*this->pShiftExit)(this->pShiftData,false);
+                    (*this->pShiftExit)(this->pShiftData, false);
                 }
             }
         }
         else {
             // Check for Up Shift within Shift sequence
-            if (this->spn523 < this->spn524) {
+            if (spn523 < spn524) {
                 this->fShifting = true;
                 if (this->pShiftExit) {
-                    (*this->pShiftExit)(this->pShiftData,true);
+                    (*this->pShiftExit)(this->pShiftData, true);
                 }
             }
         }
@@ -2792,6 +2906,15 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn514;
+        uint16_t        spn515;
+        uint8_t         spn519;
+        uint8_t         spn2978;
+        uint16_t        spn3236;
+        uint8_t         spn3237;
+        uint8_t         spn3238;
+        uint8_t         spn3239;
+        uint8_t         spn3240;
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2804,12 +2927,70 @@ extern	"C" {
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
+        // SPN 514  1       8bits       Nominal Friction - Percent T orque
+        spn514 = pMsg->DATA.bytes[0];
+        // SPN 515  2-3     16bits      Engine's Desired Operating Speed
+        spn515 = (pMsg->DATA.bytes[2] << 8) + pMsg->DATA.bytes[1];
+        // SPN 514  4       8bits       Engine's Desired Operating Speed Asymmetry Adjustment
+        spn519 = pMsg->DATA.bytes[3];
+        // SPN 2978 5       8bits       Estimated Engine Parasitic Losses - Percent Torque
+        spn2978 = pMsg->DATA.bytes[4];
+        // SPN 3236 6-7     16bits      Aftertreatment 1 Exhaust Gas Mass Flow
+        spn3236 = (pMsg->DATA.bytes[6] << 8) + pMsg->DATA.bytes[5];
+        // SPN 3237 8.1     2bits       Aftertreatment 1 Intake Dew Point
+        spn3237 = pMsg->DATA.bytes[7] & 0x3;
+        // SPN 3238 8.3     2bits       Aftertreatment 1 Exhaust Dew Point
+        spn3238 = (pMsg->DATA.bytes[7] >> 2) & 0x3;
+        // SPN 3239 8.5     2bits       Aftertreatment 2 Intake Dew Point
+        spn3239 = (pMsg->DATA.bytes[7] >> 4) & 0x3;
+        // SPN 3240 8.7     2bits       Aftertreatment 2 Exhaust Dew Point
+        spn3240 = (pMsg->DATA.bytes[7] >> 6) & 0x3;
+
         // Return to caller.
         return false;
     }
 
 
 
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 4 8
+    //---------------------------------------------------------------
+    
+    bool            j1939en_HandlePgn65248(
+        J1939EN_DATA	*this,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint32_t        spn244;
+        uint32_t        spn245;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 244  1-4     32bits      Trip Distance
+        spn244 = pMsg->DATA.bytes[0] | (pMsg->DATA.bytes[1] << 8)
+                | (pMsg->DATA.bytes[2] << 16)  | (pMsg->DATA.bytes[3] << 24);
+        // SPN 245  5-8     32bits      Total Vehicle Distance
+        spn245 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8)
+        | (pMsg->DATA.bytes[6] << 16)  | (pMsg->DATA.bytes[7] << 24);
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                  H a n d l e  P G N 6 5 2 5 2
     //---------------------------------------------------------------
@@ -2830,8 +3011,13 @@ extern	"C" {
             return false;
         }
 #endif
+        
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
+        
+
+        
+        
         
         // Return to caller.
         return false;
@@ -2850,6 +3036,12 @@ extern	"C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
+        uint8_t         spn110;
+        uint8_t         spn174;
+        uint16_t        spn175;
+        uint16_t        spn176;
+        uint8_t         spn52;
+        uint8_t         spn1134;
 
         // Do initialization.
 #ifdef NDEBUG
@@ -2859,15 +3051,157 @@ extern	"C" {
             return false;
         }
 #endif
+
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
+        // SPN 110  1       8bits       Engine Coolant Temperature
+        spn110 = pMsg->DATA.bytes[0];
+        // SPN 174  2       8bits       Engine Fuel Temperature 1
+        spn174 = pMsg->DATA.bytes[1];
+        // SPN 175  3-4     16bits      Engine Oil Temperature 1
+        spn175 = pMsg->DATA.bytes[2] | (pMsg->DATA.bytes[3] << 8);
+        // SPN 176  5-6     16bits      Engine Turbocharger Oil Temperature
+        spn176 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+        // SPN 52   7       8bits       Engine Intercooler Temperature
+        spn52 = pMsg->DATA.bytes[6];
+        // SPN 1134 8       8bits       Engine Intercooler Thermostat Opening
+        spn1134 = pMsg->DATA.bytes[7];
+        
+        
+        
+        
         // Return to caller.
         return false;
     }
 
 
 
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 6 3
+    //---------------------------------------------------------------
+    
+    bool            j1939en_HandlePgn65263(
+        J1939EN_DATA	*this,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn94;
+        uint8_t         spn22;
+        uint8_t         spn98;
+        uint8_t         spn100;
+        uint16_t        spn101;
+        uint8_t         spn109;
+        uint8_t         spn111;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 94   1       8bits       Engine Fuel Delivery Pressure
+        spn94 = pMsg->DATA.bytes[0];
+        // SPN 22   2       8bits       Engine Extended Crankcase Blow-by Pressure
+        spn22 = pMsg->DATA.bytes[1];
+        // SPN 98   3       8bits       Engine Oil Level
+        spn98 = pMsg->DATA.bytes[2];
+        // SPN 100  4       8bits       Engine Oil Pressure
+        spn100 = pMsg->DATA.bytes[3];
+        // SPN 101  5-6     16bits      Engine Crankcase Pressure
+        spn101 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+        // SPN 109  4       8bits       Engine Coolant Pressure
+        spn109 = pMsg->DATA.bytes[6];
+        // SPN 111  4       8bits       Engine Coolant Level
+        spn111 = pMsg->DATA.bytes[7];
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 6 4
+    //---------------------------------------------------------------
+    
+    bool            j1939en_HandlePgn65264(
+        J1939EN_DATA	*this,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn90;
+        uint16_t        spn186;
+        uint16_t        spn187;
+        uint8_t         spn980;
+        uint8_t         spn979;
+        uint8_t         spn978;
+        uint8_t         spn984;
+        uint8_t         spn983;
+        uint8_t         spn982;
+        uint8_t         spn981;
+        uint8_t         spn2897;
+        uint8_t         spn3447;
+        uint8_t         spn3448;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 90   1       8bits       Power Takeoff Oil Temperature
+        spn90 = pMsg->DATA.bytes[0];
+        // SPN 186  2-3     16bits      Power Takeoff Speed
+        spn186 = pMsg->DATA.bytes[1] | (pMsg->DATA.bytes[2] << 8);
+        // SPN 187  4-5     16bits      Power Takeoff Set Speed
+        spn187 = pMsg->DATA.bytes[3] | (pMsg->DATA.bytes[4] << 8);
+        // SPN 980  6.1     2bits       Engine PTO Enable Switch
+        spn980 = pMsg->DATA.bytes[5] & 0x3;
+        // SPN 979  6.3     2bits       Engine Remote PTO Preprogrammed Speed Control Switch
+        spn979 = (pMsg->DATA.bytes[5] >> 2) & 0x3;
+        // SPN 978  6.5     2bits       Engine Remote PTO Variable Speed Control Switch
+        spn978 = (pMsg->DATA.bytes[5] >> 4) & 0x3;
+        // SPN 984  7.1     2bits       Engine PTO Set Switch
+        spn984 = pMsg->DATA.bytes[6] & 0x3;
+        // SPN 983  7.3     2bits       Engine PTO Coast/Decelerate Switch
+        spn983 = (pMsg->DATA.bytes[6] >> 2) & 0x3;
+        // SPN 982  7.5     2bits       Engine PTO Resume Switch
+        spn982 = (pMsg->DATA.bytes[6] >> 4) & 0x3;
+        // SPN 981  7.7     2bits       Engine PTO Accelerate Switch
+        spn981 = (pMsg->DATA.bytes[6] >> 6) & 0x3;
+        // SPN 2897 8.1     2bits       Operator PTO Memory Select Switch
+        spn2897 = pMsg->DATA.bytes[7] & 0x3;
+        // SPN 3447 8.3     2bits       Remote PTO preprogrammed speed control switch #2
+        spn3447 = (pMsg->DATA.bytes[7] >> 2) & 0x3;
+        // SPN 3448 8.5     2bits       Auxiliary Input Ignore Switch
+        spn3448 = (pMsg->DATA.bytes[7] >> 4) & 0x3;
+        
+        
+        
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                  H a n d l e  P G N 6 5 2 6 5
     //---------------------------------------------------------------
@@ -3083,6 +3417,92 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //                        N e w  R p m
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939en_NewRpm(
+        J1939EN_DATA	*this,
+        uint16_t        rpm
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        //this->rpm = rpm;
+        if (this->pRpmRoutine) {
+            this->pRpmRoutine(this->pRpmData, rpm);
+        }
+        
+        // Return to caller.
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                          S h u t d o w n
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939en_Shutdown(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return j1939en_getLastError(this);
+        }
+#endif
+        
+        // Put code here...
+        
+        // Return to caller.
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                          S t a r t
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939en_Start(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        // Put code here...
+        
+        // Return to caller.
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_NOT_IMPLEMENTED;
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //           T r a n s m i t  P G N 6 1 4 4 3   0xF003
     //---------------------------------------------------------------

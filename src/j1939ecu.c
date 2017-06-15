@@ -56,6 +56,7 @@ extern "C" {
     // This table is based on Cummins iSX15 Engine Specifications
     // found in Cummins' literature.
     // Engine Idle is between 600 and 800 rpm (default 600).
+#ifdef XYZZY
     ENG_TRQ_HP      engTorque[] = {
         {   0, 200,  750},      // Idle
         {1000, 400, 1850},
@@ -67,6 +68,7 @@ extern "C" {
         {1800, 560, 1440},
     };
     uint16_t        cEngTorque = (sizeof(engTorque)/sizeof(ENG_TRQ_HP)) - 1;
+#endif
 
 
  
@@ -189,7 +191,7 @@ extern "C" {
     
     
 
-    uint16_t        j1939ecu_getRpm(
+    uint32_t        j1939ecu_getRpm(
         J1939ECU_DATA     *this
     )
     {
@@ -207,9 +209,10 @@ extern "C" {
         return this->rpm;
     }
 
+    
     bool            j1939ecu_setRpm(
         J1939ECU_DATA   *this,
-        uint16_t        value
+        uint32_t        value
     )
     {
 #ifdef NDEBUG
@@ -228,6 +231,29 @@ extern "C" {
 
 
 
+    bool            j1939ecu_setRpmRoutine(
+        J1939ECU_DATA	*this,
+        void            (*pRpmRoutine)(void *, uint32_t),
+        void            *pRpmData
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939ecu_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pRpmRoutine = pRpmRoutine;
+        this->pRpmData = pRpmData;
+        
+        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
     uint32_t        j1939ecu_getSize(
         J1939ECU_DATA       *this
     )
@@ -620,6 +646,37 @@ extern "C" {
         // Return to caller.
         j1939ecu_setLastError(this, ERESULT_SUCCESS_FALSE);
         return j1939ecu_getLastError(this);
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                        N e w  R p m
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939ecu_NewRpm(
+        J1939ECU_DATA	*this,
+        uint32_t        rpm
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939ecu_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        this->rpm = rpm;
+        if (this->pRpmRoutine) {
+            this->pRpmRoutine(this->pRpmData, rpm);
+        }
+        
+        // Return to caller.
+        j1939ecu_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
     }
     
     

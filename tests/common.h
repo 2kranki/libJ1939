@@ -167,4 +167,15 @@ uint32_t		cMsgs03;
 
 
 
+/* Captured messages just from Kenworth
+ * Short Run
+ */
+extern
+J1939_MSG_DATA	Msgs04[];
+
+extern
+uint32_t		cMsgs04;
+
+
+
 

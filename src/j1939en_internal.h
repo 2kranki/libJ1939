@@ -58,6 +58,21 @@ extern "C" {
 #endif
 
 
+    typedef enum j1939en_state_e {
+        J1939EN_STATE_NOT_STARTED=0,
+        J1939EN_STATE_STARTED_IDLE,
+        J1939TC_STATE_RUNNING,
+        J1939TC_STATE_RUNNING_RETARDED,
+    } J1939EN_STATE;
+    
+    
+    typedef struct engine_torque_power_s {
+        uint16_t        rpm;            // 0 == idle
+        uint16_t        hp;             //
+        uint16_t        torque;         // foot-lbs ???
+    } ENG_TRQ_HP;
+    
+    
     //                  Main Control j1939en
     /* This control j1939en resides only in memory and is used to provide
      * the information necessary to access the j1939en data.
@@ -73,7 +88,30 @@ extern "C" {
 
         // Common Data
         ERESULT             eRc;
+        OBJ_ID              pECU;
+        uint16_t            ratedPower;
+        //                                      // actual_power = (ratedPower * 0.5) kW
+        //                                      // range: 0 - 32127.5 kW
+        uint16_t            minTorque;
+        uint16_t            maxTorque;
+        bool                fAutomatic;         // True == Automatic Transmission,
+        //                                      // False == Manual
+        uint32_t            timeOut;
+        uint8_t             fRetarding;         // Retarding is Active
+        uint8_t             fShifting;          // Shift in progress
+        uint8_t             fShutdown;          // Shutdown is Active
+        uint8_t             reserved8c[1];
+        P_VOIDEXIT12        pShiftExit;
+        void                *pShiftData;
         
+        
+        // Engine parameters
+        //                                      // actual_rpm = (rpm * 0.125) / 1000
+        //                                      // range: 0 - 8031.875 rpm
+        void                (*pRpmRoutine)(void *pRpmData, uint16_t rpm);
+        void                *pRpmData;
+        
+        // Message Repeat Times
         uint32_t            startTime61443;     // Repeat every 50ms
         uint32_t            startTime61444;     // Repeat engine speed dependent
                                                 // (100ms for now)
@@ -100,8 +138,8 @@ extern "C" {
         uint8_t             spn519;             // Engine's Desired Operating Speed
                                                 // Asymmetry Adjustment
 
-        uint8_t             spn523;             // 03 - Transmission Current Gear
-        uint8_t             spn524;             // 03 - Transmission Selected Gear
+        uint8_t             spn523;             // Transmission Current Gear
+        uint8_t             spn524;             // Transmission Selected Gear
         uint8_t             spn527;             // Cruise Control States
         uint8_t             spn558;             // Accelerator Pedal 1 Low Idle Switch
 
@@ -149,21 +187,13 @@ extern "C" {
         uint16_t            spn161;             // 03 - Transmission Input Shaft Speed
         uint16_t            spn175;             // Engine Oil Temperature 1
         uint16_t            spn176;             // Turbo Oil Temperature
-        uint16_t            spn190;             // Engine Speed
+        uint16_t            spn190;             // Engine Speed (rpm)
         uint16_t            spn191;             // 03 - Transmission Output Shaft Speed
         uint16_t            spn515;             // Engine's Desired Operating Speed
         uint16_t            spn1636;            // Intake Manifold 1 Air Temperature
         uint16_t            spn1637;            // Engine Coolant Temperature
         uint16_t            reserved16;
         // The last spn is used in Init() to establish size of area to initialize.
-
-        uint32_t            timeOut;
-        uint8_t             fRetarding;         // Retarding is Active
-        uint8_t             fShifting;          // Shift in progress
-        uint8_t             fShutdown;          // Shutdown is Active
-        uint8_t             reserved8c[1];
-        P_VOIDEXIT12        pShiftExit;
-        void                *pShiftData;
 
     };
 #pragma pack(pop)
@@ -184,6 +214,12 @@ extern "C" {
     );
 
 
+    bool            j1939en_setLastError(
+        J1939EN_DATA    *this,
+        ERESULT         value
+    );
+    
+    
     bool            j1939en_HandlePgn0(
         J1939EN_DATA	*this,
         J1939_MSG       *pMsg               // NULL == Timed Out

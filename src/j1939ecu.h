@@ -119,6 +119,13 @@ extern "C" {
     );
 
 
+    bool            j1939ecu_setRpmRoutine(
+        J1939ECU_DATA	*this,
+        void            (*pRpmRoutine)(void *, uint32_t),
+        void            *pRpmData
+    );
+    
+    
 
     
     //---------------------------------------------------------------

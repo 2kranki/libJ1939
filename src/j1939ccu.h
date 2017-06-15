@@ -119,8 +119,21 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
-    ERESULT     j1939ccu_getLastError(
-        J1939CCU_DATA		*this
+    ERESULT         j1939ccu_getLastError(
+        J1939CCU_DATA	*this
+    );
+
+    
+    bool            j1939ccu_setRPM(
+        J1939CCU_DATA	*this,
+        uint32_t        value
+    );
+    
+    
+    bool            j1939ccu_setRpmRoutine(
+        J1939CCU_DATA	*this,
+        void            (*pRpm)(void *, uint32_t),
+        void            *pRpmData
     );
 
 

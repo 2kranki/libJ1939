@@ -80,6 +80,7 @@ struct j1939tbl_data_s	{
     OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
     // Common Data
+    FILE                *pFileOut;
 
 };
 #pragma pack(pop)
@@ -95,10 +96,11 @@ struct j1939tbl_data_s	{
         OBJ_ID          objId
     );
 
+    
 #ifdef NDEBUG
 #else
     bool			j1939tbl_Validate(
-        J1939TBL_DATA       *cbp
+        J1939TBL_DATA   *this
     );
 #endif
 

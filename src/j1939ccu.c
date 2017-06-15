@@ -180,6 +180,7 @@ extern "C" {
         return 0;
     }
 
+    
     bool            j1939ccu_setPriority(
         J1939CCU_DATA     *this,
         uint16_t        value
@@ -201,6 +202,69 @@ extern "C" {
 
 
 
+    uint32_t        j1939ccu_getRPM(
+        J1939CCU_DATA     *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !j1939ccu_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return this->rpm;
+    }
+    
+    
+    bool            j1939ccu_setRPM(
+        J1939CCU_DATA	*this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939ccu_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->rpm = value;
+        
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+
+    
+    
+    bool            j1939ccu_setRpmRoutine(
+        J1939CCU_DATA	*this,
+        void            (*pRpmRoutine)(void *, uint32_t),
+        void            *pRpmData
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !j1939ccu_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->pRpmRoutine = pRpmRoutine;
+        this->pRpmData = pRpmData;
+        
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
     uint32_t        j1939ccu_getSize(
         J1939CCU_DATA       *this
     )
@@ -558,6 +622,37 @@ extern "C" {
         // Return to caller.
         j1939ccu_setLastError(this, ERESULT_SUCCESS_FALSE);
         return j1939ccu_getLastError(this);
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                        N e w  R p m
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939ccu_NewRpm(
+        J1939CCU_DATA	*this,
+        uint32_t        rpm
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939ccu_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        this->rpm = rpm;
+        if (this->pRpmRoutine) {
+            this->pRpmRoutine(this->pRpmData, rpm);
+        }
+        
+        // Return to caller.
+        j1939ccu_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
     }
     
     
