@@ -764,6 +764,16 @@ extern	"C" {
     );
     
     
+    bool            j1939en_TransmitPgn65266(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_TransmitPgn65279(
+        J1939EN_DATA	*this
+    );
+    
+    
 
     
 #ifdef	__cplusplus

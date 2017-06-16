@@ -25,7 +25,7 @@
 #include    <common.h>
 #include    <j1939_defs.h>
 #include    <trace.h>
-#include    <j1939tbl_internal.h>
+#include    <j1939misc_internal.h>
 #include    <j1939can.h>
 #include    <j1939sys.h>
 
@@ -79,24 +79,26 @@ int         tearDown(
 
 
 
-int         test_j1939tbl_01(
+int         test_j1939misc_01(
     const
     char        *pTestName
 )
 {
-    J1939TBL_DATA *pObj = OBJ_NIL;
+    J1939MISC_DATA *pObj = OBJ_NIL;
     int         i;
     J1939_MSG   msg;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(pObj); 
+    pObj = j1939misc_Init(pObj); 
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
+
+        j1939misc_setFileOut(pObj, stdout);
 
         for (i=0; i<cMsgs01; ++i) {
             j1939msg_ConstructMsg_E1(&msg, Msgs01[i].pdu, Msgs01[i].len, Msgs01[i].data);
-            j1939tbl_DumpMessage(pObj, &msg);
+            j1939misc_DumpMessage(pObj, &msg);
         }
         fprintf(stderr, "\n\n\n");
 
@@ -109,24 +111,26 @@ int         test_j1939tbl_01(
 
 
 
-int         test_j1939tbl_01A(
+int         test_j1939misc_01A(
     const
     char        *pTestName
 )
 {
-    J1939TBL_DATA *pObj = OBJ_NIL;
+    J1939MISC_DATA *pObj = OBJ_NIL;
     int         i;
     J1939_MSG   msg;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(pObj); 
+    pObj = j1939misc_Init(pObj); 
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
+
+        j1939misc_setFileOut(pObj, stdout);
 
         for (i=0; i<cMsgs01A; ++i) {
             j1939msg_ConstructMsg_E1(&msg, Msgs01A[i].pdu, Msgs01A[i].len, Msgs01A[i].data);
-            j1939tbl_DumpMessage(pObj, &msg);
+            j1939misc_DumpMessage(pObj, &msg);
         }
         fprintf(stderr, "\n\n\n");
 
@@ -139,24 +143,26 @@ int         test_j1939tbl_01A(
 
 
 
-int         test_j1939tbl_02(
+int         test_j1939misc_02(
     const
     char        *pTestName
 )
 {
-    J1939TBL_DATA *pObj = OBJ_NIL;
+    J1939MISC_DATA *pObj = OBJ_NIL;
     int         i;
     J1939_MSG   msg;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(pObj); 
+    pObj = j1939misc_Init(pObj); 
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
+
+        j1939misc_setFileOut(pObj, stdout);
 
         for (i=0; i<cMsgs02; ++i) {
             j1939msg_ConstructMsg_E1(&msg, Msgs02[i].pdu, Msgs02[i].len, Msgs02[i].data);
-            j1939tbl_DumpMessage(pObj, &msg);
+            j1939misc_DumpMessage(pObj, &msg);
         }
         fprintf(stderr, "\n\n\n");
 
@@ -169,24 +175,26 @@ int         test_j1939tbl_02(
 
 
 
-int         test_j1939tbl_03(
+int         test_j1939misc_03(
     const
     char        *pTestName
 )
 {
-    J1939TBL_DATA *pObj = OBJ_NIL;
+    J1939MISC_DATA *pObj = OBJ_NIL;
     int         i;
     J1939_MSG   msg;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(pObj); 
+    pObj = j1939misc_Init(pObj); 
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
+
+        j1939misc_setFileOut(pObj, stdout);
 
         for (i=0; i<cMsgs03; ++i) {
             j1939msg_ConstructMsg_E1(&msg, Msgs03[i].pdu, Msgs03[i].len, Msgs03[i].data);
-            j1939tbl_DumpMessage(pObj, &msg);
+            j1939misc_DumpMessage(pObj, &msg);
         }
         fprintf(stderr, "\n\n\n");
 
@@ -199,26 +207,28 @@ int         test_j1939tbl_03(
 
 
 
-int         test_j1939tbl_04(
+int         test_j1939misc_04(
     const
     char        *pTestName
 )
 {
-    J1939TBL_DATA *pObj = OBJ_NIL;
+    J1939MISC_DATA *pObj = OBJ_NIL;
     int         i;
     J1939_MSG   msg;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(pObj); 
+    pObj = j1939misc_Init(pObj); 
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
 
+        j1939misc_setFileOut(pObj, stdout);
+
         for (i=0; i<cMsgs04; ++i) {
             j1939msg_ConstructMsg_E1(&msg, Msgs04[i].pdu, Msgs04[i].len, Msgs04[i].data);
-            j1939tbl_DumpMessage(pObj, &msg);
-            //if (i > 500)
-                //break;
+            j1939misc_DumpMessage(pObj, &msg);
+            if (i > 100)
+                break;
         }
         fprintf(stderr, "\n\n\n");
 
@@ -232,15 +242,15 @@ int         test_j1939tbl_04(
 
 
 
-TINYTEST_START_SUITE(test_j1939tbl);
-  TINYTEST_ADD_TEST(test_j1939tbl_04,setUp,tearDown);
-  //TINYTEST_ADD_TEST(test_j1939tbl_03,setUp,tearDown);
-  //TINYTEST_ADD_TEST(test_j1939tbl_02,setUp,tearDown);
-  //TINYTEST_ADD_TEST(test_j1939tbl_01A,setUp,tearDown);
-  //TINYTEST_ADD_TEST(test_j1939tbl_01,setUp,tearDown);
+TINYTEST_START_SUITE(test_j1939misc);
+  TINYTEST_ADD_TEST(test_j1939misc_04,setUp,tearDown);
+  //TINYTEST_ADD_TEST(test_j1939misc_03,setUp,tearDown);
+  //TINYTEST_ADD_TEST(test_j1939misc_02,setUp,tearDown);
+  //TINYTEST_ADD_TEST(test_j1939misc_01A,setUp,tearDown);
+  //TINYTEST_ADD_TEST(test_j1939misc_01,setUp,tearDown);
 TINYTEST_END_SUITE();
 
-TINYTEST_MAIN_SINGLE_SUITE(test_j1939tbl);
+TINYTEST_MAIN_SINGLE_SUITE(test_j1939misc);
 
 
 

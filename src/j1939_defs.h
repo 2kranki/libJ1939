@@ -336,6 +336,8 @@ extern	"C" {
         OBJ_IDENT_J1939CCU_CLASS,
         OBJ_IDENT_J1939CU,              // J1939 Control Unit Base CU
         OBJ_IDENT_J1939CU_CLASS,
+        OBJ_IDENT_J1939DATA,            // J1939 PGN/SPN Data
+        OBJ_IDENT_J1939DATA_CLASS,
         OBJ_IDENT_J1939DG,              // J1939 Diagnostic/Test CA
         OBJ_IDENT_J1939DG_CLASS,
         OBJ_IDENT_J1939ECU,             // J1939 Engine Control Unit ECU
@@ -344,6 +346,8 @@ extern	"C" {
         OBJ_IDENT_J1939EN_CLASS,
         OBJ_IDENT_J1939ER,              // J1939 Engine Retarder CA
         OBJ_IDENT_J1939ER_CLASS,
+        OBJ_IDENT_J1939MISC,            // J1939 Misc - Not Need for regular operation
+        OBJ_IDENT_J1939MISC_CLASS,
         OBJ_IDENT_J1939MSG,
         OBJ_IDENT_J1939MSG_CLASS,
         OBJ_IDENT_J1939RQ,
@@ -352,8 +356,6 @@ extern	"C" {
         OBJ_IDENT_J1939SS_CLASS,
         OBJ_IDENT_J1939SYS,             // SYS Test Module
         OBJ_IDENT_J1939SYS_CLASS,
-        OBJ_IDENT_J1939TBL,             // J1939 SPN & PGN Tables
-        OBJ_IDENT_J1939TBL_CLASS,
         OBJ_IDENT_J1939TC,              // J1939 Transmission #1 CA
         OBJ_IDENT_J1939TC_CLASS,
         OBJ_IDENT_J1939TCU,             // J1939 Transmission Control Unit TCU
@@ -415,6 +417,18 @@ extern	"C" {
         J1939_NULL=254,
         J1939_GENERAL_BROADCAST=255
    } J1939_NAMES;
+    
+
+    // Address Table
+    typedef struct j1939_preferred_address_s {
+        uint8_t         address;
+        const
+        char            *pDescription;
+        const
+        char            *pExplanation;      // Optional
+        
+    } J1939_PREFERRED_ADDRESS;
+
     
 
     // SPN Table
@@ -504,7 +518,7 @@ extern	"C" {
 #endif
 
 
-#include        <j1939tbl.h>
+#include        <j1939data.h>
 
 
 #endif      // J1939_DEFS_H

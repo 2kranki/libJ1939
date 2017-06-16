@@ -1,5 +1,5 @@
 /*
- *	Generated 04/08/2017 00:51:45
+ *	Generated 06/15/2017 11:49:27
  */
 
 
@@ -22,20 +22,9 @@
 
 
 #include    <tinytest.h>
-#include    <common.h>
+#include    <cmn_defs.h>
 #include    <trace.h>
-#include    <j1939_defs.h>
-#include    <j1939tbl_internal.h>
-#include    <j1939can.h>
-#include    <j1939sys.h>
-
-
-static
-J1939CAN_DATA   *pCAN = OBJ_NIL;
-
-
-
-
+#include    <j1939misc_internal.h>
 
 
 
@@ -45,12 +34,9 @@ int         setUp(
 )
 {
     mem_Init( );
-    
+    trace_Shared( ); 
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
-    pSYS = j1939sys_New();
-    pCAN = j1939can_New();
-    cCurMsg = 0;
     
     return 1; 
 }
@@ -63,14 +49,12 @@ int         tearDown(
 {
     // Put teardown code here. This method is called after the invocation of each
     // test method in the class.
-    obj_Release(pCAN);
-    pCAN = OBJ_NIL;
-    obj_Release(pSYS);
-    pSYS = OBJ_NIL;
-    //j1939_SharedReset( );
+
     
+    trace_SharedReset( ); 
     mem_Dump( );
     mem_Release( );
+    
     return 1; 
 }
 
@@ -79,20 +63,16 @@ int         tearDown(
 
 
 
-
-
-int         test_j1939tbl_OpenClose(
+int         test_j1939misc_OpenClose(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
-    J1939TBL_DATA	*pObj = OBJ_NIL;
+    J1939MISC_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939tbl_Alloc(0);
+    pObj = j1939misc_Alloc(0);
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939tbl_Init(
-                    pObj 
-            );
+    pObj = j1939misc_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {
 
@@ -108,11 +88,11 @@ int         test_j1939tbl_OpenClose(
 
 
 
-TINYTEST_START_SUITE(test_j1939tbl);
-  TINYTEST_ADD_TEST(test_j1939tbl_OpenClose,setUp,tearDown);
+TINYTEST_START_SUITE(test_j1939misc);
+  TINYTEST_ADD_TEST(test_j1939misc_OpenClose,setUp,tearDown);
 TINYTEST_END_SUITE();
 
-TINYTEST_MAIN_SINGLE_SUITE(test_j1939tbl);
+TINYTEST_MAIN_SINGLE_SUITE(test_j1939misc);
 
 
 

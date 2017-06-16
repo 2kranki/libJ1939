@@ -3314,6 +3314,9 @@ extern	"C" {
             if ((curTime - this->startTime65265) >= pgn65265_entry.msFreq) {
                 j1939en_TransmitPgn65265(this);
             }
+            if ((curTime - this->startTime65279) >= pgn65265_entry.msFreq) {
+                j1939en_TransmitPgn65279(this);
+            }
         }
         if (this->fRetarding) {
             j1939en_HandlePgn0(this, NULL);
@@ -3381,9 +3384,9 @@ extern	"C" {
 
         // Default all SPNs to unsupported values.
         memset(
-               &this->spn52,
+               &this->spnFirst,
                0xFF,
-               (offsetof(J1939EN_DATA,spn1637) - offsetof(J1939EN_DATA,spn52) + 2)
+               (offsetof(J1939EN_DATA,spnLast) - offsetof(J1939EN_DATA,spnFirst))
         );
         this->spn110  = 0x67;       // spn110 - Engine Coolant Temp - 63 C
         this->spn514  = 0x8D;       // spn514 - Nominal Friction - Percent Torque - 16%
@@ -3399,9 +3402,10 @@ extern	"C" {
         
 #ifdef NDEBUG
 #else
-        BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,eRc));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spnFirst));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,timeOut));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spnLast));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,pShiftExit));
         BREAK_NOT_BOUNDARY4(sizeof(J1939EN_DATA));
         if( !j1939en_Validate(this) ) {
@@ -4093,6 +4097,160 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //           T r a n s m i t  P G N 6 5 2 6 6   0xFEF2        LFE
+    //---------------------------------------------------------------
+    
+    // PGN 65266  0x00FEF2 - Fuel Economy (Liquid) - LFE
+    // Freq: 100 ms
+    // Priority: 6
+    
+    int             j1939en_SetupPgn65266(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn65266_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn65266_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65266_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 8) {
+                return 0;
+            }
+            *pData  = this->spn183 & 0xFF;
+            ++pData;    // 1
+            *pData  = (this->spn183 >> 8) & 0xFF;
+            ++pData;    // 2
+            *pData  = this->spn184 & 0xFF;
+            ++pData;    // 3
+            *pData  = (this->spn184 >> 8) & 0xFF;
+            ++pData;    // 4
+            *pData  = (this->spn185 & 0xFF);
+            ++pData;    // 5
+            *pData  = (this->spn185 >> 8) & 0xFF;
+            ++pData;    // 6
+            *pData  = this->spn51;
+            ++pData;    // 7
+            *pData  = 0xFF;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939en_TransmitPgn65266(
+        J1939EN_DATA	*this
+    )
+    {
+        uint16_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939en_SetupPgn65266(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->startTime65266 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //           T r a n s m i t  P G N 6 5 2 7 9   0xFEFF        WFI
+    //---------------------------------------------------------------
+    
+    // PGN 65279  0x00FEFF - Water in Fuel Indicator - WFI
+    // Freq: 100 ms
+    // Priority: 6
+    
+    int             j1939en_SetupPgn65279(
+        J1939EN_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        int             i;
+        
+        if (pPDU) {
+            pPDU->PF = (pgn65279_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn65279_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65279_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 8) {
+                return 0;
+            }
+            *pData  = 0xF8;
+            *pData |= (this->spn97 & 0x3);
+            for (i=1; i<8; ++i) {
+                ++pData;
+                *pData  = 0xFF;
+            }
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939en_TransmitPgn65279(
+        J1939EN_DATA	*this
+    )
+    {
+        uint16_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939en_SetupPgn65279(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->startTime65279 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                      Validate
     //---------------------------------------------------------------

@@ -14,6 +14,23 @@ the CAN and J1939 objects. It seemed to keep up with the message
 flow, because the PIC32MX795 is fairly powerful. I would use
 a PIC32MZ today.
 
+                *** Temporary ***
+For those of you who have looked at my prior versions, I just 
+finished breaking j1939tbl into two entities, j1939data and
+j1939misc. It allows me to have certain pgn/spn data in memory
+on the PIC32MX without overburdening it. j1939misc is mostly
+used to make my traces intelligible and is not needed in the
+PIC.
+
+Now, I start on the hard part for me. Coding the various objects
+for the simulation was tedious but pretty straight forward. Now,
+I turn to trying to simulate the internal logic of an engine,
+transmission, etc. I am a programmer by trade and never had any
+engineering training. So, this is my first stab at it. I will
+probably need to rewrite this portion several times. lol
+                *** End of Temporary ***
+
+
 My test environment is primarily MacOSX using TinyTest programs to
 provide regression testing. Those routines are now working in
 Windows as well. Initially, I did not add tracing functions,

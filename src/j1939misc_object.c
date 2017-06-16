@@ -1,7 +1,7 @@
 // vi: nu:noai:ts=4:sw=4
 
-//	Class Object Metods and Tables for 'j1939cab'
-//	Generated 06/12/2017 17:43:12
+//	Class Object Metods and Tables for 'j1939misc'
+//	Generated 06/15/2017 11:49:27
 
 
 /*
@@ -33,8 +33,8 @@
 
 
 
-#define			J1939CAB_OBJECT_C	    1
-#include        <j1939cab_internal.h>
+#define			J1939MISC_OBJECT_C	    1
+#include        <j1939misc_internal.h>
 
 
 
@@ -42,14 +42,14 @@
 //                  Class Object Definition
 //-----------------------------------------------------------
 
-struct j1939cab_class_data_s	{
+struct j1939misc_class_data_s	{
     // Warning - OBJ_DATA must be first in this object!
     OBJ_DATA        super;
     
     // Common Data
     //uint32_t        misc;
 };
-typedef struct j1939cab_class_data_s J1939CAB_CLASS_DATA;
+typedef struct j1939misc_class_data_s J1939MISC_CLASS_DATA;
 
 
 
@@ -62,26 +62,23 @@ typedef struct j1939cab_class_data_s J1939CAB_CLASS_DATA;
 
 static
 const
-OBJ_INFO        j1939cab_Info;            // Forward Reference
+OBJ_INFO        j1939misc_Info;            // Forward Reference
 
 
 
-OBJ_ID          j1939cab_Class(
+OBJ_ID          j1939misc_Class(
     OBJ_ID          objId
 );
 
 
 
 static
-bool            j1939cab_ClassIsKindOf(
+bool            j1939misc_ClassIsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939CAB_CLASS == classID) {
+    if (OBJ_IDENT_J1939MISC_CLASS == classID) {
        return true;
-    }
-    if (OBJ_IDENT_J1939CA_CLASS == classID) {
-        return true;
     }
     if (OBJ_IDENT_OBJ_CLASS == classID) {
        return true;
@@ -95,15 +92,15 @@ uint16_t		obj_ClassWhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939CAB_CLASS;
+    return OBJ_IDENT_J1939MISC_CLASS;
 }
 
 
 static
 const
 OBJ_IUNKNOWN    obj_Vtbl = {
-	&j1939cab_Info,
-    j1939cab_ClassIsKindOf,
+	&j1939misc_Info,
+    j1939misc_ClassIsKindOf,
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
@@ -118,23 +115,20 @@ OBJ_IUNKNOWN    obj_Vtbl = {
 //-----------------------------------------------------------
 
 const
-J1939CAB_CLASS_DATA  j1939cab_ClassObj = {
-    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939CAB_CLASS, 0, 1},
+J1939MISC_CLASS_DATA  j1939misc_ClassObj = {
+    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939MISC_CLASS, 0, 1},
 	//0
 };
 
 
 
 static
-bool            j1939cab_IsKindOf(
+bool            j1939misc_IsKindOf(
     uint16_t		classID
 )
 {
-    if (OBJ_IDENT_J1939CAB == classID) {
+    if (OBJ_IDENT_J1939MISC == classID) {
        return true;
-    }
-    if (OBJ_IDENT_J1939CA == classID) {
-        return true;
     }
     if (OBJ_IDENT_OBJ == classID) {
        return true;
@@ -145,51 +139,51 @@ bool            j1939cab_IsKindOf(
 
 // Dealloc() should be put into the Internal Header as well
 // for classes that get inherited from.
-void            j1939cab_Dealloc(
+void            j1939misc_Dealloc(
     OBJ_ID          objId
 );
 
 
-OBJ_ID          j1939cab_Class(
+OBJ_ID          j1939misc_Class(
     OBJ_ID          objId
 )
 {
-    return (OBJ_ID)&j1939cab_ClassObj;
+    return (OBJ_ID)&j1939misc_ClassObj;
 }
 
 
 static
-uint16_t		j1939cab_WhoAmI(
+uint16_t		j1939misc_WhoAmI(
     OBJ_ID          objId
 )
 {
-    return OBJ_IDENT_J1939CAB;
+    return OBJ_IDENT_J1939MISC;
 }
 
 
 const
-J1939CAB_VTBL     j1939cab_Vtbl = {
+J1939MISC_VTBL     j1939misc_Vtbl = {
     {
-        &j1939cab_Info,
-        j1939cab_IsKindOf,
+        &j1939misc_Info,
+        j1939misc_IsKindOf,
         obj_RetainStandard,
         obj_ReleaseStandard,
-        j1939cab_Dealloc,
-        j1939cab_Class,
-        j1939cab_WhoAmI,
-        (P_OBJ_QUERYINFO)j1939cab_QueryInfo,
-        (P_OBJ_TOSTRING)j1939cab_ToDebugString,
-        NULL,			// j1939cab_Enable,
-        NULL,			// j1939cab_Disable,
-        NULL,			// (P_OBJ_ASSIGN)j1939cab_Assign,
-        NULL,			// (P_OBJ_COMPARE)j1939cab_Compare,
-        NULL, 			// (P_OBJ_PTR)j1939cab_Copy,
-        NULL 			// (P_OBJ_HASH)j1939cab_Hash,
+        j1939misc_Dealloc,
+        j1939misc_Class,
+        j1939misc_WhoAmI,
+        (P_OBJ_QUERYINFO)j1939misc_QueryInfo,
+        (P_OBJ_TOSTRING)j1939misc_ToDebugString,
+        NULL,			// j1939misc_Enable,
+        NULL,			// j1939misc_Disable,
+        NULL,			// (P_OBJ_ASSIGN)j1939misc_Assign,
+        NULL,			// (P_OBJ_COMPARE)j1939misc_Compare,
+        NULL, 			// (P_OBJ_PTR)j1939misc_Copy,
+        NULL 			// (P_OBJ_HASH)j1939misc_Hash,
     },
     // Put other object method names below this.
     // Properties:
     // Methods:
-    //j1939cab_IsEnabled,
+    //j1939misc_IsEnabled,
  
 };
 
@@ -197,12 +191,12 @@ J1939CAB_VTBL     j1939cab_Vtbl = {
 
 static
 const
-OBJ_INFO        j1939cab_Info = {
-    "j1939cab",
-    "j1939 Cab Controller",
-    (OBJ_DATA *)&j1939cab_ClassObj,
-    (OBJ_DATA *)&j1939ca_ClassObj,
-    (OBJ_IUNKNOWN *)&j1939cab_Vtbl
+OBJ_INFO        j1939misc_Info = {
+    "j1939misc",
+    "j1939 Misc - not needed for normal operation",
+    (OBJ_DATA *)&j1939misc_ClassObj,
+    (OBJ_DATA *)&obj_ClassObj,
+    (OBJ_IUNKNOWN *)&j1939misc_Vtbl
 };
 
 

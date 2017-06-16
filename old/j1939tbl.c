@@ -7370,7 +7370,7 @@ extern "C" {
             spn184 = pMsg->DATA.bytes[2] | (pMsg->DATA.bytes[3] << 8);
             // SPN 185  5-6     16bits       Engine Average Fuel Economy
             spn185 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
-            // SPN 51   7       8bits       Engine Throttle Position
+            // SPN 51   7       8bits        Engine Throttle Position
             spn51 = pMsg->DATA.bytes[6];
 
             if (spn183 == 0xFFFF) {

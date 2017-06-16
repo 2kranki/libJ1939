@@ -1207,7 +1207,7 @@ extern "C" {
             pPDU->PF = 254;
             pPDU->PS = 247;
             pPDU->SA = this->super.ca;
-            pPDU->P  = pgn65271_entry.priority;
+            pPDU->P  = pgn57344_entry.priority;
         }
         else {
             return 0;

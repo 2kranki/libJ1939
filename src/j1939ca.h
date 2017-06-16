@@ -78,7 +78,7 @@
 
 
 #include        <j1939_defs.h>
-#include        <j1939tbl.h>
+#include        <j1939data.h>
 
 
 #ifndef J1939CA_H

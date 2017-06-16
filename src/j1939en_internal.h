@@ -120,8 +120,12 @@ extern "C" {
         uint32_t            startTime65252;     // Repeat every 1000ms
         uint32_t            startTime65262;     // Repeat every 1000ms
         uint32_t            startTime65265;     // Repeat every 100ms
+        uint32_t            startTime65266;     // Repeat every 100ms
+        uint32_t            startTime65279;     // Repeat every 10000ms
 
         // The first spn is used in Init() to establish size of area to initialize.
+        uint8_t             spnFirst;
+        uint8_t             spn51;              // Engine Throttle Position
         uint8_t             spn52;              // Engine Intercooler Temperature
         uint8_t             spn69;              // Two Speed Axle Switch
         uint8_t             spn70;              // Parking Brake Switch
@@ -180,13 +184,17 @@ extern "C" {
         uint8_t             spn2432;            // Engine Demand - Percent Torque
         uint8_t             spn2978;            // Estimated Engine Parasitic Losses -
                                                 // Percent Torque
-        uint8_t             reserved8b[1];
+        uint8_t             spn97;              // Water In Fuel Indicator
+        //uint8_t             reserved8b[1];
 
         // Engine Fields - 2 bytes
         uint16_t            spn84;              // Wheel-Based Vehicle Speed
         uint16_t            spn161;             // 03 - Transmission Input Shaft Speed
         uint16_t            spn175;             // Engine Oil Temperature 1
         uint16_t            spn176;             // Turbo Oil Temperature
+        uint16_t            spn183;             // Engine Instantaneous Fuel Economy
+        uint16_t            spn184;             // Engine Average Fuel Economy
+        uint16_t            spn185;             // Engine Throttle Position
         uint16_t            spn190;             // Engine Speed (rpm)
         uint16_t            spn191;             // 03 - Transmission Output Shaft Speed
         uint16_t            spn515;             // Engine's Desired Operating Speed
@@ -194,6 +202,7 @@ extern "C" {
         uint16_t            spn1637;            // Engine Coolant Temperature
         uint16_t            reserved16;
         // The last spn is used in Init() to establish size of area to initialize.
+        uint32_t            spnLast;
 
     };
 #pragma pack(pop)

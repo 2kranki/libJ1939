@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/13/2017  4:58:58.000)
+# ( 6/16/2017 14:30:14.000)
 
 
 LIBNAM=libJ1939
@@ -122,6 +122,18 @@ $(OBJDIR)/j1939cu_object.o: $(SRCDIR)/j1939cu_object.c
 
 
 
+OBJS += $(OBJDIR)/j1939data.o $(OBJDIR)/j1939data_object.o
+
+
+$(OBJDIR)/j1939data.o: $(SRCDIR)/j1939data.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939data_object.o: $(SRCDIR)/j1939data_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
 OBJS += $(OBJDIR)/j1939dg.o $(OBJDIR)/j1939dg_object.o
 
 
@@ -170,6 +182,18 @@ $(OBJDIR)/j1939er_object.o: $(SRCDIR)/j1939er_object.c
 
 
 
+OBJS += $(OBJDIR)/j1939misc.o $(OBJDIR)/j1939misc_object.o
+
+
+$(OBJDIR)/j1939misc.o: $(SRCDIR)/j1939misc.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+$(OBJDIR)/j1939misc_object.o: $(SRCDIR)/j1939misc_object.c
+	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
+
+
+
 OBJS += $(OBJDIR)/j1939ss.o $(OBJDIR)/j1939ss_object.o
 
 
@@ -190,18 +214,6 @@ $(OBJDIR)/j1939sys.o: $(SRCDIR)/j1939sys.c
 
 
 $(OBJDIR)/j1939sys_object.o: $(SRCDIR)/j1939sys_object.c
-	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
-
-
-
-OBJS += $(OBJDIR)/j1939tbl.o $(OBJDIR)/j1939tbl_object.o
-
-
-$(OBJDIR)/j1939tbl.o: $(SRCDIR)/j1939tbl.c
-	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
-
-
-$(OBJDIR)/j1939tbl_object.o: $(SRCDIR)/j1939tbl_object.c
 	$(CC) $(CFLAGS) -c -o $(OBJDIR)/$(@F) $<
 
 
@@ -327,6 +339,13 @@ test_j1939cu:
 	$(OBJDIR)/$(@F)
 
 
+TESTS += test_j1939data
+
+test_j1939data:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939data.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
+	$(OBJDIR)/$(@F)
+
+
 TESTS += test_j1939dg
 
 test_j1939dg:
@@ -355,6 +374,13 @@ test_j1939er:
 	$(OBJDIR)/$(@F)
 
 
+TESTS += test_j1939misc
+
+test_j1939misc:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939misc.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
+	$(OBJDIR)/$(@F)
+
+
 TESTS += test_j1939ss
 
 test_j1939ss:
@@ -366,13 +392,6 @@ TESTS += test_j1939sys
 
 test_j1939sys:
 	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939sys.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
-	$(OBJDIR)/$(@F)
-
-
-TESTS += test_j1939tbl
-
-test_j1939tbl:
-	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Itests $(LIBPATH) -o $(OBJDIR)/$(@F) tests/test_j1939tbl.c tests/common.c tests/common2.c tests/common3.c tests/common4.c 
 	$(OBJDIR)/$(@F)
 
 
