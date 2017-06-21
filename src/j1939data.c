@@ -168,7 +168,9 @@ extern "C" {
         0,              // Operating Min
         1,              // Operating Max
         0,              // Data Min
-        1               // Data Max
+        1,              // Data Max
+        NULL,
+        NULL
     };
     
     const
@@ -335,7 +337,7 @@ extern "C" {
     static
     const
     J1939_SPN_TYPE      pressure01 = {
-        //  Len   Mult    Div  offset  round    min    max     min    max
+    //  Len   Mult    Div  offset  round    min    max     min    max
         8,     5,    10,      0,     2,     0,   125,      0,   250
     };
     
@@ -347,30 +349,64 @@ extern "C" {
         //  Len   Mult    Div  offset  round    min    max     min    max
         8,     1,     1,      0,     0,     0,   253,      0,   255
     };
+#endif
     
     
     static
     const
     J1939_SPN_TYPE      temp01 = {
-        //  Len   Mult    Div  offset  round    min    max     min    max
-        8,     1,     1,    -40,     2,   -40,   210,      0,   250
+        J1939_SPN_TYPE_TEMPERATURE01,
+        8,                      // Len in bits
+        0,                      // Number of Decimal Places
+        1,                      // Multiplier
+        1,                      // Divisor
+        -40,                    // Offset
+        2,                      // Round
+        -40,                    // Min Data Range
+        210,                    // Max Data Range
+        0,                      // Min Operational Range
+        250,                    // Max Operational Range
+        "Temperature",
+        "deg C"
     };
     
     static
     const
     J1939_SPN_TYPE      temp02 = {
-        //  Len   Mult    Div  offset  round    min    max     min    max
-        16,  3125, 10000,   -273,  5000,  -273,  1735,      0, 55520
+        J1939_SPN_TYPE_TEMPERATURE02,
+        16,                     // Len in bits
+        5,                      // Number of Decimal Places
+        3125,                   // Multiplier
+        10000,                  // Divisor
+        -273,                   // Offset
+        5000,                   // Round
+        -273,                   // Min Data Range
+        1735,                   // Max Data Range
+        0,                      // Min Operational Range
+        55520,                  // Max Operational Range
+        "Temperature",
+        "deg C"
     };
     
     
     static
     const
     J1939_SPN_TYPE      velocityRotational01 = {
-        //  Len   Mult    Div  offset  round    min    max     min    max
-        16,   125,  1000,      0,   500,     0,  8031,      0, 64255
+        //  Len   Mult    Div  offset  round    min     max     min    max
+        J1939_SPN_TYPE_VELOCITY01,
+        16,                     // Len in bits
+        3,                      // Number of Decimal Places
+        125,                    // Multiplier
+        1000,                   // Divisor
+        0,                      // Offset
+        500,                    // Round
+        0,                      // Min Data Range
+        8031875,                // Max Data Range - 8,031.875rpm
+        0,                      // Min Operational Range
+        64255,                  // Max Operational Range - 8,031.875rpm
+        "speed",
+        "rpm"
     };
-#endif
     
     
     
@@ -398,7 +434,7 @@ extern "C" {
     J1939_SPN           spn52 = {
         52,
         0,
-        NULL    /*&temp01*/,
+        &temp01,
         "Engine Intercooler Temperature"
     };
     
@@ -708,8 +744,7 @@ extern "C" {
         162,
         0,
         NULL    /*&???*/,
-        "Transmission Requested Range",
-        NULL
+        "Transmission Requested Range"
     };
     
     
@@ -726,12 +761,13 @@ extern "C" {
         163,
         0,
         NULL    /*&???*/,
-        "Transmission Current Range",
-        NULL
+        "Transmission Current Range"
     };
     
     
     // SPN 166 - Engine Rated Power (kW)
+    // Net brake power that the engine will deliver continuously,
+    // specified for a given application at a rated speed.
     //                                      // actual_power = (ratedPower * 0.5) kW
     //                                      // range: 0 - 32127.5 kW
     static
@@ -740,8 +776,7 @@ extern "C" {
         166,
         0,
         NULL    /*&???*/,
-        "Engine Rated Power (kW)",
-        "Net brake power that the engine will deliver continuously, specified for a given application at a rated speed."
+        "Engine Rated Power (kW)"
     };
     
     
@@ -773,7 +808,7 @@ extern "C" {
     J1939_SPN           spn170 = {
         170,
         0,
-        NULL    /*&temp01*/,
+        &temp01,
         "Cab Interior Temperature"
     };
     
@@ -784,7 +819,7 @@ extern "C" {
     J1939_SPN           spn171 = {
         171,
         0,
-        NULL    /*&temp01*/,
+        &temp01,
         "Ambient Air Temperature"
     };
     
@@ -795,7 +830,7 @@ extern "C" {
     J1939_SPN           spn172 = {
         172,
         0,
-        NULL    /*&temp01*/,
+        &temp01,
         "Engine Air Inlet Temperature"
     };
     
@@ -806,7 +841,7 @@ extern "C" {
     J1939_SPN           spn174 = {
         174,
         0,
-        NULL    /*&temp01*/,
+        &temp01,
         "Fuel Temperature"
     };
     
@@ -817,7 +852,7 @@ extern "C" {
     J1939_SPN           spn175 = {
         175,
         0,
-        NULL    /*&temp02*/,
+        &temp02,
         "Engine Oil Temperature 1"
     };
     
@@ -828,7 +863,7 @@ extern "C" {
     J1939_SPN           spn176 = {
         176,
         0,
-        NULL    /*&temp02*/,
+        &temp02,
         "Turbo Oil Temperature"
     };
     
@@ -851,8 +886,19 @@ extern "C" {
     J1939_SPN           spn190 = {
         190,
         0,
-        NULL    /*&velocityRotational01*/,
+        &velocityRotational01,
         "Engine Speed"
+    };
+    
+    
+    // SPN 191 - Transmission Output Shaft Speed - Calculated speed of the transmission output shaft.
+    static
+    const
+    J1939_SPN           spn191 = {
+        191,
+        0,
+        &velocityRotational01,
+        "Transmission Output Shaft Speed"
     };
     
     
@@ -2882,7 +2928,7 @@ extern "C" {
     const
     J1939_PGN_ENTRY     pgn65178_entry = {
         // PGN 65178  0x00FE9A - Turbocharger Information 2 - TCI2
-        0x0000FE99,
+        0x0000FE9A,
         1000,               // msFreq
         8,                  // dlc
         6,                  // priority
@@ -2890,6 +2936,20 @@ extern "C" {
         0,                  // --reserved--
         NULL,               // SPN Table Pointer
         "Turbocharger Information 2 - TCI2"
+    };
+    
+    
+    const
+    J1939_PGN_ENTRY     pgn65198_entry = {
+        // PGN 65198  0x00FEAE - Air Supply Pressure - AIR1
+        0x0000FEAE,
+        1000,               // msFreq
+        8,                  // dlc
+        6,                  // priority
+        7,                  // cSPNs
+        0,                  // --reserved--
+        NULL,               // SPN Table Pointer
+        "Air Supply Pressure - AIR1"
     };
     
     
@@ -3147,7 +3207,7 @@ extern "C" {
     
     const
     J1939_PGN_ENTRY     pgn65252_entry = {
-        // PGN 65252  0x00FEE4 - Shutdown           - SHUTDOW
+        // PGN 65252  0x00FEE4 - Shutdown - SHUTDOW
         0x00FEE4,
         1000,               // msFreq
         8,                  // dlc
@@ -3156,6 +3216,20 @@ extern "C" {
         0,                  // --reserved--
         pgn65252spns,       // SPN Table Pointer
         "Shutdown - SHUTDOW"
+    };
+    
+    
+    const
+    J1939_PGN_ENTRY     pgn65254_entry = {
+        // PGN 65254  0x00FEE6 - Time/Date - TD
+        0x00FEE6,
+        0,                  // msFreq
+        8,                  // dlc
+        6,                  // priority
+        8,                  // cSPNs
+        0,                  // --reserved--
+        NULL, //pgn65254spns,       // SPN Table Pointer
+        "Time/Date - TD"
     };
     
     
@@ -3657,6 +3731,7 @@ extern "C" {
         &pgn65129_entry,
         &pgn65177_entry,
         &pgn65178_entry,
+        &pgn65198_entry,
         &pgn65213_entry,
         &pgn65215_entry,
         &pgn65217_entry,

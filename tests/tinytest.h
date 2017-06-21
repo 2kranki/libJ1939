@@ -64,7 +64,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "ERROR: "                                                   \
+            "\aERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d false, actual: %s\n",                                \
            __FILE__, __LINE__, #actual);                                \
@@ -85,7 +85,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "ERROR: "                                                   \
+            "\aERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d true, actual: %s\n",                                 \
            __FILE__, __LINE__, #actual                                  \
@@ -107,7 +107,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "ERROR: "                                                   \
+            "\aERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d expected %s, actual: %s\n",                          \
            __FILE__, __LINE__, #expected, #actual);                     \
@@ -125,7 +125,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "ERROR: "                                                   \
+            "\aERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d expected \"%s\", actual: \"%s\"\n",                  \
            __FILE__, __LINE__, expected, actual);                       \
@@ -143,7 +143,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "ERROR: "                                                   \
+            "\aERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d assertion failed: \"%s\"\n",                         \
            __FILE__, __LINE__, #assertion);                             \

@@ -31,8 +31,10 @@
     "routines": [
         "j1939msg.c"
     ],
-    "tests":
-    {
+    "programs": {
+        "dumpJ1939.c":null
+    },
+    "tests": {
         "test_dump.c":     ["common.c","common2.c","common3.c","common4.c"],
         "test_truck.c":    ["common.c","common2.c","common3.c","common4.c"],
         "test_j1939ca.c":  ["common.c","common2.c","common3.c","common4.c"],

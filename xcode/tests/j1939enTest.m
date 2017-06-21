@@ -188,9 +188,9 @@ void        shiftExit(void *ptr,bool fShifting)
         XCTAssertTrue( (0 == cCurMsg) );
 
         // We need to go long enough (1200ms) to get all timed messages to pop.
-        // PGN 61443 - F003 - every 50ms        28ea
-        // PGN 61444 - F004 - every 100ms       14ea
-        // PGN 65265 - FEF1 - every 100ms       14ea
+        // PGN 61443 - F003 - every 50ms        24ea
+        // PGN 61444 - F004 - every 100ms       12ea
+        // PGN 65265 - FEF1 - every 100ms       12ea
         // PGN 65247 - FEDF - every 250ms        6ea
         // PGN 65129 - FE69 - every 1000ms       1ea
         // PGN 65262 - FEEE - every 1000ms       1ea
@@ -205,7 +205,7 @@ void        shiftExit(void *ptr,bool fShifting)
         fSkipPrt = false;
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( ((56 < cCurMsg) && (cCurMsg < 65)) );
+        XCTAssertTrue( ((22 < cCurMsg) && (cCurMsg < 26)) );
         j = 0;
         for (i=0; i<cCurMsg; ++i) {
             if (j1939msg_getPGN(&curMsg[i]).pgn == 61443) {
@@ -213,7 +213,7 @@ void        shiftExit(void *ptr,bool fShifting)
             }
         }
         fprintf(stderr, "j = %d\n", j);
-        XCTAssertTrue( ((23 < j) && (j < 29)) );
+        XCTAssertTrue( ((10 < j) && (j < 15)) );
         j = 0;
         for (i=0; i<cCurMsg; ++i) {
             if (j1939msg_getPGN(&curMsg[i]).pgn == 61444) {
@@ -221,7 +221,7 @@ void        shiftExit(void *ptr,bool fShifting)
             }
         }
         fprintf(stderr, "j = %d\n", j);
-        XCTAssertTrue( ((11 < j) && (j < 15)) );
+        XCTAssertTrue( ((10 < j) && (j < 15)) );
         j = 0;
         for (i=0; i<cCurMsg; ++i) {
             if (j1939msg_getPGN(&curMsg[i]).pgn == 65265) {

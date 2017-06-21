@@ -711,6 +711,41 @@ extern	"C" {
     );
     
    
+    bool            j1939en_CylinderHeatersEngage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_CylinderHeatersDisengage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_EngineShutdownEngage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_EngineShutdownDisengage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_EngineStarterEngage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_EngineStarterDisengage(
+        J1939EN_DATA	*this
+    );
+    
+    
+    bool            j1939en_HandleTimedTransmits(
+        J1939EN_DATA	*this
+    );
+    
+    
     // j1939en_Open calculates the needed buffer size, allocates an
     // area and sets up the control portion of the j1939en.
     // Warning - See J1939CAM, but this function may not change.
@@ -724,11 +759,6 @@ extern	"C" {
     );
         
 
-    bool            j1939en_HandleTimedTransmits(
-        J1939EN_DATA	*this
-    );
-    
-    
     bool            j1939en_TransmitPgn61443(
         J1939EN_DATA	*this
     );

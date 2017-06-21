@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/16/2017 14:30:14.000)
+# ( 6/18/2017 17:54:14.000)
 
 
 LIBNAM=libJ1939
@@ -286,6 +286,27 @@ $(LIBPATH):  $(OBJS)
 
 
 
+PROGS =
+
+
+
+PROGS += dumpJ1939
+
+dumpJ1939:
+	$(CC) $(CFLAGS) $(CFLAGS_LIBS) -L$(LIBDIR) -Iprograms/dumpJ1939 $(LIBPATH) -o $(OBJDIR)/$(@F) programs/dumpJ1939/dumpJ1939.c 
+	echo $(OBJDIR)/$(@F)
+
+
+
+
+.PHONY: programs
+programs:  $(PROGS)
+
+
+
+
+
+
 TESTS =
 
 
@@ -425,6 +446,7 @@ test_truck:
 
 
 
+.PHONY: test
 test:  $(TESTS)
 
 

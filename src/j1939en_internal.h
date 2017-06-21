@@ -59,10 +59,15 @@ extern "C" {
 
 
     typedef enum j1939en_state_e {
-        J1939EN_STATE_NOT_STARTED=0,
-        J1939EN_STATE_STARTED_IDLE,
+        J1939EN_STATE_STOPPED=0,
+        J1939EN_STATE_HEATERS_ON,
+        J1939EN_STATE_STARTER_ACTIVATE,
+        J1939EN_STATE_STARTER_ACTIVE,
+        J1939EN_STATE_STARTER_ENGAGED,
         J1939TC_STATE_RUNNING,
         J1939TC_STATE_RUNNING_RETARDED,
+        J1939TC_STATE_SHUTDOWN_PHASE1,
+        J1939TC_STATE_SHUTDOWN_PHASE2,
     } J1939EN_STATE;
     
     
@@ -90,20 +95,20 @@ extern "C" {
         ERESULT             eRc;
         OBJ_ID              pECU;
         uint16_t            ratedPower;
+        uint16_t            state;              // Engine State (see J1939EN_STATE)
         //                                      // actual_power = (ratedPower * 0.5) kW
         //                                      // range: 0 - 32127.5 kW
         uint16_t            minTorque;
         uint16_t            maxTorque;
-        bool                fAutomatic;         // True == Automatic Transmission,
-        //                                      // False == Manual
         uint32_t            timeOut;
         uint8_t             fRetarding;         // Retarding is Active
         uint8_t             fShifting;          // Shift in progress
         uint8_t             fShutdown;          // Shutdown is Active
-        uint8_t             reserved8c[1];
+        uint8_t             fAutomatic;         // True == Automatic Transmission,
+        //                                      // False == Manual
         P_VOIDEXIT12        pShiftExit;
         void                *pShiftData;
-        
+        //uint8_t             reserved8b[1];
         
         // Engine parameters
         //                                      // actual_rpm = (rpm * 0.125) / 1000
@@ -112,6 +117,8 @@ extern "C" {
         void                *pRpmData;
         
         // Message Repeat Times
+        uint32_t            currentTime;
+        uint32_t            startTimeOperation; // Varies
         uint32_t            startTime61443;     // Repeat every 50ms
         uint32_t            startTime61444;     // Repeat engine speed dependent
                                                 // (100ms for now)
@@ -128,79 +135,87 @@ extern "C" {
         uint8_t             spn51;              // Engine Throttle Position
         uint8_t             spn52;              // Engine Intercooler Temperature
         uint8_t             spn69;              // Two Speed Axle Switch
+
         uint8_t             spn70;              // Parking Brake Switch
         uint8_t             spn86;              // Cruise Control Set Speed
-
         uint8_t             spn91;              // Accelerator Pedal Position 1
         uint8_t             spn92;              // Percent Load At Current Speed
+
         uint8_t             spn110;             // Engine Coolant Temperature
         uint8_t             spn174;             // Fuel Temperature
-
         uint8_t             spn512;             // Driver's Demand Engine - Percent Torque
         uint8_t             spn513;             // Actual Engine - Percent Torque
+
         uint8_t             spn514;             // Nominal Friction - Percent Torque
         uint8_t             spn519;             // Engine's Desired Operating Speed
                                                 // Asymmetry Adjustment
-
         uint8_t             spn523;             // Transmission Current Gear
         uint8_t             spn524;             // Transmission Selected Gear
+
         uint8_t             spn527;             // Cruise Control States
         uint8_t             spn558;             // Accelerator Pedal 1 Low Idle Switch
-
         uint8_t             spn559;             // Accelerator Pedal Kickdown Switch
         uint8_t             spn574;             // Transmission Shift In Process
+
         uint8_t             spn595;             // Cruise Control Active
         uint8_t             spn596;             // Cruise Control Enable Switch
-
         uint8_t             spn597;             // Brake Switch
         uint8_t             spn598;             // Clutch Switch
+
         uint8_t             spn599;             // Cruise Control Set Switch
         uint8_t             spn600;             // Cruise Control Coast (Decelerate) Switch
-
         uint8_t             spn601;             // Cruise Control Resume Switch
         uint8_t             spn602;             // Cruise Control Accelerate Switch
+
         uint8_t             spn899;             // Engine Torque Mode
         uint8_t             spn966;             // Engine Test Mode Switch
-
         uint8_t             spn967;             // Idle Decrement Switch
         uint8_t             spn968;             // Idle Increment Switch
+
         uint8_t             spn974;             // Remote Accelerator Pedal Position
         uint8_t             spn976;             // PTO State
-
         uint8_t             spn1109;            // Engine Protection System
         //                                      // Approaching Shutdown
         uint8_t             spn1110;            // Engine Protection System has
         //                                      // Shutdown Engine
+
         uint8_t             spn1134;            // Engine Intercooler Thermostat Opening
         uint8_t             spn1237;            // Engine Shutdown Override Switch
-
         uint8_t             spn1437;            // Road Speed Limit Status
         uint8_t             spn1480;            // CA of Controlling Retarder Device
+
         uint8_t             spn1483;            // Source Address of Controlling Device
                                                 // for Engine Control
         uint8_t             spn1633;            // Cruise Control Pause Switch
-
         uint8_t             spn1675;            // Engine Starter Mode
         uint8_t             spn2432;            // Engine Demand - Percent Torque
+
         uint8_t             spn2978;            // Estimated Engine Parasitic Losses -
                                                 // Percent Torque
         uint8_t             spn97;              // Water In Fuel Indicator
-        //uint8_t             reserved8b[1];
+        uint8_t             reserved8b[2];
 
         // Engine Fields - 2 bytes
         uint16_t            spn84;              // Wheel-Based Vehicle Speed
         uint16_t            spn161;             // 03 - Transmission Input Shaft Speed
+
         uint16_t            spn175;             // Engine Oil Temperature 1
         uint16_t            spn176;             // Turbo Oil Temperature
+
         uint16_t            spn183;             // Engine Instantaneous Fuel Economy
         uint16_t            spn184;             // Engine Average Fuel Economy
+
         uint16_t            spn185;             // Engine Throttle Position
         uint16_t            spn190;             // Engine Speed (rpm)
+
         uint16_t            spn191;             // 03 - Transmission Output Shaft Speed
         uint16_t            spn515;             // Engine's Desired Operating Speed
+
         uint16_t            spn1636;            // Intake Manifold 1 Air Temperature
         uint16_t            spn1637;            // Engine Coolant Temperature
-        uint16_t            reserved16;
+
+        //uint16_t            reserved16;
+
         // The last spn is used in Init() to establish size of area to initialize.
         uint32_t            spnLast;
 
@@ -295,6 +310,11 @@ extern "C" {
     );
 
 
+    ERESULT         j1939en_Operation(
+        J1939EN_DATA	*this
+    );
+    
+    
     int             j1939en_SetupPgn61443(
         J1939EN_DATA	*this,
         J1939_PDU       *pPDU,

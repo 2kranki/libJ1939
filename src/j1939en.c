@@ -2461,6 +2461,47 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
+    //                  C y l i n d e r  H e a t e r s
+    //---------------------------------------------------------------
+    
+    bool            j1939en_CylinderHeatersEngage(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        return true;
+    }
+    
+    
+    bool            j1939en_CylinderHeatersDisengage(
+        J1939EN_DATA	*this
+    )
+    {
+    
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                      D e a l l o c
     //---------------------------------------------------------------
 
@@ -2483,6 +2524,91 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    //               E n g i n e  S h u t d o w n
+    //---------------------------------------------------------------
+    
+    bool            j1939en_EngineShutdownEngage(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        return true;
+    }
+    
+    
+    bool            j1939en_EngineShutdownDisengage(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //               E n g i n e  S t a r t e r
+    //---------------------------------------------------------------
+    
+    bool            j1939en_EngineStarterEngage(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->spn1675 = 0b001;          // starter active, gear not engaged
+        this->state = J1939EN_STATE_STARTER_ACTIVE;
+        
+        return true;
+    }
+    
+    
+    bool            j1939en_EngineStarterDisengage(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                  H a n d l e  P G N 0    0x000000
     //---------------------------------------------------------------
@@ -3291,31 +3417,48 @@ extern	"C" {
         }
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->currentTime = curTime;
+
+        if (curTime  >= this->startTimeOperation) {
+            j1939en_Operation(this);
+        }
 
         if (j1939ca_getTimedTransmits((J1939CA_DATA *)this)) {
             if ((curTime - this->startTime61443) >= pgn61443_entry.msFreq) {
                 j1939en_TransmitPgn61443(this);
+                this->startTime61443 = curTime;
             }
             if ((curTime - this->startTime61444) >= pgn61444_entry.msFreq) {
                 j1939en_TransmitPgn61444(this);
+                this->startTime61444 = curTime;
             }
             if ((curTime - this->startTime65129) >= pgn65129_entry.msFreq) {
                 j1939en_TransmitPgn65129(this);
+                this->startTime65129 = curTime;
             }
             if ((curTime - this->startTime65247) >= pgn65247_entry.msFreq) {
                 j1939en_TransmitPgn65247(this);
+                this->startTime65247 = curTime;
             }
             if (this->fShutdown && ((curTime - this->startTime65252) >= pgn65252_entry.msFreq)) {
                 j1939en_TransmitPgn65252(this);
+                this->startTime65252 = curTime;
             }
             if ((curTime - this->startTime65262) >= pgn65262_entry.msFreq) {
                 j1939en_TransmitPgn65262(this);
+                this->startTime65262 = curTime;
             }
             if ((curTime - this->startTime65265) >= pgn65265_entry.msFreq) {
                 j1939en_TransmitPgn65265(this);
+                this->startTime65265 = curTime;
+            }
+            if ((curTime - this->startTime65266) >= pgn65266_entry.msFreq) {
+                j1939en_TransmitPgn65266(this);
+                this->startTime65266 = curTime;
             }
             if ((curTime - this->startTime65279) >= pgn65265_entry.msFreq) {
                 j1939en_TransmitPgn65279(this);
+                this->startTime65279 = curTime;
             }
         }
         if (this->fRetarding) {
@@ -3403,8 +3546,10 @@ extern	"C" {
 #ifdef NDEBUG
 #else
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spnFirst));
+        //fprintf(stderr, "Offset of spn84 = %lu\n", offsetof(J1939EN_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spn84));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,timeOut));
+        //fprintf(stderr, "Offset of spnLast = %lu\n", offsetof(J1939EN_DATA,spnLast));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,spnLast));
         BREAK_NOT_BOUNDARY4(offsetof(J1939EN_DATA,pShiftExit));
         BREAK_NOT_BOUNDARY4(sizeof(J1939EN_DATA));
@@ -3440,9 +3585,90 @@ extern	"C" {
         }
 #endif
         
-        //this->rpm = rpm;
-        if (this->pRpmRoutine) {
-            this->pRpmRoutine(this->pRpmData, rpm);
+        switch (this->state) {
+
+            case J1939EN_STATE_STOPPED:
+                break;
+                
+            case J1939EN_STATE_HEATERS_ON:
+                break;
+                
+            case J1939EN_STATE_STARTER_ENGAGED:
+                break;
+                
+            case J1939TC_STATE_RUNNING:
+                break;
+                
+            case J1939TC_STATE_RUNNING_RETARDED:
+                break;
+                
+        }
+        
+        // Return to caller.
+        j1939en_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                      O p e r a t i o n
+    //---------------------------------------------------------------
+    
+    ERESULT         j1939en_Operation(
+        J1939EN_DATA	*this
+    )
+    {
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939en_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        switch (this->state) {
+
+            case J1939EN_STATE_STOPPED:
+                break;
+                
+            case J1939EN_STATE_HEATERS_ON:
+                if (this->spn1675 == 0b001) {
+                    this->startTimeOperation = this->currentTime + 250; // ms
+                    break;
+                }
+                break;
+                
+            case J1939EN_STATE_STARTER_ACTIVATE:
+                this->startTimeOperation = this->currentTime + 250; // ms
+                if (this->spn1675 == 0b000) {
+                    this->spn1675 = 0b001;
+                    this->startTimeOperation = this->currentTime + 250; // ms
+                    break;
+                }
+               break;
+                
+            case J1939EN_STATE_STARTER_ACTIVE:
+                this->startTimeOperation = this->currentTime + 250; // ms
+                break;
+                
+            case J1939EN_STATE_STARTER_ENGAGED:
+                break;
+                
+            case J1939TC_STATE_RUNNING:
+                break;
+                
+            case J1939TC_STATE_RUNNING_RETARDED:
+                break;
+                
+            case J1939TC_STATE_SHUTDOWN_PHASE1:
+                break;
+                
+            case J1939TC_STATE_SHUTDOWN_PHASE2:
+                break;
+                
         }
         
         // Return to caller.
@@ -3582,7 +3808,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61443 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -3665,7 +3890,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61444 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -3746,7 +3970,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65129 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -3827,7 +4050,6 @@ extern	"C" {
         }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -3910,7 +4132,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65247 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
         return true;
@@ -3991,7 +4212,6 @@ extern	"C" {
         }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65262 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -4089,7 +4309,6 @@ extern	"C" {
         }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65265 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
 
         // Return to caller.
         return fRc;
@@ -4170,7 +4389,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65266 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
         return fRc;
@@ -4243,7 +4461,6 @@ extern	"C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65279 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
         return fRc;

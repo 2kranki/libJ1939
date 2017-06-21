@@ -22,9 +22,20 @@
 
 
 #include    <tinytest.h>
-#include    <cmn_defs.h>
+#include    <common.h>
 #include    <trace.h>
+#include    <j1939_defs.h>
 #include    <j1939cab_internal.h>
+#include    <j1939can.h>
+#include    <j1939sys.h>
+
+
+static
+J1939CAN_DATA   *pCAN = OBJ_NIL;
+
+
+
+
 
 
 
@@ -37,6 +48,9 @@ int         setUp(
     trace_Shared( ); 
     // Put setup code here. This method is called before the invocation of each
     // test method in the class.
+    pSYS = j1939sys_New();
+    pCAN = j1939can_New();
+    cCurMsg = 0;
     
     return 1; 
 }
@@ -49,7 +63,11 @@ int         tearDown(
 {
     // Put teardown code here. This method is called after the invocation of each
     // test method in the class.
-
+    obj_Release(pCAN);
+    pCAN = OBJ_NIL;
+    obj_Release(pSYS);
+    pSYS = OBJ_NIL;
+    //j1939_SharedReset( );
     
     trace_SharedReset( ); 
     mem_Dump( );
@@ -68,18 +86,22 @@ int         test_j1939cab_OpenClose(
     char        *pTestName
 )
 {
-    J1939CAB_DATA	*pObj = OBJ_NIL;
+    J1939CAB_DATA	*pCab = OBJ_NIL;
    
-    pObj = j1939cab_Alloc(0);
-    TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    pObj = j1939cab_Init( pObj );
-    TINYTEST_FALSE( (OBJ_NIL == pObj) );
-    if (pObj) {
+    XCTAssertFalse( (OBJ_NIL == pCAN) );
+    XCTAssertFalse( (OBJ_NIL == pSYS) );
+    XCTAssertTrue( (0 == cCurMsg) );
+ 
+    pCab = j1939cab_Alloc(0);
+    TINYTEST_FALSE( (OBJ_NIL == pCab) );
+    pCab = j1939cab_Init(pCab, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4);
+    TINYTEST_FALSE( (OBJ_NIL == pCab) );
+    if (pCab) {
 
         // Test something.
 
-        obj_Release(pObj);
-        pObj = OBJ_NIL;
+        obj_Release(pCab);
+        pCab = OBJ_NIL;
     }
 
     return 1;

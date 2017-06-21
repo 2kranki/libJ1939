@@ -430,6 +430,14 @@ extern	"C" {
     } J1939_PREFERRED_ADDRESS;
 
     
+    
+    typedef enum j1939_spn_type_e {
+        J1939_SPN_TYPE_UNKNOWN=0,
+        J1939_SPN_TYPE_TEMPERATURE01,
+        J1939_SPN_TYPE_TEMPERATURE02,
+        J1939_SPN_TYPE_VELOCITY01,
+    } J1939_SPN_TYPE_E;
+    
 
     // SPN Table
 #pragma pack(push, 1)
@@ -449,6 +457,8 @@ extern	"C" {
         int32_t         maxData;        // Maximum Data Range
         const
         char            *pDesc;
+        const
+        char            *pSuffix;
     } J1939_SPN_TYPE;
 #pragma pack(pop)
     
@@ -461,8 +471,6 @@ extern	"C" {
         J1939_SPN_TYPE  *pType;
         const
         char            *pDesc;
-        const
-        char            *pExpl;         // Optional Explanation
     } J1939_SPN;
 #pragma pack(pop)
     

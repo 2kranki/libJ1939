@@ -42,6 +42,7 @@
 
 /* Header File Inclusion */
 #include <j1939misc_internal.h>
+#include <dec.h>
 
 
 
@@ -58,6 +59,181 @@ extern "C" {
     * * * * * * * * * * *  Internal Subroutines   * * * * * * * * * *
     ****************************************************************/
 
+    // size: resolution: 0.4 % per bit, offset 0, range: 0 - 100 %
+    static
+    bool            printPCT03(
+        J1939MISC_DATA  *this,
+        const
+        char            *pDesc,
+        uint8_t         num
+    )
+    {
+        char            numstr[32] = {0};
+        uint32_t        cNum = 32;
+        char            *pStr = numstr;
+        int64_t         total;
+        bool            fRc;
+        
+        total = ((int16_t)num * 10) >> 2;
+        fRc =   dec_putInt64DecA(
+                                 total,          // Input Number
+                                 -1,             // Sign: -1 == leading, 0 == none, 1 == trailing
+                                 true,           // Align: false == left, true == right
+                                 false,          // Fill: false == space fill, true == zero fill
+                                 6,              // Field Width
+                                 1,              // Decimal Point Position
+                                 &cNum,          // Buffer Length
+                                 &pStr                       // Buffer Ptr
+                                 );
+        pStr = numstr;
+        fprintf(this->pFileOut, "%s = %s %%\n", pDesc, pStr);
+        
+        
+        return true;
+    }
+    
+    
+    
+    // resolution: 1 % per bit, offset: -125, range: -125 - 125 %
+    static
+    bool            printPCT05(
+        J1939MISC_DATA  *this,
+        const
+        char            *pDesc,
+        uint16_t         num
+    )
+    {
+        char            numstr[32] = {0};
+        uint32_t        cNum = 32;
+        char            *pStr = numstr;
+        int64_t         total;
+        bool            fRc;
+        
+        total = (((int16_t)num) - 125);
+        fRc =   dec_putInt64DecA(
+                                 total,          // Input Number
+                                 -1,             // Sign: -1 == leading, 0 == none, 1 == trailing
+                                 true,           // Align: false == left, true == right
+                                 false,          // Fill: false == space fill, true == zero fill
+                                 4,              // Field Width
+                                 0,              // Decimal Point Position
+                                 &cNum,          // Buffer Length
+                                 &pStr                       // Buffer Ptr
+                                 );
+        pStr = numstr;
+        fprintf(this->pFileOut, "%s = %s %%\n", pDesc, pStr);
+        
+        
+        return true;
+    }
+    
+    
+    
+    static
+    bool            printRPM01(
+        J1939MISC_DATA  *this,
+        const
+        char            *pDesc,
+        uint16_t         num
+    )
+    {
+        char            numstr[32] = {0};
+        uint32_t        cNum = 32;
+        char            *pStr = numstr;
+        int64_t         total;
+        bool            fRc;
+        
+        total = num * 125;
+        fRc =   dec_putInt64DecA(
+                        total,          // Input Number
+                        0,              // Sign: -1 == leading, 0 == none, 1 == trailing
+                        true,           // Align: false == left, true == right
+                        false,          // Fill: false == space fill, true == zero fill
+                        10,             // Field Width
+                        3,                          // Decimal Point Position
+                        &cNum,                      // Buffer Length
+                        &pStr                       // Buffer Ptr
+                );
+        pStr = numstr;
+        fprintf(this->pFileOut, "%s = %s rpm\n", pDesc, pStr);
+
+        
+        return true;
+    }
+
+    
+    
+    // resolution: 1/256 km/h per bit, offset 0, range: 0 - 250.996 km/h
+    static
+    bool            printSpeed02(
+        J1939MISC_DATA  *this,
+        const
+        char            *pDesc,
+        uint16_t         num
+    )
+    {
+        char            numstr[32] = {0};
+        uint32_t        cNum = 32;
+        char            *pStr = numstr;
+        int64_t         total;
+        bool            fRc;
+        
+        total = (((int16_t)num) * 1000) >> 8;
+        fRc =   dec_putInt64DecA(
+                                 total,          // Input Number
+                                 -1,             // Sign: -1 == leading, 0 == none, 1 == trailing
+                                 true,           // Align: false == left, true == right
+                                 false,          // Fill: false == space fill, true == zero fill
+                                 9,              // Field Width
+                                 3,              // Decimal Point Position
+                                 &cNum,          // Buffer Length
+                                 &pStr                       // Buffer Ptr
+                                 );
+        pStr = numstr;
+        fprintf(this->pFileOut, "%s = %s km/h\n", pDesc, pStr);
+        
+        
+        return true;
+    }
+    
+    
+    
+    // size: 8 bits, resolution: 1/16 km/h per bit, offset -7.8125
+    // range: -7.8125 - 7.8125 km/h
+    static
+    bool            printSpeed04(
+        J1939MISC_DATA  *this,
+        const
+        char            *pDesc,
+        uint8_t         num
+    )
+    {
+        char            numstr[32] = {0};
+        uint32_t        cNum = 32;
+        char            *pStr = numstr;
+        int64_t         total;
+        bool            fRc;
+        
+        total = ((((int16_t)num) * 10000) >> 4) - 78125;
+        fRc =   dec_putInt64DecA(
+                                 total,          // Input Number
+                                 -1,             // Sign: -1 == leading, 0 == none, 1 == trailing
+                                 true,           // Align: false == left, true == right
+                                 false,          // Fill: false == space fill, true == zero fill
+                                 8,              // Field Width
+                                 4,              // Decimal Point Position
+                                 &cNum,          // Buffer Length
+                                 &pStr                       // Buffer Ptr
+                                 );
+        pStr = numstr;
+        fprintf(this->pFileOut, "%s = %s km/h\n", pDesc, pStr);
+        
+        
+        return true;
+    }
+    
+    
+    
     static
     bool            print1of4(
                               J1939MISC_DATA  *this,
@@ -1057,9 +1233,9 @@ extern "C" {
         if (spn1085 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn1085Intended Retarder Percent Torque = %d\n", spn1085);
+            fprintf(this->pFileOut, "\tspn1085 Intended Retarder Percent Torque = %d\n", spn1085);
         }
-        fprintf(this->pFileOut, "\tspn1667Retarder Requesting Brake Light = %d\n", spn1667);
+        fprintf(this->pFileOut, "\tspn1667 Retarder Requesting Brake Light = %d\n", spn1667);
         if (spn1480 == 0xFF) {
         }
         else {
@@ -1225,7 +1401,7 @@ extern "C" {
         if (spn521 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn521 Brake Pedal Position = %d\n", spn521);
+            printPCT03(this, "\tspn521 Brake Pedal Position", spn521);
         }
         print1of4(this,
                   spn575,
@@ -1314,7 +1490,7 @@ extern "C" {
                   );
         print1of4(this,
                   spn1438,
-                  "ABS/EBS Amber Warning Signal (Powered Vehicle)",
+                  "spn1438 ABS/EBS Amber Warning Signal (Powered Vehicle)",
                   "Off",
                   "On",
                   "Reserved",
@@ -1436,7 +1612,7 @@ extern "C" {
         
         print1of4(this,
                   spn560,
-                  "Transmission Driveline Engaged",
+                  "spn560 Transmission Driveline Engaged",
                   "Driveline disengaged",
                   "Driveline engaged",
                   "Error",
@@ -1444,7 +1620,7 @@ extern "C" {
                   );
         print1of4(this,
                   spn573,
-                  "Transmission Torque Converter Lockup Engaged",
+                  "spn573 Transmission Torque Converter Lockup Engaged",
                   "Torque converter lockup disengaged",
                   "Torque converter lockup engaged",
                   "Error",
@@ -1452,7 +1628,7 @@ extern "C" {
                   );
         print1of4(this,
                   spn574,
-                  "Transmission Shift In Process",
+                  "spn574 Transmission Shift In Process",
                   "Shift is not in process",
                   "Shift in process",
                   "Error",
@@ -1461,7 +1637,7 @@ extern "C" {
         if (spn191 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tTransmission Output Shaft Speed = %d\n", spn191);
+            printSpeed02(this, "\tspn191 Transmission Output Shaft Speed", spn191);
         }
         if (spn522 == 0xFF) {
         }
@@ -1470,7 +1646,7 @@ extern "C" {
         }
         print1of4(this,
                   spn606,
-                  "Engine Momentary Overspeed Enable",
+                  "spn606 Engine Momentary Overspeed Enable",
                   "Momentary engine overspeed is disabled",
                   "Momentary engine overspeed is enabled",
                   "Reserved",
@@ -1478,7 +1654,7 @@ extern "C" {
                   );
         print1of4(this,
                   spn607,
-                  "Progressive Shift Disable",
+                  "spn607 Progressive Shift Disable",
                   "Progressive shift is not disabled",
                   "Progressive shift is disabled",
                   "Reserved",
@@ -1487,12 +1663,12 @@ extern "C" {
         if (spn161 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tTransmission Input Shaft Speed = %d\n", spn161);
+            fprintf(this->pFileOut, "\tspn161 Transmission Input Shaft Speed = %d\n", spn161);
         }
         if (spn1482 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tSource Address of Controlling Device for "
+            fprintf(this->pFileOut, "\tspn1482 Source Address of Controlling Device for "
                     "Transmission Control = ");
             pEntryA = j1939data_Find_Adr(spn1482);
             if (pEntryA) {
@@ -1687,23 +1863,25 @@ extern "C" {
         // SPN 2432 8       8bits       Engine Demand - Percent Torque
         spn2432 = pMsg->DATA.bytes[2];
         
-        if (spn899) {
+        if (spn899 == 0x0F) {
+        }
+        else {
             fprintf(this->pFileOut, "\tspn899 Engine Torque Mode = %d\n", spn899);
         }
         if (spn512 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn512 Driver's Demand Engine - Percent Torque = %d\n", spn512);
+            printPCT05(this, "\tspn512 Driver's Demand Engine - Percent Torque", spn512);
         }
         if (spn513 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn513 Actual Engine - Percent Torque = %d\n", spn513);
+            printPCT05(this, "\tspn513 Actual Engine - Percent Torque", spn513);
         }
         if (spn190 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn190 Engine Speed (rpm) = %d\n", spn190);
+            printRPM01(this, "\tspn190 Engine Speed", spn190);
         }
         if (spn1483 == 0xFF) {
         }
@@ -1754,16 +1932,11 @@ extern "C" {
             case 13:
                 fprintf(this->pFileOut, "\tspn1675 Engine Starter Mode - error\n");
                 break;
-            case 14:
-                fprintf(this->pFileOut, "\tspn1675Engine Starter Mode - error\n");
-                break;
-            default:
-                break;
         }
         if (spn2432 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn2432 Engine Demand - Percent Torque = %d\n", spn2432);
+            printPCT05(this, "\tspn2432 Engine Demand - Percent Torque", spn2432);
         }
         
         // Return to caller.
@@ -2322,6 +2495,98 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                  D u m p  P G N 6 5 1 9 8
+    //---------------------------------------------------------------
+    
+    bool            j1939misc_DumpPgn65198(
+        J1939MISC_DATA  *this,
+        J1939_MSG       *pMsg,
+        const
+        J1939_PGN_ENTRY *pEntry
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn46;
+        uint8_t         spn1086;
+        uint8_t         spn1087;
+        uint8_t         spn1088;
+        uint8_t         spn1089;
+        uint8_t         spn1090;
+        uint8_t         spn1351;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939misc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN   46 1       8bits       Pneumatic Supply Pressure
+        spn46 = pMsg->DATA.bytes[0];
+        // SPN 1086 2       8bits       Parking and/or Trailer Air Pressure
+        spn1086 = pMsg->DATA.bytes[1];
+        // SPN 1087 3       8bits       Service Brake Air Pressure Circuit #1
+        spn1087 = pMsg->DATA.bytes[2];
+        // SPN 1088 4       8bits       Service Brake Air Pressure Circuit #2
+        spn1088 = pMsg->DATA.bytes[3];
+        // SPN 1089 5       8bits       Auxiliary Equipment Supply Pressure
+        spn1089 = pMsg->DATA.bytes[4];
+        // SPN 1090 6       8bits       Air Suspension Supply Pressure
+        spn1090 = pMsg->DATA.bytes[5];
+        // SPN 1351 7.1     2bits       Air Compressor Status
+        spn1351 = pMsg->DATA.bytes[6] & 0x3;
+        
+        if (spn46 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn46 Pneumatic Supply Pressure = %d\n", spn46);
+        }
+        if (spn1086 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1086 Parking and/or Trailer Air Pressure = %d\n", spn1086);
+        }
+        if (spn1087 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1087 Service Brake Air Pressure Circuit #1 = %d\n", spn1087);
+        }
+        if (spn1088 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1088 Service Brake Air Pressure Circuit #2 = %d\n", spn1088);
+        }
+        if (spn1089 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1089 Auxiliary Equipment Supply Pressure = %d\n", spn1089);
+        }
+        if (spn1090 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1090 Air Suspension Supply Pressure = %d\n", spn1090);
+        }
+        print1of4(this,
+                  spn1351,
+                  "spn1351 Air Compressor Status",
+                  "Not active",
+                  "Active",
+                  "Error",
+                  NULL
+                  );
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                  D u m p  P G N 6 5 2 1 3
     //---------------------------------------------------------------
     
@@ -2470,37 +2735,37 @@ extern "C" {
         if (spn904 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn904 Front Axle Speed = %d\n", spn904);
+            printSpeed02(this, "\tspn904 Front Axle Speed", spn904);
         }
         if (spn905 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn905 Relative Speed; Front Axle, Left Wheel = %d\n", spn905);
+            printSpeed04(this, "\tspn905 Relative Speed; Front Axle, Left Wheel", spn905);
         }
         if (spn906 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn906 Relative Speed; Front Axle, Right Wheel = %d\n", spn906);
+            printSpeed04(this, "\tspn906 Relative Speed; Front Axle, Right Wheel", spn906);
         }
         if (spn907 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn907 Relative Speed; Rear Axle #1, Left Wheel = %d\n", spn907);
+            printSpeed04(this, "\tspn907 Relative Speed; Rear Axle #1, Left Wheel", spn907);
         }
         if (spn908 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn908 Relative Speed; Rear Axle #1, Right Wheel = %d\n", spn908);
+            printSpeed04(this, "\tspn908 Relative Speed; Rear Axle #1, Right Wheel", spn908);
         }
         if (spn909 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn909 Relative Speed; Rear Axle #2, Left Wheel = %d\n", spn909);
+            printSpeed04(this, "\tspn909 Relative Speed; Rear Axle #2, Left Wheel", spn909);
         }
         if (spn910 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn910 Relative Speed; Rear Axle #2, Right Wheel = %d\n", spn910);
+            printSpeed04(this, "\tspn910 Relative Speed; Rear Axle #2, Right Wheel", spn910);
         }
         
         // Return to caller.
@@ -2954,6 +3219,99 @@ extern "C" {
                   "Error",
                   NULL
                   );
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 5 4
+    //---------------------------------------------------------------
+    
+    bool            j1939misc_DumpPgn65254(
+        J1939MISC_DATA  *this,
+        J1939_MSG       *pMsg,
+        const
+        J1939_PGN_ENTRY *pEntry
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint32_t        spn959;
+        uint32_t        spn960;
+        uint32_t        spn961;
+        uint32_t        spn963;
+        uint32_t        spn962;
+        uint32_t        spn964;
+        uint32_t        spn1601;
+        uint32_t        spn1602;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939misc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 959  1       8bits       Seconds
+        spn959 = pMsg->DATA.bytes[0];
+        // SPN 960  1       8bits       Minutes
+        spn960 = pMsg->DATA.bytes[1];
+        // SPN 961  1       8bits       Hours
+        spn961 = pMsg->DATA.bytes[1];
+        // SPN 963  1       8bits       Month
+        spn963 = pMsg->DATA.bytes[1];
+        // SPN 962  1       8bits       Day
+        spn962 = pMsg->DATA.bytes[1];
+        // SPN 964  1       8bits       Year
+        spn964 = pMsg->DATA.bytes[1];
+        // SPN 1601 1       8bits       Local minute offset
+        spn1601 = pMsg->DATA.bytes[1];
+        // SPN 1602 1       8bits       Local hour offset
+        spn1602 = pMsg->DATA.bytes[1];
+        
+        if (spn959 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn959 Seconds = %d\n", spn959);
+        }
+        if (spn960 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn960 Minutes = %d\n", spn960);
+        }
+        if (spn961 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn961 Hourss = %d\n", spn961);
+        }
+        if (spn963 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn963 Month = %d\n", spn963);
+        }
+        if (spn962 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn962 Hourss = %d\n", spn962);
+        }
+        if (spn960 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn960 Minutes = %d\n", spn960);
+        }
+        if (spn961 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn961 Hourss = %d\n", spn961);
+        }
         
         // Return to caller.
         return false;
@@ -3438,12 +3796,12 @@ extern "C" {
         if (spn84 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn84   Vechicle Speed = %d\n", spn84);
+            printSpeed02(this, "\tspn84 Vechicle Speed", spn84);
         }
         if (spn86 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn86 CC Vechicle Speed = %d\n", spn84);
+            fprintf(this->pFileOut, "\tspn86 CC Vechicle Speed = %d km/h\n", spn86);
         }
         print1of4(this,
                   spn69,
@@ -4368,6 +4726,10 @@ extern "C" {
                 j1939misc_DumpPgn65098(this, pMsg, pEntry);
                 break;
                 
+            case 65198:
+                j1939misc_DumpPgn65198(this, pMsg, pEntry);
+                break;
+                
             case 65213:
                 j1939misc_DumpPgn65213(this, pMsg, pEntry);
                 break;
@@ -4390,6 +4752,10 @@ extern "C" {
                 
             case 65252:
                 j1939misc_DumpPgn65252(this, pMsg, pEntry);
+                break;
+                
+            case 65254:
+                j1939misc_DumpPgn65254(this, pMsg, pEntry);
                 break;
                 
             case 65257:
@@ -4525,10 +4891,6 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939MISC_DATA,eRc));
-        fprintf(stderr, "sizeof(J1939MISC_DATA) = %lu\n", sizeof(J1939MISC_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(&this->eRc);
         BREAK_NOT_BOUNDARY4(sizeof(J1939MISC_DATA));
     #endif

@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/16/2017 14:30:14.000)
+# ( 6/18/2017 17:54:14.000)
 
 
 LIBNAM=libJ1939
@@ -84,6 +84,27 @@ $(LIBPATH):  $(OBJS)
 	lib /OUT:$(LIB_FILENAME) @<<$(LRFNAM)
 $(OBJS: =  )
 <<NOKEEP
+
+
+
+
+
+
+PROGS =
+
+
+
+PROGS = $(PROGS) dumpJ1939
+
+dumpJ1939:
+	$(CC) $(CFLAGS) /Iprograms\dumpJ1939 programs\dumpJ1939\dumpJ1939.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+
+
+programs:  $(PROGS)
 
 
 
