@@ -996,7 +996,7 @@ extern "C" {
 
         j1939ca_Setup((J1939CA_DATA *)this, J1939_CAB_CONTROLLER);
         //this->super.name.ECU = 0;
-        this->super.name.FU = J1939_CAB_CONTROLLER;
+        this->super.name.FU = 12;
         this->super.name.FUI = 0;
         //FIXME: this->super.pRcvPgnTbl = &rcvPgntbl;
         //FIXME: this->super.pXmtPgnTbl = &xmtPgntbl;

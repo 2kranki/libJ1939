@@ -9,6 +9,7 @@
     ],
     "objects": {
         "truck":null,
+        "j1939bs":null,
         "j1939cu":null,
         "j1939ccu":null,
         "j1939ecu":null,
@@ -37,6 +38,7 @@
     "tests": {
         "test_dump.c":     ["common.c","common2.c","common3.c","common4.c"],
         "test_truck.c":    ["common.c","common2.c","common3.c","common4.c"],
+        "test_j1939bs.c":  ["common.c","common2.c","common3.c","common4.c"],
         "test_j1939ca.c":  ["common.c","common2.c","common3.c","common4.c"],
         "test_j1939cab.c": ["common.c","common2.c","common3.c","common4.c"],
         "test_j1939cam.c": ["common.c","common2.c","common3.c","common4.c"],

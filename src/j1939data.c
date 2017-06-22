@@ -2954,6 +2954,20 @@ extern "C" {
     
     
     const
+    J1939_PGN_ENTRY     pgn65202_entry = {
+        // PGN 65202  0x00FEB3 - Fuel Information 1 (Gaseous) - GFI1
+        0x0000FEB3,
+        0,                  // msFreq (on demand)
+        8,                  // dlc
+        6,                  // priority
+        3,                  // cSPNs
+        0,                  // --reserved--
+        NULL,               // SPN Table Pointer
+        "Fuel Information 1 (Gaseous) - GFI1"
+    };
+    
+    
+    const
     J1939_PGN_ENTRY     pgn65213_entry = {
         // PGN 65213  0x00FEBD - Fan Drive - FD
         0x0000FEBD,
@@ -3220,16 +3234,44 @@ extern "C" {
     
     
     const
+    J1939_PGN_ENTRY     pgn65253_entry = {
+        // PGN 65253  0x00FEE5 - Engine Hours,Revolutions - HOURS
+        0x00FEE5,
+        0,                  // msFreq (on demand)
+        8,                  // dlc
+        6,                  // priority
+        2,                  // cSPNs
+        0,                  // --reserved--
+        NULL,               // SPN Table Pointer
+        "Engine Hours,Revolutions - HOURS"
+    };
+    
+    
+    const
     J1939_PGN_ENTRY     pgn65254_entry = {
         // PGN 65254  0x00FEE6 - Time/Date - TD
         0x00FEE6,
-        0,                  // msFreq
+        0,                  // msFreq (on demand)
         8,                  // dlc
         6,                  // priority
         8,                  // cSPNs
         0,                  // --reserved--
         NULL, //pgn65254spns,       // SPN Table Pointer
         "Time/Date - TD"
+    };
+    
+    
+    const
+    J1939_PGN_ENTRY     pgn65255_entry = {
+        // PGN 65255  0x00FEE7 - Vehicle Hours - VH
+        0x00FEE7,
+        0,                  // msFreq (on demand)
+        8,                  // dlc
+        6,                  // priority
+        2,                  // cSPNs
+        0,                  // --reserved--
+        NULL, //pgn65254spns,       // SPN Table Pointer
+        "Vehicle Hours - VH"
     };
     
     
@@ -3732,6 +3774,7 @@ extern "C" {
         &pgn65177_entry,
         &pgn65178_entry,
         &pgn65198_entry,
+        &pgn65202_entry,
         &pgn65213_entry,
         &pgn65215_entry,
         &pgn65217_entry,
@@ -3750,6 +3793,9 @@ extern "C" {
         &pgn65249_entry,
         &pgn65251_entry,
         &pgn65252_entry,
+        &pgn65253_entry,
+        &pgn65254_entry,
+        &pgn65255_entry,
         &pgn65257_entry,
         &pgn65261_entry,
         &pgn65262_entry,

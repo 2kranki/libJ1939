@@ -322,6 +322,8 @@ extern	"C" {
     
     typedef enum obj_j1939_idents_e {
         OBJ_IDENT_J1939_BASE=OBJ_IDENT_J1939_ENTRIES,
+        OBJ_IDENT_J1939BS,              // J1939 Brake System CA
+        OBJ_IDENT_J1939BS_CLASS,
         OBJ_IDENT_J1939CA,              // J1939 Control Application Base CA
         OBJ_IDENT_J1939CA_CLASS,
         OBJ_IDENT_J1939CAB,             // J1939 Cab Controller CA

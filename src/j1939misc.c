@@ -74,7 +74,7 @@ extern "C" {
         int64_t         total;
         bool            fRc;
         
-        total = ((int16_t)num * 10) >> 2;
+        total = (int64_t)num * 4;
         fRc =   dec_putInt64DecA(
                                  total,          // Input Number
                                  -1,             // Sign: -1 == leading, 0 == none, 1 == trailing
@@ -2248,12 +2248,12 @@ extern "C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
-        uint8_t         spn2913;
-        uint8_t         spn2912;
-        uint8_t         spn2919;
-        uint8_t         spn2917;
-        uint8_t         spn2918;
-        uint8_t         spn2921;
+        uint8_t         spn2913;            // Halt brake mode
+        uint8_t         spn2912;            // Hill holder mode
+        uint8_t         spn2919;            // Foundation Brake Use
+        uint8_t         spn2917;            // XBR System State
+        uint8_t         spn2918;            // XBR Active Control Mode
+        uint8_t         spn2921;            // XBR Acceleration Limit
         
         // Do initialization.
 #ifdef NDEBUG
@@ -2587,6 +2587,65 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 0 2
+    //---------------------------------------------------------------
+    
+    bool            j1939misc_DumpPgn65202(
+        J1939MISC_DATA  *this,
+        J1939_MSG       *pMsg,
+        const
+        J1939_PGN_ENTRY *pEntry
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint32_t        spn1030;        // Total Engine PTO Fuel Used (Gaseous)
+        uint16_t        spn1031;        // Trip Average Fuel Rate (Gaseous)
+        uint16_t        spn1389;        // Engine Fuel Specific Gravity
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939misc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 1030 1-4     32bits      Total Engine PTO Fuel Used (Gaseous)
+        spn1030 = pMsg->DATA.bytes[0] | (pMsg->DATA.bytes[1] << 8)
+                    | (pMsg->DATA.bytes[2] << 16)  | (pMsg->DATA.bytes[3] << 24);
+        // SPN 1031 5-6     16bits      Trip Average Fuel Rate (Gaseous)
+        spn1031 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8);
+        // SPN 1389 7-8     16bits      Engine Fuel Specific Gravity
+        spn1389 = pMsg->DATA.bytes[6] | (pMsg->DATA.bytes[7] << 8);
+        
+        if (spn1030 == 0xFFFFFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1030 Total Engine PTO Fuel Used (Gaseous) = %d\n", spn1030);
+        }
+        if (spn1031 == 0xFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1031 Trip Average Fuel Rate (Gaseous) = %d\n", spn1031);
+        }
+        if (spn1389 == 0xFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1389 Engine Fuel Specific Gravity = %d\n", spn1389);
+        }
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                  D u m p  P G N 6 5 2 1 3
     //---------------------------------------------------------------
     
@@ -2698,13 +2757,13 @@ extern "C" {
     {
         J1939_PDU       pdu;
         J1939_PGN       pgn;
-        uint16_t        spn904;
-        uint8_t         spn905;
-        uint8_t         spn906;
-        uint8_t         spn907;
-        uint8_t         spn908;
-        uint8_t         spn909;
-        uint8_t         spn910;
+        uint16_t        spn904;         // Front Axle Speed
+        uint8_t         spn905;         // Relative Speed; Front Axle, Left Wheel
+        uint8_t         spn906;         // Relative Speed; Front Axle, Right Wheel
+        uint8_t         spn907;         // Relative Speed; Rear Axle #1, Left Wheel
+        uint8_t         spn908;         // Relative Speed; Rear Axle #1, Right Wheel
+        uint8_t         spn909;         // Relative Speed; Rear Axle #2, Left Wheel
+        uint8_t         spn910;         // Relative Speed; Rear Axle #2, Right Wheel
         
         // Do initialization.
 #ifdef NDEBUG
@@ -3227,6 +3286,58 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 5 3
+    //---------------------------------------------------------------
+    
+    bool            j1939misc_DumpPgn65253(
+        J1939MISC_DATA  *this,
+        J1939_MSG       *pMsg,
+        const
+        J1939_PGN_ENTRY *pEntry
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint32_t        spn247;         // Engine Total Hours of Operation
+        uint32_t        spn249;         // Engine Total Revolutions
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939misc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 247  1-4     32bits      Engine Total Hours of Operation
+        spn247 = pMsg->DATA.bytes[0] | (pMsg->DATA.bytes[1] << 8)
+        | (pMsg->DATA.bytes[2] << 16)  | (pMsg->DATA.bytes[3] << 24);
+        // SPN 249  5-8     32bits      Engine Total Revolutions
+        spn249 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8)
+        | (pMsg->DATA.bytes[6] << 16)  | (pMsg->DATA.bytes[7] << 24);
+        
+        if (spn247 == 0xFFFFFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn247 Engine Total Hours of Operation = %d\n", spn247);
+        }
+        if (spn249 == 0xFFFFFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn249 Engine Total Revolutions = %d\n", spn249);
+        }
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                  H a n d l e  P G N 6 5 2 5 4
     //---------------------------------------------------------------
     
@@ -3311,6 +3422,58 @@ extern "C" {
         }
         else {
             fprintf(this->pFileOut, "\tspn961 Hourss = %d\n", spn961);
+        }
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  H a n d l e  P G N 6 5 2 5 5
+    //---------------------------------------------------------------
+    
+    bool            j1939misc_DumpPgn65255(
+        J1939MISC_DATA  *this,
+        J1939_MSG       *pMsg,
+        const
+        J1939_PGN_ENTRY *pEntry
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint32_t        spn246;         // Total Vehicle Hours
+        uint32_t        spn248;         // Total Power Takeoff Hours
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939misc_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 246  1-4     32bits      Total Vehicle Hours
+        spn246 = pMsg->DATA.bytes[0] | (pMsg->DATA.bytes[1] << 8)
+        | (pMsg->DATA.bytes[2] << 16)  | (pMsg->DATA.bytes[3] << 24);
+        // SPN 248  5-8     32bits      Total Power Takeoff Hours
+        spn248 = pMsg->DATA.bytes[4] | (pMsg->DATA.bytes[5] << 8)
+        | (pMsg->DATA.bytes[6] << 16)  | (pMsg->DATA.bytes[7] << 24);
+        
+        if (spn246 == 0xFFFFFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn246 Total Vehicle Hours = %d\n", spn246);
+        }
+        if (spn248 == 0xFFFFFFFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn248 Total Power Takeoff Hours = %d\n", spn248);
         }
         
         // Return to caller.
@@ -4730,6 +4893,10 @@ extern "C" {
                 j1939misc_DumpPgn65198(this, pMsg, pEntry);
                 break;
                 
+            case 65202:
+                j1939misc_DumpPgn65202(this, pMsg, pEntry);
+                break;
+                
             case 65213:
                 j1939misc_DumpPgn65213(this, pMsg, pEntry);
                 break;
@@ -4754,8 +4921,16 @@ extern "C" {
                 j1939misc_DumpPgn65252(this, pMsg, pEntry);
                 break;
                 
+            case 65253:
+                j1939misc_DumpPgn65253(this, pMsg, pEntry);
+                break;
+                
             case 65254:
                 j1939misc_DumpPgn65254(this, pMsg, pEntry);
+                break;
+                
+            case 65255:
+                j1939misc_DumpPgn65255(this, pMsg, pEntry);
                 break;
                 
             case 65257:

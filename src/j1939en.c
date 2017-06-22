@@ -3519,6 +3519,7 @@ extern	"C" {
         // All of our tests that captured messages from startup in a real truck
         // did not show the engine or transmission claiming their name.  They
         // just assumed they had the names.
+        j1939ca_Setup((J1939CA_DATA *)this, J1939_ENGINE_1);
         this->super.cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
         this->super.pRcvPgnTbl = &rcvPgnTbl;
         this->super.pXmtPgnTbl = &xmtPgnTbl;

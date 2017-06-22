@@ -886,10 +886,10 @@ extern	"C" {
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939tc_Vtbl );
 
-        j1939ca_Setup((J1939CA_DATA *)this, J1939_TRANSMISSION_1);
         //this->super.name.ECU = 0;
         this->super.name.FU = 3;
         this->super.name.FUI = 0;
+
         this->super.pRcvPgnTbl = &rcvPgntbl;
         this->super.pXmtPgnTbl = &xmtPgntbl;
         this->super.pTimedTransmit =
@@ -898,6 +898,7 @@ extern	"C" {
         // All of our tests that captured messages from startup in a real truck
         // did not show the engine or transmission claiming their name.  They
         // just assumed they had the names.
+        j1939ca_Setup((J1939CA_DATA *)this, J1939_TRANSMISSION_1);
         this->super.cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
 
         // Default all SPNs to unsupported values.
