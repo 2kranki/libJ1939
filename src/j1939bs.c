@@ -58,7 +58,55 @@ extern "C" {
         NULL,
         NULL,
         (P_SETUP_MSG_RTN)j1939bs_SetupPgn0,
-        offsetof(J1939BS_DATA, startTime0),
+        0,
+        0,
+        0,
+        0
+    };
+    
+    
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn61441_entry = {
+        //  PGN 61441  0x00F001 - Electronic Engine Controller 1 - EBC1
+        &pgn61441_entry,
+        (P_SRVCMSG_RTN)j1939bs_HandlePgn61441,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939bs_SetupPgn61441,
+        offsetof(J1939BS_DATA, time61441),
+        0,
+        0,
+        0
+    };
+    
+    
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn64964_entry = {
+        //  PGN 61441  0x00F001 - Electronic Engine Controller 1 - EBC1
+        &pgn64964_entry,
+        (P_SRVCMSG_RTN)j1939bs_HandlePgn64964,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939bs_SetupPgn64964,
+        offsetof(J1939BS_DATA, time64964),
+        0,
+        0,
+        0
+    };
+    
+    
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn65215_entry = {
+        //  PGN 65215  0x00FEBF - Wheel Speed Information - EBC2
+        &pgn65215_entry,
+        (P_SRVCMSG_RTN)j1939bs_HandlePgn65215,
+        NULL,
+        (P_SETUP_MSG_RTN)j1939bs_SetupPgn65215,
+        offsetof(J1939BS_DATA, time65215),
         0,
         0,
         0
@@ -70,6 +118,9 @@ extern "C" {
     const
     J1939CA_PGN_ENTRY     *rcvPgnIndex[] = {
         &ca_pgn0_entry,
+        &ca_pgn61441_entry,
+        &ca_pgn64964_entry,
+        &ca_pgn65215_entry,
         NULL
     };
     
@@ -86,7 +137,9 @@ extern "C" {
     static
     const
     J1939CA_PGN_ENTRY     *xmtPgnIndex[] = {
-        &ca_pgn0_entry,
+        &ca_pgn61441_entry,
+        &ca_pgn64964_entry,
+        &ca_pgn65215_entry,
         NULL
     };
     
@@ -816,14 +869,16 @@ extern "C" {
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         this->curTime = curTime;
-        
-        //TODO: maybe doesn't consider clock rollover
-        if ((curTime - this->startTime0) >= this->tsc1Time) {
-            j1939bs_TransmitPgn0(this);
+
+        if ((curTime - this->time61441.msTime) >= this->time61441.msDelay) {
+            j1939bs_TransmitPgn61441(this);
         }
-        //if (this->fActive) {
-        //j1939bs_HandlePgn0( this, 0, NULL );
-        //}
+        if ((curTime - this->time64964.msTime) >= this->time64964.msDelay) {
+            j1939bs_TransmitPgn64964(this);
+        }
+        if ((curTime - this->time65215.msTime) >= this->time65215.msDelay) {
+            j1939bs_TransmitPgn65215(this);
+        }
         
         // Return to caller.
         return true;
@@ -897,15 +952,20 @@ extern "C" {
                (offsetof(J1939BS_DATA,spnLast) - offsetof(J1939BS_DATA,spnFirst)
                 + sizeof(uint32_t))
         );
-#ifdef XYZZY
-        this->spn520 = 125;     // Actual Retarder - Percent Torque
-        this->spn571 = 1;       // Enable Retarder Brake Assist
-        this->spn572 = 1;       // Enable Retarder Shift Assist
-        this->spn1085 = 125;    // Intended Retarder Percent Torque
-        this->spn1715 = 75;     // Maximum Torque that can be requested by the driver
-        this->spn1717 = 0;      // Maximum Allowable Torque on request
-#endif
+        this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
 
+        this->time61441.msDefault = 100;
+        this->time61441.msDelay = 100;
+        this->time61441.pgn = 61441;
+        
+        this->time64964.msDefault = 100;
+        this->time64964.msDelay = 100;
+        this->time64964.pgn = 64964;
+        
+        this->time65215.msDefault = 100;
+        this->time65215.msDelay = 100;
+        this->time65215.pgn = 65215;
+        
     #ifdef NDEBUG
     #else
         if( !j1939bs_Validate(this) ) {
@@ -1170,7 +1230,253 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime0 = this->curTime;
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //  PGN 61441  0x00F001 - Electronic Engine Controller 1 - EBC1
+    //---------------------------------------------------------------
+    
+    int             j1939bs_SetupPgn61441(
+        J1939BS_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn61441_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn61441_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn61441_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            *pData  = 0x00;
+            *pData |= this->spn561 & 0x03;
+            *pData |= (this->spn562 & 0x03) << 2;
+            *pData |= (this->spn563 & 0x03) << 4;
+            *pData |= (this->spn1121 & 0x03) << 6;
+            ++pData;    // 1
+            *pData  = this->spn521 & 0xFF;
+            ++pData;    // 2
+            *pData  = 0x00;
+            *pData |= this->spn575 & 0x03;
+            *pData |= (this->spn576 & 0x03) << 2;
+            *pData |= (this->spn577 & 0x03) << 4;
+            *pData |= (this->spn1238 & 0x03) << 6;
+            ++pData;    // 3
+            *pData  = 0x00;
+            *pData |= this->spn972 & 0x03;
+            *pData |= (this->spn971 & 0x03) << 2;
+            *pData |= (this->spn970 & 0x03) << 4;
+            *pData |= (this->spn969 & 0x03) << 6;
+            ++pData;    // 4
+            *pData  = this->spn973 & 0xFF;
+            ++pData;    // 5
+            *pData  = 0x00;
+            *pData |= this->spn1243 & 0x03;
+            *pData |= (this->spn1439 & 0x03) << 2;
+            *pData |= (this->spn1438 & 0x03) << 4;
+            *pData |= (this->spn1793 & 0x03) << 6;
+            ++pData;    // 6
+            *pData  = this->spn1481 & 0xFF;
+            ++pData;    // 7
+            *pData  = 0x03;
+            *pData |= (this->spn2911 & 0x03) << 2;
+            *pData |= (this->spn1836 & 0x03) << 4;
+            *pData |= (this->spn1792 & 0x03) << 6;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939bs_TransmitPgn61441(
+        J1939BS_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939bs_SetupPgn61441(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->time61441.msTime = this->curTime;
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //  PGN 64964  0x00FDC4 - Electronic Brake Controller 5 - EBC5
+    //---------------------------------------------------------------
+    
+    int             j1939bs_SetupPgn64964(
+        J1939BS_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn64964_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn64964_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn64964_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            *pData  = 0x03;
+            *pData |= (this->spn2913 & 0x07) << 2;
+            *pData |= (this->spn2912 & 0x07) << 5;
+            ++pData;    // 1
+            *pData  = 0xC0;
+            *pData |= this->spn2919 & 0x03;
+            *pData |= (this->spn2917 & 0x03) << 2;
+            *pData |= (this->spn2918 & 0x03) << 4;
+            ++pData;    // 2
+            *pData = this->spn2921 & 0xFF;
+            ++pData;    // 3
+            *pData = 0xFF;
+            ++pData;    // 4
+            *pData = 0xFF;
+            ++pData;    // 5
+            *pData  = 0x00;
+            *pData = 0xFF;
+            ++pData;    // 6
+            *pData = 0xFF;
+            ++pData;    // 7
+            *pData = 0xFF;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939bs_TransmitPgn64964(
+        J1939BS_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939bs_SetupPgn64964(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->time64964.msTime = this->curTime;
+        
+        // Return to caller.
+        return fRc;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //  PGN 65215  0x00FEBF - Wheel Speed Information - EBC2
+    //---------------------------------------------------------------
+    
+    int             j1939bs_SetupPgn65215(
+        J1939BS_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn65215_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn65215_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65215_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            *pData  = this->spn904 & 0xFF;
+            ++pData;    // 1
+            *pData  = (this->spn904 >> 8) & 0xFF;
+            ++pData;    // 2
+            *pData  = this->spn905 & 0xFF;
+            ++pData;    // 3
+            *pData  = this->spn906 & 0xFF;
+            ++pData;    // 4
+            *pData  = this->spn907 & 0xFF;
+            ++pData;    // 5
+            *pData  = this->spn908 & 0xFF;
+            ++pData;    // 6
+            *pData  = this->spn909 & 0xFF;
+            ++pData;    // 7
+            *pData  = this->spn910 & 0xFF;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939bs_TransmitPgn65215(
+        J1939BS_DATA	*this
+    )
+    {
+        uint32_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939bs_SetupPgn65215(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->time65215.msTime = this->curTime;
         
         // Return to caller.
         return fRc;

@@ -1,5 +1,6 @@
 /*
- *	Generated 06/05/2017 08:35:58
+ * Test J1939 Cab Control Unit
+ * Generated 06/05/2017 08:35:58
  */
 
 

@@ -53,9 +53,8 @@
 
 
 
-#include        <cmn_defs.h>
-#include        <AStr.h>
 #include        <j1939_defs.h>
+#include        <AStr.h>
 
 
 #ifndef         J1939SYS_H

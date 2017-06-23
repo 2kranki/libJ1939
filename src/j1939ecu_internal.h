@@ -41,6 +41,10 @@
 
 #include    <j1939ecu.h>
 #include    <j1939cu_internal.h>
+#include    <j1939can.h>
+#include    <j1939en.h>
+#include    <j1939er.h>
+#include    <j1939sys.h>
 
 
 

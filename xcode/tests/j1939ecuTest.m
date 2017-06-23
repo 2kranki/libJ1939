@@ -26,9 +26,9 @@
 //      XCTAssertNoThrowSpecificNamed(expression, exception_class, exception_name, failure_description, ...)
 
 
-#include    "j1939ecu_internal.h"
+#include    <j1939ecu_internal.h>
 #include    <j1939can.h>
-#include    "j1939sys.h"
+#include    <j1939sys.h>
 
 #include    "common.h"
 
@@ -101,6 +101,8 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {
         
+        // WARNING: Test in batch tests. OBJ-C doesnt like us doing tasking outside of it!
+
         obj_Release(pObj);
         pObj = OBJ_NIL;
     }

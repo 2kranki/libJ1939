@@ -55,7 +55,7 @@
 #include    <j1939en_internal.h>
 #include    <j1939er_internal.h>
 #include    <j1939can.h>
-#include    "j1939sys.h"
+#include    <j1939sys.h>
 
 
 #include    "common.h"

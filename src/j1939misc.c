@@ -3959,12 +3959,12 @@ extern "C" {
         if (spn84 == 0xFFFF) {
         }
         else {
-            printSpeed02(this, "\tspn84 Vechicle Speed", spn84);
+            printSpeed02(this, "\tspn84 Vehicle Speed", spn84);
         }
         if (spn86 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn86 CC Vechicle Speed = %d km/h\n", spn86);
+            fprintf(this->pFileOut, "\tspn86 CC Vehicle Speed = %d km/h\n", spn86);
         }
         print1of4(this,
                   spn69,

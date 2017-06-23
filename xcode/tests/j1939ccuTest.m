@@ -102,6 +102,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     if (pObj) {
         
         
+        // WARNING: Test in batch tests. OBJ-C doesnt like us doing tasking outside of it!
         
         obj_Release(pObj);
         pObj = OBJ_NIL;

@@ -155,6 +155,12 @@ extern "C" {
     );
     
  
+    ERESULT     j1939cab_ParkingBrake(
+        J1939CAB_DATA	*this,
+        bool            fApplied
+    );
+    
+    
     /*!
      Create a string that describes this object and the objects within it.
      Example:
@@ -170,6 +176,11 @@ extern "C" {
     ASTR_DATA *     j1939cab_ToDebugString(
         J1939CAB_DATA   *this,
         int             indent
+    );
+    
+    
+    bool            j1939cab_TransmitPgn57344(
+        J1939CAB_DATA	*this
     );
     
     

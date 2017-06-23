@@ -41,6 +41,10 @@
 
 #include    <j1939ccu.h>
 #include    <j1939cu_internal.h>
+#include    <j1939bs.h>
+#include    <j1939cab.h>
+#include    <j1939cc.h>
+#include    <j1939ss.h>
 
 
 
@@ -65,6 +69,10 @@ struct j1939ccu_data_s	{
     OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
 
     // Common Data
+    J1939BS_DATA    *pBrake;
+    J1939CAB_DATA   *pCab;
+    J1939CC_DATA    *pCruise;
+    J1939SS_DATA    *pShift;
     uint32_t        rpm;
     void            (*pRpmRoutine)(void *, uint32_t);
     void            *pRpmData;

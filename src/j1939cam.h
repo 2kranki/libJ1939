@@ -21,9 +21,9 @@
  *              naming process.
  *
  *              Since all messages for the CA are funneled through
- *              this object, we handle the Data Link Support here
- *              as well including PGN Requests and Transport
- *              Protocol messages.
+ *              this object via HandleMessages(), we handle the Data
+ *              Link Support here as well including PGN Requests 
+ *              and Transport Protocol messages.
  *
  * Remarks
  *	**			Currently, this module only dispatches the in-
@@ -36,6 +36,9 @@
  *			Prentice-Hall, 1990
  *		"Programs and Data Structures in C", Leendert Ammeraal,
  *			John Wiley & Sons, 1987
+ *      "SAE J1939 Surface Vehicle Recommended Practices", http://sae.org
+ *      "SAE J1939-21 Data Link Layer", http://sae.org
+ *      "SAE J1939-71 Vehicle Application Layer", http://sae.org
  */
 
 

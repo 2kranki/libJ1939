@@ -38,7 +38,8 @@
 
 
 
-#include    "j1939can.h"
+#include    <j1939can.h>
+#include    <psxLock.h>
 
 
 #ifndef J1939CAN_INTERNAL_H
@@ -63,6 +64,7 @@ struct j1939can_data_s	{
 
     // Common Data
     ERESULT             eRc;
+    PSXLOCK_DATA        *pLock;
     uint8_t             fLoopRcv;   // Loop Rcv back to Xmt
     uint8_t             fLoopXmt;   // Loop Xmt back to Rcv
     uint16_t            rsvd16;

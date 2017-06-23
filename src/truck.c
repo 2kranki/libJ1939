@@ -81,7 +81,6 @@ extern "C" {
     //===============================================================
 
     TRUCK_DATA *     truck_Alloc(
-        uint16_t        stackSize
     )
     {
         TRUCK_DATA       *this;
@@ -89,12 +88,7 @@ extern "C" {
         
         // Do initialization.
         
-        if (0 == stackSize) {
-            stackSize = 256;
-        }
-        cbSize += stackSize << 2;
         this = obj_Alloc( cbSize );
-        obj_setMisc1(this, stackSize);
         
         // Return to caller.
         return this;
@@ -103,12 +97,11 @@ extern "C" {
 
 
     TRUCK_DATA *     truck_New(
-        uint16_t        stackSize
     )
     {
         TRUCK_DATA       *this;
         
-        this = truck_Alloc(stackSize);
+        this = truck_Alloc( );
         if (this) {
             this = truck_Init(this);
         } 
@@ -379,7 +372,7 @@ extern "C" {
         }
 #endif
         
-        pOther = truck_New(obj_getSize(this));
+        //FIXME: pOther = truck_New(obj_getSize(this));
         if (pOther) {
             eRc = truck_Assign(this, pOther);
             if (ERESULT_HAS_FAILED(eRc)) {
@@ -584,6 +577,36 @@ extern "C" {
         // Return to caller.
         truck_setLastError(this, ERESULT_SUCCESS_FALSE);
         return truck_getLastError(this);
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  P a r k i n g  B r a k e
+    //---------------------------------------------------------------
+    
+    ERESULT     truck_ParkingBrake(
+        TRUCK_DATA		*this,
+        bool            fApplied
+    )
+    {
+        J1939_MSG       msg;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        // Send Proprietary A : PROPA_CMD_SET_PARKING_BRAKE to Cab, Engine?
+        
+        
+        // Return to caller.
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
     }
     
     

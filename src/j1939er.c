@@ -1177,6 +1177,7 @@ extern	"C" {
         }
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->curTime = curTime;
 
         //TODO: maybe doesn't consider clock rollover
         if ((curTime - this->startTime61440) >= 100) {
@@ -1352,7 +1353,7 @@ extern	"C" {
         }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->startTime61440 = this->curTime;
 
         // Return to caller.
         return true;
@@ -1396,8 +1397,7 @@ extern	"C" {
 
         //FIXME: We need to implement 21 Data Link Layer!
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-
-        this->startTime65249 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->startTime65249 = this->curTime;
 
         // Return to caller.
         return true;

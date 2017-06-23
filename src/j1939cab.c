@@ -58,10 +58,25 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn57344,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn57344,
-        offsetof(J1939CAB_DATA, startTime57344),
+        offsetof(J1939CAB_DATA, time57344),
         0,
         0,
         1000
+    };
+    
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn61184_entry = {
+        // PGN 61184  0x00EF00 - Proprietary A - PROPA
+        &pgn61184_entry,
+        (P_SRVCMSG_RTN)j1939cab_HandlePgn61184,
+        NULL,
+        NULL,
+        0,                  // Offset of Timeout repeat xmt
+        0,                  // Destination Address if applicable
+        0,                  // Reserved
+        0                   // ms Transmit Repeat
     };
     
     
@@ -73,7 +88,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn61443,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn61443,
-        offsetof(J1939CAB_DATA, startTime61443),
+        offsetof(J1939CAB_DATA, time61443),
         0,
         0,
         50
@@ -103,7 +118,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn65217,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn65217,
-        offsetof(J1939CAB_DATA, startTime65217),
+        offsetof(J1939CAB_DATA, time65217),
         0,
         0,
         1000
@@ -133,7 +148,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn65265,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn65265,
-        offsetof(J1939CAB_DATA, startTime65265),
+        offsetof(J1939CAB_DATA, time65265),
         0,
         0,
         100
@@ -148,7 +163,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn65269,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn65269,
-        offsetof(J1939CAB_DATA, startTime65269),
+        offsetof(J1939CAB_DATA, time65269),
         0,
         0,
         1000
@@ -163,7 +178,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cab_HandlePgn65271,
         NULL,
         (P_SETUP_MSG_RTN)j1939cab_SetupPgn65271,
-        offsetof(J1939CAB_DATA, startTime65271),
+        offsetof(J1939CAB_DATA, time65271),
         0,
         0,
         1000
@@ -691,6 +706,49 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //  PGN 61184  0x00EF00 - Proprietary A - PROPA
+    //---------------------------------------------------------------
+    
+    bool            j1939cab_HandlePgn61184(
+        J1939CAB_DATA	*this,
+        J1939_MSG       *pMsg
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint16_t        spnCmd;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cab_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        if (pMsg) {
+            pdu = j1939msg_getPDU(pMsg);
+            pgn = j1939pdu_getPGN(pdu);
+            
+            spnCmd = pMsg->DATA.bytes[0] | (pMsg->DATA.bytes[1] << 8);
+            switch (spnCmd) {
+                case PROPA_CMD_SET_PARKING_BRAKE:
+                    j1939cab_ParkingBrake(this, pMsg->DATA.bytes[2]);
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //  PGN 61443  0x00F003 - Electronic Engine Controller 2 - EEC2
     //---------------------------------------------------------------
     
@@ -945,6 +1003,45 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //           H a n d l e  T i m e d  T r a n s m i t s
+    //---------------------------------------------------------------
+    
+    bool            j1939cab_HandleTimedTransmits(
+        J1939CAB_DATA	*this
+    )
+    {
+        uint32_t        curTime;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cab_Validate( this ) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->curTime = curTime;
+       
+        if ((curTime - this->time57344.msTime) >= this->time57344.msDelay) {
+            j1939cab_TransmitPgn57344(this);
+        }
+        if ((curTime - this->time65265.msTime) >= this->time65265.msDelay) {
+            j1939cab_TransmitPgn65265(this);
+        }
+#ifdef XYZZY
+        if (this->fActive) {
+            j1939er_HandlePgn0( this, NULL );
+        }
+#endif
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                          I n i t
     //---------------------------------------------------------------
 
@@ -1002,6 +1099,30 @@ extern "C" {
         //FIXME: this->super.pXmtPgnTbl = &xmtPgntbl;
         //FIXME: this->super.pTimedTransmit = (P_HANDLE_TIMED_TRANSMITS)&j1939cc_HandleTimedTransmits;
         
+        this->time57344.msDefault = 50;
+        this->time57344.msDelay = 50;
+        this->time57344.pgn = 57344;
+        
+        this->time61443.msDefault = 50;
+        this->time61443.msDelay = 50;
+        this->time61443.pgn = 57344;
+        
+        this->time65217.msDefault = 1000;
+        this->time65217.msDelay = 1000;
+        this->time65217.pgn = 65217;
+        
+        this->time65265.msDefault = 100;
+        this->time65265.msDelay = 100;
+        this->time65265.pgn = 65265;
+        
+        this->time65269.msDefault = 1000;
+        this->time65269.msDelay = 1000;
+        this->time65269.pgn = 65269;
+        
+        this->time65271.msDefault = 1000;
+        this->time65271.msDelay = 1000;
+        this->time65271.pgn = 65271;
+        
     #ifdef NDEBUG
     #else
         if( !j1939cab_Validate(this) ) {
@@ -1027,7 +1148,7 @@ extern "C" {
     //---------------------------------------------------------------
     
     ERESULT         j1939cab_IsEnabled(
-        J1939CAB_DATA		*this
+        J1939CAB_DATA	*this
     )
     {
         
@@ -1048,6 +1169,43 @@ extern "C" {
         // Return to caller.
         j1939cab_setLastError(this, ERESULT_SUCCESS_FALSE);
         return j1939cab_getLastError(this);
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    //                  P a r k i n g  B r a k e
+    //---------------------------------------------------------------
+    
+    ERESULT     j1939cab_ParkingBrake(
+        J1939CAB_DATA	*this,
+        bool            fApplied
+    )
+    {
+        uint8_t         spn70 = 0;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cab_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        if (fApplied) {
+            spn70 = 0b01;
+        }
+        if (spn70 == this->spn70) {
+        }
+        else {
+            this->spn70 = spn70;
+            j1939cab_TransmitPgn65265(this);
+        }
+        
+        // Return to caller.
+        j1939cab_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
     }
     
     
@@ -1262,7 +1420,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime57344 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time57344.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1345,7 +1503,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61443 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time61443.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1426,7 +1584,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65217 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65217.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1507,7 +1665,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65261 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65261.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1605,7 +1763,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65265 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65265.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1686,7 +1844,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65269 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65269.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1768,7 +1926,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65271 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65271.msTime = this->curTime;
         
         // Return to caller.
         return fRc;

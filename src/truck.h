@@ -102,12 +102,10 @@ extern "C" {
      @return:   pointer to truck object if successful, otherwise OBJ_NIL.
      */
     TRUCK_DATA *     truck_Alloc(
-        uint16_t    stackSize           // Stack Size in Words
     );
     
     
     TRUCK_DATA *     truck_New(
-        uint16_t    stackSize           // Stack Size in Words
     );
     
     
@@ -127,6 +125,19 @@ extern "C" {
     //                      *** Methods ***
     //---------------------------------------------------------------
 
+    /*!
+     Accelerator pedal simulation by percentage.
+     @param:    this    TRUCK object pointer
+     @param:    percent a value of 0 - 99 representing the amount of downward 
+                        movement made on the accelerator pedal
+     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     */
+    ERESULT         truck_Accelerator(
+        TRUCK_DATA		*this,
+        uint16_t        percent         // 0 - 99, 0 == idle
+    );
+    
+    
     ERESULT     truck_Disable(
         TRUCK_DATA		*this
     );
@@ -147,6 +158,18 @@ extern "C" {
     );
     
  
+    /*!
+     Create a string that describes this object and the objects within it.
+     @param:    this    TRUCK object pointer
+     @param:    fApplied true == Applied parking brake, false == Released parking brake
+     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     */
+    ERESULT     truck_ParkingBrake(
+        TRUCK_DATA		*this,
+        bool            fApplied
+    );
+    
+    
     /*!
      Create a string that describes this object and the objects within it.
      Example:

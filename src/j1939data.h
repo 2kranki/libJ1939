@@ -125,6 +125,9 @@ extern "C" {
     J1939_PGN_ENTRY     pgn61440_entry;
     extern
     const
+    J1939_PGN_ENTRY     pgn61441_entry;
+    extern
+    const
     J1939_PGN_ENTRY     pgn61442_entry;
     extern
     const
@@ -132,6 +135,9 @@ extern "C" {
     extern
     const
     J1939_PGN_ENTRY     pgn61444_entry;
+    extern
+    const
+    J1939_PGN_ENTRY     pgn64964_entry;
     extern
     const
     J1939_PGN_ENTRY     pgn61445_entry;
@@ -144,6 +150,9 @@ extern "C" {
     extern
     const
     J1939_PGN_ENTRY     pgn65184_entry;
+    extern
+    const
+    J1939_PGN_ENTRY     pgn65215_entry;
     extern
     const
     J1939_PGN_ENTRY     pgn65217_entry;

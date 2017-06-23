@@ -1,11 +1,11 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939CCU Console Transmit Task (j1939ccu) Header
+//          J1939 Cab Control Unit (j1939ccu) Header
 //****************************************************************
 /*
  * Program
- *			Separate j1939ccu (j1939ccu)
+ *			J1939 Cab Control Unit (j1939ccu)
  * Purpose
  *			This object provides a standardized way of handling
  *          a separate j1939ccu to run things without complications

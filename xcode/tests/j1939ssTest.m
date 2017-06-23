@@ -29,8 +29,8 @@
 #import     <cmn_defs.h>
 #include    "j1939ss_internal.h"
 #include    "common.h"              // Tests Common Routines
-#include    "j1939can.h"
-#include    "j1939sys.h"
+#include    <j1939can.h>
+#include    <j1939sys.h>
 
 
 

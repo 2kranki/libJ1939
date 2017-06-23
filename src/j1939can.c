@@ -457,7 +457,10 @@ extern "C" {
         }
 #endif
 
-        //j1939can_setStr(this, OBJ_NIL);
+        if (this->pLock) {
+            obj_Release(this->pLock);
+            this->pLock = OBJ_NIL;
+        }
 
         obj_setVtbl(this, this->pSuperVtbl);
         //other_Dealloc(this);          // Needed for inheritance
@@ -568,6 +571,7 @@ extern "C" {
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939can_Vtbl);
         
         j1939can_setLastError(this, ERESULT_GENERAL_FAILURE);
+        this->pLock = psxLock_New();
 
     #ifdef NDEBUG
     #else

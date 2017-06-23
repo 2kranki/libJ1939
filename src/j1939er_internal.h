@@ -73,6 +73,7 @@ extern "C" {
         // Common Data
         ERESULT             eRc;
         
+        uint32_t            curTime;
         uint32_t            startTime61440;     // Repeat every 100ms
         uint32_t            startTime65249;     // Repeat every 5s
 

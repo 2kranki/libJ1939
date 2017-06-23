@@ -1,5 +1,5 @@
 # Generated file do not edit!
-# ( 6/18/2017 17:54:14.000)
+# ( 6/23/2017  2:23:54.000)
 
 
 LIBNAM=libJ1939
@@ -35,6 +35,7 @@ LIBPATH = $(OBJDIR)\$(LIB_FILENAME)
 
 
 OBJS =
+OBJS = $(OBJS) $(OBJDIR)\j1939bs.obj $(OBJDIR)\j1939bs_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939ca.obj $(OBJDIR)\j1939ca_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939cab.obj $(OBJDIR)\j1939cab_object.obj
 OBJS = $(OBJS) $(OBJDIR)\j1939cam.obj $(OBJDIR)\j1939cam_object.obj
@@ -119,6 +120,14 @@ TESTS = $(TESTS) test_dump
 
 test_dump:
 	$(CC) $(CFLAGS) /Itests tests\test_dump.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
+	del *.obj
+	$(OBJDIR)\$(@F).exe
+
+
+TESTS = $(TESTS) test_j1939bs
+
+test_j1939bs:
+	$(CC) $(CFLAGS) /Itests tests\test_j1939bs.c tests\common.c tests\common2.c tests\common3.c tests\common4.c /link /out:$(OBJDIR)\$(@F).exe $(LIBPATH) $(LIBS) 
 	del *.obj
 	$(OBJDIR)\$(@F).exe
 

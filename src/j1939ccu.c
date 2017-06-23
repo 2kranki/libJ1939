@@ -42,8 +42,6 @@
 
 /* Header File Inclusion */
 #include    <j1939ccu_internal.h>
-#include    <j1939cc.h>
-#include    <j1939ss.h>
 
 
 
@@ -432,6 +430,23 @@ extern "C" {
             return;
         }
 #endif
+        
+        if (this->pBrake) {
+            obj_Release(this->pBrake);
+            this->pBrake = OBJ_NIL;
+        }
+        if (this->pCab) {
+            obj_Release(this->pCab);
+            this->pCab = OBJ_NIL;
+        }
+        if (this->pCruise) {
+            obj_Release(this->pCruise);
+            this->pCruise = OBJ_NIL;
+        }
+        if (this->pShift) {
+            obj_Release(this->pShift);
+            this->pShift = OBJ_NIL;
+        }
 
         obj_setVtbl(this, this->pSuperVtbl);
         j1939cu_Dealloc(this);          // Needed for inheritance
@@ -519,8 +534,6 @@ extern "C" {
     )
     {
         uint32_t        cbSize = sizeof(J1939CCU_DATA);
-        J1939CC_DATA    *pCC;
-        J1939SS_DATA    *pSS;
         
         if (OBJ_NIL == this) {
             return OBJ_NIL;
@@ -557,29 +570,45 @@ extern "C" {
         
         j1939ccu_setLastError(this, ERESULT_GENERAL_FAILURE);
         
-        // Create the Cab Controller.
-        pCC = j1939cc_Alloc();
-        pCC = j1939cc_Init(pCC, pCAN, pSYS, spn2837, spn2838, spn2846);
-        if( OBJ_NIL == pCC ) {
+        // Create the Brake Controller.
+        this->pBrake = j1939bs_Alloc();
+        this->pBrake = j1939bs_Init(this->pBrake, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == this->pBrake ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pCC);
-        obj_Release(pCC);
-        pCC = OBJ_NIL;
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), this->pBrake);
+        
+        // Create the Cab Controller.
+        this->pCab = j1939cab_Alloc();
+        this->pCab = j1939cab_Init(this->pCab, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == this->pCab ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), this->pCab);
+        
+        // Create the Cruise Controller.
+        this->pCruise = j1939cc_Alloc();
+        this->pCruise = j1939cc_Init(this->pCruise, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == this->pCruise ) {
+            DEBUG_BREAK();
+            obj_Release(this);
+            return OBJ_NIL;
+        }
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), this->pCruise);
         
         // Create the Shift Controller.
-        pSS = j1939ss_Alloc();
-        pSS = j1939ss_Init(pSS, pCAN, pSYS, spn2837, spn2838, spn2846);
-        if( OBJ_NIL == pSS ) {
+        this->pShift = j1939ss_Alloc();
+        this->pShift = j1939ss_Init(this->pShift, pCAN, pSYS, spn2837, spn2838, spn2846);
+        if( OBJ_NIL == this->pShift ) {
             DEBUG_BREAK();
             obj_Release(this);
             return OBJ_NIL;
         }
-        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), pSS);
-        obj_Release(pSS);
-        pSS = OBJ_NIL;
+        j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), this->pShift);
         
     #ifdef NDEBUG
     #else

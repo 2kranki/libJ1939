@@ -40,6 +40,17 @@
 
 
 #include    <truck.h>
+#include    <msgBus.h>
+
+#include    <j1939cam.h>
+
+#include    <j1939cu.h>
+#include    <j1939ccu.h>
+#include    <j1939ecu.h>
+#include    <j1939tcu.h>
+
+#include    <j1939can.h>
+#include    <j1939sys.h>
 
 
 #ifndef TRUCK_INTERNAL_H
@@ -51,7 +62,16 @@
 extern "C" {
 #endif
 
-
+    
+    // When we create a new CU, we must supply it with a CAN object
+    // which is tied to the BUS.
+    typedef struct cu_group_s {
+        J1939CU_DATA        *pCU;
+        J1939CAN_DATA       *pCAN;
+    } CU_GROUP;
+    
+    
+    
 
 
 #pragma pack(push, 1)
@@ -59,18 +79,22 @@ struct truck_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     OBJ_DATA        super;
-    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+    OBJ_IUNKNOWN    *pSuperVtbl;        // Needed for Inheritance
 
     // Common Data
     ERESULT         eRc;
-    uint16_t        size;		/* maximum number of elements           */
+    
+    // Remember that each of these are separate tasks.
+    CU_GROUP        cab;
+    CU_GROUP        eng;
+    CU_GROUP        xms;
+    
+    uint8_t         fParkingBrake;      // true == Parking Brake is applied
+    uint8_t         rsvd8[3];
+    uint16_t        accelPedal;         // Accelerator Pedal Percentage (0 - 99)
     uint16_t        reserved;
+    uint32_t        totalLoad;          // Weight of tractor, trailer and load
     ASTR_DATA       *pStr;
-
-    volatile
-    int32_t         numRead;
-    // WARNING - 'elems' must be last element of this structure!
-    uint32_t        elems[0];
 
 };
 #pragma pack(pop)

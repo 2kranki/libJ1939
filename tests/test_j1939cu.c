@@ -1,5 +1,6 @@
 /*
- *	Generated 04/13/2017 20:44:32
+ * J1939 Control Unit
+ * Generated 04/13/2017 20:44:32
  */
 
 
@@ -93,7 +94,7 @@ int         test_j1939cu_OpenClose(
                        (OBJ_ID)pSYS,
                        1,             // J1939 Identity Number (21 bits)
                        8192,          // J1939 Manufacturer Code (11 bits)
-                       4              // J1939 Industry Group (3 bits) (Marine)
+                       1              // J1939 Industry Group (3 bits) (On-Highway Equipment)
             );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     if (pObj) {

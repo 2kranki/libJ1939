@@ -53,8 +53,8 @@
 
 #include    "j1939dg_internal.h"
 #include    "common.h"
-#include    "j1939can.h"
-#include    "j1939sys.h"
+#include    <j1939can.h>
+#include    <j1939sys.h>
 
 
 

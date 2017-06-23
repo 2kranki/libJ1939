@@ -70,12 +70,32 @@ extern "C" {
     } J1939CA_STATE;
     
 
+    typedef enum propa_cmd_e {
+        PROPA_CMD_UNKOWN=0,
+        PROPA_CMD_SET_PARKING_BRAKE,        // msg byte[2] == true/false (1/0)
+    } PROPA_CMD;
+    
+    
 #pragma pack(push, 1)
     typedef struct j1939ca_msg_s {
         uint32_t        msDelay;            // Delay in ms
         uint32_t        msTime;             // Time when delay expires
         J1939_MSG       msg;
     } J1939CA_MSG;
+#pragma pack(pop)
+    
+    
+#pragma pack(push, 1)
+    typedef struct j1939ca_time_delay_s {
+        uint32_t        pgn;                // PGN for this delay
+        uint32_t        msDefault;          // Default Delay in ms (0 == on demand)
+        uint32_t        msDelay;            // Current Delay in ms
+        //                                  // If the msg delay changes based on other
+        //                                  // factors such as RPM, this field is used.
+        //                                  // To reset it, you simply copy in the
+        //                                  // default time.
+        uint32_t        msTime;             // Time when delay expires
+    } J1939CA_TIME_DELAY;
 #pragma pack(pop)
     
     
@@ -223,7 +243,7 @@ extern "C" {
         P_J1939_XMTRTN      pXmtMsgDL;
         OBJ_PTR             pXmtDataDL;
         
-        uint32_t            startTime;
+        uint32_t            startTime;      // ???
         
         uint8_t             ca;             // Claimed Address
         uint8_t             cs;             // CA Claimed State

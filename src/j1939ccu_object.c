@@ -201,7 +201,7 @@ OBJ_INFO        j1939ccu_Info = {
     "j1939ccu",
     "J1939 Cab Control Unit",
     (OBJ_DATA *)&j1939ccu_ClassObj,
-    (OBJ_DATA *)&obj_ClassObj,
+    (OBJ_DATA *)&j1939cu_ClassObj,
     (OBJ_IUNKNOWN *)&j1939ccu_Vtbl
 };
 

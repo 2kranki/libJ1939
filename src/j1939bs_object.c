@@ -80,6 +80,9 @@ bool            j1939bs_ClassIsKindOf(
     if (OBJ_IDENT_J1939BS_CLASS == classID) {
        return true;
     }
+    if (OBJ_IDENT_J1939CA_CLASS == classID) {
+        return true;
+    }
     if (OBJ_IDENT_OBJ_CLASS == classID) {
        return true;
     }
@@ -129,6 +132,9 @@ bool            j1939bs_IsKindOf(
 {
     if (OBJ_IDENT_J1939BS == classID) {
        return true;
+    }
+    if (OBJ_IDENT_J1939CA == classID) {
+        return true;
     }
     if (OBJ_IDENT_OBJ == classID) {
        return true;

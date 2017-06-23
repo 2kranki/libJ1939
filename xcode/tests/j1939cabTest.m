@@ -29,7 +29,7 @@
 #include    <j1939cab_internal.h>
 #include    "common.h"              // Tests Common Routines
 #include    <j1939can.h>
-#include    "j1939sys.h"
+#include    <j1939sys.h>
 
 
 static
