@@ -7,16 +7,16 @@
  * Program
  *			J1939 Cab Control Unit (j1939ccu)
  * Purpose
- *			This object provides a standardized way of handling
- *          a separate j1939ccu to run things without complications
- *          of interfering with the main j1939ccu. A j1939ccu may be 
- *          called a j1939ccu on other O/S's.
+ *			This object provides support for the following Control
+ *          Applications:
+ *              j1939bs - Braking System CA
+ *              j1939cab - Cab CA
+ *              j1939cc - Cruise Control CA
+ *              j1939ss - Shifter CA
+ *          The CAs run under the CCU's Consumer Task.
  *
  * Remarks
- *	1.      Using this object allows for testable code, because a
- *          function, TaskBody() must be supplied which is repeatedly
- *          called on the internal j1939ccu. A testing unit simply calls
- *          the TaskBody() function as many times as needed to test.
+ *	1.      None
  *
  * History
  *	06/05/2017 Generated

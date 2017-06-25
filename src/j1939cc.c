@@ -60,7 +60,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn57344,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn57344,
-        offsetof(J1939CC_DATA, startTime57344),
+        offsetof(J1939CC_DATA, time57344),
         0,
         0,
         1000
@@ -75,7 +75,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn61443,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn61443,
-        offsetof(J1939CC_DATA, startTime61443),
+        offsetof(J1939CC_DATA, time61443),
         0,
         0,
         50
@@ -105,7 +105,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65217,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn65217,
-        offsetof(J1939CC_DATA, startTime65217),
+        offsetof(J1939CC_DATA, time65217),
         0,
         0,
         1000
@@ -135,7 +135,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65265,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn65265,
-        offsetof(J1939CC_DATA, startTime65265),
+        offsetof(J1939CC_DATA, time65265),
         0,
         0,
         100
@@ -150,7 +150,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65269,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn65269,
-        offsetof(J1939CC_DATA, startTime65269),
+        offsetof(J1939CC_DATA, time65269),
         0,
         0,
         1000
@@ -165,7 +165,7 @@ extern "C" {
         (P_SRVCMSG_RTN)j1939cc_HandlePgn65271,
         NULL,
         (P_SETUP_MSG_RTN)j1939cc_SetupPgn65271,
-        offsetof(J1939CC_DATA, startTime65271),
+        offsetof(J1939CC_DATA, time65271),
         0,
         0,
         1000
@@ -973,6 +973,45 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //           H a n d l e  T i m e d  T r a n s m i t s
+    //---------------------------------------------------------------
+    
+    bool            j1939cc_HandleTimedTransmits(
+        J1939CC_DATA	*this
+    )
+    {
+        uint32_t        curTime;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939cc_Validate( this ) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->curTime = curTime;
+        
+        if ((curTime - this->time57344.msTime) >= this->time57344.msDelay) {
+            j1939cc_TransmitPgn57344(this);
+        }
+        if ((curTime - this->time65265.msTime) >= this->time65265.msDelay) {
+            j1939cc_TransmitPgn65265(this);
+        }
+#ifdef XYZZY
+        if (this->fActive) {
+            j1939er_HandlePgn0( this, NULL );
+        }
+#endif
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                          I n i t
     //---------------------------------------------------------------
 
@@ -1032,6 +1071,39 @@ extern "C" {
         //FIXME: this->super.pXmtPgnTbl = &xmtPgntbl;
         //FIXME: this->super.pTimedTransmit = (P_HANDLE_TIMED_TRANSMITS)&j1939cc_HandleTimedTransmits;
         
+        this->time57344.msDefault = pgn57344_entry.msFreq;
+        this->time57344.msDelay = pgn57344_entry.msFreq;
+        this->time57344.pgn = 57344;
+        
+        this->time61443.msDefault = pgn61443_entry.msFreq;
+        this->time61443.msDelay = pgn61443_entry.msFreq;
+        this->time61443.pgn = 61443;
+        
+        this->time65217.msDefault = pgn65217_entry.msFreq;
+        this->time65217.msDelay = pgn65217_entry.msFreq;
+        this->time65217.pgn = 65217;
+        
+        this->time65265.msDefault = pgn65265_entry.msFreq;
+        this->time65265.msDelay = pgn65265_entry.msFreq;
+        this->time65265.pgn = 65265;
+        
+        this->time65269.msDefault = pgn65269_entry.msFreq;
+        this->time65269.msDelay = pgn65269_entry.msFreq;
+        this->time65269.pgn = 65269;
+        
+        this->time65271.msDefault = pgn65271_entry.msFreq;
+        this->time65271.msDelay = pgn65271_entry.msFreq;
+        this->time65271.pgn = 65271;
+        
+        // Default all SPNs to unsupported values.
+        memset(
+               &this->spnFirst,
+               0xFF,
+               (offsetof(J1939CC_DATA,spnLast) - offsetof(J1939CC_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        //this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
+        
     #ifdef NDEBUG
     #else
         if( !j1939cc_Validate(this) ) {
@@ -1040,7 +1112,8 @@ extern "C" {
             return OBJ_NIL;
         }
         BREAK_NOT_BOUNDARY4(sizeof(J1939CC_DATA));
-        //BREAK_NOT_BOUNDARY4(&this->thread);
+        BREAK_NOT_BOUNDARY4(&this->spnFirst);
+        BREAK_NOT_BOUNDARY4(&this->spnLast);
     #endif
 
         return this;
@@ -1228,7 +1301,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime57344 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time57344.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1311,7 +1384,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61443 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time61443.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1392,7 +1465,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65217 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65217.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1473,7 +1546,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65261 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65261.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1571,7 +1644,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65265 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65265.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1652,7 +1725,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65269 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65269.msTime = this->curTime;
         
         // Return to caller.
         return fRc;
@@ -1734,7 +1807,7 @@ extern "C" {
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65271 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->time65271.msTime = this->curTime;
         
         // Return to caller.
         return fRc;

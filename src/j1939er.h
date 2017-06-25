@@ -378,6 +378,11 @@ extern	"C" {
     );
     
         
+    bool            j1939er_TransmitPgn65275(
+        J1939ER_DATA	*this
+    );
+    
+    
     
 
     

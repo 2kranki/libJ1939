@@ -207,9 +207,24 @@ extern "C" {
 
         uint16_t            spn185;             // Engine Throttle Position
         uint16_t            spn190;             // Engine Speed (rpm)
+        // Actual engine speed which is calculated over a minimum crankshaft angle of 720
+        // degrees divided by the number of cylinders.
+        // mult: 0.125 rpm per bit, offset: 0
+        // range: 0 to 8,031.875 rpm
 
         uint16_t            spn191;             // 03 - Transmission Output Shaft Speed
+        // Calculated speed of the transmission output shaft.
+        // mult: 0.125 rpm per bit, offset: 0
+        // range: 0 to 8,031.875 rpm
         uint16_t            spn515;             // Engine's Desired Operating Speed
+        // An indication by the engine of the optimal operating speed of the engine for
+        // the current existing conditions. These conditions may include the torque
+        // generated to accommodate powertrain demands from the operator (via the
+        // accelerator pedal), cruise control, road speed limit governors, or ASR.
+        // Dynamic commands from functions such as smoke control or shift control are
+        // excluded from this calculation.
+        // mult: 0.125 rpm per bit, offset: 0
+        // range: 0 to 8,031.875 rpm
 
         uint16_t            spn1636;            // Intake Manifold 1 Air Temperature
         uint16_t            spn1637;            // Engine Coolant Temperature

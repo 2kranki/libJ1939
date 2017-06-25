@@ -1099,28 +1099,37 @@ extern "C" {
         //FIXME: this->super.pXmtPgnTbl = &xmtPgntbl;
         //FIXME: this->super.pTimedTransmit = (P_HANDLE_TIMED_TRANSMITS)&j1939cc_HandleTimedTransmits;
         
-        this->time57344.msDefault = 50;
-        this->time57344.msDelay = 50;
+        // Default all SPNs to unsupported values.
+        memset(
+               &this->spnFirst,
+               0xFF,
+               (offsetof(J1939CAB_DATA,spnLast) - offsetof(J1939CAB_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        //this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
+        
+        this->time57344.msDefault = pgn57344_entry.msFreq;
+        this->time57344.msDelay = pgn57344_entry.msFreq;
         this->time57344.pgn = 57344;
         
-        this->time61443.msDefault = 50;
-        this->time61443.msDelay = 50;
-        this->time61443.pgn = 57344;
+        this->time61443.msDefault = pgn61443_entry.msFreq;
+        this->time61443.msDelay = pgn61443_entry.msFreq;
+        this->time61443.pgn = 61443;
         
-        this->time65217.msDefault = 1000;
-        this->time65217.msDelay = 1000;
+        this->time65217.msDefault = pgn65217_entry.msFreq;
+        this->time65217.msDelay = pgn65217_entry.msFreq;
         this->time65217.pgn = 65217;
         
-        this->time65265.msDefault = 100;
-        this->time65265.msDelay = 100;
+        this->time65265.msDefault = pgn65265_entry.msFreq;
+        this->time65265.msDelay = pgn65265_entry.msFreq;
         this->time65265.pgn = 65265;
         
-        this->time65269.msDefault = 1000;
-        this->time65269.msDelay = 1000;
+        this->time65269.msDefault = pgn65269_entry.msFreq;
+        this->time65269.msDelay = pgn65269_entry.msFreq;
         this->time65269.pgn = 65269;
         
-        this->time65271.msDefault = 1000;
-        this->time65271.msDelay = 1000;
+        this->time65271.msDefault = pgn65271_entry.msFreq;
+        this->time65271.msDelay = pgn65271_entry.msFreq;
         this->time65271.pgn = 65271;
         
     #ifdef NDEBUG
@@ -1130,11 +1139,11 @@ extern "C" {
             obj_Release(this);
             return OBJ_NIL;
         }
-#ifdef __APPLE__
-        fprintf(stderr, "offsetof(eRc) = %lu\n", offsetof(J1939CAB_DATA,eRc));
-        fprintf(stderr, "sizeof(J1939CAB_DATA) = %lu\n", sizeof(J1939CAB_DATA));
-#endif
         BREAK_NOT_BOUNDARY4(&this->eRc);
+        BREAK_NOT_BOUNDARY4(&this->spnFirst);
+        BREAK_NOT_BOUNDARY4(&this->spn79);
+        BREAK_NOT_BOUNDARY4(&this->spn917);
+        BREAK_NOT_BOUNDARY4(&this->spnLast);
         BREAK_NOT_BOUNDARY4(sizeof(J1939CAB_DATA));
     #endif
 

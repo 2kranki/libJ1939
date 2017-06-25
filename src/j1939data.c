@@ -3013,10 +3013,10 @@ extern "C" {
     J1939_PGN_ENTRY     pgn65226_entry = {
         // PGN 65226  0x00FECA - Active Diagnostic Trouble Codes - DM1
         0x0000FECA,
-        0,                  // msFreq
+        0,                  // msFreq   (on demand)
         8,                  // dlc
         6,                  // priority
-        0,                  // cSPNs
+        12,                 // cSPNs
         0,                  // --reserved--
         NULL,               // SPN Table Pointer
         "Active Diagnostic Trouble Codes - DM1"
@@ -3430,6 +3430,20 @@ extern "C" {
     
     
     const
+    J1939_PGN_ENTRY     pgn65275_entry = {
+        // PGN 65275  0x00FEFB - Transmission Fluids 1 - TRF1
+        0x0000FEFB,
+        1000,               // msFreq
+        8,                  // dlc
+        6,                  // priority
+        2,                  // cSPNs
+        0,                  // --reserved--
+        NULL,               // SPN Table Pointer
+        "Retarder Fluids - RF"
+    };
+    
+    
+    const
     J1939_PGN_ENTRY     pgn65276_entry = {
         // PGN 65276  0x00FEFC - Dash Display - DD
         0x0000FEFC,
@@ -3807,6 +3821,7 @@ extern "C" {
         &pgn65270_entry,
         &pgn65271_entry,
         &pgn65272_entry,
+        &pgn65275_entry,
         &pgn65276_entry,
         &pgn65277_entry,
         &pgn65279_entry,

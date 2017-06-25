@@ -74,10 +74,20 @@ extern "C" {
         ERESULT             eRc;
         
         uint32_t            curTime;
-        uint32_t            startTime61440;     // Repeat every 100ms
-        uint32_t            startTime65249;     // Repeat every 5s
+        J1939CA_TIME_DELAY  time61440;
+        J1939CA_TIME_DELAY  time65249;
+        J1939CA_TIME_DELAY  time65275;
 
         // The first spn is used in Init() to establish size of area to initialize.
+        uint8_t             spnFirst;
+        uint8_t             spn119;             // Hydraulic Retarder Pressure
+        // Gage pressure of oil in hydraulic retarder system
+        //                                      // mult: 16 kPa per bit, offset: 0
+        //                                      // range: 0 to 1000 kPa
+        uint8_t             spn120;             // Hydraulic Retarder Oil Temperature
+        // Temperature of oil found in a hydraulic retarder.
+        //                                      // mult: 1 degree C per bit, offset: -40 C
+        //                                      // range: -40 C to 210 C
         uint8_t             spn520;             // Actual Retarder - Percent Torque
                                                 // offset: -125%, -125 to 125 (0 - 250)
         uint8_t             spn571;             // Retarder Enable - Brake Assist Switch
@@ -129,6 +139,7 @@ extern "C" {
         // The last spn is used in Init() to establish size of area to initialize.
 
         uint32_t            timeOut;
+        uint32_t            spnLast;
         uint8_t             fActive;
         uint8_t             rsvd8[3];
 
@@ -181,6 +192,14 @@ extern "C" {
     );
 
 
+    bool            j1939er_HandlePgn65249(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+    
+    
     bool            j1939er_HandlePgn65262(
         J1939ER_DATA	*cbp,
         J1939_MSG       *pMsg               // NULL == Timed Out
@@ -201,7 +220,22 @@ extern "C" {
     );
 
 
+    int             j1939er_SetupPgn65249(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
 
+    
+    int             j1939er_SetupPgn65275(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    );
+    
+    
 
 
 #ifdef	__cplusplus

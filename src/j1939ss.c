@@ -59,7 +59,7 @@ extern "C" {
         NULL,
         NULL,
         (P_SETUP_MSG_RTN)j1939ss_SetupPgn0,
-        offsetof(J1939SS_DATA, startTime0),
+        0, //FIXME: offsetof(J1939SS_DATA, startTime0),
         0,
         0,
         0
@@ -1379,14 +1379,8 @@ bool			j1939ss_setSpn3350(
         }
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
-        
-        //TODO: maybe doesn't consider clock rollover
-        if ((curTime - this->startTime0) >= this->tsc1Time) {
-            j1939ss_TransmitPgn0(this);
-        }
-        //if (this->fActive) {
-            //j1939ss_HandlePgn0( this, 0, NULL );
-        //}
+        this->curTime = curTime;
+    
         
         // Return to caller.
         return true;
@@ -1455,9 +1449,18 @@ bool			j1939ss_setSpn3350(
         this->super.pTimedTransmit =
         (P_HANDLE_TIMED_TRANSMITS)&j1939ss_HandleTimedTransmits;
 
-        this->tsc1Time = 10;
+        //this->tsc1Time = 10;
         
-    #ifdef NDEBUG
+        // Default all SPNs to unsupported values.
+        memset(
+               &this->spnFirst,
+               0xFF,
+               (offsetof(J1939SS_DATA,spnLast) - offsetof(J1939SS_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        //this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
+
+#ifdef NDEBUG
     #else
         if( !j1939ss_Validate(this) ) {
             DEBUG_BREAK();
@@ -1465,7 +1468,8 @@ bool			j1939ss_setSpn3350(
             return OBJ_NIL;
         }
         BREAK_NOT_BOUNDARY4(&this->eRc);
-        BREAK_NOT_BOUNDARY4(&this->tsc1Time);
+        BREAK_NOT_BOUNDARY4(&this->spnFirst);
+        BREAK_NOT_BOUNDARY4(&this->spnLast);
         BREAK_NOT_BOUNDARY4(sizeof(J1939SS_DATA));
     #endif
 
@@ -1660,7 +1664,7 @@ bool			j1939ss_setSpn3350(
         }
         
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime0 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        //this->startTime0 = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         
         // Return to caller.
         return fRc;

@@ -129,6 +129,7 @@ extern "C" {
     
     
     
+    // resolution: 0.125 rpm per bit, offset 0, range: 0 to 8,031.875 rpm
     static
     bool            printRPM01(
         J1939MISC_DATA  *this,
@@ -163,7 +164,7 @@ extern "C" {
 
     
     
-    // resolution: 1/256 km/h per bit, offset 0, range: 0 - 250.996 km/h
+    // resolution: 1/256 km/h per bit, offset 0, range: 0 to 250.996 km/h
     static
     bool            printSpeed02(
         J1939MISC_DATA  *this,
@@ -1637,7 +1638,8 @@ extern "C" {
         if (spn191 == 0xFFFF) {
         }
         else {
-            printSpeed02(this, "\tspn191 Transmission Output Shaft Speed", spn191);
+            
+            printRPM01(this, "\tspn191 Transmission Output Shaft Speed", spn191);
         }
         if (spn522 == 0xFF) {
         }
@@ -1663,7 +1665,7 @@ extern "C" {
         if (spn161 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn161 Transmission Input Shaft Speed = %d\n", spn161);
+            printRPM01(this, "\tspn161 Transmission Input Shaft Speed", spn161);
         }
         if (spn1482 == 0xFF) {
         }
@@ -2941,12 +2943,12 @@ extern "C" {
         if (spn514 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn514 Nominal Friction - Percent Torque = %d\n", spn514);
+            printPCT05(this, "\tspn514 Nominal Friction - Percent Torque", spn514);
         }
         if (spn515 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn515 Engine's Desired Operating Speed = %d\n", spn515);
+            printRPM01(this, "\tspn515 Engine's Desired Operating Speed", spn515);
         }
         if (spn519 == 0xFF) {
         }
@@ -2956,7 +2958,7 @@ extern "C" {
         if (spn2978 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn2978 Estimated Engine Parasitic Losses - Percent Torque = %d\n", spn2978);
+            printPCT05(this, "\tspn2978 Estimated Engine Parasitic Losses - Percent Torque", spn2978);
         }
         if (spn3236 == 0xFFFF) {
         }
@@ -3401,7 +3403,7 @@ extern "C" {
         if (spn961 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn961 Hourss = %d\n", spn961);
+            fprintf(this->pFileOut, "\tspn961 Hours = %d\n", spn961);
         }
         if (spn963 == 0xFF) {
         }
@@ -3411,17 +3413,22 @@ extern "C" {
         if (spn962 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn962 Hourss = %d\n", spn962);
+            fprintf(this->pFileOut, "\tspn962 Day = %d\n", spn962);
         }
-        if (spn960 == 0xFF) {
-        }
-        else {
-            fprintf(this->pFileOut, "\tspn960 Minutes = %d\n", spn960);
-        }
-        if (spn961 == 0xFF) {
+        if (spn964 == 0xFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn961 Hourss = %d\n", spn961);
+            fprintf(this->pFileOut, "\tspn964 Year = %d\n", spn964);
+        }
+        if (spn1601 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1601 Local minute offset = %d\n", spn1601);
+        }
+        if (spn1602 == 0xFF) {
+        }
+        else {
+            fprintf(this->pFileOut, "\tspn1602 Local hour offset = %d\n", spn1602);
         }
         
         // Return to caller.
@@ -3779,12 +3786,12 @@ extern "C" {
         if (spn186 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn186 Power Takeoff Speed = %d\n", spn186);
+            printRPM01(this, "\tspn186 Power Takeoff Speed", spn186);
         }
         if (spn187 == 0xFFFF) {
         }
         else {
-            fprintf(this->pFileOut, "\tspn187 Power Takeoff Set Speed = %d\n", spn186);
+            printRPM01(this, "\tspn187 Power Takeoff Set Speed", spn187);
         }
         print1of4(this,
                   spn980,

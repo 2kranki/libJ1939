@@ -74,6 +74,7 @@ extern	"C" {
         10
     };
 
+    
     static
     const
     J1939CA_PGN_ENTRY     ca_pgn61440_entry = {
@@ -82,17 +83,34 @@ extern	"C" {
         (P_SRVCMSG_RTN)j1939er_HandlePgn61440,
         NULL,
         (P_SETUP_MSG_RTN)j1939er_SetupPgn61440,
-        offsetof(J1939ER_DATA, startTime61440),
+        offsetof(J1939ER_DATA, time61440),
         0,
         0,
         100
     };
 
+    
+    static
+    const
+    J1939CA_PGN_ENTRY     ca_pgn65249_entry = {
+        // PGN 65249  0x00FEE1 - Retarder Configuration - RC -
+        &pgn65249_entry,
+        NULL,
+        (P_VARMSG_RTN)j1939er_HandlePgn65249,
+        (P_SETUP_MSG_RTN)j1939er_SetupPgn65249,
+        offsetof(J1939ER_DATA, time65249),
+        0,
+        0,
+        100
+    };
+    
+    
     static
     const
     J1939CA_PGN_ENTRY     *rcvPgnIndex[] = {
         &ca_pgn0_entry,
         &ca_pgn61440_entry,
+        &ca_pgn65249_entry,
         NULL
     };
 
@@ -110,6 +128,7 @@ extern	"C" {
     const
     J1939CA_PGN_ENTRY     *xmtPgnIndex[] = {
         &ca_pgn61440_entry,
+        &ca_pgn65249_entry,
         NULL
     };
 
@@ -1096,7 +1115,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //     H a n d l e  P G N 6 1 4 4 0 -
+    // PGN 61440  0x00F000 - Electronic Retarder Controller 1 - ERC1
     //---------------------------------------------------------------
 
     bool            j1939er_HandlePgn61440(
@@ -1159,6 +1178,130 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
+    // PGN 65249  0x00FEE1 - Retarder Configuration - RC -
+    //---------------------------------------------------------------
+    
+    bool            j1939er_HandlePgn65249(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn901;
+        uint8_t         spn902;
+        uint8_t         spn557;
+        uint16_t        spn546;
+        uint8_t         spn551;
+        uint16_t        spn548;
+        uint8_t         spn552;
+        uint16_t        spn549;
+        uint8_t         spn553;
+        uint16_t        spn550;
+        uint8_t         spn554;
+        uint16_t        spn547;
+        uint16_t        spn556;
+        uint8_t         spn555;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939er_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = *pPDU;
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 901  01.1     4bits      Retarder Type
+        spn901 = pData[0] & 0x0F;
+        // SPN 902  01.5     4bits      Retarder Location
+        spn902 = (pData[0] >> 4) & 0x0F;
+        // SPN 557  02       8bits      Retarder Control Method
+        //                              (Retarder Configuration)
+        spn557 = pData[1];
+        // SPN 546  03-04    16bits     Retarder Speed At Idle, Point 1
+        //                              (Retarder Configuration)
+        spn546 = pData[2] | (pData[3] << 8);
+        // SPN 551  05       8bits      Percent Torque At Idle, Point 1
+        //                              (Retarder Configuration)
+        spn551 = pData[4];
+        // SPN 548  06-07    16bits     Maximum Retarder Speed, Point 2
+        //                              (Retarder Configuration)
+        spn548 = pData[5] | (pData[6] << 8);
+        // SPN 552  08       8bits      Percent Torque At Maximum Speed, Point 2
+        //                              (Retarder Configuration)
+        spn552 = pData[7];
+        // SPN 549  09-10    16bits     Retarder Speed At Point 3
+        //                              (Retarder Configuration)
+        spn549 = pData[8] | (pData[9] << 8);
+        // SPN 553  11       8bits      Percent Torque At Point 3
+        //                              (Retarder Configuration)
+        spn553 = pData[10];
+        // SPN 550  12-13    16bits     Retarder Speed At Point 4
+        //                              (Retarder Configuration)
+        spn550 = pData[11] | (pData[12] << 8);
+        // SPN 554  14       8bits      Percent Torque At Point 4
+        //                              (Retarder Configuration)
+        spn554 = pData[13];
+        // SPN 547  15-16    16bits     Retarder Speed At Peak Torque, Point 5
+        //                              (Retarder Configuration)
+        spn547 = pData[14] | (pData[15] << 8);
+        // SPN 556  17-18    16bits     Reference Retarder Torque
+        //                              (Retarder Configuration)
+        spn556 = pData[16] | (pData[17] << 8);
+        // SPN 555  19       8bits      Percent Torque At Peak Torque, Point 5
+        //                              (Retarder Configuration)
+        spn555 = pData[18];
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
+    // PGN 65275  0x00FEFB - Transmission Fluids 1 - TRF1
+    //---------------------------------------------------------------
+    
+    bool            j1939er_HandlePgn65275(
+        J1939ER_DATA	*this,
+        J1939_MSG       *pMsg               // NULL == Timed Out
+    )
+    {
+        J1939_PDU       pdu;
+        J1939_PGN       pgn;
+        uint8_t         spn119;
+        uint8_t         spn120;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !j1939er_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        pdu = j1939msg_getPDU(pMsg);
+        pgn = j1939pdu_getPGN(pdu);
+        
+        // SPN 119  1       8bits       Hydraulic Retarder Pressure
+        spn119 = pMsg->DATA.bytes[0];
+        // SPN 120  2       8bits       Hydraulic Retarder Oil Temperature
+        spn120 = pMsg->DATA.bytes[1];
+        
+        // Return to caller.
+        return false;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //           H a n d l e  T i m e d  T r a n s m i t s
     //---------------------------------------------------------------
 
@@ -1179,12 +1322,11 @@ extern	"C" {
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
         this->curTime = curTime;
 
-        //TODO: maybe doesn't consider clock rollover
-        if ((curTime - this->startTime61440) >= 100) {
+        if ((curTime - this->time61440.msTime) >= this->time61440.msDelay) {
             j1939er_TransmitPgn61440(this);
         }
-        if (this->fActive) {
-            j1939er_HandlePgn0( this, NULL );
+        if ((curTime - this->time65249.msTime) >= this->time65249.msDelay) {
+            j1939er_TransmitPgn65249(this);
         }
 
         // Return to caller.
@@ -1245,10 +1387,12 @@ extern	"C" {
         
         // Default all SPNs to unsupported values.
         memset(
-               &this->spn520,
+               &this->spnFirst,
                0xFF,
-               (offsetof(J1939ER_DATA,spn1637) - offsetof(J1939ER_DATA,spn520) + 2)
-        );
+               (offsetof(J1939ER_DATA,spnLast) - offsetof(J1939ER_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        this->spn1480 = J1939_ENGINE_RETARDER_EXHAUST_1;
         this->spn520 = 125;     // Actual Retarder - Percent Torque
         this->spn571 = 1;       // Enable Retarder Brake Assist
         this->spn572 = 1;       // Enable Retarder Shift Assist
@@ -1256,6 +1400,18 @@ extern	"C" {
         this->spn1715 = 75;     // Maximum Torque that can be requested by the driver
         this->spn1717 = 0;      // Maximum Allowable Torque on request
 
+        this->time61440.msDefault = pgn61440_entry.msFreq;
+        this->time61440.msDelay = pgn61440_entry.msFreq;
+        this->time61440.pgn = 61440;
+        
+        this->time65249.msDefault = pgn65249_entry.msFreq;
+        this->time65249.msDelay = pgn65249_entry.msFreq;
+        this->time65249.pgn = 65249;
+        
+        this->time65275.msDefault = pgn65275_entry.msFreq;
+        this->time65275.msDelay = pgn65275_entry.msFreq;
+        this->time65275.pgn = 65275;
+        
 #ifdef NDEBUG
 #else
         if( !j1939er_Validate( this ) ) {
@@ -1264,6 +1420,8 @@ extern	"C" {
             return NULL;
         }
         BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,spn84));
+        BREAK_NOT_BOUNDARY4(&this->spnFirst);
+        BREAK_NOT_BOUNDARY4(&this->spnLast);
         BREAK_NOT_BOUNDARY4(offsetof(J1939ER_DATA,timeOut));
         BREAK_NOT_BOUNDARY4(sizeof(J1939ER_DATA));
 #endif
@@ -1275,7 +1433,7 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //           T r a n s m i t  P G N 6 1 4 4 0   0xF000       ERC1
+    // PGN 61440  0x00F000 - Electronic Retarder Controller 1 - ERC1
     //---------------------------------------------------------------
 
     // Electronic Retarder Controller 1 - ERC1 -
@@ -1353,7 +1511,7 @@ extern	"C" {
         }
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime61440 = this->curTime;
+        this->time61440.msTime = this->curTime;
 
         // Return to caller.
         return true;
@@ -1362,9 +1520,61 @@ extern	"C" {
 
 
     //---------------------------------------------------------------
-    //           T r a n s m i t  P G N 6 5 2 4 9   0xF000
+    // PGN 65249  0x00FEE1 - Retarder Configuration - RC
     //---------------------------------------------------------------
 
+    int             j1939er_SetupPgn65249(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn65249_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn65249_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65249_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 19) {
+                return 0;
+            }
+            *pData  = 0x00;
+            *pData |= this->spn900 & 0xF;
+            *pData |= (this->spn571 & 0x3) << 4;
+            *pData |= (this->spn572 & 0x3) << 6;
+            ++pData;
+            *pData  = this->spn520;
+            ++pData;
+            *pData  = this->spn1085;
+            ++pData;
+            *pData  = 0xF0;
+            *pData |= (this->spn1082 & 0x3);
+            *pData |= (this->spn1667 & 0x3) << 2;
+            ++pData;
+            *pData  = this->spn1480;
+            ++pData;
+            *pData  = this->spn1715;
+            ++pData;
+            *pData  = this->spn1716;
+            ++pData;
+            *pData  = this->spn1717;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
     // Retarder Configuration - RC -
     // Unused bits are set to 1.
     bool            j1939er_TransmitPgn65249(
@@ -1397,7 +1607,7 @@ extern	"C" {
 
         //FIXME: We need to implement 21 Data Link Layer!
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->startTime65249 = this->curTime;
+        this->time65249.msTime = this->curTime;
 
         // Return to caller.
         return true;
@@ -1405,6 +1615,83 @@ extern	"C" {
 
 
 
+    //---------------------------------------------------------------
+    // PGN 61440  0x00F000 - Electronic Retarder Controller 1 - ERC1
+    //---------------------------------------------------------------
+    
+    int             j1939er_SetupPgn65275(
+        J1939ER_DATA	*this,
+        J1939_PDU       *pPDU,
+        uint16_t        cData,
+        uint8_t         *pData
+    )
+    {
+        
+        if (pPDU) {
+            pPDU->PF = (pgn65275_entry.pgn >> 8) & 0xFF;
+            pPDU->PS = pgn65275_entry.pgn & 0xFF;
+            pPDU->SA = this->super.ca;
+            pPDU->P  = pgn65275_entry.priority;
+        }
+        else {
+            return 0;
+        }
+        
+        if (pData) {
+            if (cData < 8) {
+                return 0;
+            }
+            *pData |= this->spn119;
+            ++pData;
+            *pData  = this->spn120;
+            ++pData;
+            *pData  = 0xFF;
+            ++pData;
+            *pData  = 0xFF;
+            ++pData;
+            *pData  = 0xFF;
+            ++pData;
+            *pData  = 0xFF;
+            ++pData;
+            *pData  = 0xFF;
+            ++pData;
+            *pData  = 0xFF;
+        }
+        else {
+            return 0;
+        }
+        
+        // Return to caller.
+        return 8;
+    }
+    
+    
+    bool            j1939er_TransmitPgn65275(
+        J1939ER_DATA	*this
+    )
+    {
+        uint16_t        dlc = 8;
+        uint8_t         data[8] = {0};
+        J1939_PDU       pdu = {0};
+        bool            fRc = false;
+        int             len;
+        
+        len = j1939er_SetupPgn65275(this, &pdu, dlc, data);
+        if (len == 8) {
+        }
+        else {
+            return false;
+        }
+        
+        fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
+        this->time65275.msTime = this->curTime;
+        
+        // Return to caller.
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                      Validate
     //---------------------------------------------------------------

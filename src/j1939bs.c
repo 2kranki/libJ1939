@@ -954,16 +954,16 @@ extern "C" {
         );
         this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
 
-        this->time61441.msDefault = 100;
-        this->time61441.msDelay = 100;
+        this->time61441.msDefault = pgn61441_entry.msFreq;
+        this->time61441.msDelay = pgn61441_entry.msFreq;
         this->time61441.pgn = 61441;
         
-        this->time64964.msDefault = 100;
-        this->time64964.msDelay = 100;
+        this->time64964.msDefault = pgn64964_entry.msFreq;
+        this->time64964.msDelay = pgn64964_entry.msFreq;
         this->time64964.pgn = 64964;
         
-        this->time65215.msDefault = 100;
-        this->time65215.msDelay = 100;
+        this->time65215.msDefault = pgn65215_entry.msFreq;
+        this->time65215.msDelay = pgn65215_entry.msFreq;
         this->time65215.pgn = 65215;
         
     #ifdef NDEBUG

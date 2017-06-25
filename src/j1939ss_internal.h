@@ -59,39 +59,42 @@ extern "C" {
 struct j1939ss_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
-    J1939CA_DATA    super;
-    OBJ_IUNKNOWN    *pSuperVtbl;      // Needed for Inheritance
+    J1939CA_DATA        super;
+    OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
 
     // Common Data
-    ERESULT         eRc;
-    uint32_t        startTime0;     // Next PGN 0 Start Time
+    ERESULT             eRc;
+    
+    uint32_t            curTime;
+    J1939CA_TIME_DELAY  time57344;
 
-    uint8_t         spn518;         // Requested Torque / Torque Limit
-    //                              // offset: -125%, -125 to 125 (0 - 250)
-    uint8_t         spn695;         // Override Control Mode
-    //                              // 0 - Disable override by the source of msg
-    //                              // 1 - Override speed
-    //                              // 2 - Override torque
-    //                              // 3 - Limit Speed/Torque
-    uint8_t         spn696;         // Requested Speed Control Conditions
-    uint8_t         spn897;         // Override Control Mode Priority
+    uint8_t             spnFirst;
+    uint8_t             spn518;         // Requested Torque / Torque Limit
+    //                                  // offset: -125%, -125 to 125 (0 - 250)
+    uint8_t             spn695;         // Override Control Mode
+    //                                  // 0 - Disable override by the source of msg
+    //                                  // 1 - Override speed
+    //                                  // 2 - Override torque
+    //                                  // 3 - Limit Speed/Torque
+    uint8_t             spn696;         // Requested Speed Control Conditions
+    uint8_t             spn897;         // Override Control Mode Priority
     //                              // 0 == Highest Priority
     //                              // 3 == Lowest Priority
-    uint16_t        spn898;         // Requested Speed / Speed Limit
-    uint8_t         spn1849;        // Transmission Requested Range Display
+    uint16_t            spn898;         // Requested Speed / Speed Limit
+    uint8_t             spn1849;        // Transmission Requested Range Display
     //                              // Flash State
-    uint8_t         spn1850;        // Transmission Requested Range Display
+    uint8_t             spn1850;        // Transmission Requested Range Display
     //                              // Blank State
-    uint8_t         spn1851;        // Transmission Shift Inhibit Indicator
-    uint8_t         spn2536;        // Transmission Mode 1 Indicator
-    uint8_t         spn2537;        // Transmission Mode 2 Indicator
-    uint8_t         spn2538;        // Transmission Mode 3 Indicator
-    uint8_t         spn2539;        // Transmission Mode 4 Indicator
-    uint8_t         spn2900;        // Transmission Engine Crank Enable
-    uint8_t         spn2945;        // Active Shift Console Indicator
-    uint8_t         spn3086;        // Transmission Ready for Brake Release
-    uint8_t         spn3289;        // Transmission Requested Gear Feedback
-    uint8_t         spn3349;        // TSC1 Transmission Rate
+    uint8_t             spn1851;        // Transmission Shift Inhibit Indicator
+    uint8_t             spn2536;        // Transmission Mode 1 Indicator
+    uint8_t             spn2537;        // Transmission Mode 2 Indicator
+    uint8_t             spn2538;        // Transmission Mode 3 Indicator
+    uint8_t             spn2539;        // Transmission Mode 4 Indicator
+    uint8_t             spn2900;        // Transmission Engine Crank Enable
+    uint8_t             spn2945;        // Active Shift Console Indicator
+    uint8_t             spn3086;        // Transmission Ready for Brake Release
+    uint8_t             spn3289;        // Transmission Requested Gear Feedback
+    uint8_t             spn3349;        // TSC1 Transmission Rate
     //                              // 000 - 1000 ms transmission rate
     //                              // 001 -  750 ms transmission rate
     //                              // 010 -  500 ms transmission rate
@@ -100,7 +103,7 @@ struct j1939ss_data_s	{
     //                              // 101 -   50 ms transmission rate
     //                              // 110 -   20 ms transmission rate
     //                              // 111 -   10 ms transmission rate (default)
-    uint8_t         spn3350;        // TSC1 Control Purpose
+    uint8_t             spn3350;        // TSC1 Control Purpose
     //                              // 00000 - Accelerator Pedal/Operator Selection
     //                              // 00001 - Cruise Control
     //                              // 00010 - PTO Governor
@@ -110,9 +113,8 @@ struct j1939ss_data_s	{
     //                              //   |
     //                              // 11110
     //                              // 11111 - Temporary Power Train Control
-    uint8_t         rsvd8;
-    uint16_t        tsc1Time;       // Broadcast Interval for PGN0 (TSC1)
-    uint16_t        rsvd16;
+    uint8_t             rsvd8;
+    uint32_t            spnLast;
 
 };
 #pragma pack(pop)

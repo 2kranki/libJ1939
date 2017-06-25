@@ -76,6 +76,7 @@ struct j1939cab_data_s	{
     J1939CA_TIME_DELAY  time65271;
     
     // The first spn is used in Init() to establish size of area to initialize.
+    uint8_t             spnFirst;
     uint8_t             spn52;              // Engine Intercooler Temperature
     uint8_t             spn69;              // Two Speed Axle Switch
     uint8_t             spn70;              // Parking Brake Switch
@@ -121,6 +122,7 @@ struct j1939cab_data_s	{
     
     uint32_t            spn917;             // High Resolution Total Vehicle Distance
     uint32_t            spn918;             // High Resolution Trip Distance
+    uint32_t            spnLast;
     
     
 };

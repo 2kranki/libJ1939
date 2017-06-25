@@ -58,7 +58,7 @@ extern	"C" {
 
 
     /****************************************************************
-    * * * * * * * * * * * *  data definitions   * * * * * * * * * * *
+    * * * * * * * * * * * *  Data Definitions   * * * * * * * * * * *
     ****************************************************************/
 
     static
@@ -401,10 +401,9 @@ extern	"C" {
         }
 #endif
         curTime = j1939ca_MsTimeGet((J1939CA_DATA *)this);
+        this->curTime = curTime;
 
-        //FIXME: What to do about overflow if anything?
-
-        if (curTime < this->nextTime61440) {
+        if ((curTime - this->time61440.msTime) >= this->time61440.msDelay) {
             j1939dg_TransmitPgn61440(this);
         }
 
@@ -464,13 +463,19 @@ extern	"C" {
 
         // Default all SPNs to unsupported values.
         memset(
-               &this->spn520,
+               &this->spnFirst,
                0xFF,
-               (offsetof(J1939DG_DATA,spn1637) - offsetof(J1939DG_DATA,spn520) + 2)
-        );
+               (offsetof(J1939DG_DATA,spnLast) - offsetof(J1939DG_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        //this->spn1481 = J1939_BRAKE_SYSTEM_CONTROLLER;
         this->spn571 = 1;       // Enable Retarder Brake Assist
         this->spn572 = 1;       // Enable Retarder Shift Assist
 
+        this->time61440.msDefault = pgn61440_entry.msFreq;
+        this->time61440.msDelay = pgn61440_entry.msFreq;
+        this->time61440.pgn = 61440;
+        
 #ifdef NDEBUG
 #else
         if( !j1939dg_Validate(this) ) {
@@ -478,7 +483,7 @@ extern	"C" {
             obj_Release(this);
             return NULL;
         }
-        BREAK_NOT_BOUNDARY4(&this->nextTime61440);
+        BREAK_NOT_BOUNDARY4(&this->time61440);
         BREAK_NOT_BOUNDARY4(&this->spn84);
         BREAK_NOT_BOUNDARY4(&this->spn1637);
         BREAK_NOT_BOUNDARY4(sizeof(J1939DG_DATA));
@@ -528,7 +533,7 @@ extern	"C" {
         pdu.P  = 6;             // Priority
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
+        this->time61440.msTime = this->curTime;
 
         // Return to caller.
         return true;
@@ -571,7 +576,7 @@ extern	"C" {
         pdu.P  = 6;             // Priority
 
         fRc = j1939ca_XmtMsgDL((J1939CA_DATA *)this, pdu, dlc, &data);
-        this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
+        //this->nextTime61440 = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 100;
 
         // Return to caller.
         return true;

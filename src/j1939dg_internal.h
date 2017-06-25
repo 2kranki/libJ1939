@@ -70,9 +70,11 @@ extern "C" {
         J1939CA_DATA        super;
         J1939CA_VTBL        *pCaVtbl;
 
-        uint32_t            nextTime61440;      // Repeat every 100ms
+        uint32_t            curTime;
+        J1939CA_TIME_DELAY  time61440;
 
         // The first spn is used in Init() to establish size of area to initialize.
+        uint8_t             spnFirst;
         uint8_t             spn520;             // Actual Retarder - Percent Torque
         uint8_t             spn571;             // Retarder Enable - Brake Assist Switch
                                                 // 00 == Retarder Brake Assist disabled
@@ -100,6 +102,7 @@ extern "C" {
         uint16_t            spn1636;            // Intake Manifold 1 Air Temperature
         uint16_t            spn1637;            // Engine Coolant Temperature
         uint16_t            rsvd16[1];
+        uint32_t            spnLast;
         // The last spn is used in Init() to establish size of area to initialize.
 
     };

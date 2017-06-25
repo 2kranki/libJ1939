@@ -61,22 +61,23 @@ struct j1939cc_data_s	{
     /* Warning - OBJ_DATA must be first in this object!
      */
     J1939CA_DATA        super;
-    OBJ_IUNKNOWN        *pSuperVtbl;      // Needed for Inheritance
+    OBJ_IUNKNOWN        *pSuperVtbl;        // Needed for Inheritance
 
     // Common Data
     ERESULT             eRc;
     OBJ_ID              pCCU;
 
-    uint32_t            startTime57344;     // Repeat every 50ms
-    uint32_t            startTime61443;     // Repeat every 50ms
-    uint32_t            startTime65217;     // Repeat every 1000ms
-    uint32_t            startTime65226;     // Repeat every 1000ms
-    uint32_t            startTime65261;     // Repeat on demand
-    uint32_t            startTime65265;     // Repeat every 100ms
-    uint32_t            startTime65269;     // Repeat every 1000ms
-    uint32_t            startTime65271;     // Repeat every 1000ms
+    uint32_t            curTime;            // Repeat every 50ms
+    J1939CA_TIME_DELAY  time57344;
+    J1939CA_TIME_DELAY  time61443;
+    J1939CA_TIME_DELAY  time65217;
+    J1939CA_TIME_DELAY  time65261;
+    J1939CA_TIME_DELAY  time65265;
+    J1939CA_TIME_DELAY  time65269;
+    J1939CA_TIME_DELAY  time65271;
 
     // The first spn is used in Init() to establish size of area to initialize.
+    uint8_t             spnFirst;
     uint8_t             spn74;              // Maximum Vehicle Speed Limit
     uint8_t             spn86;              // Cruise Control Set Speed
     uint8_t             spn87;              // Cruise Control High Set Limit Speed
@@ -114,6 +115,7 @@ struct j1939cc_data_s	{
     
     uint32_t            spn917;             // High Resolution Total Vehicle Distance
     uint32_t            spn918;             // High Resolution Trip Distance
+    uint32_t            spnLast;
     
 
 };

@@ -3530,8 +3530,10 @@ extern	"C" {
         memset(
                &this->spnFirst,
                0xFF,
-               (offsetof(J1939EN_DATA,spnLast) - offsetof(J1939EN_DATA,spnFirst))
-        );
+               (offsetof(J1939EN_DATA,spnLast) - offsetof(J1939EN_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        this->spn1483 = J1939_ENGINE_1;
         this->spn110  = 0x67;       // spn110 - Engine Coolant Temp - 63 C
         this->spn514  = 0x8D;       // spn514 - Nominal Friction - Percent Torque - 16%
 

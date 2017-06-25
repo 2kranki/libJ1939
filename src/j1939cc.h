@@ -188,6 +188,11 @@ extern "C" {
     );
     
     
+    bool            j1939cc_TransmitPgn57344(
+        J1939CC_DATA	*this
+    );
+    
+    
     bool            j1939cc_TransmitPgn61443(
         J1939CC_DATA	*this
     );

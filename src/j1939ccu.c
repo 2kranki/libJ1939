@@ -579,7 +579,7 @@ extern "C" {
             return OBJ_NIL;
         }
         j1939cam_AddCA(j1939cu_getCam((J1939CU_DATA *)this), this->pBrake);
-        
+
         // Create the Cab Controller.
         this->pCab = j1939cab_Alloc();
         this->pCab = j1939cab_Init(this->pCab, pCAN, pSYS, spn2837, spn2838, spn2846);
