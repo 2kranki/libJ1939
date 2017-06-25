@@ -21,6 +21,9 @@ will depend upon time and resources.
     --  Make sure time handling is consistant with CA, DG, ER and TC
     --  Look at time rollover in message handlers and timed msgs
 
+--  J1939cc - Cruise Control CA
+    -- If adding adaptive cruise control, see pgn 65135.
+
 --  J1939dg - Diagnostics
     --  need to complete, currently not implemented
     --  Look at time rollover in message handlers and timed msgs

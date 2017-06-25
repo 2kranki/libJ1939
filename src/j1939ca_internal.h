@@ -70,9 +70,14 @@ extern "C" {
     } J1939CA_STATE;
     
 
+    // Proprietary A Message Definitions
+    // spnCmd 1-2   16bits          Message Command
     typedef enum propa_cmd_e {
         PROPA_CMD_UNKOWN=0,
-        PROPA_CMD_SET_PARKING_BRAKE,        // msg byte[2] == true/false (1/0)
+        PROPA_CMD_SET_ACCELERATOR,          // msg byte[2] == 0 to 100 %
+        PROPA_CMD_SET_CYLINDER_HEATERS,     // msg byte[2] == true/false
+        PROPA_CMD_SET_IGNITION,             // msg byte[2] == true/false
+        PROPA_CMD_SET_PARKING_BRAKE,        // msg byte[2] == true/false
     } PROPA_CMD;
     
     
@@ -286,9 +291,13 @@ extern "C" {
         //                                  // hold open the connection.
         //                                  // Action: Close connection.
 
+        uint8_t             spnFirst;
         uint8_t             spn2553;
         uint8_t             spn2555;
-        uint16_t            rsvd16;
+        uint8_t             rsvd8b[1];
+        uint32_t            spnLast;
+        
+        
         J1939_PGN           spn2540;        // Parameter Group Number (RQST)
         J1939CA_MSG_60416   msg60416;
         

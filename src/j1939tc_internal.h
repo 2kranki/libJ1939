@@ -172,10 +172,18 @@ extern "C" {
 
         // Engine Fields - 2 bytes
         uint16_t            spn161;             // Transmission Input Shaft Speed
+        // Rotational velocity of the primary shaft transferring power into the trans-
+        // mission. When a torque converter is present, it is the output of the torque
+        // converter.
+        // mult: 0.125 rpm per bit  offset: 0
+        // range: 0 to 8,031.875 rpm
         uint16_t            spn162;             // Transmission Requested Range
         uint16_t            spn163;             // Transmission Current Range
         uint16_t            spn177;             // Transmission Oil Termperature
         uint16_t            spn191;             // Transmission Output Shaft Speed
+        // Calculated speed of the transmission output shaft.
+        // mult: 0.125 rpm per bit, offset: 0
+        // range: 0 to 8,031.875 rpm
         uint16_t            spn526;             // Transmission Actual Gear Ratio
         uint16_t            spn898;             // Engine Requested Speed/Speed Limit
         uint16_t            reserved16;

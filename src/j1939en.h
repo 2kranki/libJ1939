@@ -711,13 +711,15 @@ extern	"C" {
     );
     
    
-    bool            j1939en_CylinderHeatersEngage(
-        J1939EN_DATA	*this
+    bool            j1939en_CylinderHeaters(
+        J1939EN_DATA	*this,
+        bool            fOnOff
     );
     
     
-    bool            j1939en_CylinderHeatersDisengage(
-        J1939EN_DATA	*this
+    bool            j1939en_EngineIgnition(
+        J1939EN_DATA	*this,
+        bool            fOnOff
     );
     
     
@@ -731,13 +733,9 @@ extern	"C" {
     );
     
     
-    bool            j1939en_EngineStarterEngage(
-        J1939EN_DATA	*this
-    );
-    
-    
-    bool            j1939en_EngineStarterDisengage(
-        J1939EN_DATA	*this
+    bool            j1939en_EngineStarter(
+        J1939EN_DATA	*this,
+        bool            fOnOff
     );
     
     

@@ -174,7 +174,7 @@ void        shiftExit(void *ptr,bool fShifting)
 
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pEng) );
     if (pEng) {
         
@@ -205,7 +205,7 @@ void        shiftExit(void *ptr,bool fShifting)
         fSkipPrt = false;
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( ((22 < cCurMsg) && (cCurMsg < 26)) );
+        XCTAssertTrue( ((65 < cCurMsg) && (cCurMsg < 75)) );
         j = 0;
         for (i=0; i<cCurMsg; ++i) {
             if (j1939msg_getPGN(&curMsg[i]).pgn == 61443) {
@@ -213,7 +213,7 @@ void        shiftExit(void *ptr,bool fShifting)
             }
         }
         fprintf(stderr, "j = %d\n", j);
-        XCTAssertTrue( ((10 < j) && (j < 15)) );
+        XCTAssertTrue( ((21 < j) && (j < 27)) );
         j = 0;
         for (i=0; i<cCurMsg; ++i) {
             if (j1939msg_getPGN(&curMsg[i]).pgn == 61444) {

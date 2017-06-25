@@ -95,24 +95,24 @@ struct j1939ss_data_s	{
     uint8_t             spn3086;        // Transmission Ready for Brake Release
     uint8_t             spn3289;        // Transmission Requested Gear Feedback
     uint8_t             spn3349;        // TSC1 Transmission Rate
-    //                              // 000 - 1000 ms transmission rate
-    //                              // 001 -  750 ms transmission rate
-    //                              // 010 -  500 ms transmission rate
-    //                              // 011 -  250 ms transmission rate
-    //                              // 100 -  100 ms transmission rate
-    //                              // 101 -   50 ms transmission rate
-    //                              // 110 -   20 ms transmission rate
-    //                              // 111 -   10 ms transmission rate (default)
+    //  000 - 1000 ms transmission rate
+    //  001 -  750 ms transmission rate
+    //  010 -  500 ms transmission rate
+    //  011 -  250 ms transmission rate
+    //  100 -  100 ms transmission rate
+    //  101 -   50 ms transmission rate
+    //  110 -   20 ms transmission rate
+    //  111 -   10 ms transmission rate (default)
     uint8_t             spn3350;        // TSC1 Control Purpose
-    //                              // 00000 - Accelerator Pedal/Operator Selection
-    //                              // 00001 - Cruise Control
-    //                              // 00010 - PTO Governor
-    //                              // 00011 - Road Speed Governor
-    //                              // 00100 - Engine Protector
-    //                              // 00101 - Reserved by SAE
-    //                              //   |
-    //                              // 11110
-    //                              // 11111 - Temporary Power Train Control
+    //  00000 - Accelerator Pedal/Operator Selection
+    //  00001 - Cruise Control
+    //  00010 - PTO Governor
+    //  00011 - Road Speed Governor
+    //  00100 - Engine Protector
+    //  00101 - Reserved by SAE
+    //    |
+    //  11110
+    //  11111 - Temporary Power Train Control
     uint8_t             rsvd8;
     uint32_t            spnLast;
 

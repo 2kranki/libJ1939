@@ -390,6 +390,36 @@ extern "C" {
     
     
     //---------------------------------------------------------------
+    //              C y l i n d e r  H e a t e r s
+    //---------------------------------------------------------------
+    
+    ERESULT     truck_CylinderHeaters(
+        TRUCK_DATA		*this,
+        bool            fOn
+    )
+    {
+        J1939_MSG       msg;
+        
+        // Do initialization.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return ERESULT_INVALID_OBJECT;
+        }
+#endif
+        
+        // Send Proprietary A : PROPA_CMD_SET_CYLINDER_HEATERS to Cab, Engine?
+        
+        
+        // Return to caller.
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return ERESULT_SUCCESS;
+    }
+    
+    
+    
+    //---------------------------------------------------------------
     //                        D e a l l o c
     //---------------------------------------------------------------
 
@@ -457,7 +487,7 @@ extern "C" {
         
         // Return to caller.
         truck_setLastError(this, ERESULT_SUCCESS);
-        return truck_getLastError(this);
+        return ERESULT_SUCCESS;
     }
 
 
@@ -486,7 +516,7 @@ extern "C" {
         
         // Return to caller.
         truck_setLastError(this, ERESULT_SUCCESS);
-        return truck_getLastError(this);
+        return ERESULT_SUCCESS;
     }
 
 
@@ -576,7 +606,7 @@ extern "C" {
         
         // Return to caller.
         truck_setLastError(this, ERESULT_SUCCESS_FALSE);
-        return truck_getLastError(this);
+        return ERESULT_SUCCESS_FALSE;
     }
     
     

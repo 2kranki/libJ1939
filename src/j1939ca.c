@@ -1849,6 +1849,14 @@ extern	"C" {
         uint32_t            blkNum = 64;
         blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
         
+        // Default all SPNs to unsupported values.
+        memset(
+               &this->spnFirst,
+               0xFF,
+               (offsetof(J1939CA_DATA,spnLast) - offsetof(J1939CA_DATA,spnFirst)
+                + sizeof(uint32_t))
+        );
+        
 #ifdef NDEBUG
 #else
         if( !j1939ca_Validate(this) ) {
@@ -2760,43 +2768,29 @@ extern	"C" {
         uint8_t         *pData
     )
     {
-        char            *pData2 = (char *)pData + 1;
-        uint32_t        len = 32;
         
         if (pPDU) {
             pPDU->eid = 0;
-            pPDU->PF = 239;
+            pPDU->PF = (pgn61184_entry.pgn >> 8) & 0xFF;
             pPDU->PS = this->curSa;
             pPDU->SA = this->ca;
-            pPDU->P  = 6;             // Priority
-        }
-        else {
-            return 0;
-        }
-        
-        if (pData) {
-            if (cData < 8) {
-                return 0;
-            }
-            *pData = 1;                 // SPN965 - Number of Software Fields;
-            dec_putInt32A(this->softwareLevel, &len, &pData2);
-            *pData2++ = '*';
-            *pData2++ = '\0';
-            len = (uint32_t)strlen((char *)(pData + 1));
+            pPDU->P  = pgn61184_entry.priority;
         }
         else {
             return 0;
         }
         
         // Return to caller.
-        return len + 1;
+        return cData;
     }
     
     
     
     bool            j1939ca_TransmitPgn61184(
         J1939CA_DATA	*this,
-        uint8_t         da                  // Destination Address
+        uint8_t         da,                 // Destination Address
+        uint8_t         cData,
+        uint8_t         *pData
     )
     {
         uint16_t        dlc = 32;
@@ -2806,15 +2800,15 @@ extern	"C" {
         int             len;
         
         this->curSa = da;
-        len = j1939ca_SetupPgn61184(this, &pdu, dlc, data);
-        if ((len > 0) && (len <= 1785)) {
+        len = j1939ca_SetupPgn61184(this, &pdu, cData, pData);
+        if (len == 8) {
         }
         else {
             return false;
         }
         
         if (this->pXmtMsgDL) {
-            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, &this->name);
+            fRc = (*this->pXmtMsgDL)(this->pXmtDataDL, pdu, dlc, pData);
         }
         
         // Return to caller.

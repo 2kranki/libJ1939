@@ -13,10 +13,15 @@
  *          called a truck on other O/S's.
  *
  * Remarks
- *	1.      Using this object allows for testable code, because a
- *          function, TaskBody() must be supplied which is repeatedly
- *          called on the internal truck. A testing unit simply calls
- *          the TaskBody() function as many times as needed to test.
+ *	1.      Things like Cylinder Heaters, Starter, Ignition and
+ *          accelerator are hard wired to various truck components.
+ *          For instance, the Starter is hard wired to the engine
+ *          and the transmission. We provide direct access to this
+ *          hard-wired entities in each of the CAs that need them
+ *          in two ways. First, we provide direct methods and second,
+ *          we provide Proprietary A messages that are generally
+ *          issued by truck and handled in each of the components
+ *          that would be normally hard-wired.
  *
  * History
  *	06/12/2017 Generated
@@ -138,6 +143,19 @@ extern "C" {
     );
     
     
+    /*!
+     This recreates the operator turning on/off the cylinder heaters.
+     @param:    this    TRUCK object pointer
+     @param:    fOn     true == Opertor turned on the cylinder heaters, false == Operator 
+                        turned off the cylinder heaters.
+     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     */
+    ERESULT     truck_Ignition(
+                               TRUCK_DATA		*this,
+                               bool            fOn
+                               );
+    
+    
     ERESULT     truck_Disable(
         TRUCK_DATA		*this
     );
@@ -148,6 +166,19 @@ extern "C" {
     );
 
    
+    /*!
+     This recreates the operator turning on/off the ignition.
+     @param:    this    TRUCK object pointer
+     @param:    fOn     true == Opertor turned on ignition, false == Operator turned
+                        off the ignition.
+     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     */
+    ERESULT     truck_Ignition(
+        TRUCK_DATA		*this,
+        bool            fOn
+    );
+    
+    
     TRUCK_DATA *   truck_Init(
         TRUCK_DATA     *this
     );
@@ -167,6 +198,19 @@ extern "C" {
     ERESULT     truck_ParkingBrake(
         TRUCK_DATA		*this,
         bool            fApplied
+    );
+    
+    
+    /*!
+     This recreates the operator turning on/off the starter.
+     @param:    this    TRUCK object pointer
+     @param:    fOn     true == Opertor turned on the starter, false == Operator turned
+                        off the starter.
+     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     */
+    ERESULT     truck_Starter(
+        TRUCK_DATA		*this,
+        bool            fOn
     );
     
     

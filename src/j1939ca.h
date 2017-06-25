@@ -417,7 +417,9 @@ extern	"C" {
     // PGN 61184 0xEF00 Proprietary A
     bool            j1939ca_TransmitPgn61184(
         J1939CA_DATA	*this,
-        uint8_t         da                  // Destination Address
+        uint8_t         da,                 // Destination Address
+        uint8_t         cData,
+        uint8_t         *pData
     );
     
     
