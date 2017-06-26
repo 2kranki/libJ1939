@@ -136,33 +136,68 @@ struct j1939bs_data_s	{
     //                              // 2 - Override torque
     //                              // 3 - Limit Speed/Torque
     uint8_t         spn696;         // Requested Speed Control Conditions
+    // This mode tells the engine control system the governor characteristics that
+    // are desired during speed control. The four characteristics defined are:
+    // (2 bits)
+    //  00 - This speed governor gain selection is adjusted to provide rapid transition
+    //          between speed setpoints. RPM overshoot and undershoot may be greater
+    //          than what is seen when the “speed control characteristic” is set to be
+    //          stability optimized.
+    //  01 - This control condition has been optimized to minimize rpm overshoot and
+    //          undershoot given an expected plant consisting of the engine and its ac-
+    //          cessory loads. This gain adjustment is not intended to compensate for
+    //          driveline characteristics. This characteristic is most appropriate when
+    //          no driveline is connected.
+    //  10 - This control condition has been optimized to minimize rpm overshoot and
+    //          undershoot given a more complex plant. For instance, the more complex
+    //          plant would contain the engine, its accessory loads and the driveline
+    //          characteristics. As an example, the driveline characteristics might
+    //          include the effective spring mass relationship of pumps, tires, clutches,
+    //          axles, driveshafts, and multiple gear ratios. This characteristic is
+    //          most appropriate when a driveline is engaged.
+    //  11 - This speed control characteristic is available for applications requiring
+    //          compensation for more than one driveline characteristic. It has been
+    //          optimized to minimize rpm overshoot and undershoot given a more complex
+    //          plant of the second variety. This more complex plant would again contain
+    //          the engine, its accessory loads and a second driveline characteristic
+    //          unique from the one described in speed control characteristic 10b.
     uint8_t         spn897;         // Override Control Mode Priority
-    //                              // 0 == Highest Priority
-    //                              // 3 == Lowest Priority
+    // This field is used as an input to the engine or retarder to determine the priority
+    // of the Override Control Mode received in the Torque/Speed Control message (see PGN
+    // 0). The default is 11 (Low priority). It is not required to use the same priority
+    // during the entire override function. For example, the transmission can use priority
+    // 01 (High priority) during a shift, but can set the priority to 11 (Low priority)
+    // at the end of the shift to allow traction control to also interact with the torque
+    // limit of the engine.
+    // (2 bits)
+    //  00 - Highest priority
+    //  01 - High priority
+    //  10 - Medium priority
+    //  11 - Low priority
     uint8_t         spn905;         // Relative Speed; Front Axle, Left Wheel
     // The speed of the front axle, left wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn906;         // Relative Speed; Front Axle, Right Wheel
     // The speed of the front axle, right wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn907;         // Relative Speed;  Rear Axle #1, Left Wheel
     // The speed of the  Rear Axle #1, left wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn908;         // Relative Speed;  Rear Axle #1, Right Wheel
     // The speed of the  Rear Axle #1, right wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn909;         // Relative Speed;  Rear Axle #2, Left Wheel
     // The speed of the  Rear Axle #2, left wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn910;         // Relative Speed;  Rear Axle #2, Right Wheel
     // The speed of the  Rear Axle #2, right wheel relative to the front axle speed, SPN 904.
-    //                              // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
-    //                              // range: -7.8125 km/h to 7.8125 km/h
+    // mult: 1/16 km/h per bit, offset:  -7.8125 km/h
+    // range: -7.8125 km/h to 7.8125 km/h
     uint8_t         spn969;         // Remote Accelerator Enable Switch (2 bits)
     // Switch signal which indicates that the remote accelerator has been enabled and
     // controls the engine.  NOTE — The accelerator interlock switch (see SPN 972) must

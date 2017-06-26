@@ -903,15 +903,13 @@ extern	"C" {
 
         // Default all SPNs to unsupported values.
         memset(
-                &this->spn123,
-                0xFF,
-                (
-                    offsetof(J1939TC_DATA,spn898)
-                    - offsetof(J1939TC_DATA,spn123)
-                    + sizeof(this->spn898)
-                )
-        );
-
+               &this->spnFirst,
+               0xFF,
+               (offsetof(J1939TC_DATA,spnLast) - offsetof(J1939TC_DATA,spnFirst)
+                + sizeof(uint32_t))
+               );
+        this->spn1482 = J1939_TRANSMISSION_1;
+        
 #ifdef NDEBUG
 #else
         if( !j1939tc_Validate(this) ) {
@@ -920,8 +918,9 @@ extern	"C" {
             return NULL;
         }
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,eRc));
-        BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn123));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spnFirst));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spn161));
+        BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,spnLast));
         BREAK_NOT_BOUNDARY4(offsetof(J1939TC_DATA,timeOut));
         BREAK_NOT_BOUNDARY4(sizeof(J1939TC_DATA));
 #endif

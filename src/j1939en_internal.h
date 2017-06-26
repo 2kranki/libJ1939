@@ -588,7 +588,6 @@ extern "C" {
         // degrees divided by the number of cylinders.
         // mult: 0.125 rpm per bit, offset: 0
         // range: 0 to 8,031.875 rpm
-
         uint16_t            spn191;             // Transmission Output Shaft Speed
         // Calculated speed of the transmission output shaft.
         // mult: 0.125 rpm per bit, offset: 0
