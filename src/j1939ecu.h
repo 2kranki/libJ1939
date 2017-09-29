@@ -5,9 +5,9 @@
 //****************************************************************
 /*
  * Program
- *			J1939 ECU (j1939ecu)
+ *			J1939 ECU/ECM (j1939ecu)
  * Purpose
- *			This object provides an ECU which is made up of a CAM
+ *			This object provides an ECU/ECM like object which is made up of a CAM
  *          and multiple CAs.
  *
  * Remarks

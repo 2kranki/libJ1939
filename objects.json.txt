@@ -1,7 +1,6 @@
 {
     "name":"libJ1939",
-    "lib_deps":
-    [
+    "lib_deps": [
         "Cmn"
     ],
     "headers_public": [

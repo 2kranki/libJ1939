@@ -273,7 +273,7 @@ bool            xmtPGN60928(
                         (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
                         8192,           // J1939 Manufacturer Code (11 bits)
-                        4               // J1939 Industry Group (3 bits) (Marine)
+                        1               // J1939 Industry Group (3 bits)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
@@ -311,7 +311,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pSYS,
                              1,              // J1939 Identity Number (21 bits)
                              8192,           // J1939 Manufacturer Code (11 bits)
-                             4               // J1939 Industry Group (3 bits) (Marine)
+                             1               // J1939 Industry Group (3 bits)
                 );
     XCTAssertFalse( (OBJ_NIL == pCA) );
     if (pCA) {
@@ -365,7 +365,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
                              8192,          // J1939 Manufacturer Code (11 bits)
-                             4              // J1939 Industry Group (3 bits) (Marine)
+                             1              // J1939 Industry Group (3 bits)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca), @"Could not init J1939CA" );
     if (pJ1939ca) {
@@ -417,7 +417,7 @@ bool            xmtPGN60928(
                              (OBJ_ID)pSYS,
                              1,             // J1939 Identity Number (21 bits)
                              8192,          // J1939 Manufacturer Code (11 bits)
-                             4              // J1939 Industry Group (3 bits) (Marine)
+                             1              // J1939 Industry Group (3 bits)
                 );
     XCTAssertFalse( (OBJ_NIL == pJ1939ca) );
     if (pJ1939ca) {
@@ -482,7 +482,7 @@ bool            xmtPGN60928(
                         (OBJ_ID)pSYS,
                         1,              // J1939 Identity Number (21 bits)
                         8192,           // J1939 Manufacturer Code (11 bits)
-                        4               // J1939 Industry Group (3 bits) (Marine)
+                        1               // J1939 Industry Group (3 bits)
                         );
     XCTAssertFalse( (OBJ_NIL == pCA) );
     if (pCA) {
@@ -536,7 +536,7 @@ bool            xmtPGN60928(
                 (OBJ_ID)pSYS,
                 1,             // J1939 Identity Number (21 bits)
                 8192,           // J1939 Manufacturer Code (11 bits)
-                4              // J1939 Industry Group (3 bits) (Marine)
+                1              // J1939 Industry Group (3 bits)
             );
     XCTAssertFalse( (OBJ_NIL == pCA) );
     cCurMsg = 0;
@@ -599,7 +599,7 @@ bool            xmtPGN60928(
                         (OBJ_ID)pSYS,
                         1,             // J1939 Identity Number (21 bits)
                         8192,          // J1939 Manufacturer Code (11 bits)
-                        4              // J1939 Industry Group (3 bits) (Marine)
+                        1              // J1939 Industry Group (3 bits)
             );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     j1939ca_Setup(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
@@ -702,7 +702,7 @@ bool            xmtPGN60928(
                          (OBJ_ID)pSYS,
                          1,             // J1939 Identity Number (21 bits)
                          8192,          // J1939 Manufacturer Code (11 bits)
-                         4              // J1939 Industry Group (3 bits) (Marine)
+                         1              // J1939 Industry Group (3 bits)
                          );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     j1939ca_Setup(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
@@ -716,7 +716,7 @@ bool            xmtPGN60928(
                          (OBJ_ID)pSYS,
                          1,             // J1939 Identity Number (21 bits)
                          8192,          // J1939 Manufacturer Code (11 bits)
-                         4              // J1939 Industry Group (3 bits) (Marine)
+                         1              // J1939 Industry Group (3 bits)
                          );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     j1939ca_Setup(pXmt, J1939_POWER_TAKEOFF_1);

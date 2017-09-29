@@ -90,10 +90,16 @@ struct truck_data_s	{
     CU_GROUP        xms;
     
     uint8_t         fParkingBrake;      // true == Parking Brake is applied
-    uint8_t         rsvd8[3];
+    uint8_t         fDriverPresent;     // true == Driver seat sensor detects driver
+    uint8_t         rsvd8[2];
     uint16_t        accelPedal;         // Accelerator Pedal Percentage (0 - 99)
     uint16_t        reserved;
-    uint32_t        totalLoad;          // Weight of tractor, trailer and load
+    uint32_t        fuelCapacity;       // Weight of tractor (l)
+    uint32_t        fuelAmount;         // Weight of tractor (l)
+    uint32_t        weightLoad;         // Weight of load (kg)
+    uint32_t        weightTractor;      // Weight of tractor (kg)
+    uint32_t        weightTrailer;      // Weight of trailer (kg)
+
     ASTR_DATA       *pStr;
 
 };

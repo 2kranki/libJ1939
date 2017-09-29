@@ -117,7 +117,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
 
@@ -146,7 +146,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
 
@@ -205,7 +205,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -264,7 +264,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -321,7 +321,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -377,7 +377,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         
@@ -422,7 +422,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     
     pTC = j1939tc_Alloc();
     XCTAssertFalse( (NULL == pTC) );
-    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 4);
+    pTC = j1939tc_Init(pTC, pCAN, pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pTC) );
     if (pTC) {
         

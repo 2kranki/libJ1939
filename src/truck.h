@@ -22,6 +22,7 @@
  *          we provide Proprietary A messages that are generally
  *          issued by truck and handled in each of the components
  *          that would be normally hard-wired.
+ *  2.      130,500 BTU per US gallon (36.4 MJ/L) for diesel
  *
  * History
  *	06/12/2017 Generated
@@ -119,11 +120,61 @@ extern "C" {
     //                      *** Properties ***
     //---------------------------------------------------------------
 
+    uint32_t        truck_getFuelAmount(
+        TRUCK_DATA      *this
+    );
+    
+    bool            truck_setFuelAmount(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    );
+    
+    
+    uint32_t        truck_getFuelCapacity(
+        TRUCK_DATA      *this
+    );
+    
+    bool            truck_setFuelCapacity(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    );
+    
+    
     ERESULT     truck_getLastError(
         TRUCK_DATA		*this
     );
 
 
+    uint32_t        truck_getWeightLoad(
+        TRUCK_DATA      *this
+    );
+    
+    bool            truck_setWeightLoad(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    );
+    
+    
+    uint32_t        truck_getWeightTractor(
+        TRUCK_DATA      *this
+    );
+    
+    bool            truck_setWeightTractor(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    );
+    
+    
+    uint32_t        truck_getWeightTrailer(
+        TRUCK_DATA      *this
+    );
+    
+    bool            truck_setWeightTrailer(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    );
+    
+    
 
     
     //---------------------------------------------------------------

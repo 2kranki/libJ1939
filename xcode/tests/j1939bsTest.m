@@ -92,7 +92,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
                         (OBJ_ID)pSYS,
                         1,             // J1939 Identity Number (21 bits)
                         8192,          // J1939 Manufacturer Code (11 bits)
-                        4              // J1939 Industry Group (3 bits) (Marine)
+                        1              // J1939 Industry Group (3 bits)
             );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     if (pObj) {

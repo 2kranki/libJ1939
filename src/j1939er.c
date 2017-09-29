@@ -1546,7 +1546,7 @@ extern	"C" {
                 return 0;
             }
             *pData  = 0x00;
-            *pData |= this->spn900 & 0xF;
+            *pData |= this->spn901 & 0xF;
             *pData |= (this->spn571 & 0x3) << 4;
             *pData |= (this->spn572 & 0x3) << 6;
             ++pData;

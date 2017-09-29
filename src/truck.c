@@ -116,6 +116,86 @@ extern "C" {
     //                      P r o p e r t i e s
     //===============================================================
 
+    uint32_t        truck_getFuelAmount(
+        TRUCK_DATA      *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return this->fuelAmount;
+    }
+    
+    
+    bool            truck_setFuelAmount(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->fuelAmount = value;
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
+    uint32_t        truck_getFuelCapacity(
+        TRUCK_DATA      *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return this->fuelCapacity;
+    }
+    
+    
+    bool            truck_setFuelCapacity(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->fuelCapacity = value;
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
     //---------------------------------------------------------------
     //                      L a s t  E r r o r
     //---------------------------------------------------------------
@@ -159,49 +239,8 @@ extern "C" {
     
     
 
-    uint16_t        truck_getPriority(
-        TRUCK_DATA     *this
-    )
-    {
-
-        // Validate the input parameters.
-#ifdef NDEBUG
-#else
-        if( !truck_Validate(this) ) {
-            DEBUG_BREAK();
-            return 0;
-        }
-#endif
-
-        truck_setLastError(this, ERESULT_SUCCESS);
-        //return this->priority;
-        return 0;
-    }
-
-
-    bool            truck_setPriority(
-        TRUCK_DATA     *this,
-        uint16_t        value
-    )
-    {
-#ifdef NDEBUG
-#else
-        if( !truck_Validate(this) ) {
-            DEBUG_BREAK();
-            return false;
-        }
-#endif
-
-        //this->priority = value;
-
-        truck_setLastError(this, ERESULT_SUCCESS);
-        return true;
-    }
-
-
-
     uint32_t        truck_getSize(
-        TRUCK_DATA       *this
+        TRUCK_DATA      *this
     )
     {
 #ifdef NDEBUG
@@ -218,8 +257,8 @@ extern "C" {
 
 
 
-    ASTR_DATA * truck_getStr(
-        TRUCK_DATA     *this
+    ASTR_DATA *     truck_getStr(
+        TRUCK_DATA      *this
     )
     {
         
@@ -237,9 +276,9 @@ extern "C" {
     }
     
     
-    bool        truck_setStr(
-        TRUCK_DATA     *this,
-        ASTR_DATA   *pValue
+    bool            truck_setStr(
+        TRUCK_DATA      *this,
+        ASTR_DATA       *pValue
     )
     {
 #ifdef NDEBUG
@@ -262,6 +301,127 @@ extern "C" {
     
     
     
+    uint32_t        truck_getWeightLoad(
+        TRUCK_DATA      *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return this->weightLoad;
+    }
+    
+    
+    bool            truck_setWeightLoad(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->weightLoad = value;
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
+    uint32_t        truck_getWeightTractor(
+        TRUCK_DATA      *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return this->weightTractor;
+    }
+    
+    
+    bool            truck_setWeightTractor(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->weightTractor = value;
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
+    uint32_t        truck_getWeightTrailer(
+        TRUCK_DATA     *this
+    )
+    {
+        
+        // Validate the input parameters.
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return 0;
+        }
+#endif
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return this->weightTrailer;
+    }
+    
+    
+    bool            truck_setWeightTrailer(
+        TRUCK_DATA      *this,
+        uint32_t        value
+    )
+    {
+#ifdef NDEBUG
+#else
+        if( !truck_Validate(this) ) {
+            DEBUG_BREAK();
+            return false;
+        }
+#endif
+        
+        this->weightTrailer = value;
+        
+        truck_setLastError(this, ERESULT_SUCCESS);
+        return true;
+    }
+    
+    
+    
+
     
 
     //===============================================================

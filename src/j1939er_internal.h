@@ -144,6 +144,46 @@ extern "C" {
         //  13 == not defined
         //  14 == Other
         //  15 == Not available
+        uint8_t             spn901;             // Retarder Type (pgn 65249)
+        // A vehicle retarder is a supplementary device to the wheel brakes for the
+        // driver to better control the vehicle. The wheel brakes used in the vehicle
+        // are not designed for continuous retarding operation. In a prolonged period
+        // of braking, the brakes can be thermally over-stressed, causing the braking
+        // effect to be reduced or even lead to complete braking system failure. The
+        // vehicle retarder is designed for continuous operation for braking during
+        // downhill operation and is also used for braking the vehicle to comply with
+        // speed limits and traffic conditions.
+        // This parameter provides some indication of the retarder dynamics. It is used
+        // in the retarder configuration message. The data type of this parameter is
+        // measured.
+        // (4 bits)
+        //  0000 - Electric/Magnetic
+        //  0001 - Hydraulic
+        //  0010 - Cooled Friction
+        //  0011 - Compression Release (Engine retarder)
+        //  0100 - Exhaust
+        //  0101 - Not defined
+        //   |
+        //  1101 - Not defined
+        //  1110 - Other
+        //  1111 - Not available
+        uint8_t             spn902;             // Retarder Location (pgn 65249)
+        // This parameter defines whether the “torque/speed curve” defined by the
+        // retarder configuration message (PGN 65249) is dependent on engine rpm,
+        // output shaft rpm, or other parameter. The data type of this parameter is
+        // measured.
+        // (4 bits)
+        //  0000 - Engine Compression Release Brake (Engine rpm)
+        //  0001 - Engine Exhaust Brake (Exhaust pressure)
+        //  0010 - Transmission Input (Engine rpm)
+        //  0011 - Transmission Output (Output Shaft rpm)
+        //  0100 - Driveline (Output Shaft rpm)
+        //  0101 - Trailer (Vehicle speed)
+        //  0110 - Not defined
+        //   |
+        //  1101 - Not defined
+        //  1110 - Other
+        //  1111 - Not available
         uint8_t             spn1082;            // Engine Coolant Load Increase
         //                                      // (2 bits)
         // Status of an event, external to the engine, that may increase the nominal

@@ -137,7 +137,7 @@ void        shiftExit(void *ptr,bool fShifting)
     
     pEng = j1939en_Alloc();
     XCTAssertFalse( (NULL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init(pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (NULL == pEng) );
     if (pEng) {
 
@@ -275,7 +275,7 @@ void        shiftExit(void *ptr,bool fShifting)
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {
@@ -364,7 +364,7 @@ void        shiftExit(void *ptr,bool fShifting)
 
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {
@@ -458,7 +458,7 @@ void        shiftExit(void *ptr,bool fShifting)
     
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {
@@ -524,7 +524,7 @@ void        shiftExit(void *ptr,bool fShifting)
    
     pEng = j1939en_Alloc();
     XCTAssertFalse( (OBJ_NIL == pEng) );
-    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4 );
+    pEng = j1939en_Init( pEng, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1);
     XCTAssertFalse( (OBJ_NIL == pEng) );
     cCurMsg = 0;
     if (pEng) {

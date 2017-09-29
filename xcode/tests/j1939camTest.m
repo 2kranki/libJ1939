@@ -151,7 +151,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
+    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
@@ -199,7 +199,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
+    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
@@ -280,7 +280,7 @@ J1939CAN_DATA   *pCAN = OBJ_NIL;
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4, true);
+    pCAM = j1939cam_NewEngine((OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 1, true);
     XCTAssertFalse( (NULL == pCAM) );
     if (pCAM) {
         
