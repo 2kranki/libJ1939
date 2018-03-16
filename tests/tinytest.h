@@ -31,6 +31,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static
+int     exitCode = 0;
+static
+int     cArgs;
+static
+char    **ppArgs;
+
+
 typedef int (*TinyTestFunc)(const char *);
 
 typedef struct TinyTestStruct
@@ -64,7 +72,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "\aERROR: "                                                   \
+            "ERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d false, actual: %s\n",                                \
            __FILE__, __LINE__, #actual);                                \
@@ -85,7 +93,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "\aERROR: "                                                   \
+            "ERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d true, actual: %s\n",                                 \
            __FILE__, __LINE__, #actual                                  \
@@ -107,7 +115,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "\aERROR: "                                                   \
+            "ERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d expected %s, actual: %s\n",                          \
            __FILE__, __LINE__, #expected, #actual);                     \
@@ -125,7 +133,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "\aERROR: "                                                   \
+            "ERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d expected \"%s\", actual: \"%s\"\n",                  \
            __FILE__, __LINE__, expected, actual);                       \
@@ -143,7 +151,7 @@ typedef struct TinyTestRegistryStruct
             stderr,                                                     \
               "\x1b[1m"                                                 \
               "\x1b[31m"                                                \
-            "\aERROR: "                                                   \
+            "ERROR: "                                                   \
               "\x1b[0m"                                                 \
             "%s:%d assertion failed: \"%s\"\n",                         \
            __FILE__, __LINE__, #assertion);                             \
@@ -183,7 +191,9 @@ void Suite##suiteName(TinyTestRegistry* registry)                       \
   int main(int argc, char* argv[])                                      \
   {                                                                     \
     TinyTestRegistry registry;                                          \
-    registry.m_headSuite = NULL
+    registry.m_headSuite = NULL;                                        \
+    cArgs = argc;                                                       \
+    ppArgs = argv
 
 #define TINYTEST_RUN_SUITE(suiteName)                                   \
   Suite##suiteName(&registry) 
@@ -248,6 +258,7 @@ void Suite##suiteName(TinyTestRegistry* registry)                       \
               "\x1b[0m",                                                \
               failedTests                                               \
       );                                                                \
+      exitCode = 4;                                                     \
     }                                                                   \
     printf("\n");                                                       \
   }
@@ -256,6 +267,7 @@ void Suite##suiteName(TinyTestRegistry* registry)                       \
     TINYTEST_INTERNAL_RUN_TESTS();                                      \
     printf("\n");                                                       \
     TINYTEST_INTERNAL_FREE_TESTS()                                      \
+    return exitCode;                                                    \
   }
 
 #define TINYTEST_MAIN_SINGLE_SUITE(suiteName)                           \
