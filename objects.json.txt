@@ -1,5 +1,6 @@
 {
     "name":"libJ1939",
+    "type":"library",
     "lib_deps": [
         "Cmn"
     ],
