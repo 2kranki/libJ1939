@@ -108,10 +108,12 @@ extern "C" {
      @return:   pointer to truck object if successful, otherwise OBJ_NIL.
      */
     TRUCK_DATA *     truck_Alloc(
+        void
     );
     
     
     TRUCK_DATA *     truck_New(
+        void
     );
     
     
@@ -183,10 +185,10 @@ extern "C" {
 
     /*!
      Accelerator pedal simulation by percentage.
-     @param:    this    TRUCK object pointer
-     @param:    percent a value of 0 - 99 representing the amount of downward 
+     @param     this    TRUCK object pointer
+     @param     percent a value of 0 - 99 representing the amount of downward
                         movement made on the accelerator pedal
-     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     @return    If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
      */
     ERESULT         truck_Accelerator(
         TRUCK_DATA		*this,
@@ -196,10 +198,10 @@ extern "C" {
     
     /*!
      This recreates the operator turning on/off the cylinder heaters.
-     @param:    this    TRUCK object pointer
-     @param:    fOn     true == Opertor turned on the cylinder heaters, false == Operator 
+     @param     this    TRUCK object pointer
+     @param     fOn     true == Opertor turned on the cylinder heaters, false == Operator
                         turned off the cylinder heaters.
-     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     @return    If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
      */
     ERESULT     truck_Ignition(
                                TRUCK_DATA		*this,
@@ -219,10 +221,10 @@ extern "C" {
    
     /*!
      This recreates the operator turning on/off the ignition.
-     @param:    this    TRUCK object pointer
-     @param:    fOn     true == Opertor turned on ignition, false == Operator turned
+     @param     this    TRUCK object pointer
+     @param     fOn     true == Opertor turned on ignition, false == Operator turned
                         off the ignition.
-     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     @return    If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
      */
     ERESULT     truck_Ignition(
         TRUCK_DATA		*this,
@@ -242,9 +244,9 @@ extern "C" {
  
     /*!
      Create a string that describes this object and the objects within it.
-     @param:    this    TRUCK object pointer
-     @param:    fApplied true == Applied parking brake, false == Released parking brake
-     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     @param     this    TRUCK object pointer
+     @param     fApplied true == Applied parking brake, false == Released parking brake
+     @return    If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
      */
     ERESULT     truck_ParkingBrake(
         TRUCK_DATA		*this,
@@ -254,10 +256,10 @@ extern "C" {
     
     /*!
      This recreates the operator turning on/off the starter.
-     @param:    this    TRUCK object pointer
-     @param:    fOn     true == Opertor turned on the starter, false == Operator turned
+     @param     this    TRUCK object pointer
+     @param     fOn     true == Opertor turned on the starter, false == Operator turned
                         off the starter.
-     @return:   If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
+     @return    If successful, ERESULT_SUCCESS. Otherwise, an ERESULT_* error code.
      */
     ERESULT     truck_Starter(
         TRUCK_DATA		*this,
@@ -268,14 +270,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = truck_ToDebugString(this,4);
-     @endcode:
-     @param:    this    TRUCK object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    TRUCK object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *    truck_ToDebugString(
         TRUCK_DATA     *this,

@@ -79,6 +79,7 @@ extern	"C" {
 
     // Warning - See J1939CAM, but this function may not change.
     J1939DG_DATA * j1939dg_Alloc(
+        void
     );
     
         

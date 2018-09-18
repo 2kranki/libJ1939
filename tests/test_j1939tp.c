@@ -111,7 +111,7 @@ int         test_j1939tp_OpenClose(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(  
                     pObj, 
@@ -147,7 +147,7 @@ int         test_j1939tp_TransmitPacket(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -205,7 +205,7 @@ int         test_j1939tp_TransmitBAM01(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -275,7 +275,7 @@ int         test_j1939tp_TransmitBAM02(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -347,11 +347,11 @@ int         test_j1939tp_TransmitBAM03(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pRcv = j1939tp_Alloc(0);
+    pRcv = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv = j1939tp_Init(pRcv, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pRcv) );
-    pXmt = j1939tp_Alloc(0);
+    pXmt = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     pXmt = j1939tp_Init(pXmt, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_POWER_TAKEOFF_1);
     XCTAssertFalse( (OBJ_NIL == pXmt) );
@@ -435,11 +435,11 @@ int         test_j1939tp_TransmitBAM04(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pRcv = j1939tp_Alloc(0);
+    pRcv = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv = j1939tp_Init(pRcv, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pRcv) );
-    pXmt = j1939tp_Alloc(0);
+    pXmt = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     pXmt = j1939tp_Init(pXmt, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_POWER_TAKEOFF_1);
     XCTAssertFalse( (OBJ_NIL == pXmt) );
@@ -522,7 +522,7 @@ int         test_j1939tp_TransmitRTS01(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -615,7 +615,7 @@ int         test_j1939tp_TransmitRTS02(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -749,7 +749,7 @@ int         test_j1939tp_TransmitRTS03(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pObj = j1939tp_Alloc(0);
+    pObj = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pObj) );
     pObj = j1939tp_Init(pObj, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pObj) );
@@ -860,7 +860,7 @@ int         test_j1939tp_TransmitRTS04(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pRcv = j1939tp_Alloc(0);
+    pRcv = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv = j1939tp_Init(pRcv, (OBJ_ID)pCAN, (OBJ_ID)pSYS, J1939_CAB_CONTROLLER_PRIMARY);
     XCTAssertFalse( (OBJ_NIL == pRcv) );
@@ -868,7 +868,7 @@ int         test_j1939tp_TransmitRTS04(
 
     pCAN_XMT = j1939can_New();
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
-    pXmt = j1939tp_Alloc(0);
+    pXmt = j1939tp_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     pXmt = j1939tp_Init(pXmt, (OBJ_ID)pCAN_XMT, (OBJ_ID)pSYS, J1939_POWER_TAKEOFF_1);
     XCTAssertFalse( (OBJ_NIL == pXmt) );

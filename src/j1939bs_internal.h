@@ -439,8 +439,7 @@ struct j1939bs_data_s	{
     void *          j1939bs_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,
-        const
-        char            *pStr
+        void            *pData
     );
 
 

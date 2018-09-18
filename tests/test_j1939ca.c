@@ -235,7 +235,7 @@ int         test_j1939ca_OpenClose(
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     
-    pObj = j1939ca_Alloc(0);
+    pObj = j1939ca_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939ca_Init(
                     pObj, 
@@ -585,7 +585,7 @@ int         test_j1939ca_MessageTransmitBAM01(
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     
-    pRcv = j1939ca_Alloc(0);
+    pRcv = j1939ca_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv =  j1939ca_Init(
                         pRcv,
@@ -599,7 +599,7 @@ int         test_j1939ca_MessageTransmitBAM01(
     j1939ca_Setup(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
     pRcv->cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
 
-    pXmt = j1939ca_Alloc(0);
+    pXmt = j1939ca_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     pXmt =  j1939ca_Init(
                         pXmt,
@@ -692,7 +692,8 @@ int         test_j1939ca_MessageTransmitRTS01(
     XCTAssertFalse( (OBJ_NIL == pCAN_XMT) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     
-    pRcv = j1939ca_Alloc(0);
+    // Create a Cab Controller CA to receive msgs.
+    pRcv = j1939ca_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pRcv) );
     pRcv =  j1939ca_Init(
                          pRcv,
@@ -706,7 +707,8 @@ int         test_j1939ca_MessageTransmitRTS01(
     j1939ca_Setup(pRcv, J1939_CAB_CONTROLLER_PRIMARY);
     pRcv->cs = J1939CA_STATE_NORMAL_OPERATION; // Assume that we have our name.
     
-    pXmt = j1939ca_Alloc(0);
+    // Create a Power Take-off CA to transmit msgs.
+    pXmt = j1939ca_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pXmt) );
     pXmt =  j1939ca_Init(
                          pXmt,
@@ -734,47 +736,55 @@ int         test_j1939ca_MessageTransmitRTS01(
         j1939can_setLoopBackXmt(pCAN_XMT, true);
         softlvl = pRcv->softwareLevel;
         
-        pgn.pgn = 61184;
+        // Transmit Request for 61184 from XMT side.  61184 is designated as having
+        // a dlc of 0 which will force a msg size of 1785 to be transmitted.
+        pgn.pgn = 61184;    // Proprietary A
         fRc = j1939ca_TransmitPgn59904(pRcv, pgn, J1939_POWER_TAKEOFF_1);
         XCTAssertTrue( (fRc) );
         
+        // Verify RTS Message
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC3106 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
-        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 16) );
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 16) );   // Verify RTS
+        // Bytes 2-3 == msg length (which is 1785 0x06F9 in this situation)
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[1]);
-        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[1] == 13) );
-        fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[2]);
-        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[2] == 0) );
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[1] == 0xF9) ); // Verify msg length
+        fprintf(stderr, "byte[2]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[2]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[2] == 0x06) );
+        // Byte 4 == Total number of packets
+        fprintf(stderr, "byte[3]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[3]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[3] == 0xFF) );
+        // Byte 5 == Max number of packets that can be sent in response to one CTS
+        fprintf(stderr, "byte[3]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[3]);
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[3] == 0xFF) );
+
+        // Verify CTS Message.
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC0631 == pdu.eid) );
+        // Verify CTS
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[0]);
-        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 17) );
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[0] == 17) );   // Verify CTS
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[1]);
-        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 2) );
+        XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[1] == 0xFF) );
         fprintf(stderr, "byte[1]=0x%0X\n", curMsg[cCurMsg-1].DATA.bytes[2]);
         XCTAssertTrue( (curMsg[cCurMsg-1].DATA.bytes[2] == 1) );
         
-        for (i=0; i<6; ++i) {
-            j1939sys_BumpMS(pSYS,100);
+        for (i=0; i<300; ++i) {
+            j1939sys_BumpMS(pSYS, 100);
             eRc = j1939ca_HandleMessages(pXmt, NULL);
             XCTAssertFalse( (ERESULT_FAILED(eRc)) );
         }
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (6 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-3]);
-        fprintf(stderr, "msg[-3] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x1CEB3106 == pdu.eid) );
-        fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-3].DATA.bytes[0]);
-        XCTAssertTrue( (curMsg[cCurMsg-3].DATA.bytes[0] == 1) );
+        XCTAssertTrue( (259 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEB3106 == pdu.eid) );
         fprintf(stderr, "byte[0]=0x%0X\n", curMsg[cCurMsg-2].DATA.bytes[0]);
-        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 2) );
+        XCTAssertTrue( (curMsg[cCurMsg-2].DATA.bytes[0] == 0xFF) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x1CEC0631 == pdu.eid) );

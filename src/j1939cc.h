@@ -108,6 +108,7 @@ extern "C" {
      @return:   pointer to j1939cc object if successful, otherwise OBJ_NIL.
      */
     J1939CC_DATA *     j1939cc_Alloc(
+        void
     );
     
     
@@ -170,14 +171,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939cc_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939CC object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939CC object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *    j1939cc_ToDebugString(
         J1939CC_DATA     *this,

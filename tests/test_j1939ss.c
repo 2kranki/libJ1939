@@ -85,13 +85,15 @@ int         tearDown(
 
 int         test_j1939ss_OpenClose(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939SS_DATA	*pSS = OBJ_NIL;
     bool            fRc;
     J1939_PDU       pdu;
    
+    fprintf(stderr, "Performing: %s\n", pTestName);
+    
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
@@ -114,23 +116,15 @@ int         test_j1939ss_OpenClose(
                 
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pSS->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF05 == pdu.eid) );
-        
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pSS, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pSS->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
+        XCTAssertTrue( (0 == cCurMsg) );
         
         obj_Release(pSS);
         pSS = OBJ_NIL;
     }
 
+    fprintf(stderr, "...%s completed.\n\n", pTestName);
     return 1;
 }
 

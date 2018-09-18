@@ -242,7 +242,7 @@ extern "C" {
         // broadcast, but may vary between those broadcasts.
         // mult: 1 % per bit  offset: -125 %
         // range: -125 to 125 (0 - 250)
-        uint8_t             reserved8b[1];
+        //uint8_t             reserved8b[1];
 
         // Engine Fields - 2 bytes
         uint16_t            spn84;              // Wheel-Based Vehicle Speed

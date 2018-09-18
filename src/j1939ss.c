@@ -986,12 +986,12 @@ bool			j1939ss_setSpn3350(
      this -> other).  Any objects in other will be released before 
      a copy of the object is performed.
      Example:
-     @code:
+     @code
         ERESULT eRc = j1939ss__Assign(this,pOther);
-     @endcode:
-     @param:    this    J1939SS object pointer
-     @param:    pOther  a pointer to another J1939SS object
-     @return:   If successful, ERESULT_SUCCESS otherwise an 
+     @endcode
+     @param     this    J1939SS object pointer
+     @param     pOther  a pointer to another J1939SS object
+     @return    If successful, ERESULT_SUCCESS otherwise an
                 ERESULT_* error 
      */
     ERESULT         j1939ss_Assign(
@@ -1056,13 +1056,13 @@ bool			j1939ss_setSpn3350(
     /*!
      Copy the current object creating a new object.
      Example:
-     @code:
+     @code
         j1939ss      *pCopy = j1939ss_Copy(this);
-     @endcode:
-     @param:    this    J1939SS object pointer
-     @return:   If successful, a J1939SS object which must be released,
+     @endcode
+     @param     this    J1939SS object pointer
+     @return    If successful, a J1939SS object which must be released,
                 otherwise OBJ_NIL.
-     @warning: Remember to release the returned the J1939SS object.
+     @warning   Remember to release the returned the J1939SS object.
      */
     J1939SS_DATA *     j1939ss_Copy(
         J1939SS_DATA       *this
@@ -1515,14 +1515,14 @@ bool			j1939ss_setSpn3350(
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939ss_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939SS object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939SS object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *     j1939ss_ToDebugString(
         J1939SS_DATA      *this,
@@ -1547,7 +1547,7 @@ bool			j1939ss_setSpn3350(
               
         pStr = AStr_New();
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         str[0] = '\0';
         j = snprintf(
@@ -1572,7 +1572,7 @@ bool			j1939ss_setSpn3350(
 #endif
         
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         j = snprintf(str, sizeof(str), " %p(j1939ss)}\n", this);
         AStr_AppendA(pStr, str);

@@ -66,7 +66,7 @@ OBJ_INFO        j1939sys_Info;            // Forward Reference
 
 
 OBJ_ID          j1939sys_Class(
-    OBJ_ID          objId
+    void
 );
 
 
@@ -87,8 +87,8 @@ bool            j1939sys_ClassIsKindOf(
 
 
 static
-uint16_t		obj_ClassWhoAmI(
-    OBJ_ID          objId
+uint16_t		j1939sys_ClassWhoAmI(
+    void
 )
 {
     return OBJ_IDENT_J1939SYS_CLASS;
@@ -103,8 +103,8 @@ OBJ_IUNKNOWN    obj_Vtbl = {
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
-    obj_Class,
-    obj_ClassWhoAmI
+    j1939sys_Class,
+    j1939sys_ClassWhoAmI
 };
 
 
@@ -144,7 +144,7 @@ void            j1939sys_Dealloc(
 
 
 OBJ_ID          j1939sys_Class(
-    OBJ_ID          objId
+    void
 )
 {
     return (OBJ_ID)&j1939sys_ClassObj;
@@ -153,7 +153,7 @@ OBJ_ID          j1939sys_Class(
 
 static
 uint16_t		j1939sys_WhoAmI(
-    OBJ_ID          objId
+    void
 )
 {
     return OBJ_IDENT_J1939SYS;

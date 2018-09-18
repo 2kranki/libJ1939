@@ -438,12 +438,12 @@ extern "C" {
      this -> other).  Any objects in other will be released before 
      a copy of the object is performed.
      Example:
-     @code:
+     @code
         ERESULT eRc = truck__Assign(this,pOther);
-     @endcode:
-     @param:    this    TRUCK object pointer
-     @param:    pOther  a pointer to another TRUCK object
-     @return:   If successful, ERESULT_SUCCESS otherwise an 
+     @endcode
+     @param     this    TRUCK object pointer
+     @param     pOther  a pointer to another TRUCK object
+     @return    If successful, ERESULT_SUCCESS otherwise an
                 ERESULT_* error 
      */
     ERESULT         truck_Assign(
@@ -508,13 +508,13 @@ extern "C" {
     /*!
      Copy the current object creating a new object.
      Example:
-     @code:
+     @code
         truck      *pCopy = truck_Copy(this);
-     @endcode:
-     @param:    this    TRUCK object pointer
-     @return:   If successful, a TRUCK object which must be released,
+     @endcode
+     @param     this    TRUCK object pointer
+     @return    If successful, a TRUCK object which must be released,
                 otherwise OBJ_NIL.
-     @warning: Remember to release the returned the TRUCK object.
+     @warning   Remember to release the returned the TRUCK object.
      */
     TRUCK_DATA *     truck_Copy(
         TRUCK_DATA       *this
@@ -808,12 +808,12 @@ extern "C" {
     void *          truck_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,
-        const
-        char            *pStr
+        void            *pData
     )
     {
-        TRUCK_DATA   *this = objId;
-        
+        TRUCK_DATA      *this = objId;
+        char            *pStr = pData;
+
         if (OBJ_NIL == this) {
             return NULL;
         }
@@ -855,7 +855,7 @@ extern "C" {
                 break;
         }
         
-        return obj_QueryInfo(objId, type, pStr);
+        return obj_QueryInfo(objId, type, pData);
     }
     
     
@@ -867,14 +867,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = truck_ToDebugString(this,4);
-     @endcode:
-     @param:    this    TRUCK object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    TRUCK object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *     truck_ToDebugString(
         TRUCK_DATA      *this,
@@ -899,7 +899,7 @@ extern "C" {
               
         pStr = AStr_New();
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         str[0] = '\0';
         j = snprintf(
@@ -925,7 +925,7 @@ extern "C" {
 #endif
         
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         j = snprintf(str, sizeof(str), " %p(truck)}\n", this);
         AStr_AppendA(pStr, str);

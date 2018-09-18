@@ -70,7 +70,7 @@ int         test_truck_OpenClose(
 {
     TRUCK_DATA	*pObj = OBJ_NIL;
    
-    pObj = truck_Alloc(0);
+    pObj = truck_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = truck_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );

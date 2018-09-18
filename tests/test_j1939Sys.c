@@ -37,7 +37,7 @@ int         test_j1939sys_OpenClose(
 {
     J1939SYS_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939sys_Alloc(0);
+    pObj = j1939sys_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939sys_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );

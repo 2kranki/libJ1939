@@ -35,7 +35,7 @@
 
 #include    <j1939_defs.h>
 #include    <j1939msg.h>
-#include    "j1939Sys.h"
+#include    "j1939sys.h"
 
 
 

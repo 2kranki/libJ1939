@@ -1,15 +1,20 @@
 // vi:nu:et:sts=4 ts=4 sw=4
 
 //****************************************************************
-//          J1939 SYS Test Object (j1939sys) Header
+//          J1939 System Function Test Object (j1939sys) Header
 //****************************************************************
 /*
  * Program
- *			J1939 SYS Test Object (j1939sys)
+ *			J1939 System Function Test Object (j1939sys)
  * Purpose
  *			This object provides a means of testing the operation
  *          of libJ1939 without actually having the library connected
  *          to a CAN Port and using an O/S. It requires j1939can as well.
+ *
+ *          This object supplies system support which would normally
+ *          be found in the real hardware/operating system.  Currently,
+ *          it provides the time support functions that need to be
+ *          provided in the actual run time environment.
  *
  * Remarks
  *	1.      J1939SYS_VTBL must be in sync with the J1939_SYS_VTBL in
@@ -102,10 +107,12 @@ extern "C" {
     //---------------------------------------------------------------
 
     J1939SYS_DATA *     j1939sys_Alloc(
+        void
     );
     
     
     J1939SYS_DATA *     j1939sys_New(
+        void
     );
     
     
@@ -148,9 +155,9 @@ extern "C" {
 
     /*!
      Simulate sleeping for ms milliseconds.
-     @param:    this    J1939SYS object pointer
-     @param:    ms      Time to sleep in ms
-     @return:   returns the current test time
+     @param     this    J1939SYS object pointer
+     @param     ms      Time to sleep in ms
+     @return    returns the current test time
      */
     uint32_t    j1939sys_SleepMS(
         J1939SYS_DATA   *this,
@@ -160,8 +167,8 @@ extern "C" {
     
     /*!
      Return the current time in MS (milliseconds).
-     @param:    this    J1939SYS object pointer
-     @return:   returns the current test time
+     @param     this    J1939SYS object pointer
+     @return    returns the current test time
      */
     uint32_t    j1939sys_TimeMS(
         J1939SYS_DATA   *this
@@ -170,9 +177,9 @@ extern "C" {
     
     /*!
      Reset the time to the given value.
-     @param:    this    J1939SYS object pointer
-     @param:    ms      Time to sleep in ms
-     @return:   returns the current test time
+     @param     this    J1939SYS object pointer
+     @param     ms      Time to sleep in ms
+     @return    returns the current test time
      */
     uint32_t    j1939sys_TimeReset(
         J1939SYS_DATA   *this,
@@ -183,14 +190,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939Sys_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939SYS object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939SYS object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA * j1939sys_ToDebugString(
         J1939SYS_DATA   *this,

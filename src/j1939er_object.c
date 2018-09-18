@@ -67,7 +67,7 @@ OBJ_INFO        j1939er_Info;            // Forward Reference
 
 
 OBJ_ID          j1939er_Class(
-    OBJ_ID          objId
+    void
 );
 
 
@@ -91,8 +91,8 @@ bool            j1939er_ClassIsKindOf(
 
 
 static
-uint16_t		obj_ClassWhoAmI(
-    OBJ_ID          objId
+uint16_t		j1939er_ClassWhoAmI(
+    void
 )
 {
     return OBJ_IDENT_J1939ER_CLASS;
@@ -107,8 +107,8 @@ OBJ_IUNKNOWN    obj_Vtbl = {
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
-    obj_Class,
-    obj_ClassWhoAmI
+    j1939er_Class,
+    j1939er_ClassWhoAmI
 };
 
 
@@ -152,7 +152,7 @@ void            j1939er_Dealloc(
 
 
 OBJ_ID          j1939er_Class(
-    OBJ_ID          objId
+    void
 )
 {
     return (OBJ_ID)&j1939er_ClassObj;
@@ -161,7 +161,7 @@ OBJ_ID          j1939er_Class(
 
 static
 uint16_t		j1939er_WhoAmI(
-    OBJ_ID          objId
+    void
 )
 {
     return OBJ_IDENT_J1939ER;

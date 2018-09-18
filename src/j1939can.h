@@ -9,7 +9,12 @@
  * Purpose
  *			This object provides a means of testing the operation
  *          of libJ1939 without actually having the library connected
- *          to a CAN Port. It requires j1939Sys as well.
+ *          to a CAN Port. It requires j1939sys as well.
+ *
+ *          Messages can be looped back on either the receive or
+ *          transmit sides and all messages transmitted from this
+ *          object can be T'd to an additional object allowing for
+ *          monitoring of the message flow.
  *
  * Remarks
  *	1.      J1939CAN_VTBL must be in sync with the J1939_CAN_VTBL in
@@ -104,10 +109,12 @@ extern "C" {
      @return:   pointer to j1939Can object if successful, otherwise OBJ_NIL.
      */
     J1939CAN_DATA *     j1939can_Alloc(
+        void
     );
     
     
     J1939CAN_DATA *     j1939can_New(
+        void
     );
     
     
@@ -182,14 +189,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939can_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939CAN object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939CAN object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *    j1939can_ToDebugString(
         J1939CAN_DATA   *this,

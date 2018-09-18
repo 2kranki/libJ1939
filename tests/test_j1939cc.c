@@ -129,7 +129,7 @@ int         test_j1939cc_Transmits(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
     
-    pCC = j1939cc_Alloc(0);
+    pCC = j1939cc_Alloc( );
     XCTAssertFalse( (OBJ_NIL == pCC) );
     pCC = j1939cc_Init( pCC,
                        (OBJ_ID)pCAN,

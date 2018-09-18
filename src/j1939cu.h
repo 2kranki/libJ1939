@@ -116,6 +116,7 @@ extern "C" {
     //---------------------------------------------------------------
 
     J1939CU_DATA *     j1939cu_Alloc(
+        void
     );
     
     
@@ -212,14 +213,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939cu_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939CU object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939CU object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *    j1939cu_ToDebugString(
         J1939CU_DATA     *this,

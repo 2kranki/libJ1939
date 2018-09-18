@@ -3097,7 +3097,7 @@ extern	"C" {
         pdu = j1939msg_getPDU(pMsg);
         pgn = j1939pdu_getPGN(pdu);
 
-        // SPN 514  1       8bits       Nominal Friction - Percent T orque
+        // SPN 514  1       8bits       Nominal Friction - Percent Torque
         spn514 = pMsg->DATA.bytes[0];
         // SPN 515  2-3     16bits      Engine's Desired Operating Speed
         spn515 = (pMsg->DATA.bytes[2] << 8) + pMsg->DATA.bytes[1];

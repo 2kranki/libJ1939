@@ -84,8 +84,7 @@ struct j1939sys_data_s	{
     void *          j1939sys_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,
-        const
-        char            *pStr
+        void            *pData
     );
     
     bool            j1939sys_setLastError(

@@ -70,7 +70,7 @@ int         test_j1939misc_OpenClose(
 {
     J1939MISC_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939misc_Alloc(0);
+    pObj = j1939misc_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939misc_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );

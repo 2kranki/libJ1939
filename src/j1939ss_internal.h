@@ -314,7 +314,7 @@ struct j1939ss_data_s	{
     //    |      |
     //  11110 - P31 - Reserved
     //  11111 - P32 - Temporary Power Train Control (Original use of TSC1 Command)
-    uint8_t             rsvd8;
+    uint8_t             rsvd8[2];
 
     uint16_t            spn898;         // Requested Speed / Speed Limit
     // Parameter provided to the engine from external sources in the torque/speed
@@ -323,6 +323,7 @@ struct j1939ss_data_s	{
     // the engine is not expected to exceed if the speed limit mode is active.
     //                              // mult: 0.125 rpm per bit, offset: 0
     //                              // range: 0 to 8,031.875 rpm
+    uint16_t            rsvd16[1];
     
     uint32_t            spnLast;
 

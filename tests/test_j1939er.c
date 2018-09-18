@@ -85,14 +85,16 @@ int         tearDown(
 
 int         test_j1939er_OpenClose(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA	*pER = OBJ_NIL;
     bool            fRc;
     J1939_PDU       pdu;    
    
-    pER = j1939er_Alloc();
+    fprintf(stderr, "Performing: %s\n", pTestName);
+    
+    pER = j1939er_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pER) );
     pER = j1939er_Init(
                     pER, 
@@ -110,16 +112,15 @@ int         test_j1939er_OpenClose(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
+        XCTAssertTrue( (0 == cCurMsg) );
 
         obj_Release(pER);
         pER = OBJ_NIL;
     }
 
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -127,12 +128,14 @@ int         test_j1939er_OpenClose(
 
 int         test_j1939er_Transmits(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
     J1939_PDU       pdu;
     bool            fRc;
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -155,13 +158,15 @@ int         test_j1939er_Transmits(
         j1939sys_TimeReset(pSYS, 0);
         j1939can_setXmtMsg(pCAN, xmtHandler, NULL);
         
-        fRc = j1939er_TransmitPgn61440(pER);
         // Initiate Address Claim.
+        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
+        XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (0 == cCurMsg) );
+        
+        fRc = j1939er_TransmitPgn61440(pER);
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        fprintf( stderr, "eid = 0x%08X\n", pdu.eid );
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
         //FIXME: msg size is 19, so we need large msg xmt!
 #ifdef XYZZY
@@ -178,6 +183,7 @@ int         test_j1939er_Transmits(
         pER = NULL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -185,7 +191,7 @@ int         test_j1939er_Transmits(
 
 int         test_j1939er_RequestNameDirect(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -193,6 +199,8 @@ int         test_j1939er_RequestNameDirect(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -217,18 +225,11 @@ int         test_j1939er_RequestNameDirect(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (0 == cCurMsg) );
 
-        // Setup up msg from #3 Transmission to ER requesting NAME;
+        // Send msg from #3 Transmission to ER requesting NAME;
         pdu.eid = 0;
         pdu.SA = 3;
         pdu.P = 3;
@@ -243,17 +244,23 @@ int         test_j1939er_RequestNameDirect(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
+        // Now handle the response
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (4 == cCurMsg) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (2 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
+        fprintf( stderr, "eid[-2] = 0x%08X\n", pdu.eid );
+        XCTAssertTrue( (0x0CEA2903 == pdu.eid) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        fprintf( stderr, "eid[-1] = 0x%08X\n", pdu.eid );
+        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
 
         obj_Release(pER);
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -261,7 +268,7 @@ int         test_j1939er_RequestNameDirect(
 
 int         test_j1939er_RequestBadNameDirect(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -269,6 +276,8 @@ int         test_j1939er_RequestBadNameDirect(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -293,20 +302,11 @@ int         test_j1939er_RequestBadNameDirect(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        
-        // Setup up msg from #3 Transmission to ER requesting NAME;
+        XCTAssertTrue( (0 == cCurMsg) );
+
+        // Setup up msg from #3 Transmission to ER requesting an unknown EID;
         pdu.eid = 0;
         pdu.SA = 3;
         pdu.P = 3;
@@ -321,19 +321,23 @@ int         test_j1939er_RequestBadNameDirect(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
+        // Now handle the response.
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (4 == cCurMsg) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (2 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18E80329 == pdu.eid) );
+        XCTAssertTrue( (0x0CEA2903 == pdu.eid) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0x18E80329 == pdu.eid) );
         
         obj_Release(pER);
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -341,7 +345,7 @@ int         test_j1939er_RequestBadNameDirect(
 
 int         test_j1939er_RequestBadNameGlobal(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -349,6 +353,8 @@ int         test_j1939er_RequestBadNameGlobal(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -373,20 +379,11 @@ int         test_j1939er_RequestBadNameGlobal(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
+        XCTAssertTrue( (0 == cCurMsg) );
         
-        // Setup up msg from #3 Transmission to ER requesting NAME;
+        // Setup up msg from #3 Transmission to ER requesting unknown EID;
         pdu.eid = 0;
         pdu.SA = 3;
         pdu.P = 3;
@@ -401,17 +398,21 @@ int         test_j1939er_RequestBadNameGlobal(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
+        // Now handle the message.
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
         // It will not nak since we asked globablly.
-        XCTAssertTrue( (3 == cCurMsg) );
+        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
+        XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0xCEAFF03 == pdu.eid) );
         
         obj_Release(pER);
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -419,7 +420,7 @@ int         test_j1939er_RequestBadNameGlobal(
 
 int         test_j1939er_RequestIRC1Direct(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -427,6 +428,8 @@ int         test_j1939er_RequestIRC1Direct(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -451,18 +454,9 @@ int         test_j1939er_RequestIRC1Direct(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-        XCTAssertTrue( (0x18EEFF29 == pdu.eid) );
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
+        XCTAssertTrue( (0 == cCurMsg) );
         
         // Setup up msg from #3 Transmission to ER requesting NAME;
         pdu.eid = 0;
@@ -479,11 +473,12 @@ int         test_j1939er_RequestIRC1Direct(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (4 == cCurMsg) );
+        XCTAssertTrue( (2 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
         fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0x0CEA2903 == pdu.eid) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
@@ -492,6 +487,7 @@ int         test_j1939er_RequestIRC1Direct(
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -499,12 +495,14 @@ int         test_j1939er_RequestIRC1Direct(
 
 int         test_j1939er_TimedIRC1(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
     bool            fRc;
     J1939_PDU       pdu;
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -529,17 +527,9 @@ int         test_j1939er_TimedIRC1(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
+        XCTAssertTrue( (0 == cCurMsg) );
         
         // Let's go 1000 ms in the future.
         // We should see 10 ERC1s because they are
@@ -560,6 +550,7 @@ int         test_j1939er_TimedIRC1(
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -567,7 +558,7 @@ int         test_j1939er_TimedIRC1(
 
 int         test_j1939er_TSC1_Direct_Clean(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -575,6 +566,8 @@ int         test_j1939er_TSC1_Direct_Clean(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -599,18 +592,11 @@ int         test_j1939er_TSC1_Direct_Clean(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        
+        XCTAssertTrue( (0 == cCurMsg) );
+        XCTAssertTrue( (!pER->fActive) );
+
         // Tell Engine Retarder to Brake.
         // Setup up msg from #3 Transmission via TSC1;
         pdu.eid = 0;
@@ -627,17 +613,15 @@ int         test_j1939er_TSC1_Direct_Clean(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (true == pER->fActive) );
+        XCTAssertTrue( (pER->fActive) );
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
-        fprintf(stderr, "msg[-2] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0X0C002903 == pdu.eid) );
+        XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0X0C002903 == pdu.eid) );
 
         // Put us 1000ms into the future.
         // Should give us 10 ERC1s.
@@ -652,7 +636,8 @@ int         test_j1939er_TSC1_Direct_Clean(
         fprintf(stderr, "msg[-1] pdu.eid = 0x%8X\n", pdu.eid);
         XCTAssertTrue( (0x18F00029 == pdu.eid) );
         
-        // Tell Engine Retarder to Stop.
+        //      *** Tell Engine Retarder to Stop. ***
+        
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
         pdu.SA = 3;
@@ -668,10 +653,10 @@ int         test_j1939er_TSC1_Direct_Clean(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);    // Show that we are sending this.
-        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (false == pER->fActive) );
-        XCTAssertTrue( (255 == pER->spn1480) );
         
+        fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
+        XCTAssertTrue( (!pER->fActive) );
+        XCTAssertTrue( (255 == pER->spn1480) );
         
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
         //FIXME: Message Count is too hard to track for the moment.
@@ -687,6 +672,7 @@ int         test_j1939er_TSC1_Direct_Clean(
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 
@@ -694,7 +680,7 @@ int         test_j1939er_TSC1_Direct_Clean(
 
 int         test_j1939er_TSC1_Direct_Timeout(
     const
-    char        *test_name
+    char        *pTestName
 )
 {
     J1939ER_DATA    *pER = NULL;
@@ -702,6 +688,8 @@ int         test_j1939er_TSC1_Direct_Timeout(
     J1939_MSG       msg;
     J1939_PDU       pdu;
     uint8_t         data[8];
+    
+    fprintf(stderr, "Performing: %s\n", pTestName);
     
     XCTAssertFalse( (OBJ_NIL == pCAN) );
     XCTAssertFalse( (OBJ_NIL == pSYS) );
@@ -726,19 +714,12 @@ int         test_j1939er_TSC1_Direct_Timeout(
         
         // Initiate Address Claim.
         fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
-        XCTAssertTrue( (J1939CA_STATE_WAIT_FOR_CLAIM_ADDRESS == pER->super.cs) );
-        fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
-
-        // Send "Timed Out".
-        j1939sys_BumpMS(pSYS, 250);
-        fRc = j1939ca_HandleMessages((J1939CA_DATA *)pER, NULL);
         XCTAssertTrue( (J1939CA_STATE_NORMAL_OPERATION == pER->super.cs) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (1 == cCurMsg) );
+        XCTAssertTrue( (0 == cCurMsg) );
         
-        // Tell Engine Retarder to Brake.
+        //          *** Tell Engine Retarder to Brake. ***
+        
         // Setup up msg from #3 Transmission to TSC1;
         pdu.eid = 0;
         pdu.SA = 3;
@@ -754,17 +735,15 @@ int         test_j1939er_TSC1_Direct_Timeout(
         j1939msg_ConstructMsg_E1(&msg, pdu.eid, 8, data);
         msg.CMSGSID.CMSGTS = 0xFFFF;    // Denote transmitting;
         fRc = xmtHandler(NULL, &msg);
+        
         fRc = j1939ca_HandleMessages( (J1939CA_DATA *)pER, &msg );
-        XCTAssertTrue( (true == pER->fActive) );
+        XCTAssertTrue( (pER->fActive) );
         XCTAssertTrue( (3 == pER->spn1480) );
         fprintf( stderr, "cCurMsg = %d\n", cCurMsg );
-        XCTAssertTrue( (3 == cCurMsg) );
-        pdu = j1939msg_getPDU(&curMsg[cCurMsg-2]);
-        fprintf(stderr, "msg[-2] pdu.eid = 0x%08X\n", pdu.eid);
-        XCTAssertTrue( (0X0C002903 == pdu.eid) );
+        XCTAssertTrue( (1 == cCurMsg) );
         pdu = j1939msg_getPDU(&curMsg[cCurMsg-1]);
         fprintf(stderr, "msg[-1] pdu.eid = 0x%08X\n", pdu.eid);
-        XCTAssertTrue( (0x18F00029 == pdu.eid) );
+        XCTAssertTrue( (0X0C002903 == pdu.eid) );
         
         for (int i=0; i<100; ++i) {
             j1939sys_BumpMS(pSYS, 10);
@@ -811,6 +790,7 @@ int         test_j1939er_TSC1_Direct_Timeout(
         pER = OBJ_NIL;
     }
     
+    fprintf(stderr, "...%s completed.\n\n\n", pTestName);
     return 1;
 }
 

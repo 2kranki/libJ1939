@@ -485,9 +485,8 @@ struct j1939cab_data_s	{
     void *          j1939cab_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,
-        const
-        char            *pStr
-                    );
+        void            *pData
+    );
     
     
     int             j1939cab_SetupPgn57344(

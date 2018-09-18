@@ -67,7 +67,7 @@ OBJ_INFO        truck_Info;            // Forward Reference
 
 
 OBJ_ID          truck_Class(
-    OBJ_ID          objId
+    void
 );
 
 
@@ -88,8 +88,8 @@ bool            truck_ClassIsKindOf(
 
 
 static
-uint16_t		obj_ClassWhoAmI(
-    OBJ_ID          objId
+uint16_t		truck_ClassWhoAmI(
+    void
 )
 {
     return OBJ_IDENT_TRUCK_CLASS;
@@ -104,8 +104,8 @@ OBJ_IUNKNOWN    obj_Vtbl = {
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
-    obj_Class,
-    obj_ClassWhoAmI
+    truck_Class,
+    truck_ClassWhoAmI
 };
 
 
@@ -145,7 +145,7 @@ void            truck_Dealloc(
 
 
 OBJ_ID          truck_Class(
-    OBJ_ID          objId
+    void
 )
 {
     return (OBJ_ID)&truck_ClassObj;
@@ -154,7 +154,7 @@ OBJ_ID          truck_Class(
 
 static
 uint16_t		truck_WhoAmI(
-    OBJ_ID          objId
+    void
 )
 {
     return OBJ_IDENT_TRUCK;

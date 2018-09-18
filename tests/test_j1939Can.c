@@ -37,7 +37,7 @@ int         test_j1939can_OpenClose(
 {
     J1939CAN_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939can_Alloc(0);
+    pObj = j1939can_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939can_Init( pObj );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );

@@ -2037,7 +2037,7 @@ extern	"C" {
         uint8_t         ca          // Claimed Address
     )
     {
-        bool            fRc;
+        bool            fRc = true;
         int             i;
         
         // Do initialization.
@@ -2795,7 +2795,7 @@ extern	"C" {
     {
         uint16_t        dlc = 32;
         J1939_PDU       pdu = {0};
-        uint8_t         data[32];
+        //uint8_t         data[32];
         bool            fRc = false;
         int             len;
         

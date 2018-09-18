@@ -106,6 +106,7 @@ extern "C" {
      @return:   pointer to j1939tp object if successful, otherwise OBJ_NIL.
      */
     J1939TP_DATA *  j1939tp_Alloc(
+        void
     );
     
     
@@ -207,8 +208,8 @@ extern "C" {
      If this object is waiting for work, set up to receive
      a multi-packet message and give a CTS to start the
      process if needed.
-     @param:    this    J1939TP object pointer
-     @return:           If successful, ERROR_SUCCESS, 
+     @param     this    J1939TP object pointer
+     @return            If successful, ERROR_SUCCESS, 
                         otherwise an ERESULT_* error code.
      */
     ERESULT         j1939tp_MessageReceive(
@@ -225,8 +226,8 @@ extern "C" {
      If this object is waiting for work, set up the message to be transmitted in 
      packets and start the protocol. The receiver should be a specific address or 
      255.
-     @param:    this    J1939TP object pointer
-     @return:   If successful, ERROR_SUCCESS, otherwise an ERESULT_* error code.
+     @param     this    J1939TP object pointer
+     @return    If successful, ERROR_SUCCESS, otherwise an ERESULT_* error code.
      */
     ERESULT         j1939tp_MessageTransmit(
         J1939TP_DATA	*this,
@@ -239,14 +240,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939tp_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939TP object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939TP object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *     j1939tp_ToDebugString(
         J1939TP_DATA    *this,

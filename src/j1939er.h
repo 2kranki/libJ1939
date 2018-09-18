@@ -130,6 +130,7 @@ extern	"C" {
     
     // Warning - See J1939CAM, but this function may not change.
     J1939ER_DATA * j1939er_Alloc(
+        void
     );
     
         

@@ -90,7 +90,7 @@ int         test_j1939cam_OpenClose(
 {
     J1939CAM_DATA   *pObj = OBJ_NIL;
    
-    pObj = j1939cam_Alloc(0);
+    pObj = j1939cam_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939cam_Init(
                     pObj, 

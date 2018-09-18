@@ -1,0 +1,591 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C460C79D214FE6DE00673FA6 /* j1939en.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C74B214FE6D500673FA6 /* j1939en.c */; };
+		C460C79E214FE6DE00673FA6 /* j1939cc_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C74C214FE6D500673FA6 /* j1939cc_object.c */; };
+		C460C79F214FE6DE00673FA6 /* j1939er.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C74E214FE6D500673FA6 /* j1939er.c */; };
+		C460C7A0214FE6DF00673FA6 /* truck.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C750214FE6D600673FA6 /* truck.c */; };
+		C460C7A1214FE6DF00673FA6 /* j1939tcu_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C751214FE6D600673FA6 /* j1939tcu_object.c */; };
+		C460C7A2214FE6DF00673FA6 /* j1939cam.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C752214FE6D600673FA6 /* j1939cam.c */; };
+		C460C7A3214FE6DF00673FA6 /* j1939data.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C755214FE6D600673FA6 /* j1939data.c */; };
+		C460C7A4214FE6DF00673FA6 /* j1939ccu_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C756214FE6D600673FA6 /* j1939ccu_object.c */; };
+		C460C7A5214FE6DF00673FA6 /* j1939msg.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C757214FE6D600673FA6 /* j1939msg.c */; };
+		C460C7A6214FE6DF00673FA6 /* j1939can.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C759214FE6D600673FA6 /* j1939can.c */; };
+		C460C7A7214FE6DF00673FA6 /* j1939ecu_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C75B214FE6D700673FA6 /* j1939ecu_object.c */; };
+		C460C7A8214FE6DF00673FA6 /* j1939dg_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C762214FE6D700673FA6 /* j1939dg_object.c */; };
+		C460C7A9214FE6DF00673FA6 /* j1939en_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C765214FE6D800673FA6 /* j1939en_object.c */; };
+		C460C7AA214FE6DF00673FA6 /* j1939misc.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C767214FE6D800673FA6 /* j1939misc.c */; };
+		C460C7AB214FE6DF00673FA6 /* j1939cu_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C76D214FE6D900673FA6 /* j1939cu_object.c */; };
+		C460C7AC214FE6DF00673FA6 /* j1939bs_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C76F214FE6D900673FA6 /* j1939bs_object.c */; };
+		C460C7AD214FE6DF00673FA6 /* j1939tc_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C770214FE6D900673FA6 /* j1939tc_object.c */; };
+		C460C7AE214FE6DF00673FA6 /* j1939ss.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C771214FE6D900673FA6 /* j1939ss.c */; };
+		C460C7AF214FE6DF00673FA6 /* j1939cab_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C775214FE6DA00673FA6 /* j1939cab_object.c */; };
+		C460C7B0214FE6DF00673FA6 /* j1939ca_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C776214FE6DA00673FA6 /* j1939ca_object.c */; };
+		C460C7B1214FE6DF00673FA6 /* j1939cam_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C777214FE6DA00673FA6 /* j1939cam_object.c */; };
+		C460C7B2214FE6DF00673FA6 /* j1939sys.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C77A214FE6DA00673FA6 /* j1939sys.c */; };
+		C460C7B3214FE6DF00673FA6 /* j1939ccu.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C77B214FE6DA00673FA6 /* j1939ccu.c */; };
+		C460C7B4214FE6DF00673FA6 /* j1939tp_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C77C214FE6DB00673FA6 /* j1939tp_object.c */; };
+		C460C7B5214FE6DF00673FA6 /* j1939cab.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C77D214FE6DB00673FA6 /* j1939cab.c */; };
+		C460C7B6214FE6DF00673FA6 /* j1939cu.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C77F214FE6DB00673FA6 /* j1939cu.c */; };
+		C460C7B7214FE6DF00673FA6 /* j1939ca.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C780214FE6DB00673FA6 /* j1939ca.c */; };
+		C460C7B8214FE6DF00673FA6 /* j1939sys_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C782214FE6DB00673FA6 /* j1939sys_object.c */; };
+		C460C7B9214FE6DF00673FA6 /* j1939ecu.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C783214FE6DB00673FA6 /* j1939ecu.c */; };
+		C460C7BA214FE6DF00673FA6 /* j1939can_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C786214FE6DC00673FA6 /* j1939can_object.c */; };
+		C460C7BB214FE6DF00673FA6 /* j1939misc_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C787214FE6DC00673FA6 /* j1939misc_object.c */; };
+		C460C7BC214FE6DF00673FA6 /* j1939tcu.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C78A214FE6DC00673FA6 /* j1939tcu.c */; };
+		C460C7BD214FE6DF00673FA6 /* truck_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C78B214FE6DC00673FA6 /* truck_object.c */; };
+		C460C7BE214FE6DF00673FA6 /* j1939dg.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C78F214FE6DD00673FA6 /* j1939dg.c */; };
+		C460C7BF214FE6DF00673FA6 /* j1939cc.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C790214FE6DD00673FA6 /* j1939cc.c */; };
+		C460C7C0214FE6DF00673FA6 /* j1939er_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C791214FE6DD00673FA6 /* j1939er_object.c */; };
+		C460C7C1214FE6DF00673FA6 /* j1939tp.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C794214FE6DD00673FA6 /* j1939tp.c */; };
+		C460C7C2214FE6DF00673FA6 /* j1939bs.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C796214FE6DE00673FA6 /* j1939bs.c */; };
+		C460C7C3214FE6DF00673FA6 /* j1939tc.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C797214FE6DE00673FA6 /* j1939tc.c */; };
+		C460C7C4214FE6DF00673FA6 /* j1939ss_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C79B214FE6DE00673FA6 /* j1939ss_object.c */; };
+		C460C7C5214FE6DF00673FA6 /* j1939data_object.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C79C214FE6DE00673FA6 /* j1939data_object.c */; };
+		C460C7C8214FF7FE00673FA6 /* libCmn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C460C7C7214FF7FE00673FA6 /* libCmn.a */; };
+		C460C7CF214FFB2400673FA6 /* common4.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C7CB214FFB2300673FA6 /* common4.c */; };
+		C460C7D0214FFB2400673FA6 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C7CC214FFB2400673FA6 /* common.c */; };
+		C460C7D1214FFB2400673FA6 /* common2.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C7CD214FFB2400673FA6 /* common2.c */; };
+		C460C7D2214FFB2400673FA6 /* common3.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C7CE214FFB2400673FA6 /* common3.c */; };
+		C460C7DB2150494A00673FA6 /* test_j1939tc.c in Sources */ = {isa = PBXBuildFile; fileRef = C460C7DA2150494900673FA6 /* test_j1939tc.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C460C73C214FE63F00673FA6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		C460C73E214FE63F00673FA6 /* testJ1939 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testJ1939; sourceTree = BUILT_PRODUCTS_DIR; };
+		C460C74A214FE6D500673FA6 /* j1939en_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939en_internal.h; sourceTree = "<group>"; };
+		C460C74B214FE6D500673FA6 /* j1939en.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939en.c; sourceTree = "<group>"; };
+		C460C74C214FE6D500673FA6 /* j1939cc_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cc_object.c; sourceTree = "<group>"; };
+		C460C74D214FE6D500673FA6 /* j1939en.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939en.h; sourceTree = "<group>"; };
+		C460C74E214FE6D500673FA6 /* j1939er.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939er.c; sourceTree = "<group>"; };
+		C460C74F214FE6D600673FA6 /* j1939ccu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ccu.h; sourceTree = "<group>"; };
+		C460C750214FE6D600673FA6 /* truck.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = truck.c; sourceTree = "<group>"; };
+		C460C751214FE6D600673FA6 /* j1939tcu_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tcu_object.c; sourceTree = "<group>"; };
+		C460C752214FE6D600673FA6 /* j1939cam.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cam.c; sourceTree = "<group>"; };
+		C460C753214FE6D600673FA6 /* j1939misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939misc.h; sourceTree = "<group>"; };
+		C460C754214FE6D600673FA6 /* j1939can.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939can.h; sourceTree = "<group>"; };
+		C460C755214FE6D600673FA6 /* j1939data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939data.c; sourceTree = "<group>"; };
+		C460C756214FE6D600673FA6 /* j1939ccu_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ccu_object.c; sourceTree = "<group>"; };
+		C460C757214FE6D600673FA6 /* j1939msg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939msg.c; sourceTree = "<group>"; };
+		C460C758214FE6D600673FA6 /* j1939data_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939data_internal.h; sourceTree = "<group>"; };
+		C460C759214FE6D600673FA6 /* j1939can.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939can.c; sourceTree = "<group>"; };
+		C460C75A214FE6D600673FA6 /* j1939ecu_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ecu_internal.h; sourceTree = "<group>"; };
+		C460C75B214FE6D700673FA6 /* j1939ecu_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ecu_object.c; sourceTree = "<group>"; };
+		C460C75C214FE6D700673FA6 /* j1939er_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939er_internal.h; sourceTree = "<group>"; };
+		C460C75D214FE6D700673FA6 /* j1939cc_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cc_internal.h; sourceTree = "<group>"; };
+		C460C75E214FE6D700673FA6 /* j1939dg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939dg.h; sourceTree = "<group>"; };
+		C460C75F214FE6D700673FA6 /* j1939cam_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cam_internal.h; sourceTree = "<group>"; };
+		C460C760214FE6D700673FA6 /* j1939er.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939er.h; sourceTree = "<group>"; };
+		C460C761214FE6D700673FA6 /* j1939ca.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ca.h; sourceTree = "<group>"; };
+		C460C762214FE6D700673FA6 /* j1939dg_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939dg_object.c; sourceTree = "<group>"; };
+		C460C763214FE6D700673FA6 /* j1939ca_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ca_internal.h; sourceTree = "<group>"; };
+		C460C764214FE6D800673FA6 /* j1939misc_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939misc_internal.h; sourceTree = "<group>"; };
+		C460C765214FE6D800673FA6 /* j1939en_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939en_object.c; sourceTree = "<group>"; };
+		C460C766214FE6D800673FA6 /* j1939cab_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cab_internal.h; sourceTree = "<group>"; };
+		C460C767214FE6D800673FA6 /* j1939misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939misc.c; sourceTree = "<group>"; };
+		C460C768214FE6D800673FA6 /* j1939ccu_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ccu_internal.h; sourceTree = "<group>"; };
+		C460C769214FE6D800673FA6 /* j1939_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939_defs.h; sourceTree = "<group>"; };
+		C460C76A214FE6D800673FA6 /* j1939cu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cu.h; sourceTree = "<group>"; };
+		C460C76B214FE6D800673FA6 /* j1939ss_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ss_internal.h; sourceTree = "<group>"; };
+		C460C76C214FE6D900673FA6 /* j1939tc_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tc_internal.h; sourceTree = "<group>"; };
+		C460C76D214FE6D900673FA6 /* j1939cu_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cu_object.c; sourceTree = "<group>"; };
+		C460C76E214FE6D900673FA6 /* j1939msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939msg.h; sourceTree = "<group>"; };
+		C460C76F214FE6D900673FA6 /* j1939bs_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939bs_object.c; sourceTree = "<group>"; };
+		C460C770214FE6D900673FA6 /* j1939tc_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tc_object.c; sourceTree = "<group>"; };
+		C460C771214FE6D900673FA6 /* j1939ss.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ss.c; sourceTree = "<group>"; };
+		C460C772214FE6D900673FA6 /* j1939tcu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tcu.h; sourceTree = "<group>"; };
+		C460C773214FE6DA00673FA6 /* j1939bs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939bs.h; sourceTree = "<group>"; };
+		C460C774214FE6DA00673FA6 /* j1939can_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939can_internal.h; sourceTree = "<group>"; };
+		C460C775214FE6DA00673FA6 /* j1939cab_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cab_object.c; sourceTree = "<group>"; };
+		C460C776214FE6DA00673FA6 /* j1939ca_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ca_object.c; sourceTree = "<group>"; };
+		C460C777214FE6DA00673FA6 /* j1939cam_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cam_object.c; sourceTree = "<group>"; };
+		C460C778214FE6DA00673FA6 /* j1939bs_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939bs_internal.h; sourceTree = "<group>"; };
+		C460C779214FE6DA00673FA6 /* j1939sys_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939sys_internal.h; sourceTree = "<group>"; };
+		C460C77A214FE6DA00673FA6 /* j1939sys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939sys.c; sourceTree = "<group>"; };
+		C460C77B214FE6DA00673FA6 /* j1939ccu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ccu.c; sourceTree = "<group>"; };
+		C460C77C214FE6DB00673FA6 /* j1939tp_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tp_object.c; sourceTree = "<group>"; };
+		C460C77D214FE6DB00673FA6 /* j1939cab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cab.c; sourceTree = "<group>"; };
+		C460C77E214FE6DB00673FA6 /* j1939data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939data.h; sourceTree = "<group>"; };
+		C460C77F214FE6DB00673FA6 /* j1939cu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cu.c; sourceTree = "<group>"; };
+		C460C780214FE6DB00673FA6 /* j1939ca.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ca.c; sourceTree = "<group>"; };
+		C460C781214FE6DB00673FA6 /* j1939cam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cam.h; sourceTree = "<group>"; };
+		C460C782214FE6DB00673FA6 /* j1939sys_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939sys_object.c; sourceTree = "<group>"; };
+		C460C783214FE6DB00673FA6 /* j1939ecu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ecu.c; sourceTree = "<group>"; };
+		C460C784214FE6DC00673FA6 /* j1939ecu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ecu.h; sourceTree = "<group>"; };
+		C460C785214FE6DC00673FA6 /* j1939cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cc.h; sourceTree = "<group>"; };
+		C460C786214FE6DC00673FA6 /* j1939can_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939can_object.c; sourceTree = "<group>"; };
+		C460C787214FE6DC00673FA6 /* j1939misc_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939misc_object.c; sourceTree = "<group>"; };
+		C460C788214FE6DC00673FA6 /* j1939tp_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tp_internal.h; sourceTree = "<group>"; };
+		C460C789214FE6DC00673FA6 /* j1939tc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tc.h; sourceTree = "<group>"; };
+		C460C78A214FE6DC00673FA6 /* j1939tcu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tcu.c; sourceTree = "<group>"; };
+		C460C78B214FE6DC00673FA6 /* truck_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = truck_object.c; sourceTree = "<group>"; };
+		C460C78C214FE6DC00673FA6 /* j1939ss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939ss.h; sourceTree = "<group>"; };
+		C460C78D214FE6DD00673FA6 /* j1939sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939sys.h; sourceTree = "<group>"; };
+		C460C78E214FE6DD00673FA6 /* truck_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = truck_internal.h; sourceTree = "<group>"; };
+		C460C78F214FE6DD00673FA6 /* j1939dg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939dg.c; sourceTree = "<group>"; };
+		C460C790214FE6DD00673FA6 /* j1939cc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939cc.c; sourceTree = "<group>"; };
+		C460C791214FE6DD00673FA6 /* j1939er_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939er_object.c; sourceTree = "<group>"; };
+		C460C792214FE6DD00673FA6 /* j1939dg_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939dg_internal.h; sourceTree = "<group>"; };
+		C460C793214FE6DD00673FA6 /* j1939cu_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cu_internal.h; sourceTree = "<group>"; };
+		C460C794214FE6DD00673FA6 /* j1939tp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tp.c; sourceTree = "<group>"; };
+		C460C795214FE6DE00673FA6 /* j1939tcu_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tcu_internal.h; sourceTree = "<group>"; };
+		C460C796214FE6DE00673FA6 /* j1939bs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939bs.c; sourceTree = "<group>"; };
+		C460C797214FE6DE00673FA6 /* j1939tc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939tc.c; sourceTree = "<group>"; };
+		C460C798214FE6DE00673FA6 /* j1939tp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939tp.h; sourceTree = "<group>"; };
+		C460C799214FE6DE00673FA6 /* j1939cab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = j1939cab.h; sourceTree = "<group>"; };
+		C460C79A214FE6DE00673FA6 /* truck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = truck.h; sourceTree = "<group>"; };
+		C460C79B214FE6DE00673FA6 /* j1939ss_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939ss_object.c; sourceTree = "<group>"; };
+		C460C79C214FE6DE00673FA6 /* j1939data_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = j1939data_object.c; sourceTree = "<group>"; };
+		C460C7C7214FF7FE00673FA6 /* libCmn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCmn.a; path = ../../../Support/lib/macosx/libCmn/libCmn.a; sourceTree = "<group>"; };
+		C460C7CB214FFB2300673FA6 /* common4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common4.c; sourceTree = "<group>"; };
+		C460C7CC214FFB2400673FA6 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
+		C460C7CD214FFB2400673FA6 /* common2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common2.c; sourceTree = "<group>"; };
+		C460C7CE214FFB2400673FA6 /* common3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common3.c; sourceTree = "<group>"; };
+		C460C7D5215019BC00673FA6 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		C460C7DA2150494900673FA6 /* test_j1939tc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_j1939tc.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C460C73B214FE63F00673FA6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C460C7C8214FF7FE00673FA6 /* libCmn.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C460C735214FE63F00673FA6 = {
+			isa = PBXGroup;
+			children = (
+				C460C749214FE6A600673FA6 /* src */,
+				C460C740214FE63F00673FA6 /* testJ1939 */,
+				C460C73F214FE63F00673FA6 /* Products */,
+				C460C7C6214FF7FC00673FA6 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		C460C73F214FE63F00673FA6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C460C73E214FE63F00673FA6 /* testJ1939 */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C460C740214FE63F00673FA6 /* testJ1939 */ = {
+			isa = PBXGroup;
+			children = (
+				C460C7DA2150494900673FA6 /* test_j1939tc.c */,
+				C460C7D5215019BC00673FA6 /* common.h */,
+				C460C7CC214FFB2400673FA6 /* common.c */,
+				C460C7CD214FFB2400673FA6 /* common2.c */,
+				C460C7CE214FFB2400673FA6 /* common3.c */,
+				C460C7CB214FFB2300673FA6 /* common4.c */,
+			);
+			name = testJ1939;
+			path = ../../tests;
+			sourceTree = SOURCE_ROOT;
+		};
+		C460C749214FE6A600673FA6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C460C769214FE6D800673FA6 /* j1939_defs.h */,
+				C460C778214FE6DA00673FA6 /* j1939bs_internal.h */,
+				C460C76F214FE6D900673FA6 /* j1939bs_object.c */,
+				C460C796214FE6DE00673FA6 /* j1939bs.c */,
+				C460C773214FE6DA00673FA6 /* j1939bs.h */,
+				C460C763214FE6D700673FA6 /* j1939ca_internal.h */,
+				C460C776214FE6DA00673FA6 /* j1939ca_object.c */,
+				C460C780214FE6DB00673FA6 /* j1939ca.c */,
+				C460C761214FE6D700673FA6 /* j1939ca.h */,
+				C460C766214FE6D800673FA6 /* j1939cab_internal.h */,
+				C460C775214FE6DA00673FA6 /* j1939cab_object.c */,
+				C460C77D214FE6DB00673FA6 /* j1939cab.c */,
+				C460C799214FE6DE00673FA6 /* j1939cab.h */,
+				C460C75F214FE6D700673FA6 /* j1939cam_internal.h */,
+				C460C777214FE6DA00673FA6 /* j1939cam_object.c */,
+				C460C752214FE6D600673FA6 /* j1939cam.c */,
+				C460C781214FE6DB00673FA6 /* j1939cam.h */,
+				C460C774214FE6DA00673FA6 /* j1939can_internal.h */,
+				C460C786214FE6DC00673FA6 /* j1939can_object.c */,
+				C460C759214FE6D600673FA6 /* j1939can.c */,
+				C460C754214FE6D600673FA6 /* j1939can.h */,
+				C460C75D214FE6D700673FA6 /* j1939cc_internal.h */,
+				C460C74C214FE6D500673FA6 /* j1939cc_object.c */,
+				C460C790214FE6DD00673FA6 /* j1939cc.c */,
+				C460C785214FE6DC00673FA6 /* j1939cc.h */,
+				C460C768214FE6D800673FA6 /* j1939ccu_internal.h */,
+				C460C756214FE6D600673FA6 /* j1939ccu_object.c */,
+				C460C77B214FE6DA00673FA6 /* j1939ccu.c */,
+				C460C74F214FE6D600673FA6 /* j1939ccu.h */,
+				C460C793214FE6DD00673FA6 /* j1939cu_internal.h */,
+				C460C76D214FE6D900673FA6 /* j1939cu_object.c */,
+				C460C77F214FE6DB00673FA6 /* j1939cu.c */,
+				C460C76A214FE6D800673FA6 /* j1939cu.h */,
+				C460C758214FE6D600673FA6 /* j1939data_internal.h */,
+				C460C79C214FE6DE00673FA6 /* j1939data_object.c */,
+				C460C755214FE6D600673FA6 /* j1939data.c */,
+				C460C77E214FE6DB00673FA6 /* j1939data.h */,
+				C460C792214FE6DD00673FA6 /* j1939dg_internal.h */,
+				C460C762214FE6D700673FA6 /* j1939dg_object.c */,
+				C460C78F214FE6DD00673FA6 /* j1939dg.c */,
+				C460C75E214FE6D700673FA6 /* j1939dg.h */,
+				C460C75A214FE6D600673FA6 /* j1939ecu_internal.h */,
+				C460C75B214FE6D700673FA6 /* j1939ecu_object.c */,
+				C460C783214FE6DB00673FA6 /* j1939ecu.c */,
+				C460C784214FE6DC00673FA6 /* j1939ecu.h */,
+				C460C74A214FE6D500673FA6 /* j1939en_internal.h */,
+				C460C765214FE6D800673FA6 /* j1939en_object.c */,
+				C460C74B214FE6D500673FA6 /* j1939en.c */,
+				C460C74D214FE6D500673FA6 /* j1939en.h */,
+				C460C75C214FE6D700673FA6 /* j1939er_internal.h */,
+				C460C791214FE6DD00673FA6 /* j1939er_object.c */,
+				C460C74E214FE6D500673FA6 /* j1939er.c */,
+				C460C760214FE6D700673FA6 /* j1939er.h */,
+				C460C764214FE6D800673FA6 /* j1939misc_internal.h */,
+				C460C787214FE6DC00673FA6 /* j1939misc_object.c */,
+				C460C767214FE6D800673FA6 /* j1939misc.c */,
+				C460C753214FE6D600673FA6 /* j1939misc.h */,
+				C460C757214FE6D600673FA6 /* j1939msg.c */,
+				C460C76E214FE6D900673FA6 /* j1939msg.h */,
+				C460C76B214FE6D800673FA6 /* j1939ss_internal.h */,
+				C460C79B214FE6DE00673FA6 /* j1939ss_object.c */,
+				C460C771214FE6D900673FA6 /* j1939ss.c */,
+				C460C78C214FE6DC00673FA6 /* j1939ss.h */,
+				C460C779214FE6DA00673FA6 /* j1939sys_internal.h */,
+				C460C782214FE6DB00673FA6 /* j1939sys_object.c */,
+				C460C77A214FE6DA00673FA6 /* j1939sys.c */,
+				C460C78D214FE6DD00673FA6 /* j1939sys.h */,
+				C460C76C214FE6D900673FA6 /* j1939tc_internal.h */,
+				C460C770214FE6D900673FA6 /* j1939tc_object.c */,
+				C460C797214FE6DE00673FA6 /* j1939tc.c */,
+				C460C789214FE6DC00673FA6 /* j1939tc.h */,
+				C460C795214FE6DE00673FA6 /* j1939tcu_internal.h */,
+				C460C751214FE6D600673FA6 /* j1939tcu_object.c */,
+				C460C78A214FE6DC00673FA6 /* j1939tcu.c */,
+				C460C772214FE6D900673FA6 /* j1939tcu.h */,
+				C460C788214FE6DC00673FA6 /* j1939tp_internal.h */,
+				C460C77C214FE6DB00673FA6 /* j1939tp_object.c */,
+				C460C794214FE6DD00673FA6 /* j1939tp.c */,
+				C460C798214FE6DE00673FA6 /* j1939tp.h */,
+				C460C78E214FE6DD00673FA6 /* truck_internal.h */,
+				C460C78B214FE6DC00673FA6 /* truck_object.c */,
+				C460C750214FE6D600673FA6 /* truck.c */,
+				C460C79A214FE6DE00673FA6 /* truck.h */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		C460C7C6214FF7FC00673FA6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C460C7C7214FF7FE00673FA6 /* libCmn.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C460C73D214FE63F00673FA6 /* testJ1939 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C460C745214FE64000673FA6 /* Build configuration list for PBXNativeTarget "testJ1939" */;
+			buildPhases = (
+				C460C73A214FE63F00673FA6 /* Sources */,
+				C460C73B214FE63F00673FA6 /* Frameworks */,
+				C460C73C214FE63F00673FA6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = testJ1939;
+			productName = testJ1939;
+			productReference = C460C73E214FE63F00673FA6 /* testJ1939 */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C460C736214FE63F00673FA6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = bob;
+				TargetAttributes = {
+					C460C73D214FE63F00673FA6 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+				};
+			};
+			buildConfigurationList = C460C739214FE63F00673FA6 /* Build configuration list for PBXProject "testJ1939" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C460C735214FE63F00673FA6;
+			productRefGroup = C460C73F214FE63F00673FA6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C460C73D214FE63F00673FA6 /* testJ1939 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C460C73A214FE63F00673FA6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C460C7A5214FE6DF00673FA6 /* j1939msg.c in Sources */,
+				C460C7A1214FE6DF00673FA6 /* j1939tcu_object.c in Sources */,
+				C460C7D0214FFB2400673FA6 /* common.c in Sources */,
+				C460C7B6214FE6DF00673FA6 /* j1939cu.c in Sources */,
+				C460C7AF214FE6DF00673FA6 /* j1939cab_object.c in Sources */,
+				C460C7C4214FE6DF00673FA6 /* j1939ss_object.c in Sources */,
+				C460C7A4214FE6DF00673FA6 /* j1939ccu_object.c in Sources */,
+				C460C7BB214FE6DF00673FA6 /* j1939misc_object.c in Sources */,
+				C460C7C1214FE6DF00673FA6 /* j1939tp.c in Sources */,
+				C460C7D1214FFB2400673FA6 /* common2.c in Sources */,
+				C460C7A8214FE6DF00673FA6 /* j1939dg_object.c in Sources */,
+				C460C7B8214FE6DF00673FA6 /* j1939sys_object.c in Sources */,
+				C460C7D2214FFB2400673FA6 /* common3.c in Sources */,
+				C460C7C3214FE6DF00673FA6 /* j1939tc.c in Sources */,
+				C460C7AA214FE6DF00673FA6 /* j1939misc.c in Sources */,
+				C460C7B3214FE6DF00673FA6 /* j1939ccu.c in Sources */,
+				C460C7A6214FE6DF00673FA6 /* j1939can.c in Sources */,
+				C460C7B9214FE6DF00673FA6 /* j1939ecu.c in Sources */,
+				C460C7AE214FE6DF00673FA6 /* j1939ss.c in Sources */,
+				C460C7BC214FE6DF00673FA6 /* j1939tcu.c in Sources */,
+				C460C7B7214FE6DF00673FA6 /* j1939ca.c in Sources */,
+				C460C7A0214FE6DF00673FA6 /* truck.c in Sources */,
+				C460C7A7214FE6DF00673FA6 /* j1939ecu_object.c in Sources */,
+				C460C7DB2150494A00673FA6 /* test_j1939tc.c in Sources */,
+				C460C7AC214FE6DF00673FA6 /* j1939bs_object.c in Sources */,
+				C460C7BA214FE6DF00673FA6 /* j1939can_object.c in Sources */,
+				C460C7BF214FE6DF00673FA6 /* j1939cc.c in Sources */,
+				C460C7A2214FE6DF00673FA6 /* j1939cam.c in Sources */,
+				C460C7C2214FE6DF00673FA6 /* j1939bs.c in Sources */,
+				C460C7B1214FE6DF00673FA6 /* j1939cam_object.c in Sources */,
+				C460C7B5214FE6DF00673FA6 /* j1939cab.c in Sources */,
+				C460C79F214FE6DE00673FA6 /* j1939er.c in Sources */,
+				C460C7BD214FE6DF00673FA6 /* truck_object.c in Sources */,
+				C460C7B4214FE6DF00673FA6 /* j1939tp_object.c in Sources */,
+				C460C7AD214FE6DF00673FA6 /* j1939tc_object.c in Sources */,
+				C460C79D214FE6DE00673FA6 /* j1939en.c in Sources */,
+				C460C7C5214FE6DF00673FA6 /* j1939data_object.c in Sources */,
+				C460C7BE214FE6DF00673FA6 /* j1939dg.c in Sources */,
+				C460C7A3214FE6DF00673FA6 /* j1939data.c in Sources */,
+				C460C7CF214FFB2400673FA6 /* common4.c in Sources */,
+				C460C7A9214FE6DF00673FA6 /* j1939en_object.c in Sources */,
+				C460C7C0214FE6DF00673FA6 /* j1939er_object.c in Sources */,
+				C460C7B2214FE6DF00673FA6 /* j1939sys.c in Sources */,
+				C460C79E214FE6DE00673FA6 /* j1939cc_object.c in Sources */,
+				C460C7B0214FE6DF00673FA6 /* j1939ca_object.c in Sources */,
+				C460C7AB214FE6DF00673FA6 /* j1939cu_object.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C460C743214FE63F00673FA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C460C744214FE64000673FA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C460C746214FE64000673FA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"__MACOSX_ENV__=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT)/../../../tests",
+					"$(PROJECT)/../../../src",
+					"$(HOME)/Support/lib/macosx/libCmn/include",
+					"$(HOME)/Support/lib/macosx/libEmu/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(HOME)/Support/lib/macosx/libEmu",
+					"$(HOME)/Support/lib/macosx/libCmn",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C460C747214FE64000673FA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = "__MACOSX_ENV__=1";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT)/../../../tests",
+					"$(PROJECT)/../../../src",
+					"$(HOME)/Support/lib/macosx/libCmn/include",
+					"$(HOME)/Support/lib/macosx/libEmu/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(HOME)/Support/lib/macosx/libEmu",
+					"$(HOME)/Support/lib/macosx/libCmn",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C460C739214FE63F00673FA6 /* Build configuration list for PBXProject "testJ1939" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C460C743214FE63F00673FA6 /* Debug */,
+				C460C744214FE64000673FA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C460C745214FE64000673FA6 /* Build configuration list for PBXNativeTarget "testJ1939" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C460C746214FE64000673FA6 /* Debug */,
+				C460C747214FE64000673FA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C460C736214FE63F00673FA6 /* Project object */;
+}

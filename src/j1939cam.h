@@ -110,6 +110,7 @@ extern	"C" {
     //---------------------------------------------------------------
     
     J1939CAM_DATA * j1939cam_Alloc(
+        void
     );
     
         
@@ -205,11 +206,10 @@ extern	"C" {
      if a message is not available. A NULL message pointer and zero
      eid, tell the Handler to simply process any time transmitted
      messages.
-     @param:    this    J1939CAM object pointer
-     @param:    eid     Message EID
-     @param:    pMsg    Message Pointer or NULL
-     @return:   if successful, true otherwise, false
-     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
+     @param     this    J1939CAM object pointer
+     @param     pMsg    Message Pointer or NULL
+     @return    if successful, true otherwise, false
+     @Warning   This function must conform to P_SRVCMSG_RTN specs.
      */
     bool            j1939cam_HandleMessages(
         J1939CAM_DATA	*this,

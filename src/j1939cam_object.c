@@ -67,7 +67,7 @@ OBJ_INFO        j1939cam_Info;            // Forward Reference
 
 
 OBJ_ID          j1939cam_Class(
-    OBJ_ID          objId
+    void
 );
 
 
@@ -88,8 +88,8 @@ bool            j1939cam_ClassIsKindOf(
 
 
 static
-uint16_t		obj_ClassWhoAmI(
-    OBJ_ID          objId
+uint16_t		j1939cam_ClassWhoAmI(
+    void
 )
 {
     return OBJ_IDENT_J1939CAM_CLASS;
@@ -104,8 +104,8 @@ OBJ_IUNKNOWN    obj_Vtbl = {
     obj_RetainNull,
     obj_ReleaseNull,
     NULL,
-    obj_Class,
-    obj_ClassWhoAmI
+    j1939cam_Class,
+    j1939cam_ClassWhoAmI
 };
 
 
@@ -146,7 +146,7 @@ void            j1939cam_Dealloc(
 
 
 OBJ_ID          j1939cam_Class(
-    OBJ_ID          objId
+    void
 )
 {
     return (OBJ_ID)&j1939cam_ClassObj;
@@ -155,7 +155,7 @@ OBJ_ID          j1939cam_Class(
 
 static
 uint16_t		j1939cam_WhoAmI(
-    OBJ_ID          objId
+    void
 )
 {
     return OBJ_IDENT_J1939CAM;

@@ -441,6 +441,7 @@ extern	"C" {
             spn1855 = (pMsg->DATA.bytes[5] >> 6) & 0x3;
             spn2985 = (pMsg->DATA.bytes[6] >> 6) & 0x3;
 
+            //TODO: Research comments above and implement more thoroughly below.
 #ifdef XYZZY
             if (this->fActive && (0 == spn695)) {      // *** Stop Retarding ***
                 this->fActive = false;

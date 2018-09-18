@@ -5,7 +5,7 @@
  * Program
  *				J1939 Transmission CA (j1939tc)
  * Purpose
- *				This object provides the Engine Status Support
+ *				This object provides the Transmission Support
  *              for the J1939 object. The CA associated with this
  *              object should insure that the internal Claimed
  *              Address is kept up to date.
@@ -103,6 +103,7 @@ extern	"C" {
     
     // Warning - See J1939CAM, but this function may not change.
     J1939TC_DATA * j1939tc_Alloc(
+        void
     );
     
         

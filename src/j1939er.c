@@ -169,6 +169,7 @@ extern	"C" {
     //===============================================================
 
     J1939ER_DATA * j1939er_Alloc(
+        void
     )
     {
         J1939ER_DATA   *this;
@@ -1073,26 +1074,57 @@ extern	"C" {
             spn898 = pMsg->DATA.bytes[1] | (pMsg->DATA.bytes[2] << 8);
             spn518 = pMsg->DATA.bytes[3];
 
-            if (this->fActive && (0 == spn695)) {      // *** Stop Retarding ***
-                this->fActive = false;
-                this->timeOut = 0;
-                this->spn1480 = 0xFF;
-                // Turn off retarder.
-                fRc = true;
-                goto exit00;
-            }
-            if ((2 == spn695) || (3 == spn695)) {
-                this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
-                if (this->fActive) {
-                    // Just update time
-                }
-                else {
-                    this->fActive = true;
-                    this->spn1480 = sa;
-                    // Turn on retarder.
-                    fRc = true;
-                    goto exit00;
-                }
+            //TODO: Research comments above and implement more thoroughly below.
+            switch (spn695) {
+                case 0:
+                    if (this->fActive) {
+                        this->fActive = false;
+                        this->timeOut = 0;
+                        this->spn1480 = 0xFF;
+                        // Turn off retarder.
+                        fRc = true;
+                        goto exit00;
+                    }
+                    break;
+                    
+                case 1:             // 1 - Override speed
+                    this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
+                    if (this->fActive)
+                        ;                       // Just update time
+                    else {
+                        this->fActive = true;
+                        this->spn1480 = sa;
+                        // Turn on retarder.
+                        fRc = true;
+                        goto exit00;
+                    }
+                    break;
+                    
+                case 2:             // 2 - Override torque
+                    this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
+                    if (this->fActive)
+                        ;                       // Just update time
+                    else {
+                        this->fActive = true;
+                        this->spn1480 = sa;
+                        // Turn on retarder.
+                        fRc = true;
+                        goto exit00;
+                    }
+                    break;
+                    
+                case 3:             // 3 - Limit Speed/Torque
+                    this->timeOut = j1939ca_MsTimeGet((J1939CA_DATA *)this) + 150;
+                    if (this->fActive)
+                        ;                       // Just update time
+                    else {
+                        this->fActive = true;
+                        this->spn1480 = sa;
+                        // Turn on retarder.
+                        fRc = true;
+                        goto exit00;
+                    }
+                    break;
             }
         }
         else {

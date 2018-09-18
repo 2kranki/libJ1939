@@ -92,7 +92,7 @@ int         test_j1939cab_OpenClose(
     XCTAssertFalse( (OBJ_NIL == pSYS) );
     XCTAssertTrue( (0 == cCurMsg) );
  
-    pCab = j1939cab_Alloc(0);
+    pCab = j1939cab_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pCab) );
     pCab = j1939cab_Init(pCab, (OBJ_ID)pCAN, (OBJ_ID)pSYS, 1, 8192, 4);
     TINYTEST_FALSE( (OBJ_NIL == pCab) );

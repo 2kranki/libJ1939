@@ -417,12 +417,12 @@ extern "C" {
      this -> other).  Any objects in other will be released before 
      a copy of the object is performed.
      Example:
-     @code:
+     @code
         ERESULT eRc = j1939cab__Assign(this,pOther);
-     @endcode:
-     @param:    this    J1939CAB object pointer
-     @param:    pOther  a pointer to another J1939CAB object
-     @return:   If successful, ERESULT_SUCCESS otherwise an 
+     @endcode
+     @param     this    J1939CAB object pointer
+     @param     pOther  a pointer to another J1939CAB object
+     @return    If successful, ERESULT_SUCCESS otherwise an
                 ERESULT_* error 
      */
     ERESULT         j1939cab_Assign(
@@ -487,13 +487,13 @@ extern "C" {
     /*!
      Copy the current object creating a new object.
      Example:
-     @code:
+     @code
         j1939cab      *pCopy = j1939cab_Copy(this);
-     @endcode:
-     @param:    this    J1939CAB object pointer
-     @return:   If successful, a J1939CAB object which must be released,
+     @endcode
+     @param     this    J1939CAB object pointer
+     @return    If successful, a J1939CAB object which must be released,
                 otherwise OBJ_NIL.
-     @warning: Remember to release the returned the J1939CAB object.
+     @warning   Remember to release the returned the J1939CAB object.
      */
     J1939CAB_DATA *     j1939cab_Copy(
         J1939CAB_DATA       *this
@@ -1226,12 +1226,12 @@ extern "C" {
     void *          j1939cab_QueryInfo(
         OBJ_ID          objId,
         uint32_t        type,
-        const
-        char            *pStr
+        void            *pData
     )
     {
         J1939CAB_DATA   *this = objId;
-        
+        char            *pStr = pData;
+
         if (OBJ_NIL == this) {
             return NULL;
         }
@@ -1273,7 +1273,7 @@ extern "C" {
                 break;
         }
         
-        return obj_QueryInfo(objId, type, pStr);
+        return obj_QueryInfo(objId, type, pData);
     }
     
     
@@ -1285,14 +1285,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939cab_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939CAB object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939CAB object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *     j1939cab_ToDebugString(
         J1939CAB_DATA   *this,
@@ -1317,7 +1317,7 @@ extern "C" {
               
         pStr = AStr_New();
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         str[0] = '\0';
         j = snprintf(
@@ -1343,7 +1343,7 @@ extern "C" {
 #endif
         
         if (indent) {
-            AStr_AppendCharRepeatW(pStr, indent, ' ');
+            AStr_AppendCharRepeatW32(pStr, indent, ' ');
         }
         j = snprintf(str, sizeof(str), " %p(j1939cab)}\n", this);
         AStr_AppendA(pStr, str);

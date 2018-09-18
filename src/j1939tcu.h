@@ -102,6 +102,7 @@ extern "C" {
      @return:   pointer to j1939tcu object if successful, otherwise OBJ_NIL.
      */
     J1939TCU_DATA * j1939tcu_Alloc(
+        void
     );
     
     
@@ -147,11 +148,11 @@ extern "C" {
      if a message is not available. A NULL message pointer and zero
      eid, tell the Handler to simply process any time transmitted
      messages.
-     @param:    this    J1939ECU object pointer
-     @param:    eid     Message EID
-     @param:    pMsg    Message Pointer or NULL
-     @return:   if successful, true otherwise, false
-     @Warning:  This function must conform to P_SRVCMSG_RTN specs.
+     @param     this    J1939ECU object pointer
+     @param     eid     Message EID
+     @param     pMsg    Message Pointer or NULL
+     @return    if successful, true otherwise, false
+     @Warning   This function must conform to P_SRVCMSG_RTN specs.
      */
     bool            j1939tcu_HandleMessages(
         J1939TCU_DATA	*this,
@@ -178,14 +179,14 @@ extern "C" {
     /*!
      Create a string that describes this object and the objects within it.
      Example:
-     @code:
+     @code
         ASTR_DATA      *pDesc = j1939tcu_ToDebugString(this,4);
-     @endcode:
-     @param:    this    J1939TCU object pointer
-     @param:    indent  number of characters to indent every line of output, can be 0
-     @return:   If successful, an AStr object which must be released containing the
+     @endcode
+     @param     this    J1939TCU object pointer
+     @param     indent  number of characters to indent every line of output, can be 0
+     @return    If successful, an AStr object which must be released containing the
                 description, otherwise OBJ_NIL.
-     @warning: Remember to release the returned AStr object.
+     @warning   Remember to release the returned AStr object.
      */
     ASTR_DATA *    j1939tcu_ToDebugString(
         J1939TCU_DATA     *this,

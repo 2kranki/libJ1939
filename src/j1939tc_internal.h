@@ -484,7 +484,7 @@ extern "C" {
         //    |      |
         //  11110 - P31 - Reserved
         //  11111 - P32 - Temporary Power Train Control (Original use of TSC1 Command)
-        uint8_t             reserved8b[1];
+        //uint8_t             reserved8b[1];
 
         // Engine Fields - 2 bytes
         uint16_t            spn161;             // Transmission Input Shaft Speed

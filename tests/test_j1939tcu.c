@@ -88,7 +88,7 @@ int         test_j1939tcu_OpenClose(
 {
     J1939TCU_DATA	*pObj = OBJ_NIL;
    
-    pObj = j1939tcu_Alloc(0);
+    pObj = j1939tcu_Alloc( );
     TINYTEST_FALSE( (OBJ_NIL == pObj) );
     pObj = j1939tcu_Init(
                     pObj, 
