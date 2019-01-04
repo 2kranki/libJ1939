@@ -101,7 +101,7 @@ uint16_t		j1939dg_ClassWhoAmI(
 
 static
 const
-OBJ_IUNKNOWN    obj_Vtbl = {
+OBJ_IUNKNOWN    class_Vtbl = {
 	&j1939dg_Info,
     j1939dg_ClassIsKindOf,
     obj_RetainNull,
@@ -120,7 +120,15 @@ OBJ_IUNKNOWN    obj_Vtbl = {
 static
 const
 J1939DG_CLASS_DATA  j1939dg_ClassObj = {
-    {&obj_Vtbl, sizeof(OBJ_DATA), OBJ_IDENT_J1939DG_CLASS, 0, 1},
+    {
+        (const OBJ_IUNKNOWN *)&class_Vtbl,  // pVtbl
+        sizeof(J1939DG_CLASS_DATA),         // cbSize
+        OBJ_IDENT_J1939DG_CLASS,            // cbIdent
+        0,                                  // cbFlags
+        0,                                  // eRc
+        1,                                  // cbRetainCount
+        {0}                                 // cbMisc
+    },
 	//0
 };
 
