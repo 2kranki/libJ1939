@@ -106,7 +106,7 @@ extern "C" {
         uint8_t             fShutdown;          // Shutdown is Active
         uint8_t             fAutomatic;         // True == Automatic Transmission,
         //                                      // False == Manual
-        P_VOIDEXIT12        pShiftExit;
+        P_VOID_EXIT12       pShiftExit;
         void                *pShiftData;
         //uint8_t             reserved8b[1];
         

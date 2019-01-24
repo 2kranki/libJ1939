@@ -446,7 +446,7 @@ extern	"C" {
     
     bool			j1939en_setShiftExit(
         J1939EN_DATA	*this,
-        P_VOIDEXIT12    pExit,
+        P_VOID_EXIT12   pExit,
         void            *pData
     )
     {
