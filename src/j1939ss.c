@@ -1432,7 +1432,6 @@ bool			j1939ss_setSpn3350(
             return OBJ_NIL;
         }
         obj_setSize(this, cbSize);                        // Needed for Inheritance
-        obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939SS);         // Needed for Inheritance
         this->pSuperVtbl = obj_getVtbl(this);
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939ss_Vtbl);
         

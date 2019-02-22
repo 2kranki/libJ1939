@@ -448,7 +448,6 @@ extern	"C" {
             return NULL;
         }
         obj_setSize(  (OBJ_ID)this, cbSize );
-        obj_setIdent( (OBJ_ID)this, OBJ_IDENT_J1939DG );
         this->pCaVtbl = (void *)obj_getVtbl(this);
         obj_setVtbl(  (OBJ_ID)this, (OBJ_IUNKNOWN *)&j1939dg_Vtbl );
 

@@ -1085,7 +1085,7 @@ extern "C" {
             return OBJ_NIL;
         }
         obj_setSize(this, cbSize);                        // Needed for Inheritance
-        obj_setIdent((OBJ_ID)this, OBJ_IDENT_J1939CAB);         // Needed for Inheritance
+
         this->pSuperVtbl = obj_getVtbl(this);
         obj_setVtbl(this, (OBJ_IUNKNOWN *)&j1939cab_Vtbl);
         

@@ -2904,7 +2904,7 @@ extern	"C" {
         //J1939CA_MSG     *pInsert;
         J1939TP_DATA    *pTP;
         uint8_t         da;
-        
+
         // Do initialization.
 #ifdef NDEBUG
 #else
@@ -2924,7 +2924,7 @@ extern	"C" {
             DEBUG_BREAK();
             return false;
         }
-        if (this->pCAN && (obj_getIdent(this->pCAN) == OBJ_IDENT_J1939CAN)) {
+        if (this->pCAN && (obj_IsKindOf(this->pCAN, OBJ_IDENT_J1939CAN))) {
         }
         else {
             DEBUG_BREAK();
