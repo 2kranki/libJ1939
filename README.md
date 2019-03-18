@@ -12,7 +12,20 @@ Within the UART and CAN routines, I buffered the data in circular
 buffers. I used a consumer/producer object to communicate between
 the CAN and J1939 objects. It seemed to keep up with the message
 flow, because the PIC32MX795 is fairly powerful. I would use
-a PIC32MZ today.
+an ARM processor today with a minimum of the abilities of the
+PIC32MX795.  For this application, you can never have enough
+memory if you are buffering up the J1939 messages.  ARM seems
+to have won the battle and gives one more flexibility.  
+
+If you wanted to develop code an analyze incoming J1939 messages
+for a particular purpose, I would look to the receive side of the
+objects that I wrote.  They should provide a solid foundation
+for any application.  It would be quite easy to move from them
+from my C objects to C++, but be very careful.  These small com-
+puters do not handle lots of malloc/free activity if you sup-
+porting vehicles traveling down the road.  I took great pains
+to allocate all my memory at the very beginning of execution
+as much as I could.
 
                 *** Temporary ***
 For those of you who have looked at my prior versions, I just 

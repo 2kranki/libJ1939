@@ -541,6 +541,7 @@
 					"$(HOME)/Support/lib/macosx/libEmu",
 					"$(HOME)/Support/lib/macosx/libCmn",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -560,6 +561,7 @@
 					"$(HOME)/Support/lib/macosx/libEmu",
 					"$(HOME)/Support/lib/macosx/libCmn",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
