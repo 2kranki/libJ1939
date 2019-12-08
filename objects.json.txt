@@ -1,37 +1,32 @@
 {
     library:{
         name:"J1939",
-        libDeps: ["Cmn"],
-        headers:{
-            public: ["j1939_defs.h"]
-        }
+        deps: ["Cmn"],
+        hdrs:["j1939_defs.h"]
     }
-    "objects": {
-        "truck":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939bs":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939cu":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939ccu":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939ecu":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939tcu":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939ca":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939cab":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939cam":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939can":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939cc":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939data":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939dg":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939en":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939er":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939misc":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939ss":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939tc":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939tp":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
-        "j1939sys":{srcDeps:["j1939_defs.h"], test:{srcs:["common.c","common2.c","common3.c","common4.c"]}}
-    },
-    "routines": [
-        "j1939msg.c"
+    "objects": [
+        {name:"truck",     test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939bs",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939cu",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939ccu",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939ecu",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939tcu",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939ca",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939cab",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939cam",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939can",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939cc",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939data", test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939dg",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939en",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939er",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939misc", test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939ss",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939tc",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939tp",   test:{srcs:["common.c","common2.c","common3.c","common4.c"]}},
+        {name:"j1939sys",  test:{srcs:["common.c","common2.c","common3.c","common4.c"]}}
     ],
-    "programs": {
-        "dumpJ1939":null
-    },
+    "routines": [
+        {name:"j1939msg"}
+    ],
 }
