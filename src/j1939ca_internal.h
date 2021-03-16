@@ -45,7 +45,6 @@
 
 
 #include        <j1939ca.h>
-#include        <table.h>
 #include        <j1939tp_internal.h>
 //#include        <psxThread.h>
 //#include        "j1939tbl.h"

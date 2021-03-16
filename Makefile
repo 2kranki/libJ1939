@@ -1,5 +1,5 @@
 # Generated file - Edits will be discarded by next generation!
-# (10/23/2020  3:37:51.000)
+# ( 3/16/2021 12:59:33.000)
 
 .DEFAULT_GOAL := all
 SHELL=/bin/sh
@@ -36,8 +36,8 @@ else   #DEBUG
 LIB_FILENAME=$(LIBNAM)D.a
 OBJDIR = $(LIBOBJ)/o/d
 endif  #NDEBUG
-TEST_OBJ = $(OBJDIR)/tests
-TEST_BIN = $(OBJDIR)/tests
+TEST_OBJ = $(OBJDIR)/obj
+TEST_BIN = $(OBJDIR)/bin
 LIB_PATH = $(LIBOBJ)/$(LIB_FILENAME)
 
 .SUFFIXES:
@@ -380,13 +380,27 @@ $(LIB_PATH):  $(OBJS)
 	ar rc $(LIB_PATH) $(OBJS)
 
 
-.PHONY: test
-test: $(TESTS)
+.PHONY: all
+all:  clean create_dirs $(LIB_PATH)
+
+
+.PHONY: build
+build:  create_dirs $(LIB_PATH)
+
+
+.PHONY: check
+check: $(TESTS)
 
 
 .PHONY: clean
 clean:
 	-cd $(TEMP) ; [ -d $(LIBNAM) ] && rm -fr $(LIBNAM)
+
+
+.PHONY: create_dirs
+create_dirs:
+	[ ! -d $(TEST_OBJ) ] && mkdir -p $(TEST_OBJ)
+	[ ! -d $(TEST_BIN) ] && mkdir -p $(TEST_BIN)
 
 
 .PHONY: install
@@ -400,12 +414,7 @@ install:
 	fi
 
 
-.PHONY: create_dirs
-create_dirs:
-	[ ! -d $(OBJDIR) ] && mkdir -p $(OBJDIR)/tests
-
-
-.PHONY: all
-all:  clean create_dirs $(LIB_PATH)
+.PHONY: test
+test: $(TESTS)
 
 

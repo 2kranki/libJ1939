@@ -1846,9 +1846,6 @@ extern	"C" {
             j1939tp_setRcvdMsg(pTP, (void *)tp_MessageReceived, this);
         }
         
-        uint32_t            blkNum = 64;
-        blkNum = table_FindBlockSize(4096, sizeof(struct j1939_msg_s));
-        
         // Default all SPNs to unsupported values.
         memset(
                &this->spnFirst,

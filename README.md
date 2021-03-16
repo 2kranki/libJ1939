@@ -21,11 +21,17 @@ If you wanted to develop code an analyze incoming J1939 messages
 for a particular purpose, I would look to the receive side of the
 objects that I wrote.  They should provide a solid foundation
 for any application.  It would be quite easy to move from them
-from my C objects to C++, but be very careful.  These small com-
-puters do not handle lots of malloc/free activity if you sup-
-porting vehicles traveling down the road.  I took great pains
-to allocate all my memory at the very beginning of execution
-as much as I could.
+from my C objects to C++, but be very careful. My C objects are
+based loosely on Objective C. Most of the extra routines are
+lightly used. However, I like this system, because I can trace
+through all the code if I want. Nothing is hidden as in C++.
+
+These small computers do not handle lots of malloc/free activity 
+if you are supporting vehicles traveling down the road.  I took 
+great pains to allocate all my memory at the very beginning of 
+execution as much as I could. If you are building a box that
+is controlling a car/truck, you certainly do not want the com-
+puter to throw up its hands, because memory got fragmented. 
 
                 *** Temporary ***
 For those of you who have looked at my prior versions, I just 
